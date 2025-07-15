@@ -1,0 +1,423 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CLIENT
+  PRO
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  MESSAGE
+  BOOKING
+  PAYMENT
+  REMINDER
+  SYSTEM
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum TransactionType {
+  BOOKING_PAYMENT
+  DEPOSIT
+  REFUND
+  PAYOUT
+  COMMISSION
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  username      String     @unique
+  passwordHash  String?
+  firstName     String?
+  lastName      String?
+  avatar        String?
+  bio           String?
+  location      String?
+  website       String?
+  phone         String?
+  role          UserRole   @default(CLIENT)
+  status        UserStatus @default(ACTIVE)
+  verified      Boolean    @default(false)
+  emailVerified DateTime?
+  
+  // OAuth fields
+  googleId      String?    @unique
+  appleId       String?    @unique
+  
+  // Pro-specific fields
+  businessName     String?
+  businessAddress  String?
+  siret            String?
+  vatNumber        String?
+  hourlyRate       Float?
+  specialties      String[]
+  portfolio        String[]
+  coverImage       String?
+  profileTheme     Json?      // Custom theme colors, fonts, etc.
+  
+  // Stripe fields
+  stripeCustomerId String?   @unique
+  stripeAccountId  String?   @unique
+  
+  // Interaction tracking
+  profileViews     Int       @default(0)
+  lastActiveAt     DateTime  @default(now())
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastLoginAt DateTime?
+  
+  // Relations
+  posts                Post[]
+  likes                Like[]
+  comments             Comment[]
+  sentMessages         Message[] @relation("MessageSender")
+  conversationMembers  ConversationMember[]
+  bookingsAsClient     Booking[] @relation("ClientBookings")
+  bookingsAsPro        Booking[] @relation("ProBookings")
+  sentPayments         Payment[] @relation("PaymentSender")
+  receivedPayments     Payment[] @relation("PaymentReceiver")
+  invoicesIssued       Invoice[] @relation("InvoiceIssuer")
+  invoicesReceived     Invoice[] @relation("InvoiceReceiver")
+  notifications        Notification[]
+  followers            Follow[] @relation("UserFollowers")
+  following            Follow[] @relation("UserFollowing")
+  reviews              Review[]
+  reviewsReceived      Review[] @relation("ReviewsReceived")
+  transactions         Transaction[]
+  userInteractions     UserInteraction[] @relation("InteractingUser")
+  receivedInteractions UserInteraction[] @relation("TargetUser")
+  searchHistory        SearchHistory[]
+  
+  @@map("users")
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  content     String
+  images      String[]
+  hashtags    String[]
+  status      PostStatus @default(PUBLISHED)
+  likesCount  Int        @default(0)
+  commentsCount Int      @default(0)
+  viewsCount  Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  publishedAt DateTime?
+  
+  // Relations
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+  likes    Like[]
+  comments Comment[]
+  
+  @@map("posts")
+}
+
+model Like {
+  id     String @id @default(cuid())
+  userId String
+  postId String
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, postId])
+  @@map("likes")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+  
+  @@map("comments")
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  title     String?
+  isGroup   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  members  ConversationMember[]
+  messages Message[]
+  
+  @@map("conversations")
+}
+
+model ConversationMember {
+  id             String   @id @default(cuid())
+  conversationId String
+  userId         String
+  joinedAt       DateTime @default(now())
+  lastReadAt     DateTime?
+  
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([conversationId, userId])
+  @@map("conversation_members")
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  content        String
+  messageType    String   @default("text") // text, image, payment, booking
+  attachments    String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relations
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  sender         User         @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId       String
+  payment        Payment?
+  booking        Booking?
+  
+  @@map("messages")
+}
+
+model Booking {
+  id          String        @id @default(cuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  location    String?
+  price       Float
+  depositAmount Float       // 25% of price
+  status      BookingStatus @default(PENDING)
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  cancelledAt DateTime?
+  
+  // Relations
+  client    User    @relation("ClientBookings", fields: [clientId], references: [id], onDelete: Cascade)
+  clientId  String
+  pro       User    @relation("ProBookings", fields: [proId], references: [id], onDelete: Cascade)
+  proId     String
+  message   Message? @relation(fields: [messageId], references: [id])
+  messageId String?  @unique
+  payments  Payment[]
+  invoice   Invoice?
+  
+  @@map("bookings")
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  amount      Float
+  currency    String        @default("EUR")
+  status      PaymentStatus @default(PENDING)
+  stripePaymentIntentId String? @unique
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  sender      User     @relation("PaymentSender", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId    String
+  receiver    User     @relation("PaymentReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId  String
+  message     Message? @relation(fields: [messageId], references: [id])
+  messageId   String?  @unique
+  booking     Booking? @relation(fields: [bookingId], references: [id])
+  bookingId   String?
+  invoice     Invoice?
+  transaction Transaction?
+  
+  @@map("payments")
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  amount      Float
+  currency    String          @default("EUR")
+  type        TransactionType
+  status      String          @default("pending")
+  stripeTransferId String?    @unique
+  description String?
+  createdAt   DateTime        @default(now())
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+  paymentId String?  @unique
+  
+  @@map("transactions")
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  amount        Float
+  currency      String   @default("EUR")
+  vatAmount     Float?
+  description   String
+  dueDate       DateTime
+  paidAt        DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  issuer     User     @relation("InvoiceIssuer", fields: [issuerId], references: [id], onDelete: Cascade)
+  issuerId   String
+  receiver   User     @relation("InvoiceReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String
+  booking    Booking? @relation(fields: [bookingId], references: [id])
+  bookingId  String?  @unique
+  payment    Payment? @relation(fields: [paymentId], references: [id])
+  paymentId  String?  @unique
+  
+  @@map("invoices")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType
+  read      Boolean          @default(false)
+  data      Json?
+  createdAt DateTime         @default(now())
+  
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  
+  @@map("notifications")
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  reviewer   User   @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewerId String
+  reviewed   User   @relation("ReviewsReceived", fields: [reviewedId], references: [id], onDelete: Cascade)
+  reviewedId String
+  
+  @@unique([reviewerId, reviewedId])
+  @@map("reviews")
+}
+
+model UserInteraction {
+  id            String   @id @default(cuid())
+  interactionType String // "view", "like", "comment", "message", "book"
+  weight        Float    @default(1.0)
+  createdAt     DateTime @default(now())
+  
+  // Relations
+  user       User   @relation("InteractingUser", fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  targetUser User   @relation("TargetUser", fields: [targetUserId], references: [id], onDelete: Cascade)
+  targetUserId String
+  
+  @@map("user_interactions")
+}
+
+model SearchHistory {
+  id        String   @id @default(cuid())
+  query     String
+  hashtags  String[]
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  
+  @@map("search_history")
+}
+
+model PushSubscription {
+  id       String @id @default(cuid())
+  userId   String
+  endpoint String
+  p256dh   String
+  auth     String
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, endpoint])
+  @@map("push_subscriptions")
+}
+
+model MagicLink {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  @@map("magic_links")
+}
