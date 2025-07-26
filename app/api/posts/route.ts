@@ -9,9 +9,13 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const page = Number.parseInt(searchParams.get("page") || "1")
     const limit = Number.parseInt(searchParams.get("limit") || "10")
+    const userId = searchParams.get("userId")
     const skip = (page - 1) * limit
 
+    const whereClause = userId ? { authorId: userId } : {}
+
     const posts = await prisma.post.findMany({
+      where: whereClause,
       skip,
       take: limit,
       orderBy: {
@@ -50,8 +54,10 @@ export async function GET(request: NextRequest) {
       id: post.id,
       content: post.content,
       images: post.images,
+      hashtags: post.hashtags || [],
       likesCount: post._count.likes,
       commentsCount: post._count.comments,
+      viewsCount: post.viewsCount || 0,
       createdAt: post.createdAt.toISOString(),
       author: post.author,
       liked: session?.user?.id ? post.likes.length > 0 : false,
@@ -79,12 +85,13 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { content, images } = body
+    const { content, images, hashtags } = body
 
     const post = await prisma.post.create({
       data: {
         content,
         images: images || [],
+        hashtags: hashtags || [],
         authorId: session.user.id,
       },
       include: {
@@ -109,6 +116,7 @@ export async function POST(request: NextRequest) {
         ...post,
         likesCount: 0,
         commentsCount: 0,
+        viewsCount: 0,
         liked: false,
       },
     })

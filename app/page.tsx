@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Calendar, Search, Hash } from "lucide-react"
+import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Calendar, Search, Hash, LogIn } from "lucide-react"
 import { BottomNavigation } from "@/components/bottom-navigation"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
@@ -228,6 +228,24 @@ export default function HomePage() {
             />
           </div>
         </div>
+
+        {/* Login Prompt for Unauthenticated Users */}
+        {!session?.user?.id && (
+          <div className="p-4 border-b border-gray-800 bg-gray-900/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-white font-medium">Join the community</h3>
+                <p className="text-gray-400 text-sm">Sign in to like, comment, and connect with professionals</p>
+              </div>
+              <Link href="/auth/login">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Sign In
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Posts Feed */}
         <div className="space-y-0 pb-20">

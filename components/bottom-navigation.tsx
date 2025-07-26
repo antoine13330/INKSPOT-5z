@@ -3,14 +3,15 @@
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { Home, Search, MessageCircle, ShoppingCart, User } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 export function BottomNavigation() {
   const pathname = usePathname()
+  const { data: session } = useSession()
 
   const navItems = [
-    { href: "/", icon: ShoppingCart, label: "Shop" },
-    { href: "/search", icon: Search, label: "Search" },
     { href: "/", icon: Home, label: "Home" },
+    { href: "/search", icon: Search, label: "Search" },
     { href: "/conversations", icon: MessageCircle, label: "Messages" },
     { href: "/profile", icon: User, label: "Profile" },
   ]
@@ -34,6 +35,15 @@ export function BottomNavigation() {
             </Link>
           )
         })}
+        {!session && (
+          <Link
+            href="/auth/login"
+            className="flex flex-col items-center py-2 px-3 text-gray-400 hover:text-blue-400"
+          >
+            <User className="w-6 h-6" />
+            <span className="text-xs mt-1">Login</span>
+          </Link>
+        )}
       </div>
     </div>
   )
