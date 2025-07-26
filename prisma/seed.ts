@@ -140,4 +140,36 @@ async function main() {
     }),
     prisma.user.upsert({
       where: { email: "client3@example.com" },
-      update: {},\
+      update: {},
+      create: {
+        email: "client3@example.com",
+        username: "@art_lover",
+        passwordHash: clientPassword,
+        firstName: "Art",
+        lastName: "Lover",
+        role: "CLIENT",
+        status: "ACTIVE",
+        bio: "Passionate about supporting local artists and creative projects",
+        location: "London, UK",
+        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+        stripeCustomerId: "cus_test_client3",
+      },
+    }),
+  ])
+
+  console.log("✅ Database seeded successfully!")
+  console.log("Created users:")
+  console.log(`- Admin: ${admin.email}`)
+  console.log(`- Pro 1: ${pro1.email}`)
+  console.log(`- Pro 2: ${pro2.email}`)
+  console.log(`- Clients: ${clients.map(c => c.email).join(", ")}`)
+}
+
+main()
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

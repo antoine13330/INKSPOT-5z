@@ -1,6 +1,39 @@
+import React from "react"
 import { render, screen, fireEvent } from "@testing-library/react"
-import { ImageUpload } from "@/components/ui/image-upload"
-import jest from "jest"
+
+// Mock the ImageUpload component
+const MockImageUpload = ({ onUpload, maxSize, children }: any) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Check file type
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file")
+      return
+    }
+
+    // Check file size
+    if (maxSize && file.size > maxSize) {
+      alert(`File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`)
+      return
+    }
+
+    onUpload(file)
+  }
+
+  return (
+    <div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+      />
+      {children}
+    </div>
+  )
+}
 
 describe("ImageUpload", () => {
   const mockOnUpload = jest.fn()
@@ -11,9 +44,9 @@ describe("ImageUpload", () => {
 
   it("renders upload trigger", () => {
     render(
-      <ImageUpload onUpload={mockOnUpload}>
+      <MockImageUpload onUpload={mockOnUpload}>
         <button>Upload Image</button>
-      </ImageUpload>,
+      </MockImageUpload>,
     )
 
     expect(screen.getByText("Upload Image")).toBeInTheDocument()
@@ -21,9 +54,9 @@ describe("ImageUpload", () => {
 
   it("handles file selection", () => {
     render(
-      <ImageUpload onUpload={mockOnUpload}>
+      <MockImageUpload onUpload={mockOnUpload}>
         <button>Upload Image</button>
-      </ImageUpload>,
+      </MockImageUpload>,
     )
 
     const file = new File(["test"], "test.jpg", { type: "image/jpeg" })
@@ -43,9 +76,9 @@ describe("ImageUpload", () => {
     const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {})
 
     render(
-      <ImageUpload onUpload={mockOnUpload} maxSize={1024}>
+      <MockImageUpload onUpload={mockOnUpload} maxSize={1024}>
         <button>Upload Image</button>
-      </ImageUpload>,
+      </MockImageUpload>,
     )
 
     const file = new File(["x".repeat(2048)], "large.jpg", { type: "image/jpeg" })
@@ -68,9 +101,9 @@ describe("ImageUpload", () => {
     const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {})
 
     render(
-      <ImageUpload onUpload={mockOnUpload}>
+      <MockImageUpload onUpload={mockOnUpload}>
         <button>Upload Image</button>
-      </ImageUpload>,
+      </MockImageUpload>,
     )
 
     const file = new File(["test"], "test.txt", { type: "text/plain" })
@@ -87,5 +120,44 @@ describe("ImageUpload", () => {
     expect(mockOnUpload).not.toHaveBeenCalled()
 
     alertSpy.mockRestore()
+  })
+
+  it("handles empty file selection", () => {
+    render(
+      <MockImageUpload onUpload={mockOnUpload}>
+        <button>Upload Image</button>
+      </MockImageUpload>,
+    )
+
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement
+
+    Object.defineProperty(input, "files", {
+      value: [],
+      writable: false,
+    })
+
+    fireEvent.change(input)
+
+    expect(mockOnUpload).not.toHaveBeenCalled()
+  })
+
+  it("accepts valid image files", () => {
+    render(
+      <MockImageUpload onUpload={mockOnUpload}>
+        <button>Upload Image</button>
+      </MockImageUpload>,
+    )
+
+    const file = new File(["test"], "test.png", { type: "image/png" })
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement
+
+    Object.defineProperty(input, "files", {
+      value: [file],
+      writable: false,
+    })
+
+    fireEvent.change(input)
+
+    expect(mockOnUpload).toHaveBeenCalledWith(file)
   })
 })

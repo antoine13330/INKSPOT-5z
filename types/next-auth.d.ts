@@ -11,6 +11,10 @@ declare module "next-auth" {
       verified: boolean
       businessName?: string
       specialties?: string[]
+      bio?: string
+      location?: string
+      website?: string
+      phone?: string
     }
   }
 
@@ -23,6 +27,10 @@ declare module "next-auth" {
     verified: boolean
     businessName?: string
     specialties?: string[]
+    bio?: string
+    location?: string
+    website?: string
+    phone?: string
   }
 }
 
@@ -34,5 +42,9 @@ declare module "next-auth/jwt" {
     verified: boolean
     businessName?: string
     specialties?: string[]
+    bio?: string
+    location?: string
+    website?: string
+    phone?: string
   }
 }
