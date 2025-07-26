@@ -1,30 +1,114 @@
-# Social media app
+# Social Media Pro
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+A modern social media platform designed for professionals to showcase their work, connect with clients, and manage bookings with integrated payments.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/antoine13330s-projects/v0-social-media-app)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/yNvymFzcLEi)
+## Features
 
-## Overview
+- 🔐 Authentication (Email/Password, Google OAuth, Apple OAuth, Magic Links)
+- 📱 Social media feed with posts, likes, comments
+- 💬 Real-time messaging system
+- 📅 Professional booking system
+- 💳 Integrated payments with Stripe
+- 🔔 Push notifications
+- 📁 File uploads to AWS S3
+- 🎨 Customizable professional profiles
+- 🔍 Smart content recommendations
+- 📊 Admin dashboard
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## Tech Stack
 
-## Deployment
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Database**: PostgreSQL
+- **Authentication**: NextAuth.js
+- **Payments**: Stripe
+- **File Storage**: AWS S3
+- **Email**: Nodemailer
+- **Push Notifications**: Web Push
 
-Your project is live at:
+## Setup Instructions
 
-**[https://vercel.com/antoine13330s-projects/v0-social-media-app](https://vercel.com/antoine13330s-projects/v0-social-media-app)**
+### 1. Clone and Install
 
-## Build your app
+```bash
+git clone <repository-url>
+cd social-media-pro
+pnpm install
+```
 
-Continue building your app on:
+### 2. Environment Configuration
 
-**[https://v0.dev/chat/projects/yNvymFzcLEi](https://v0.dev/chat/projects/yNvymFzcLEi)**
+Copy the example environment file and configure it:
 
-## How It Works
+```bash
+cp .env.example .env
+```
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Then edit `.env` with your actual values:
+
+- **Database**: Set up a PostgreSQL database and update `DATABASE_URL`
+- **NextAuth**: Generate a random secret for `NEXTAUTH_SECRET`
+- **OAuth**: Configure Google and Apple OAuth credentials
+- **Email**: Set up SMTP server credentials
+- **Stripe**: Add your Stripe API keys
+- **AWS S3**: Configure S3 bucket for file uploads
+- **VAPID**: Generate keys for push notifications
+
+### 3. Generate VAPID Keys
+
+```bash
+pnpm run generate-vapid
+```
+
+Copy the generated keys to your `.env` file.
+
+### 4. Database Setup
+
+```bash
+# Push the schema to your database
+pnpm run db:push
+
+# Seed the database with sample data
+pnpm run db:seed
+```
+
+### 5. Start Development Server
+
+```bash
+pnpm run dev
+```
+
+Visit `http://localhost:3000` to see the application.
+
+## Default Users
+
+After seeding, you can log in with:
+
+- **Admin**: admin@example.com / admin123
+- **Professional**: pierce@example.com / pro123
+
+## Environment Variables Reference
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/db` |
+| `NEXTAUTH_SECRET` | NextAuth encryption secret | Random 32+ character string |
+| `NEXTAUTH_URL` | Application URL | `http://localhost:3000` |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID | From Google Console |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth secret | From Google Console |
+| `STRIPE_SECRET_KEY` | Stripe secret key | `sk_test_...` |
+| `AWS_S3_BUCKET_NAME` | S3 bucket for uploads | `my-app-uploads` |
+
+## Scripts
+
+- `pnpm run dev` - Start development server
+- `pnpm run build` - Build for production
+- `pnpm run start` - Start production server
+- `pnpm run db:push` - Push schema to database
+- `pnpm run db:studio` - Open Prisma Studio
+- `pnpm run db:seed` - Seed database with sample data
+- `pnpm run generate-vapid` - Generate VAPID keys
+
+## License
+
+MIT
