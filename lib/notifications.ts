@@ -2,7 +2,11 @@ import webpush from "web-push"
 import { prisma } from "./prisma"
 
 // Configure VAPID keys
-webpush.setVapidDetails("mailto:your-email@example.com", process.env.VAPID_PUBLIC_KEY!, process.env.VAPID_PRIVATE_KEY!)
+webpush.setVapidDetails(
+  process.env.EMAIL_FROM || "mailto:noreply@yourdomain.com", 
+  process.env.VAPID_PUBLIC_KEY!, 
+  process.env.VAPID_PRIVATE_KEY!
+)
 
 export interface PushSubscription {
   endpoint: string

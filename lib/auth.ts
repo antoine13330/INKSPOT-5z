@@ -110,6 +110,9 @@ export const authOptions: NextAuthOptions = {
         token.avatar = user.avatar
       }
 
+      return token
+    },
+    async signIn({ user, account, profile }) {
       // Handle OAuth sign-in
       if (account?.provider === "google" && account.providerAccountId) {
         const existingUser = await prisma.user.findUnique({
@@ -118,7 +121,7 @@ export const authOptions: NextAuthOptions = {
 
         if (!existingUser && user?.email) {
           // Create user with Google ID
-          const newUser = await prisma.user.create({
+          await prisma.user.create({
             data: {
               email: user.email,
               username: user.email.split("@")[0],
@@ -130,8 +133,6 @@ export const authOptions: NextAuthOptions = {
               emailVerified: new Date(),
             },
           })
-          token.role = newUser.role
-          token.username = newUser.username
         }
       }
 
@@ -141,7 +142,7 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!existingUser && user?.email) {
-          const newUser = await prisma.user.create({
+          await prisma.user.create({
             data: {
               email: user.email,
               username: user.email?.split("@")[0] || `user_${account.providerAccountId.slice(0, 8)}`,
@@ -150,19 +151,36 @@ export const authOptions: NextAuthOptions = {
               emailVerified: new Date(),
             },
           })
-          token.role = newUser.role
-          token.username = newUser.username
         }
       }
 
-      return token
+      return true
     },
     session: async ({ session, token }) => {
-      if (token) {
-        session.user.id = token.sub
-        session.user.role = token.role
-        session.user.username = token.username
-        session.user.avatar = token.avatar
+      if (token?.sub) {
+        // Get fresh user data from database
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.sub },
+          select: {
+            id: true,
+            username: true,
+            avatar: true,
+            role: true,
+            verified: true,
+            businessName: true,
+            specialties: true,
+          },
+        })
+
+        if (dbUser) {
+          session.user.id = dbUser.id
+          session.user.username = dbUser.username
+          session.user.avatar = dbUser.avatar
+          session.user.role = dbUser.role
+          session.user.verified = dbUser.verified
+          session.user.businessName = dbUser.businessName
+          session.user.specialties = dbUser.specialties
+        }
       }
       return session
     },
