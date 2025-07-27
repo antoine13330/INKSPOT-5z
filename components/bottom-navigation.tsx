@@ -5,7 +5,6 @@ import { useSession, signOut } from "next-auth/react"
 import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp } from "lucide-react"
 import { useState } from "react"
 import { NotificationsPanel } from "@/components/notifications-panel"
-import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -84,12 +83,6 @@ export function BottomNavigation() {
               <span className="text-xs mt-1">PRO</span>
             </button>
           )}
-          
-          {/* Theme Toggle */}
-          <div className="flex flex-col items-center py-2 px-3">
-            <ThemeToggle />
-            <span className="text-xs mt-1 text-muted-foreground">Theme</span>
-          </div>
           
           {/* Notifications Button */}
           {session && (
