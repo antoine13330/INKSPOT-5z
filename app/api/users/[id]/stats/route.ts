@@ -1,44 +1,38 @@
-import { NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const userId = params.id
+    const { id } = params;
 
-    // Get posts count
+    // Get user's posts count
     const postsCount = await prisma.post.count({
-      where: {
-        authorId: userId,
-      },
-    })
+      where: { authorId: id }
+    });
 
-    // Get followers count (users who follow this user)
+    // Get user's followers count
     const followersCount = await prisma.follow.count({
-      where: {
-        followingId: userId,
-      },
-    })
+      where: { followingId: id }
+    });
 
-    // Get following count (users this user follows)
+    // Get user's following count
     const followingCount = await prisma.follow.count({
-      where: {
-        followerId: userId,
-      },
-    })
+      where: { followerId: id }
+    });
 
     return NextResponse.json({
-      posts: postsCount,
-      followers: followersCount,
-      following: followingCount,
-    })
+      postsCount,
+      followersCount,
+      followingCount
+    });
   } catch (error) {
-    console.error("Error fetching user stats:", error)
+    console.error('Error fetching user stats:', error);
     return NextResponse.json(
-      { error: "Failed to fetch user stats" },
+      { error: 'Internal server error' },
       { status: 500 }
-    )
+    );
   }
 } 
