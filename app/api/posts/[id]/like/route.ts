@@ -1,73 +1,77 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { prisma } from "@/lib/prisma"
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const postId = params.id
-    const userId = session.user.id
+    const postId = params.id;
 
-    // Check if like already exists
+    // Check if post exists
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      include: { author: true },
+    });
+
+    if (!post) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    // Check if user already liked the post
     const existingLike = await prisma.like.findUnique({
       where: {
         userId_postId: {
-          userId,
-          postId,
+          userId: session.user.id,
+          postId: postId,
         },
       },
-    })
+    });
 
     if (existingLike) {
-      // Unlike
+      // Unlike the post
       await prisma.like.delete({
         where: {
           userId_postId: {
-            userId,
-            postId,
+            userId: session.user.id,
+            postId: postId,
           },
         },
-      })
+      });
 
-      // Update post likes count
+      // Decrease likes count
       await prisma.post.update({
         where: { id: postId },
-        data: {
-          likesCount: {
-            decrement: 1,
-          },
-        },
-      })
+        data: { likesCount: { decrement: 1 } },
+      });
 
-      return NextResponse.json({ liked: false })
+      return NextResponse.json({ liked: false });
     } else {
-      // Like
+      // Like the post
       await prisma.like.create({
         data: {
-          userId,
-          postId,
+          userId: session.user.id,
+          postId: postId,
         },
-      })
+      });
 
-      // Update post likes count
+      // Increase likes count
       await prisma.post.update({
         where: { id: postId },
-        data: {
-          likesCount: {
-            increment: 1,
-          },
-        },
-      })
+        data: { likesCount: { increment: 1 } },
+      });
 
-      return NextResponse.json({ liked: true })
+      return NextResponse.json({ liked: true });
     }
   } catch (error) {
-    console.error("Error toggling like:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Error toggling like:", error);
+    return NextResponse.json({ error: "Failed to toggle like" }, { status: 500 });
   }
 }

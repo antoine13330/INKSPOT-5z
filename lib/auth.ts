@@ -1,21 +1,22 @@
-import type { NextAuthOptions } from "next-auth"
+import { NextAuthOptions } from "next-auth"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { prisma } from "@/lib/prisma"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-import AppleProvider from "next-auth/providers/apple"
-import EmailProvider from "next-auth/providers/email"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { prisma } from "./prisma"
 import bcrypt from "bcryptjs"
-import { sendMagicLinkEmail } from "./email"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -23,9 +24,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+          where: { email: credentials.email }
         })
 
         if (!user || !user.passwordHash) {
@@ -38,171 +37,105 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        // Update last login
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() },
-        })
-
         return {
           id: user.id,
           email: user.email,
           username: user.username,
           role: user.role,
-          avatar: user.avatar,
+          verified: user.verified,
         }
-      },
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          email: profile.email,
-          username: profile.email.split("@")[0],
-          firstName: profile.given_name,
-          lastName: profile.family_name,
-          avatar: profile.picture,
-          googleId: profile.sub,
-          role: "CLIENT",
-        }
-      },
-    }),
-    AppleProvider({
-      clientId: process.env.APPLE_ID!,
-      clientSecret: process.env.APPLE_SECRET!,
-      profile(profile) {
-        return {
-          id: profile.sub,
-          email: profile.email,
-          username: profile.email?.split("@")[0] || `user_${profile.sub.slice(0, 8)}`,
-          firstName: profile.name?.firstName,
-          lastName: profile.name?.lastName,
-          appleId: profile.sub,
-          role: "CLIENT",
-        }
-      },
-    }),
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: process.env.EMAIL_FROM,
-      async sendVerificationRequest({ identifier: email, url, provider }) {
-        await sendMagicLinkEmail(email, url)
-      },
-    }),
-  ],
-  session: {
-    strategy: "jwt",
-  },
-  callbacks: {
-    jwt: async ({ token, user, account }) => {
-      if (user) {
-        token.role = user.role
-        token.username = user.username
-        token.avatar = user.avatar
       }
-
+    })
+  ],
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id
+        token.role = user.role
+        token.verified = user.verified
+      }
       return token
     },
-    async signIn({ user, account, profile }) {
-      // Handle OAuth sign-in
-      if (account?.provider === "google" && account.providerAccountId) {
-        const existingUser = await prisma.user.findUnique({
-          where: { googleId: account.providerAccountId },
-        })
-
-        if (!existingUser && user?.email) {
-          // Create user with Google ID
-          await prisma.user.create({
-            data: {
-              email: user.email,
-              username: user.email.split("@")[0],
-              firstName: user.name?.split(" ")[0],
-              lastName: user.name?.split(" ").slice(1).join(" "),
-              avatar: user.image,
-              googleId: account.providerAccountId,
-              role: "CLIENT",
-              emailVerified: new Date(),
-            },
-          })
-        }
-      }
-
-      if (account?.provider === "apple" && account.providerAccountId) {
-        const existingUser = await prisma.user.findUnique({
-          where: { appleId: account.providerAccountId },
-        })
-
-        if (!existingUser && user?.email) {
-          await prisma.user.create({
-            data: {
-              email: user.email,
-              username: user.email?.split("@")[0] || `user_${account.providerAccountId.slice(0, 8)}`,
-              appleId: account.providerAccountId,
-              role: "CLIENT",
-              emailVerified: new Date(),
-            },
-          })
-        }
-      }
-
-      return true
-    },
-    session: async ({ session, token }) => {
-      if (token?.sub) {
-        // Get fresh user data from database
-        const dbUser = await prisma.user.findUnique({
-          where: { id: token.sub },
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-            role: true,
-            verified: true,
-            businessName: true,
-            specialties: true,
-          },
-        })
-
-        if (dbUser) {
-          session.user.id = dbUser.id
-          session.user.username = dbUser.username
-          session.user.avatar = dbUser.avatar
-          session.user.role = dbUser.role
-          session.user.verified = dbUser.verified
-          session.user.businessName = dbUser.businessName
-          session.user.specialties = dbUser.specialties
-        }
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string
+        session.user.role = token.role as string
+        session.user.verified = token.verified as boolean
       }
       return session
     },
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "google") {
+        // Check if user exists
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email! }
+        })
+
+        if (!existingUser) {
+          // Generate a unique username from Google name
+          const baseUsername = user.name?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'user'
+          let username = baseUsername
+          let counter = 1
+          
+          // Check if username exists and generate a unique one
+          while (await prisma.user.findUnique({ where: { username } })) {
+            username = `${baseUsername}${counter}`
+            counter++
+          }
+
+          // Create new user from Google with better data mapping
+          const newUser = await prisma.user.create({
+            data: {
+              email: user.email!,
+              username: username,
+              firstName: user.name?.split(' ')[0] || '',
+              lastName: user.name?.split(' ').slice(1).join(' ') || '',
+              avatar: user.image || '',
+              verified: true,
+              role: "CLIENT",
+              googleId: profile?.sub || null,
+            }
+          })
+          user.id = newUser.id
+        } else {
+          // Update existing user with Google info if needed
+          const updateData: any = {}
+          
+          if (!existingUser.avatar && user.image) {
+            updateData.avatar = user.image
+          }
+          
+          if (!existingUser.firstName && user.name?.split(' ')[0]) {
+            updateData.firstName = user.name.split(' ')[0]
+          }
+          
+          if (!existingUser.lastName && user.name?.split(' ').slice(1).join(' ')) {
+            updateData.lastName = user.name.split(' ').slice(1).join(' ')
+          }
+          
+          if (!existingUser.googleId && profile?.sub) {
+            updateData.googleId = profile.sub
+          }
+
+          if (Object.keys(updateData).length > 0) {
+            await prisma.user.update({
+              where: { email: user.email! },
+              data: updateData
+            })
+          }
+          
+          user.id = existingUser.id
+        }
+      }
+      return true
+    }
   },
   pages: {
     signIn: "/auth/login",
-    signUp: "/auth/register",
-    verifyRequest: "/auth/verify-request",
+    newUser: "/auth/register", // Redirect new users to registration page
   },
-  events: {
-    async signIn({ user, account, profile, isNewUser }) {
-      if (isNewUser && user.email) {
-        // Send welcome notification
-        await prisma.notification.create({
-          data: {
-            title: "Welcome to Social Media Pro!",
-            message: "Complete your profile to get started",
-            type: "SYSTEM",
-            userId: user.id,
-          },
-        })
-      }
-    },
+  session: {
+    strategy: "jwt",
   },
+  secret: process.env.NEXTAUTH_SECRET,
 }

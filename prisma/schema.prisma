@@ -42,6 +42,10 @@ enum NotificationType {
   PAYMENT
   REMINDER
   SYSTEM
+  COLLABORATION_INVITE
+  COLLABORATION_ACCEPTED
+  COLLABORATION_REJECTED
+  MENTION
 }
 
 enum PostStatus {
@@ -56,6 +60,12 @@ enum TransactionType {
   REFUND
   PAYOUT
   COMMISSION
+}
+
+enum CollaborationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 model User {
@@ -113,17 +123,20 @@ model User {
   bookingsAsPro        Booking[] @relation("ProBookings")
   sentPayments         Payment[] @relation("PaymentSender")
   receivedPayments     Payment[] @relation("PaymentReceiver")
-  invoicesIssued       Invoice[] @relation("InvoiceIssuer")
-  invoicesReceived     Invoice[] @relation("InvoiceReceiver")
+  sentInvoices         Invoice[] @relation("InvoiceIssuer")
+  receivedInvoices     Invoice[] @relation("InvoiceReceiver")
   notifications        Notification[]
-  followers            Follow[] @relation("UserFollowers")
-  following            Follow[] @relation("UserFollowing")
-  reviews              Review[]
-  reviewsReceived      Review[] @relation("ReviewsReceived")
-  transactions         Transaction[]
-  userInteractions     UserInteraction[] @relation("InteractingUser")
-  receivedInteractions UserInteraction[] @relation("TargetUser")
+  sentReviews          Review[] @relation("ReviewSender")
+  receivedReviews      Review[] @relation("ReviewReceiver")
+  followers            Follow[] @relation("Follower")
+  following            Follow[] @relation("Following")
+  interactions         UserInteraction[] @relation("InteractingUser")
+  targetInteractions   UserInteraction[] @relation("TargetUser")
   searchHistory        SearchHistory[]
+  pushSubscriptions    PushSubscription[]
+  magicLinks           MagicLink[]
+  collaborations       Collaboration[] @relation("CollaborationPro")
+  transactions         Transaction[]
   
   @@map("users")
 }
@@ -133,10 +146,12 @@ model Post {
   content     String
   images      String[]
   hashtags    String[]
+  price       Float?
   status      PostStatus @default(PUBLISHED)
   likesCount  Int        @default(0)
   commentsCount Int      @default(0)
   viewsCount  Int        @default(0)
+  isCollaboration Boolean @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   publishedAt DateTime?
@@ -146,6 +161,7 @@ model Post {
   authorId String
   likes    Like[]
   comments Comment[]
+  collaborations Collaboration[]
   
   @@map("posts")
 }
@@ -347,8 +363,8 @@ model Follow {
   createdAt   DateTime @default(now())
   
   // Relations
-  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
-  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
   
   @@unique([followerId, followingId])
   @@map("follows")
@@ -362,9 +378,9 @@ model Review {
   updatedAt DateTime @updatedAt
   
   // Relations
-  reviewer   User   @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewer   User   @relation("ReviewSender", fields: [reviewerId], references: [id], onDelete: Cascade)
   reviewerId String
-  reviewed   User   @relation("ReviewsReceived", fields: [reviewedId], references: [id], onDelete: Cascade)
+  reviewed   User   @relation("ReviewReceiver", fields: [reviewedId], references: [id], onDelete: Cascade)
   reviewedId String
   
   @@unique([reviewerId, reviewedId])
@@ -407,6 +423,9 @@ model PushSubscription {
   auth     String
   createdAt DateTime @default(now())
   
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   @@unique([userId, endpoint])
   @@map("push_subscriptions")
 }
@@ -419,5 +438,26 @@ model MagicLink {
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
   
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  
   @@map("magic_links")
+}
+
+model Collaboration {
+  id          String   @id @default(cuid())
+  postId      String
+  proId       String
+  status      CollaborationStatus @default(PENDING)
+  message     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  pro         User     @relation("CollaborationPro", fields: [proId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, proId])
+  @@map("collaborations")
 }

@@ -5,33 +5,44 @@ import { prisma } from "@/lib/prisma"
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const query = searchParams.get("q") || ""
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const limit = Number.parseInt(searchParams.get("limit") || "20")
-    const skip = (page - 1) * limit
+    const { searchParams } = new URL(request.url);
+    const query = searchParams.get("q") || "";
+    const tags = searchParams.get("tags")?.split(",") || [];
+    const sortBy = searchParams.get("sortBy") || "date"; // date, popularity, likes
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const limit = Number.parseInt(searchParams.get("limit") || "20");
+    const skip = (page - 1) * limit;
 
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
 
-    if (!query.trim()) {
-      return NextResponse.json({ posts: [] })
+    if (!query.trim() && tags.length === 0) {
+      return NextResponse.json({ posts: [] });
     }
 
     // Extract hashtags from query
-    const hashtagRegex = /#[\w]+/g
-    const hashtags = query.match(hashtagRegex) || []
-    const textQuery = query.replace(hashtagRegex, "").trim()
+    const hashtagRegex = /#[\w]+/g;
+    const hashtags = query.match(hashtagRegex) || [];
+    const textQuery = query.replace(hashtagRegex, "").trim();
 
     // Build search conditions
-    const searchConditions: any[] = []
+    const searchConditions: any[] = [];
 
-    // Search by hashtags
+    // Search by hashtags from query
     if (hashtags.length > 0) {
       searchConditions.push({
         hashtags: {
           hasSome: hashtags,
         },
-      })
+      });
+    }
+
+    // Search by specific tags parameter
+    if (tags.length > 0) {
+      searchConditions.push({
+        hashtags: {
+          hasSome: tags,
+        },
+      });
     }
 
     // Search by content
@@ -41,7 +52,7 @@ export async function GET(request: NextRequest) {
           contains: textQuery,
           mode: "insensitive",
         },
-      })
+      });
     }
 
     // Search by author username
@@ -53,7 +64,31 @@ export async function GET(request: NextRequest) {
             mode: "insensitive",
           },
         },
-      })
+      });
+    }
+
+    // Determine sort order
+    let orderBy: any[] = [];
+    switch (sortBy) {
+      case "popularity":
+        orderBy = [
+          { viewsCount: "desc" },
+          { likesCount: "desc" },
+          { createdAt: "desc" },
+        ];
+        break;
+      case "likes":
+        orderBy = [
+          { likesCount: "desc" },
+          { createdAt: "desc" },
+        ];
+        break;
+      case "date":
+      default:
+        orderBy = [
+          { createdAt: "desc" },
+        ];
+        break;
     }
 
     const posts = await prisma.post.findMany({
@@ -89,17 +124,10 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: [
-        {
-          createdAt: "desc",
-        },
-        {
-          likesCount: "desc",
-        },
-      ],
+      orderBy,
       skip,
       take: limit,
-    })
+    });
 
     // Update view counts
     if (posts.length > 0) {

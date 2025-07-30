@@ -1,36 +1,50 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { getRecommendedPosts } from "@/lib/recommendations"
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
-    }
+    const session = await getServerSession(authOptions);
+    
+    // Get recommended posts with collaborations
+    const posts = await prisma.post.findMany({
+      where: {
+        status: "PUBLISHED",
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            businessName: true,
+            avatar: true,
+          },
+        },
+        collaborations: {
+          include: {
+            pro: {
+              select: {
+                id: true,
+                username: true,
+                businessName: true,
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: [
+        { publishedAt: "desc" },
+        { likesCount: "desc" },
+        { viewsCount: "desc" },
+      ],
+      take: 50,
+    });
 
-    const { searchParams } = new URL(request.url)
-    const limit = Number.parseInt(searchParams.get("limit") || "20")
-
-    const posts = await getRecommendedPosts(session.user.id, limit)
-
-    return NextResponse.json({
-      posts: posts.map((post) => ({
-        id: post.id,
-        content: post.content,
-        images: post.images,
-        hashtags: post.hashtags,
-        likesCount: post.likesCount,
-        commentsCount: post.commentsCount,
-        viewsCount: post.viewsCount,
-        createdAt: post.createdAt.toISOString(),
-        author: post.author,
-        liked: post.liked,
-      })),
-    })
+    return NextResponse.json({ posts });
   } catch (error) {
-    console.error("Error fetching recommended posts:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Error fetching recommended posts:", error);
+    return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
   }
 }

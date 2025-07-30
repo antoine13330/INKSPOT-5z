@@ -157,12 +157,204 @@ async function main() {
     }),
   ])
 
+  // Create sample posts with hashtags for search testing
+  const posts = await Promise.all([
+    // Posts from Pierce (Tattoo Artist)
+    prisma.post.upsert({
+      where: { id: "post_pierce_1" },
+      update: {},
+      create: {
+        id: "post_pierce_1",
+        content: "Just finished this amazing traditional Japanese sleeve! The client wanted something bold and meaningful. The process took 3 sessions and the result is absolutely stunning. #tattoo #japanese #traditional #sleeve #art",
+        hashtags: ["tattoo", "japanese", "traditional", "sleeve", "art"],
+        authorId: pro1.id,
+        status: "PUBLISHED",
+        likesCount: 45,
+        commentsCount: 12,
+        viewsCount: 234,
+        publishedAt: new Date("2024-01-15"),
+      },
+    }),
+    prisma.post.upsert({
+      where: { id: "post_pierce_2" },
+      update: {},
+      create: {
+        id: "post_pierce_2",
+        content: "Black and grey realism portrait work. This piece represents the client's journey through life. Every detail matters in realism work. #realism #portrait #blackwork #tattoo #art",
+        hashtags: ["realism", "portrait", "blackwork", "tattoo", "art"],
+        authorId: pro1.id,
+        status: "PUBLISHED",
+        likesCount: 67,
+        commentsCount: 8,
+        viewsCount: 456,
+        publishedAt: new Date("2024-01-10"),
+      },
+    }),
+    prisma.post.upsert({
+      where: { id: "post_pierce_3" },
+      update: {},
+      create: {
+        id: "post_pierce_3",
+        content: "Custom geometric design with watercolor elements. This style combines precision with artistic freedom. The client loved the final result! #geometric #watercolor #custom #design #tattoo",
+        hashtags: ["geometric", "watercolor", "custom", "design", "tattoo"],
+        authorId: pro1.id,
+        status: "PUBLISHED",
+        likesCount: 89,
+        commentsCount: 15,
+        viewsCount: 678,
+        publishedAt: new Date("2024-01-05"),
+      },
+    }),
+
+    // Posts from Gourmet (Digital Artist)
+    prisma.post.upsert({
+      where: { id: "post_gourmet_1" },
+      update: {},
+      create: {
+        id: "post_gourmet_1",
+        content: "New logo design for a tech startup. Clean, modern, and memorable. The client wanted something that represents innovation and growth. #logo #design #branding #digital #art",
+        hashtags: ["logo", "design", "branding", "digital", "art"],
+        authorId: pro2.id,
+        status: "PUBLISHED",
+        likesCount: 34,
+        commentsCount: 6,
+        viewsCount: 189,
+        publishedAt: new Date("2024-01-12"),
+      },
+    }),
+    prisma.post.upsert({
+      where: { id: "post_gourmet_2" },
+      update: {},
+      create: {
+        id: "post_gourmet_2",
+        content: "Digital illustration for a children's book. Creating characters that kids will love and remember. This project was so much fun to work on! #illustration #digital #children #book #art",
+        hashtags: ["illustration", "digital", "children", "book", "art"],
+        authorId: pro2.id,
+        status: "PUBLISHED",
+        likesCount: 56,
+        commentsCount: 9,
+        viewsCount: 345,
+        publishedAt: new Date("2024-01-08"),
+      },
+    }),
+    prisma.post.upsert({
+      where: { id: "post_gourmet_3" },
+      update: {},
+      create: {
+        id: "post_gourmet_3",
+        content: "Minimalist poster design for a music festival. Sometimes less is more. The typography and spacing create the perfect balance. #minimalist #poster #typography #design #art",
+        hashtags: ["minimalist", "poster", "typography", "design", "art"],
+        authorId: pro2.id,
+        status: "PUBLISHED",
+        likesCount: 78,
+        commentsCount: 11,
+        viewsCount: 567,
+        publishedAt: new Date("2024-01-03"),
+      },
+    }),
+
+    // Posts from clients
+    prisma.post.upsert({
+      where: { id: "post_client1_1" },
+      update: {},
+      create: {
+        id: "post_client1_1",
+        content: "Got my first tattoo today! Amazing experience with @pierce. The design is exactly what I wanted. Can't wait to show it off! #firsttattoo #experience #pierce #tattoo",
+        hashtags: ["firsttattoo", "experience", "pierce", "tattoo"],
+        authorId: clients[0].id,
+        status: "PUBLISHED",
+        likesCount: 23,
+        commentsCount: 4,
+        viewsCount: 123,
+        publishedAt: new Date("2024-01-14"),
+      },
+    }),
+    prisma.post.upsert({
+      where: { id: "post_client2_1" },
+      update: {},
+      create: {
+        id: "post_client2_1",
+        content: "Looking for an artist to create a custom superhero design. Something unique and powerful. Any recommendations? #superhero #custom #design #art #commission",
+        hashtags: ["superhero", "custom", "design", "art", "commission"],
+        authorId: clients[1].id,
+        status: "PUBLISHED",
+        likesCount: 12,
+        commentsCount: 7,
+        viewsCount: 89,
+        publishedAt: new Date("2024-01-13"),
+      },
+    }),
+    prisma.post.upsert({
+      where: { id: "post_client3_1" },
+      update: {},
+      create: {
+        id: "post_client3_1",
+        content: "Supporting local artists is so important! Just commissioned a beautiful piece from @gourmet_del_arte. The attention to detail is incredible. #supportlocal #art #commission #gourmet",
+        hashtags: ["supportlocal", "art", "commission", "gourmet"],
+        authorId: clients[2].id,
+        status: "PUBLISHED",
+        likesCount: 45,
+        commentsCount: 3,
+        viewsCount: 234,
+        publishedAt: new Date("2024-01-11"),
+      },
+    }),
+  ])
+
+  // Create some likes and follows for engagement
+  await Promise.all([
+    // Likes
+    prisma.like.upsert({
+      where: { userId_postId: { userId: clients[0].id, postId: "post_pierce_1" } },
+      update: {},
+      create: {
+        userId: clients[0].id,
+        postId: "post_pierce_1",
+      },
+    }),
+    prisma.like.upsert({
+      where: { userId_postId: { userId: clients[1].id, postId: "post_gourmet_1" } },
+      update: {},
+      create: {
+        userId: clients[1].id,
+        postId: "post_gourmet_1",
+      },
+    }),
+    prisma.like.upsert({
+      where: { userId_postId: { userId: clients[2].id, postId: "post_pierce_2" } },
+      update: {},
+      create: {
+        userId: clients[2].id,
+        postId: "post_pierce_2",
+      },
+    }),
+
+    // Follows
+    prisma.follow.upsert({
+      where: { followerId_followingId: { followerId: clients[0].id, followingId: pro1.id } },
+      update: {},
+      create: {
+        followerId: clients[0].id,
+        followingId: pro1.id,
+      },
+    }),
+    prisma.follow.upsert({
+      where: { followerId_followingId: { followerId: clients[2].id, followingId: pro2.id } },
+      update: {},
+      create: {
+        followerId: clients[2].id,
+        followingId: pro2.id,
+      },
+    }),
+  ])
+
   console.log("✅ Database seeded successfully!")
   console.log("Created users:")
   console.log(`- Admin: ${admin.email}`)
   console.log(`- Pro 1: ${pro1.email}`)
   console.log(`- Pro 2: ${pro2.email}`)
   console.log(`- Clients: ${clients.map(c => c.email).join(", ")}`)
+  console.log(`Created ${posts.length} posts with hashtags for search testing`)
 }
 
 main()
