@@ -167,18 +167,11 @@ export default function ProfilePage() {
                   </Badge>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Link href="/profile/edit">
-                  <Button variant="outline" size="icon" className="modern-button">
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                </Link>
-                <Link href="/profile/edit">
-                  <Button variant="outline" size="icon" className="modern-button">
-                    <Settings className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
+              <Link href="/profile/edit">
+                <Button variant="outline" size="icon" className="modern-button">
+                  <Edit className="w-4 h-4" />
+                </Button>
+              </Link>
             </div>
 
             {/* Bio */}

@@ -1,173 +1,163 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { stripe } from "@/lib/stripe"
-import { prisma } from "@/lib/prisma"
-import { headers } from "next/headers"
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+import { NextRequest, NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe";
+import { prisma } from "@/lib/prisma";
+import { headers } from "next/headers";
 
 export async function POST(request: NextRequest) {
+  const body = await request.text();
+  const signature = headers().get("stripe-signature");
+
+  if (!signature) {
+    return NextResponse.json({ error: "No signature" }, { status: 400 });
+  }
+
+  let event;
+
   try {
-    const body = await request.text()
-    const signature = headers().get("stripe-signature")!
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
+  } catch (err) {
+    console.error("Webhook signature verification failed:", err);
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  }
 
-    let event
-    try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
-    } catch (err) {
-      console.error("Webhook signature verification failed:", err)
-      return NextResponse.json({ message: "Invalid signature" }, { status: 400 })
-    }
-
+  try {
     switch (event.type) {
       case "payment_intent.succeeded":
-        await handlePaymentSucceeded(event.data.object)
-        break
+        await handlePaymentSucceeded(event.data.object);
+        break;
 
       case "payment_intent.payment_failed":
-        await handlePaymentFailed(event.data.object)
-        break
+        await handlePaymentFailed(event.data.object);
+        break;
 
-      case "transfer.created":
-        await handleTransferCreated(event.data.object)
-        break
+      case "checkout.session.completed":
+        await handleCheckoutCompleted(event.data.object);
+        break;
 
-      case "payout.paid":
-        await handlePayoutPaid(event.data.object)
-        break
+      case "account.updated":
+        await handleAccountUpdated(event.data.object);
+        break;
+
+      case "customer.created":
+        await handleCustomerCreated(event.data.object);
+        break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        console.log(`Unhandled event type: ${event.type}`);
     }
 
-    return NextResponse.json({ received: true })
+    return NextResponse.json({ received: true });
   } catch (error) {
-    console.error("Webhook error:", error)
-    return NextResponse.json({ message: "Webhook error" }, { status: 500 })
+    console.error("Error processing webhook:", error);
+    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
   }
 }
 
 async function handlePaymentSucceeded(paymentIntent: any) {
-  try {
-    // Update payment status
-    const payment = await prisma.payment.update({
-      where: {
-        stripePaymentIntentId: paymentIntent.id,
-      },
+  const { customer, amount, currency, metadata } = paymentIntent;
+
+  // Update booking status if it's a booking payment
+  if (metadata.bookingId) {
+    await prisma.booking.update({
+      where: { id: metadata.bookingId },
       data: {
-        status: "COMPLETED",
+        status: "CONFIRMED",
       },
-      include: {
-        booking: {
-          include: {
-            client: true,
-            pro: true,
-          },
-        },
-      },
-    })
+    });
 
-    if (payment.booking) {
-      // If this is a deposit payment, confirm the booking
-      if (payment.amount === payment.booking.depositAmount) {
-        await prisma.booking.update({
-          where: { id: payment.booking.id },
-          data: { status: "CONFIRMED" },
-        })
+    // Get booking to find sender and receiver
+    const booking = await prisma.booking.findUnique({
+      where: { id: metadata.bookingId },
+      include: { client: true, pro: true },
+    });
 
-        // Create notifications
-        await Promise.all([
-          prisma.notification.create({
-            data: {
-              title: "Booking Confirmed",
-              message: `Your booking "${payment.booking.title}" has been confirmed`,
-              type: "BOOKING",
-              userId: payment.booking.clientId,
-              data: {
-                bookingId: payment.booking.id,
-                type: "booking_confirmed",
-              },
-            },
-          }),
-          prisma.notification.create({
-            data: {
-              title: "Deposit Received",
-              message: `Deposit received for "${payment.booking.title}"`,
-              type: "PAYMENT",
-              userId: payment.booking.proId,
-              data: {
-                bookingId: payment.booking.id,
-                paymentId: payment.id,
-                type: "deposit_received",
-              },
-            },
-          }),
-        ])
-      }
-
-      // Create transaction record
-      await prisma.transaction.create({
+    if (booking) {
+      // Create payment record
+      await prisma.payment.create({
         data: {
-          amount: payment.amount,
-          currency: payment.currency,
-          type: payment.amount === payment.booking.depositAmount ? "DEPOSIT" : "BOOKING_PAYMENT",
-          status: "completed",
-          description: payment.description || `Payment for ${payment.booking.title}`,
-          userId: payment.receiverId,
-          paymentId: payment.id,
+          amount: amount / 100, // Convert from cents
+          currency,
+          status: "COMPLETED",
+          stripePaymentIntentId: paymentIntent.id,
+          bookingId: metadata.bookingId,
+          senderId: booking.clientId,
+          receiverId: booking.proId,
         },
-      })
+      });
     }
-  } catch (error) {
-    console.error("Error handling payment succeeded:", error)
   }
 }
 
 async function handlePaymentFailed(paymentIntent: any) {
-  try {
-    await prisma.payment.update({
-      where: {
-        stripePaymentIntentId: paymentIntent.id,
-      },
+  const { metadata } = paymentIntent;
+
+  if (metadata.bookingId) {
+    await prisma.booking.update({
+      where: { id: metadata.bookingId },
       data: {
-        status: "FAILED",
+        status: "CANCELLED",
       },
-    })
-  } catch (error) {
-    console.error("Error handling payment failed:", error)
+    });
+
+    // Get booking to find sender and receiver
+    const booking = await prisma.booking.findUnique({
+      where: { id: metadata.bookingId },
+      include: { client: true, pro: true },
+    });
+
+    if (booking) {
+      await prisma.payment.create({
+        data: {
+          amount: paymentIntent.amount / 100,
+          currency: paymentIntent.currency,
+          status: "FAILED",
+          stripePaymentIntentId: paymentIntent.id,
+          bookingId: metadata.bookingId,
+          senderId: booking.clientId,
+          receiverId: booking.proId,
+        },
+      });
+    }
   }
 }
 
-async function handleTransferCreated(transfer: any) {
-  try {
-    // Record the transfer
-    await prisma.transaction.create({
-      data: {
-        amount: transfer.amount / 100, // Convert from cents
-        currency: transfer.currency.toUpperCase(),
-        type: "PAYOUT",
-        status: "completed",
-        stripeTransferId: transfer.id,
-        description: transfer.description || "Payout to professional",
-        userId: transfer.destination, // This should be mapped to user ID
-      },
-    })
-  } catch (error) {
-    console.error("Error handling transfer created:", error)
+async function handleCheckoutCompleted(session: any) {
+  const { customer, metadata } = session;
+
+  // Update user with Stripe customer ID if not already set
+  if (customer && metadata.userId) {
+    await prisma.user.update({
+      where: { id: metadata.userId },
+      data: { stripeCustomerId: customer },
+    });
   }
 }
 
-async function handlePayoutPaid(payout: any) {
-  try {
-    // Update transaction status if needed
-    await prisma.transaction.updateMany({
-      where: {
-        stripeTransferId: payout.id,
-      },
+async function handleAccountUpdated(account: any) {
+  const { id, charges_enabled, payouts_enabled, metadata } = account;
+
+  if (metadata.userId) {
+    await prisma.user.update({
+      where: { id: metadata.userId },
       data: {
-        status: "completed",
+        stripeAccountId: id,
+        verified: charges_enabled && payouts_enabled,
       },
-    })
-  } catch (error) {
-    console.error("Error handling payout paid:", error)
+    });
+  }
+}
+
+async function handleCustomerCreated(customer: any) {
+  const { id, email, metadata } = customer;
+
+  if (metadata.userId) {
+    await prisma.user.update({
+      where: { id: metadata.userId },
+      data: { stripeCustomerId: id },
+    });
   }
 }

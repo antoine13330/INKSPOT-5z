@@ -1,32 +1,27 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
+import { signIn, getSession } from "next-auth/react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
-import { signIn, useSession } from "next-auth/react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
+import Link from "next/link"
+import { Eye, EyeOff, Mail, Lock, Github } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { data: session } = useSession()
+  const callbackUrl = searchParams.get("callbackUrl") || "/"
 
-  // Redirect if already logged in
-  if (session) {
-    router.push("/")
-    return null
-  }
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
@@ -38,78 +33,94 @@ export default function LoginPage() {
       })
 
       if (result?.error) {
-        toast.error("Invalid email or password")
+        toast.error("Invalid credentials")
       } else {
-        toast.success("Login successful!")
-        router.push("/")
+        toast.success("Logged in successfully!")
+        router.push(callbackUrl)
       }
     } catch (error) {
-      toast.error("An error occurred during login")
+      toast.error("An error occurred")
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl: "/" })
+      await signIn("google", { callbackUrl })
     } catch (error) {
-      toast.error("Google login failed")
+      toast.error("Google sign-in failed")
       setIsLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-gray-900 border-gray-800">
+      <Card className="w-full max-w-md bg-gray-900 border-gray-700">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-white">Welcome Back</CardTitle>
-          <CardDescription className="text-gray-400">Sign in to your account to continue</CardDescription>
-          {searchParams.get("message") && (
-            <div className="mt-2 p-2 bg-green-900/20 border border-green-500/20 rounded text-green-400 text-sm">
-              {searchParams.get("message")}
-            </div>
-          )}
+          <CardDescription className="text-gray-400">
+            Sign in to your account to continue
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+        <CardContent className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-white">
+              <Label htmlFor="email" className="text-gray-300">
                 Email
               </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-gray-800 border-gray-700 text-white"
-                required
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+                  required
+                />
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-white">
+              <Label htmlFor="password" className="text-gray-300">
                 Password
               </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-gray-800 border-gray-700 text-white"
-                required
-              />
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10 pr-10 bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
+              </div>
             </div>
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={isLoading}
+            >
               {isLoading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
-          <div className="relative my-6">
+          <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-700" />
+              <Separator className="w-full bg-gray-600" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-gray-900 px-2 text-gray-400">Or continue with</span>
@@ -118,12 +129,12 @@ export default function LoginPage() {
 
           <Button
             type="button"
-            onClick={handleGoogleLogin}
             variant="outline"
-            className="w-full border-gray-700 text-white hover:bg-gray-800"
+            className="w-full bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+            onClick={handleGoogleSignIn}
             disabled={isLoading}
           >
-            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -144,13 +155,11 @@ export default function LoginPage() {
             Continue with Google
           </Button>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-400">
-              Don't have an account?{" "}
-              <Link href="/auth/register" className="text-blue-400 hover:text-blue-300">
-                Sign up
-              </Link>
-            </p>
+          <div className="text-center text-sm text-gray-400">
+            Don't have an account?{" "}
+            <Link href="/auth/register" className="text-blue-400 hover:text-blue-300">
+              Sign up
+            </Link>
           </div>
         </CardContent>
       </Card>

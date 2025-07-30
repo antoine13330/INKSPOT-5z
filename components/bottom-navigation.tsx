@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
 import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp } from "lucide-react"
 import { useState } from "react"

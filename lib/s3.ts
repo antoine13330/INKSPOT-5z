@@ -1,55 +1,54 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION!,
+  region: process.env.AWS_REGION || 'us-east-1',
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
-})
+});
 
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!
+const BUCKET_NAME = process.env.AWS_S3_BUCKET!;
 
-export async function uploadToS3(file: Buffer, key: string, contentType: string): Promise<string> {
+export async function uploadToS3(
+  file: Buffer,
+  fileName: string,
+  contentType: string
+): Promise<string> {
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
-    Key: key,
+    Key: `uploads/${fileName}`,
     Body: file,
     ContentType: contentType,
-    ACL: "public-read",
-  })
+    ACL: 'public-read',
+  });
 
-  await s3Client.send(command)
-  return `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
+  await s3Client.send(command);
+  return `https://${BUCKET_NAME}.s3.amazonaws.com/uploads/${fileName}`;
 }
 
-export async function deleteFromS3(key: string): Promise<void> {
+export async function deleteFromS3(fileName: string): Promise<void> {
   const command = new DeleteObjectCommand({
     Bucket: BUCKET_NAME,
-    Key: key,
-  })
+    Key: `uploads/${fileName}`,
+  });
 
-  await s3Client.send(command)
+  await s3Client.send(command);
 }
 
-export async function getSignedUploadUrl(key: string, contentType: string): Promise<string> {
-  const command = new PutObjectCommand({
+export async function getSignedDownloadUrl(fileName: string): Promise<string> {
+  const command = new GetObjectCommand({
     Bucket: BUCKET_NAME,
-    Key: key,
-    ContentType: contentType,
-    ACL: "public-read",
-  })
+    Key: `uploads/${fileName}`,
+  });
 
-  return await getSignedUrl(s3Client, command, { expiresIn: 3600 }) // 1 hour
+  return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
 }
 
-export function generateS3Key(
-  userId: string,
-  type: "avatar" | "cover" | "post" | "portfolio",
-  filename: string,
-): string {
-  const timestamp = Date.now()
-  const extension = filename.split(".").pop()
-  return `${type}/${userId}/${timestamp}.${extension}`
+export function generateFileName(originalName: string, userId: string): string {
+  const timestamp = Date.now();
+  const randomString = Math.random().toString(36).substring(2, 15);
+  const extension = originalName.split('.').pop();
+  return `${userId}_${timestamp}_${randomString}.${extension}`;
 }

@@ -34,6 +34,18 @@ export async function GET(request: NextRequest) {
             hourlyRate: true,
           },
         },
+        collaborations: {
+          include: {
+            pro: {
+              select: {
+                id: true,
+                username: true,
+                businessName: true,
+                avatar: true,
+              },
+            },
+          },
+        },
         likes: session?.user?.id
           ? {
               where: {
@@ -55,11 +67,14 @@ export async function GET(request: NextRequest) {
       content: post.content,
       images: post.images,
       hashtags: post.hashtags || [],
+      price: post.price,
+      isCollaboration: post.isCollaboration,
       likesCount: post._count.likes,
       commentsCount: post._count.comments,
       viewsCount: post.viewsCount || 0,
-      createdAt: post.createdAt.toISOString(),
+      publishedAt: post.publishedAt?.toISOString() || post.createdAt.toISOString(),
       author: post.author,
+      collaborations: post.collaborations,
       liked: session?.user?.id ? post.likes.length > 0 : false,
     }))
 
