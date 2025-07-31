@@ -1,0 +1,41 @@
+# Page snapshot
+
+```yaml
+- link:
+  - /url: /auth/login
+  - button:
+    - img
+- text: Create Account
+- paragraph: Join the community and start sharing your art
+- text: U
+- img
+- paragraph: Click the camera icon to upload a profile picture (optional)
+- text: First Name
+- textbox "First Name"
+- text: Last Name
+- textbox "Last Name"
+- text: Username
+- textbox "Username"
+- text: Email
+- textbox "Email"
+- text: Password
+- textbox "Password"
+- button:
+  - img
+- text: Confirm Password
+- textbox "Confirm Password"
+- button:
+  - img
+- button "Create Account"
+- text: Or continue with
+- button "Sign up with Google":
+  - img
+  - text: Sign up with Google
+- paragraph:
+  - text: Already have an account?
+  - link "Sign in":
+    - /url: /auth/login
+- region "Notifications alt+T"
+- region "Notifications alt+T"
+- alert
+```

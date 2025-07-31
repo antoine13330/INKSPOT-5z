@@ -1,0 +1,5073 @@
+{
+  "config": {
+    "configFile": "/workspace/playwright.config.ts",
+    "rootDir": "/workspace/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 600000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/workspace/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/workspace/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/workspace/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/workspace/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/workspace/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/workspace/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/workspace/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/workspace/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/workspace/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "/workspace/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.54.1",
+    "workers": 2,
+    "webServer": {
+      "command": "pnpm run dev",
+      "port": 3000,
+      "reuseExistingServer": true,
+      "env": {
+        "NODE_ENV": "test"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "auth.spec.ts",
+      "file": "auth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication E2E Tests",
+          "file": "auth.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "User Registration",
+              "file": "auth.spec.ts",
+              "line": 10,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should register a new CLIENT user successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-f9554e2ea1d98ce5d4bc",
+                  "file": "auth.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new PRO user successfully - Scenario 1",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-a1f5d0beea434c871461",
+                  "file": "auth.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for invalid data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-39ebd43a768de1f24ae5",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for mismatched passwords",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-a20bbcbaa38141d70a8e",
+                  "file": "auth.spec.ts",
+                  "line": 130,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new CLIENT user successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-3f9cafb1748756830fd9",
+                  "file": "auth.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new PRO user successfully - Scenario 1",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-52ada719c06c2816a10e",
+                  "file": "auth.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for invalid data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-5d557afb73a5603b6b7b",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for mismatched passwords",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-d5091f333f6ff55752ce",
+                  "file": "auth.spec.ts",
+                  "line": 130,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new CLIENT user successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-96d2fa416f2dc2bfa78b",
+                  "file": "auth.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new PRO user successfully - Scenario 1",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-b17ab6a17fb6b9c28b29",
+                  "file": "auth.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for invalid data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-77d9edd46f6086c8829a",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for mismatched passwords",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-759109d4b3d3806122c3",
+                  "file": "auth.spec.ts",
+                  "line": 130,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new CLIENT user successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-8e44857084956820af27",
+                  "file": "auth.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new PRO user successfully - Scenario 1",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-405f366aea3784ace1ba",
+                  "file": "auth.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for invalid data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-b3eb695cf2b82a53b3ea",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for mismatched passwords",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-46aca3d7ccc8e42ab964",
+                  "file": "auth.spec.ts",
+                  "line": 130,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new CLIENT user successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-83eb477c3b76b0907f73",
+                  "file": "auth.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should register a new PRO user successfully - Scenario 1",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-f7cf2902e599fe724dd9",
+                  "file": "auth.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for invalid data",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-20529e33a87ba647e78b",
+                  "file": "auth.spec.ts",
+                  "line": 119,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for mismatched passwords",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9edf3c85f20135040c5e",
+                  "file": "auth.spec.ts",
+                  "line": 130,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "User Login",
+              "file": "auth.spec.ts",
+              "line": 144,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should login successfully with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-e8f9273848e45d827096",
+                  "file": "auth.spec.ts",
+                  "line": 146,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-976a53cb414904753e44",
+                  "file": "auth.spec.ts",
+                  "line": 165,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for empty fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-4a176b3653fac9a09720",
+                  "file": "auth.spec.ts",
+                  "line": 178,
+                  "column": 9
+                },
+                {
+                  "title": "should login successfully with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-be46707791783083c3f5",
+                  "file": "auth.spec.ts",
+                  "line": 146,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-3a9818978235531e3f49",
+                  "file": "auth.spec.ts",
+                  "line": 165,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for empty fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9d25aa53cc7740a103a5",
+                  "file": "auth.spec.ts",
+                  "line": 178,
+                  "column": 9
+                },
+                {
+                  "title": "should login successfully with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-367c1e4c212552b21374",
+                  "file": "auth.spec.ts",
+                  "line": 146,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-efec8b93e0a6ce5542ba",
+                  "file": "auth.spec.ts",
+                  "line": 165,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for empty fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9f1ca93006b10fdbfbec",
+                  "file": "auth.spec.ts",
+                  "line": 178,
+                  "column": 9
+                },
+                {
+                  "title": "should login successfully with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1142023c5dd6f6db74c7",
+                  "file": "auth.spec.ts",
+                  "line": 146,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-ce8f9a2ad9678ffd5a3f",
+                  "file": "auth.spec.ts",
+                  "line": 165,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for empty fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-60de5606ac484eeb406a",
+                  "file": "auth.spec.ts",
+                  "line": 178,
+                  "column": 9
+                },
+                {
+                  "title": "should login successfully with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-75f6e07372dee6094df4",
+                  "file": "auth.spec.ts",
+                  "line": 146,
+                  "column": 9
+                },
+                {
+                  "title": "should show error for invalid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1d91856c6525ac4287f1",
+                  "file": "auth.spec.ts",
+                  "line": 165,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for empty fields",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-d128c08e52b2061c90ff",
+                  "file": "auth.spec.ts",
+                  "line": 178,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Navigation between auth pages",
+              "file": "auth.spec.ts",
+              "line": 193,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should navigate from login to register",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-74d4e612a9622719039f",
+                  "file": "auth.spec.ts",
+                  "line": 195,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from register to login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-382188f84f2f49258db4",
+                  "file": "auth.spec.ts",
+                  "line": 205,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from login to register",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-9deb9d9eff95b3cc770c",
+                  "file": "auth.spec.ts",
+                  "line": 195,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from register to login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-386be25a8a358010656e",
+                  "file": "auth.spec.ts",
+                  "line": 205,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from login to register",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-c261d8ee231ecf33ff0c",
+                  "file": "auth.spec.ts",
+                  "line": 195,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from register to login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1d2beeef30d6029c5d51",
+                  "file": "auth.spec.ts",
+                  "line": 205,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from login to register",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-086d58b56fa8b7d4c79c",
+                  "file": "auth.spec.ts",
+                  "line": 195,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from register to login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-78da860f6bfb20e15c2e",
+                  "file": "auth.spec.ts",
+                  "line": 205,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from login to register",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-6fb0ca47d706061a0676",
+                  "file": "auth.spec.ts",
+                  "line": 195,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate from register to login",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-2b1fd01fd41d1be50318",
+                  "file": "auth.spec.ts",
+                  "line": 205,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Responsive Authentication",
+              "file": "auth.spec.ts",
+              "line": 216,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should work on mobile viewport",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-c5c35d5d7753e4cb2bfb",
+                  "file": "auth.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should work on mobile viewport",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-26d551d0cc7bde235ddc",
+                  "file": "auth.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should work on mobile viewport",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-00a784f586efdd061285",
+                  "file": "auth.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should work on mobile viewport",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-1d568ae4754c1b93873b",
+                  "file": "auth.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should work on mobile viewport",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "d748ac400d08b85935ef-ce844c10282fd8e307a2",
+                  "file": "auth.spec.ts",
+                  "line": 218,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "booking-flow.spec.ts",
+      "file": "booking-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Booking Flow E2E Tests",
+          "file": "booking-flow.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Professional Search",
+              "file": "booking-flow.spec.ts",
+              "line": 10,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should search for professionals successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-bb0e5e111fcdec693258",
+                  "file": "booking-flow.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should filter professionals by specialty",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-1291e763fc73e3a02c25",
+                  "file": "booking-flow.spec.ts",
+                  "line": 31,
+                  "column": 9
+                },
+                {
+                  "title": "should display professional details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-b2a2307ecb1ef30c598c",
+                  "file": "booking-flow.spec.ts",
+                  "line": 56,
+                  "column": 9
+                },
+                {
+                  "title": "should search for professionals successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-4d3f3e8242b5508ee67a",
+                  "file": "booking-flow.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should filter professionals by specialty",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-8d34eb7868ec6689af31",
+                  "file": "booking-flow.spec.ts",
+                  "line": 31,
+                  "column": 9
+                },
+                {
+                  "title": "should display professional details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-1d16f7c7adba6bb4c4cf",
+                  "file": "booking-flow.spec.ts",
+                  "line": 56,
+                  "column": 9
+                },
+                {
+                  "title": "should search for professionals successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-e16a08eb8d493cbade74",
+                  "file": "booking-flow.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should filter professionals by specialty",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-ecdb00bc7dab94e0c406",
+                  "file": "booking-flow.spec.ts",
+                  "line": 31,
+                  "column": 9
+                },
+                {
+                  "title": "should display professional details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-8b38bdff47a0c9b0dc12",
+                  "file": "booking-flow.spec.ts",
+                  "line": 56,
+                  "column": 9
+                },
+                {
+                  "title": "should search for professionals successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-cafb9706f6f588718f0f",
+                  "file": "booking-flow.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should filter professionals by specialty",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-006c036570554f423b56",
+                  "file": "booking-flow.spec.ts",
+                  "line": 31,
+                  "column": 9
+                },
+                {
+                  "title": "should display professional details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-4c0694436c4d99239697",
+                  "file": "booking-flow.spec.ts",
+                  "line": 56,
+                  "column": 9
+                },
+                {
+                  "title": "should search for professionals successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-574f5c230c35a2408e94",
+                  "file": "booking-flow.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should filter professionals by specialty",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-53e688305815d0547e2d",
+                  "file": "booking-flow.spec.ts",
+                  "line": 31,
+                  "column": 9
+                },
+                {
+                  "title": "should display professional details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-133e5be5ca1948efab28",
+                  "file": "booking-flow.spec.ts",
+                  "line": 56,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Booking Process - Scenario 2",
+              "file": "booking-flow.spec.ts",
+              "line": 76,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should complete full booking flow: Client → Search PRO → Booking → Payment",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-1c8f3046309c9fedff0a",
+                  "file": "booking-flow.spec.ts",
+                  "line": 78,
+                  "column": 9
+                },
+                {
+                  "title": "should handle booking without payment for consultation requests",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-7084cc8a3f4a03a02663",
+                  "file": "booking-flow.spec.ts",
+                  "line": 186,
+                  "column": 9
+                },
+                {
+                  "title": "should complete full booking flow: Client → Search PRO → Booking → Payment",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-44ba28f74d68f83cca7a",
+                  "file": "booking-flow.spec.ts",
+                  "line": 78,
+                  "column": 9
+                },
+                {
+                  "title": "should handle booking without payment for consultation requests",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-cc3830778325e406b8d8",
+                  "file": "booking-flow.spec.ts",
+                  "line": 186,
+                  "column": 9
+                },
+                {
+                  "title": "should complete full booking flow: Client → Search PRO → Booking → Payment",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-d0c8c79464f1c2cddf71",
+                  "file": "booking-flow.spec.ts",
+                  "line": 78,
+                  "column": 9
+                },
+                {
+                  "title": "should handle booking without payment for consultation requests",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-c87eb723457b66e2a075",
+                  "file": "booking-flow.spec.ts",
+                  "line": 186,
+                  "column": 9
+                },
+                {
+                  "title": "should complete full booking flow: Client → Search PRO → Booking → Payment",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-8e17ab4ed9011ceb2f5d",
+                  "file": "booking-flow.spec.ts",
+                  "line": 78,
+                  "column": 9
+                },
+                {
+                  "title": "should handle booking without payment for consultation requests",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-ac27a4f6e499e834b261",
+                  "file": "booking-flow.spec.ts",
+                  "line": 186,
+                  "column": 9
+                },
+                {
+                  "title": "should complete full booking flow: Client → Search PRO → Booking → Payment",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-dece6a300b25f4c00a06",
+                  "file": "booking-flow.spec.ts",
+                  "line": 78,
+                  "column": 9
+                },
+                {
+                  "title": "should handle booking without payment for consultation requests",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-7ac5a3352b92a9e7fe3b",
+                  "file": "booking-flow.spec.ts",
+                  "line": 186,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Booking Validation",
+              "file": "booking-flow.spec.ts",
+              "line": 216,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should show validation errors for incomplete booking form",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-84fe88f7ea0984912205",
+                  "file": "booking-flow.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should prevent booking for past dates",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-596060257f78092dd5fc",
+                  "file": "booking-flow.spec.ts",
+                  "line": 246,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for incomplete booking form",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-4537e8238c6d736dda0f",
+                  "file": "booking-flow.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should prevent booking for past dates",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-844bd41e80e3eceffbc3",
+                  "file": "booking-flow.spec.ts",
+                  "line": 246,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for incomplete booking form",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-b03c6690d0baf2516d55",
+                  "file": "booking-flow.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should prevent booking for past dates",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-14d05ad260c5ff1e7682",
+                  "file": "booking-flow.spec.ts",
+                  "line": 246,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for incomplete booking form",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-5730f252cafe219bcafa",
+                  "file": "booking-flow.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should prevent booking for past dates",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-97f7c37b33dee2bffe12",
+                  "file": "booking-flow.spec.ts",
+                  "line": 246,
+                  "column": 9
+                },
+                {
+                  "title": "should show validation errors for incomplete booking form",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-567a1e08dabff0ce8ebb",
+                  "file": "booking-flow.spec.ts",
+                  "line": 218,
+                  "column": 9
+                },
+                {
+                  "title": "should prevent booking for past dates",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-07ac7f7bf0486998fd48",
+                  "file": "booking-flow.spec.ts",
+                  "line": 246,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Booking Experience",
+              "file": "booking-flow.spec.ts",
+              "line": 278,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should complete booking flow on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-4361fc53196288d69c9f",
+                  "file": "booking-flow.spec.ts",
+                  "line": 280,
+                  "column": 9
+                },
+                {
+                  "title": "should complete booking flow on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-4c0be164aa7a004bdcd4",
+                  "file": "booking-flow.spec.ts",
+                  "line": 280,
+                  "column": 9
+                },
+                {
+                  "title": "should complete booking flow on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-b2061c3c80b520c7f792",
+                  "file": "booking-flow.spec.ts",
+                  "line": 280,
+                  "column": 9
+                },
+                {
+                  "title": "should complete booking flow on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-6fc83ca25404462f513d",
+                  "file": "booking-flow.spec.ts",
+                  "line": 280,
+                  "column": 9
+                },
+                {
+                  "title": "should complete booking flow on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-e5b9b7fce76f1c09dad8",
+                  "file": "booking-flow.spec.ts",
+                  "line": 280,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Booking Management",
+              "file": "booking-flow.spec.ts",
+              "line": 313,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display booking confirmation details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-5d5b1bded660ecad0850",
+                  "file": "booking-flow.spec.ts",
+                  "line": 315,
+                  "column": 9
+                },
+                {
+                  "title": "should display booking confirmation details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-b8000b9240e54939d083",
+                  "file": "booking-flow.spec.ts",
+                  "line": 315,
+                  "column": 9
+                },
+                {
+                  "title": "should display booking confirmation details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-5c90df07022e851b307a",
+                  "file": "booking-flow.spec.ts",
+                  "line": 315,
+                  "column": 9
+                },
+                {
+                  "title": "should display booking confirmation details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-91064aab18f527d0bf09",
+                  "file": "booking-flow.spec.ts",
+                  "line": 315,
+                  "column": 9
+                },
+                {
+                  "title": "should display booking confirmation details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e6ed7267b3ac8668a6a7-ce1de3f9bcab9d3db3cc",
+                  "file": "booking-flow.spec.ts",
+                  "line": 315,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "messaging.spec.ts",
+      "file": "messaging.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Messaging E2E Tests",
+          "file": "messaging.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Message Sending - Scenario 3",
+              "file": "messaging.spec.ts",
+              "line": 10,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should send and receive messages in real-time",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-da119c3e7aa37aa61f5f",
+                  "file": "messaging.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should send messages with file attachments",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-9f7f4d9bc90bf90f85c7",
+                  "file": "messaging.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show typing indicators",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-53c05cc81e60b17579ad",
+                  "file": "messaging.spec.ts",
+                  "line": 107,
+                  "column": 9
+                },
+                {
+                  "title": "should send and receive messages in real-time",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-93f080a1c6b992acfd95",
+                  "file": "messaging.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should send messages with file attachments",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-b63294d0af6b02e8d651",
+                  "file": "messaging.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show typing indicators",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-8e56c0ebb7f51041380a",
+                  "file": "messaging.spec.ts",
+                  "line": 107,
+                  "column": 9
+                },
+                {
+                  "title": "should send and receive messages in real-time",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-5bbc31b625e57bffd8b1",
+                  "file": "messaging.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should send messages with file attachments",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-7c7bc025192c43831448",
+                  "file": "messaging.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show typing indicators",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-a2e92365a36e3533160d",
+                  "file": "messaging.spec.ts",
+                  "line": 107,
+                  "column": 9
+                },
+                {
+                  "title": "should send and receive messages in real-time",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-22b686c90a8619b3d25c",
+                  "file": "messaging.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should send messages with file attachments",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-b59b74dd5738e6d0a8ba",
+                  "file": "messaging.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show typing indicators",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-2fe962338052e0527bcd",
+                  "file": "messaging.spec.ts",
+                  "line": 107,
+                  "column": 9
+                },
+                {
+                  "title": "should send and receive messages in real-time",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-8a7168d8bb0fadcac9f4",
+                  "file": "messaging.spec.ts",
+                  "line": 12,
+                  "column": 9
+                },
+                {
+                  "title": "should send messages with file attachments",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-fc6de64a652f3c6bd40d",
+                  "file": "messaging.spec.ts",
+                  "line": 59,
+                  "column": 9
+                },
+                {
+                  "title": "should show typing indicators",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-3809e93421d7692368d1",
+                  "file": "messaging.spec.ts",
+                  "line": 107,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Message History and Navigation",
+              "file": "messaging.spec.ts",
+              "line": 129,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display conversation history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-a1674769de2a56386bf8",
+                  "file": "messaging.spec.ts",
+                  "line": 131,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate between conversations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-0af543b560e5fabbae34",
+                  "file": "messaging.spec.ts",
+                  "line": 145,
+                  "column": 9
+                },
+                {
+                  "title": "should search through message history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-b577e661c4aa192d2407",
+                  "file": "messaging.spec.ts",
+                  "line": 167,
+                  "column": 9
+                },
+                {
+                  "title": "should display conversation history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-e2a53797e02ae8b14790",
+                  "file": "messaging.spec.ts",
+                  "line": 131,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate between conversations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-770724f45ed4508dc206",
+                  "file": "messaging.spec.ts",
+                  "line": 145,
+                  "column": 9
+                },
+                {
+                  "title": "should search through message history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-28abd0478b8a3f07276a",
+                  "file": "messaging.spec.ts",
+                  "line": 167,
+                  "column": 9
+                },
+                {
+                  "title": "should display conversation history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-aa442209f78159af43bc",
+                  "file": "messaging.spec.ts",
+                  "line": 131,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate between conversations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-39d90f051a9397bc331d",
+                  "file": "messaging.spec.ts",
+                  "line": 145,
+                  "column": 9
+                },
+                {
+                  "title": "should search through message history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-da946f1ba0dd7e5bdf1f",
+                  "file": "messaging.spec.ts",
+                  "line": 167,
+                  "column": 9
+                },
+                {
+                  "title": "should display conversation history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-51b3f96e88f61ec4eb25",
+                  "file": "messaging.spec.ts",
+                  "line": 131,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate between conversations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-6e1d235e460429f7fb95",
+                  "file": "messaging.spec.ts",
+                  "line": 145,
+                  "column": 9
+                },
+                {
+                  "title": "should search through message history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-6d95d9733eac3c925759",
+                  "file": "messaging.spec.ts",
+                  "line": 167,
+                  "column": 9
+                },
+                {
+                  "title": "should display conversation history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-f45eb739367d4392b7b1",
+                  "file": "messaging.spec.ts",
+                  "line": 131,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate between conversations",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-a33d81dfc44899e826d1",
+                  "file": "messaging.spec.ts",
+                  "line": 145,
+                  "column": 9
+                },
+                {
+                  "title": "should search through message history",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-574e47d52aaa35bd7bc4",
+                  "file": "messaging.spec.ts",
+                  "line": 167,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Notifications",
+              "file": "messaging.spec.ts",
+              "line": 188,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should show message notifications",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-28a6f7304ffa47f74b80",
+                  "file": "messaging.spec.ts",
+                  "line": 190,
+                  "column": 9
+                },
+                {
+                  "title": "should handle real-time message reception",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-a2de3a34ae947a434338",
+                  "file": "messaging.spec.ts",
+                  "line": 213,
+                  "column": 9
+                },
+                {
+                  "title": "should show message notifications",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-5f3081fb91f8dc1560e5",
+                  "file": "messaging.spec.ts",
+                  "line": 190,
+                  "column": 9
+                },
+                {
+                  "title": "should handle real-time message reception",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-d36b5fc19f79c9434cda",
+                  "file": "messaging.spec.ts",
+                  "line": 213,
+                  "column": 9
+                },
+                {
+                  "title": "should show message notifications",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-d2acb3578759b65e9f75",
+                  "file": "messaging.spec.ts",
+                  "line": 190,
+                  "column": 9
+                },
+                {
+                  "title": "should handle real-time message reception",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-d0ddf1c7af4fd2b5054c",
+                  "file": "messaging.spec.ts",
+                  "line": 213,
+                  "column": 9
+                },
+                {
+                  "title": "should show message notifications",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-6cb81967cb1d1c2ad2fb",
+                  "file": "messaging.spec.ts",
+                  "line": 190,
+                  "column": 9
+                },
+                {
+                  "title": "should handle real-time message reception",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-71132f42fc02eae51e7d",
+                  "file": "messaging.spec.ts",
+                  "line": 213,
+                  "column": 9
+                },
+                {
+                  "title": "should show message notifications",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-feb0c436d1e3275dedfc",
+                  "file": "messaging.spec.ts",
+                  "line": 190,
+                  "column": 9
+                },
+                {
+                  "title": "should handle real-time message reception",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-ad48d76d27c9e5a7433b",
+                  "file": "messaging.spec.ts",
+                  "line": 213,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "File Management in Messages",
+              "file": "messaging.spec.ts",
+              "line": 236,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should display file attachments correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-41f06c4f5852cf864b8a",
+                  "file": "messaging.spec.ts",
+                  "line": 238,
+                  "column": 9
+                },
+                {
+                  "title": "should support different file types",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-4e917064b2d79f90a453",
+                  "file": "messaging.spec.ts",
+                  "line": 258,
+                  "column": 9
+                },
+                {
+                  "title": "should display file attachments correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-abee90eed5d608ddb852",
+                  "file": "messaging.spec.ts",
+                  "line": 238,
+                  "column": 9
+                },
+                {
+                  "title": "should support different file types",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-a9148f8ebc1c15259d18",
+                  "file": "messaging.spec.ts",
+                  "line": 258,
+                  "column": 9
+                },
+                {
+                  "title": "should display file attachments correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-187b9fd1629b2ddeecb5",
+                  "file": "messaging.spec.ts",
+                  "line": 238,
+                  "column": 9
+                },
+                {
+                  "title": "should support different file types",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-ad8cb92ce47169807fc6",
+                  "file": "messaging.spec.ts",
+                  "line": 258,
+                  "column": 9
+                },
+                {
+                  "title": "should display file attachments correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-58e09c9ce4428a6755bc",
+                  "file": "messaging.spec.ts",
+                  "line": 238,
+                  "column": 9
+                },
+                {
+                  "title": "should support different file types",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-c5df1f81f29eb904baae",
+                  "file": "messaging.spec.ts",
+                  "line": 258,
+                  "column": 9
+                },
+                {
+                  "title": "should display file attachments correctly",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-adddd6c38aafc43120b1",
+                  "file": "messaging.spec.ts",
+                  "line": 238,
+                  "column": 9
+                },
+                {
+                  "title": "should support different file types",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-ab0c099df5ed506f420d",
+                  "file": "messaging.spec.ts",
+                  "line": 258,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Messaging Experience",
+              "file": "messaging.spec.ts",
+              "line": 279,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-59eb7984532df61e65da",
+                  "file": "messaging.spec.ts",
+                  "line": 281,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for file uploads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-91bd5d02e01e0d8ad978",
+                  "file": "messaging.spec.ts",
+                  "line": 312,
+                  "column": 9
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-1148a03ba0cb1b800374",
+                  "file": "messaging.spec.ts",
+                  "line": 281,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for file uploads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-78cd71729fd6d8ca75af",
+                  "file": "messaging.spec.ts",
+                  "line": 312,
+                  "column": 9
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-b3e677e914173ad47f6f",
+                  "file": "messaging.spec.ts",
+                  "line": 281,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for file uploads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-57c7f5862619f7ef98bf",
+                  "file": "messaging.spec.ts",
+                  "line": 312,
+                  "column": 9
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-d2be75a145c57cab67d2",
+                  "file": "messaging.spec.ts",
+                  "line": 281,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for file uploads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-c32550485b1233063b4f",
+                  "file": "messaging.spec.ts",
+                  "line": 312,
+                  "column": 9
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-8d48666bae98aa1a1661",
+                  "file": "messaging.spec.ts",
+                  "line": 281,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for file uploads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-81c3c0c8c83832c2dae4",
+                  "file": "messaging.spec.ts",
+                  "line": 312,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Message Status and Delivery",
+              "file": "messaging.spec.ts",
+              "line": 334,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should show message delivery status",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-ecf26b94f49866511ab5",
+                  "file": "messaging.spec.ts",
+                  "line": 336,
+                  "column": 9
+                },
+                {
+                  "title": "should show message delivery status",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-559ccf3cdca2ba759122",
+                  "file": "messaging.spec.ts",
+                  "line": 336,
+                  "column": 9
+                },
+                {
+                  "title": "should show message delivery status",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-4452809688b0d7a3dc5c",
+                  "file": "messaging.spec.ts",
+                  "line": 336,
+                  "column": 9
+                },
+                {
+                  "title": "should show message delivery status",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-8426c5e3aa3d308841b7",
+                  "file": "messaging.spec.ts",
+                  "line": 336,
+                  "column": 9
+                },
+                {
+                  "title": "should show message delivery status",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "107d361b6fc8beba4b6c-706ae5c3ccba54738879",
+                  "file": "messaging.spec.ts",
+                  "line": 336,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "mobile.spec.ts",
+      "file": "mobile.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Mobile E2E Tests",
+          "file": "mobile.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Mobile Navigation - Scenario 5",
+              "file": "mobile.spec.ts",
+              "line": 11,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should navigate mobile interface successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-59a91ad0b70a79164580",
+                  "file": "mobile.spec.ts",
+                  "line": 13,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile menu interactions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-c05dc96c6edc3e007400",
+                  "file": "mobile.spec.ts",
+                  "line": 45,
+                  "column": 9
+                },
+                {
+                  "title": "should support swipe gestures for navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-e373629a3d7703fb779d",
+                  "file": "mobile.spec.ts",
+                  "line": 71,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate mobile interface successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-4c3f069e7830815de51c",
+                  "file": "mobile.spec.ts",
+                  "line": 13,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile menu interactions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-099b686b5bbf2d9eba95",
+                  "file": "mobile.spec.ts",
+                  "line": 45,
+                  "column": 9
+                },
+                {
+                  "title": "should support swipe gestures for navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-100bde8757d0919be12f",
+                  "file": "mobile.spec.ts",
+                  "line": 71,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate mobile interface successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-eb40b5887b02e92b7d6e",
+                  "file": "mobile.spec.ts",
+                  "line": 13,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile menu interactions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-5ff088a81f6762bdadb5",
+                  "file": "mobile.spec.ts",
+                  "line": 45,
+                  "column": 9
+                },
+                {
+                  "title": "should support swipe gestures for navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-743ab9f08dd9cda705ee",
+                  "file": "mobile.spec.ts",
+                  "line": 71,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate mobile interface successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-842d15f108e90b812af3",
+                  "file": "mobile.spec.ts",
+                  "line": 13,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile menu interactions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-ac609e656df08fe93e56",
+                  "file": "mobile.spec.ts",
+                  "line": 45,
+                  "column": 9
+                },
+                {
+                  "title": "should support swipe gestures for navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-a5fe45dd8adc302c90d4",
+                  "file": "mobile.spec.ts",
+                  "line": 71,
+                  "column": 9
+                },
+                {
+                  "title": "should navigate mobile interface successfully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-aacb073e87a5b40dde77",
+                  "file": "mobile.spec.ts",
+                  "line": 13,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile menu interactions",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-b7690300fe4ab5243492",
+                  "file": "mobile.spec.ts",
+                  "line": 45,
+                  "column": 9
+                },
+                {
+                  "title": "should support swipe gestures for navigation",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-f27b75e61f0b7585a0c1",
+                  "file": "mobile.spec.ts",
+                  "line": 71,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Post Creation",
+              "file": "mobile.spec.ts",
+              "line": 93,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should create a post successfully on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-289aaefa3cf1825d0fe6",
+                  "file": "mobile.spec.ts",
+                  "line": 95,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile camera integration",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-31361e782b416aece384",
+                  "file": "mobile.spec.ts",
+                  "line": 155,
+                  "column": 9
+                },
+                {
+                  "title": "should validate form fields on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-e8c2c71149491f27efb0",
+                  "file": "mobile.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "should create a post successfully on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-f6c60177d8b992ce4f02",
+                  "file": "mobile.spec.ts",
+                  "line": 95,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile camera integration",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-d30ca7147a9112c300f6",
+                  "file": "mobile.spec.ts",
+                  "line": 155,
+                  "column": 9
+                },
+                {
+                  "title": "should validate form fields on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-9737bfd69e44bb6677b1",
+                  "file": "mobile.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "should create a post successfully on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-de0686a112022aa02e54",
+                  "file": "mobile.spec.ts",
+                  "line": 95,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile camera integration",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-9ad4cdb32e4dd2181034",
+                  "file": "mobile.spec.ts",
+                  "line": 155,
+                  "column": 9
+                },
+                {
+                  "title": "should validate form fields on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-2e1daaaa8106c58fd144",
+                  "file": "mobile.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "should create a post successfully on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-d1fd053cd20d72e15b84",
+                  "file": "mobile.spec.ts",
+                  "line": 95,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile camera integration",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-27e0c52b37f64fda98a6",
+                  "file": "mobile.spec.ts",
+                  "line": 155,
+                  "column": 9
+                },
+                {
+                  "title": "should validate form fields on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-e8e537ba39133b1762e8",
+                  "file": "mobile.spec.ts",
+                  "line": 174,
+                  "column": 9
+                },
+                {
+                  "title": "should create a post successfully on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-abd8c259460bc96b634f",
+                  "file": "mobile.spec.ts",
+                  "line": 95,
+                  "column": 9
+                },
+                {
+                  "title": "should handle mobile camera integration",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-8d346f816fce1e58b841",
+                  "file": "mobile.spec.ts",
+                  "line": 155,
+                  "column": 9
+                },
+                {
+                  "title": "should validate form fields on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-084f09dbd756b1710a61",
+                  "file": "mobile.spec.ts",
+                  "line": 174,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Touch Interactions",
+              "file": "mobile.spec.ts",
+              "line": 189,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle touch interactions for posts",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-b0d49622bf422ab9b2a9",
+                  "file": "mobile.spec.ts",
+                  "line": 191,
+                  "column": 9
+                },
+                {
+                  "title": "should support pinch-to-zoom on images",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-56e6e1bcf189accd209a",
+                  "file": "mobile.spec.ts",
+                  "line": 227,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for posts",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-771808419ca9dc8acb1e",
+                  "file": "mobile.spec.ts",
+                  "line": 191,
+                  "column": 9
+                },
+                {
+                  "title": "should support pinch-to-zoom on images",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-8723d4be7dd33d31be18",
+                  "file": "mobile.spec.ts",
+                  "line": 227,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for posts",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-c3ab40c3777ac39c8965",
+                  "file": "mobile.spec.ts",
+                  "line": 191,
+                  "column": 9
+                },
+                {
+                  "title": "should support pinch-to-zoom on images",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-c185fbfe242096ee86e3",
+                  "file": "mobile.spec.ts",
+                  "line": 227,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for posts",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-fbaebb534d501e7f8750",
+                  "file": "mobile.spec.ts",
+                  "line": 191,
+                  "column": 9
+                },
+                {
+                  "title": "should support pinch-to-zoom on images",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-438e90dfdc500203994d",
+                  "file": "mobile.spec.ts",
+                  "line": 227,
+                  "column": 9
+                },
+                {
+                  "title": "should handle touch interactions for posts",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-c2c7e5a7bef42ee2ba11",
+                  "file": "mobile.spec.ts",
+                  "line": 191,
+                  "column": 9
+                },
+                {
+                  "title": "should support pinch-to-zoom on images",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-b15f0e5d96081266572e",
+                  "file": "mobile.spec.ts",
+                  "line": 227,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Performance and UX",
+              "file": "mobile.spec.ts",
+              "line": 257,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should load quickly on mobile network",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-4c1b1dd80e8141b774ab",
+                  "file": "mobile.spec.ts",
+                  "line": 259,
+                  "column": 9
+                },
+                {
+                  "title": "should display correctly on different mobile sizes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-4a7c7f6fb1705566fd13",
+                  "file": "mobile.spec.ts",
+                  "line": 276,
+                  "column": 9
+                },
+                {
+                  "title": "should handle orientation changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-23fe4ec0c60772063e45",
+                  "file": "mobile.spec.ts",
+                  "line": 305,
+                  "column": 9
+                },
+                {
+                  "title": "should load quickly on mobile network",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-ae0f2f0c9e2cb1a28a10",
+                  "file": "mobile.spec.ts",
+                  "line": 259,
+                  "column": 9
+                },
+                {
+                  "title": "should display correctly on different mobile sizes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-0108a30c4bea86a1cefa",
+                  "file": "mobile.spec.ts",
+                  "line": 276,
+                  "column": 9
+                },
+                {
+                  "title": "should handle orientation changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-0eafed20f9cc6e956d2d",
+                  "file": "mobile.spec.ts",
+                  "line": 305,
+                  "column": 9
+                },
+                {
+                  "title": "should load quickly on mobile network",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-8631533aed1e9dc3b1a3",
+                  "file": "mobile.spec.ts",
+                  "line": 259,
+                  "column": 9
+                },
+                {
+                  "title": "should display correctly on different mobile sizes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-4eb8f2447eb3571df5c1",
+                  "file": "mobile.spec.ts",
+                  "line": 276,
+                  "column": 9
+                },
+                {
+                  "title": "should handle orientation changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-91d24dc41d43ba130ae0",
+                  "file": "mobile.spec.ts",
+                  "line": 305,
+                  "column": 9
+                },
+                {
+                  "title": "should load quickly on mobile network",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-9404f178aa5d006ebefc",
+                  "file": "mobile.spec.ts",
+                  "line": 259,
+                  "column": 9
+                },
+                {
+                  "title": "should display correctly on different mobile sizes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-ba1dd8b7f9408e5e229f",
+                  "file": "mobile.spec.ts",
+                  "line": 276,
+                  "column": 9
+                },
+                {
+                  "title": "should handle orientation changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-75c3440c410bcdd8c120",
+                  "file": "mobile.spec.ts",
+                  "line": 305,
+                  "column": 9
+                },
+                {
+                  "title": "should load quickly on mobile network",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-0aa1335f7871c1d3a4cf",
+                  "file": "mobile.spec.ts",
+                  "line": 259,
+                  "column": 9
+                },
+                {
+                  "title": "should display correctly on different mobile sizes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-1fb56048a7107fc4b2ad",
+                  "file": "mobile.spec.ts",
+                  "line": 276,
+                  "column": 9
+                },
+                {
+                  "title": "should handle orientation changes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-7137361f1a0d85f4205a",
+                  "file": "mobile.spec.ts",
+                  "line": 305,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Accessibility",
+              "file": "mobile.spec.ts",
+              "line": 327,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should be accessible with screen reader",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-351306bdb1946aec241d",
+                  "file": "mobile.spec.ts",
+                  "line": 329,
+                  "column": 9
+                },
+                {
+                  "title": "should support keyboard navigation on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-b237b28dd3b6d1c8ba99",
+                  "file": "mobile.spec.ts",
+                  "line": 353,
+                  "column": 9
+                },
+                {
+                  "title": "should be accessible with screen reader",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-7b6d20a13564cd2d0fe6",
+                  "file": "mobile.spec.ts",
+                  "line": 329,
+                  "column": 9
+                },
+                {
+                  "title": "should support keyboard navigation on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-46993b9cae9bca6b61e0",
+                  "file": "mobile.spec.ts",
+                  "line": 353,
+                  "column": 9
+                },
+                {
+                  "title": "should be accessible with screen reader",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-cbb5aa125761cd78d8fe",
+                  "file": "mobile.spec.ts",
+                  "line": 329,
+                  "column": 9
+                },
+                {
+                  "title": "should support keyboard navigation on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-836c3c3ee7dfc4e36ef3",
+                  "file": "mobile.spec.ts",
+                  "line": 353,
+                  "column": 9
+                },
+                {
+                  "title": "should be accessible with screen reader",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-0c053708be45b2a12946",
+                  "file": "mobile.spec.ts",
+                  "line": 329,
+                  "column": 9
+                },
+                {
+                  "title": "should support keyboard navigation on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-c811624e07d5dff3d134",
+                  "file": "mobile.spec.ts",
+                  "line": 353,
+                  "column": 9
+                },
+                {
+                  "title": "should be accessible with screen reader",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-c867430ee1072a1bac52",
+                  "file": "mobile.spec.ts",
+                  "line": 329,
+                  "column": 9
+                },
+                {
+                  "title": "should support keyboard navigation on mobile",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-3e2f3803b2ddfb97ae3c",
+                  "file": "mobile.spec.ts",
+                  "line": 353,
+                  "column": 9
+                }
+              ]
+            },
+            {
+              "title": "Mobile Error Handling",
+              "file": "mobile.spec.ts",
+              "line": 377,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-f9405dec3f2b0633465b",
+                  "file": "mobile.spec.ts",
+                  "line": 379,
+                  "column": 9
+                },
+                {
+                  "title": "should provide fallback for failed image loads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-f67a840a109543855442",
+                  "file": "mobile.spec.ts",
+                  "line": 390,
+                  "column": 9
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-6892863d1a72076338e9",
+                  "file": "mobile.spec.ts",
+                  "line": 379,
+                  "column": 9
+                },
+                {
+                  "title": "should provide fallback for failed image loads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-096f9efa8012dea0d811",
+                  "file": "mobile.spec.ts",
+                  "line": 390,
+                  "column": 9
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-08c0937dae6cc94e32d6",
+                  "file": "mobile.spec.ts",
+                  "line": 379,
+                  "column": 9
+                },
+                {
+                  "title": "should provide fallback for failed image loads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-b8c3a43c7d4f077580cb",
+                  "file": "mobile.spec.ts",
+                  "line": 390,
+                  "column": 9
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-ebb89cb3c8013df10588",
+                  "file": "mobile.spec.ts",
+                  "line": 379,
+                  "column": 9
+                },
+                {
+                  "title": "should provide fallback for failed image loads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-b74b664684fff179e01d",
+                  "file": "mobile.spec.ts",
+                  "line": 390,
+                  "column": 9
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-e0158cfecec65e3455e8",
+                  "file": "mobile.spec.ts",
+                  "line": 379,
+                  "column": 9
+                },
+                {
+                  "title": "should provide fallback for failed image loads",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "e79c838550b25e92508e-27925c2bbcbcb4392bc1",
+                  "file": "mobile.spec.ts",
+                  "line": 390,
+                  "column": 9
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-07-31T11:33:06.153Z",
+    "duration": 142.5229999999999,
+    "expected": 0,
+    "skipped": 235,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
