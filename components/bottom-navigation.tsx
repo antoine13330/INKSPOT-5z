@@ -5,6 +5,7 @@ import { useSession, signOut } from "next-auth/react"
 import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp } from "lucide-react"
 import { useState } from "react"
 import { NotificationsPanel } from "@/components/notifications-panel"
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -70,6 +71,12 @@ export function BottomNavigation() {
             </Link>
           ))}
           
+          {/* Theme Toggle */}
+          <div className="flex flex-col items-center py-2 px-3">
+            <ThemeToggle />
+            <span className="text-xs mt-1 text-muted-foreground">Theme</span>
+          </div>
+          
           {/* PRO Menu Button */}
           {session?.user?.role === "PRO" && (
             <button
@@ -119,6 +126,15 @@ export function BottomNavigation() {
               >
                 <Settings className="w-4 h-4" />
                 <span className="text-xs mt-1">Settings</span>
+              </Link>
+
+              <Link
+                href="/pro/themes"
+                className="flex flex-col items-center py-2 px-3 text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => setShowProMenu(false)}
+              >
+                <Settings className="w-4 h-4" />
+                <span className="text-xs mt-1">Themes</span>
               </Link>
             </div>
           </div>

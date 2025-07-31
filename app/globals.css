@@ -34,6 +34,23 @@ body {
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+    
+    /* Chart colors for data visualization */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    
+    /* Sidebar variables */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -56,6 +73,83 @@ body {
     --border: 0 0% 14%;
     --input: 0 0% 14%;
     --ring: 217 91% 60%;
+    
+    /* Chart colors for dark mode */
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    
+    /* Sidebar dark mode */
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  /* PRO Custom Theme - Purple Brand */
+  .pro-custom {
+    --background: 310 15% 97%;
+    --foreground: 310 50% 10%;
+    --card: 310 10% 100%;
+    --card-foreground: 310 50% 10%;
+    --popover: 310 10% 100%;
+    --popover-foreground: 310 50% 10%;
+    --primary: 310 83% 53%;
+    --primary-foreground: 310 10% 98%;
+    --secondary: 310 15% 93%;
+    --secondary-foreground: 310 50% 10%;
+    --muted: 310 15% 93%;
+    --muted-foreground: 310 25% 45%;
+    --accent: 310 20% 90%;
+    --accent-foreground: 310 50% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 310 20% 85%;
+    --input: 310 20% 85%;
+    --ring: 310 83% 53%;
+    
+    /* Custom PRO chart colors */
+    --chart-1: 310 70% 55%;
+    --chart-2: 280 60% 50%;
+    --chart-3: 340 65% 48%;
+    --chart-4: 260 70% 52%;
+    --chart-5: 320 75% 50%;
+  }
+
+  /* PRO Custom Theme Dark variant */
+  .dark.pro-custom {
+    --background: 310 20% 6%;
+    --foreground: 310 15% 98%;
+    --card: 310 20% 8%;
+    --card-foreground: 310 15% 98%;
+    --popover: 310 20% 8%;
+    --popover-foreground: 310 15% 98%;
+    --primary: 310 75% 65%;
+    --primary-foreground: 310 20% 10%;
+    --secondary: 310 20% 12%;
+    --secondary-foreground: 310 15% 98%;
+    --muted: 310 20% 12%;
+    --muted-foreground: 310 15% 65%;
+    --accent: 310 20% 15%;
+    --accent-foreground: 310 15% 98%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 310 20% 18%;
+    --input: 310 20% 18%;
+    --ring: 310 75% 65%;
+    
+    /* Dark PRO chart colors */
+    --chart-1: 310 60% 65%;
+    --chart-2: 280 55% 60%;
+    --chart-3: 340 60% 58%;
+    --chart-4: 260 65% 62%;
+    --chart-5: 320 70% 60%;
   }
 }
 
@@ -66,12 +160,25 @@ body {
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Smooth transitions for theme changes */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
   }
 }
 
 /* Custom styles for modern design */
 .modern-card {
   @apply bg-card border border-border rounded-xl shadow-sm;
+  transition: all 0.3s ease;
+}
+
+.modern-card:hover {
+  @apply shadow-lg border-border/80;
 }
 
 .modern-avatar {
@@ -82,8 +189,17 @@ body {
   @apply rounded-lg font-medium transition-all duration-200;
 }
 
+.modern-button:hover {
+  @apply scale-105 shadow-md;
+}
+
 .modern-input {
   @apply rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground;
+  transition: all 0.2s ease;
+}
+
+.modern-input:focus {
+  @apply ring-2 ring-ring border-primary/50;
 }
 
 .modern-badge {
@@ -104,11 +220,38 @@ body {
   @apply bg-card/80 backdrop-blur-sm border-t border-border;
 }
 
-/* Gradient accents */
+/* Enhanced gradient accents */
 .gradient-primary {
   background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 100%);
 }
 
 .gradient-accent {
   background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--accent)/0.8) 100%);
+}
+
+/* PRO Theme gradient */
+.gradient-pro {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(310 75% 45%) 50%, hsl(340 80% 50%) 100%);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 20%;
+    --ring: 0 0% 20%;
+  }
+  
+  .dark {
+    --border: 0 0% 80%;
+    --ring: 0 0% 80%;
+  }
 }
