@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -8,7 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, Calendar, Search, Hash } from "lucide-react"
 import { BottomNavigation } from "@/components/bottom-navigation"
-import { useSession } from "next-auth/react"
+import { usePosts } from "@/lib/hooks/use-posts"
+import { useAuth } from "@/lib/hooks/use-auth"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -36,151 +36,28 @@ interface Post {
 }
 
 export default function HomePage() {
-  const { data: session } = useSession()
-  const [posts, setPosts] = useState<Post[]>([])
-  const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set())
-  const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<Post[]>([])
-  const [isSearching, setIsSearching] = useState(false)
+  const { user, isAuthenticated, isPro } = useAuth()
+  const {
+    posts,
+    searchResults,
+    searchQuery,
+    isLoading,
+    isSearching,
+    searchPosts,
+    toggleLike,
+    recordView,
+    clearSearch,
+  } = usePosts()
 
-  useEffect(() => {
-    if (session?.user?.id) {
-      fetchRecommendedPosts()
-    } else {
-      fetchPublicPosts()
-    }
-  }, [session])
-
-  const fetchRecommendedPosts = async () => {
-    try {
-      const response = await fetch("/api/posts/recommended")
-      const data = await response.json()
-      setPosts(data.posts || [])
-    } catch (error) {
-      console.error("Error fetching recommended posts:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const fetchPublicPosts = async () => {
-    try {
-      const response = await fetch("/api/posts")
-      const data = await response.json()
-      setPosts(data.posts || [])
-    } catch (error) {
-      console.error("Error fetching posts:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const searchPosts = async (query: string) => {
+  const handleSearchChange = (query: string) => {
     if (!query.trim()) {
-      setSearchResults([])
-      setIsSearching(false)
-      return
-    }
-
-    setIsSearching(true)
-    try {
-      const response = await fetch(`/api/posts/search?q=${encodeURIComponent(query)}`)
-      const data = await response.json()
-      setSearchResults(data.posts || [])
-
-      // Record search history
-      if (session?.user?.id) {
-        await fetch("/api/search/history", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query,
-            hashtags: extractHashtags(query),
-          }),
-        })
-      }
-    } catch (error) {
-      console.error("Error searching posts:", error)
+      clearSearch()
+    } else {
+      searchPosts(query)
     }
   }
 
-  const extractHashtags = (text: string): string[] => {
-    const hashtagRegex = /#[\w]+/g
-    return text.match(hashtagRegex) || []
-  }
 
-  const toggleLike = async (postId: string) => {
-    if (!session?.user?.id) return
-
-    try {
-      const response = await fetch(`/api/posts/${postId}/like`, {
-        method: "POST",
-      })
-
-      if (response.ok) {
-        const newLiked = new Set(likedPosts)
-        const isCurrentlyLiked = newLiked.has(postId)
-
-        if (isCurrentlyLiked) {
-          newLiked.delete(postId)
-        } else {
-          newLiked.add(postId)
-        }
-        setLikedPosts(newLiked)
-
-        // Update posts state
-        const updatePosts = (postsArray: Post[]) =>
-          postsArray.map((post) =>
-            post.id === postId
-              ? { ...post, likesCount: post.likesCount + (isCurrentlyLiked ? -1 : 1), liked: !isCurrentlyLiked }
-              : post,
-          )
-
-        setPosts(updatePosts)
-        if (isSearching) {
-          setSearchResults(updatePosts)
-        }
-
-        // Record interaction
-        await fetch("/api/interactions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            targetUserId: posts.find((p) => p.id === postId)?.author.id,
-            interactionType: "like",
-            weight: 2,
-          }),
-        })
-      }
-    } catch (error) {
-      console.error("Error toggling like:", error)
-    }
-  }
-
-  const recordPostView = async (post: Post) => {
-    if (!session?.user?.id || post.author.id === session.user.id) return
-
-    try {
-      await fetch("/api/interactions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          targetUserId: post.author.id,
-          interactionType: "view",
-          weight: 1,
-        }),
-      })
-    } catch (error) {
-      console.error("Error recording view:", error)
-    }
-  }
 
   const bookService = (proId: string) => {
     window.location.href = `/booking/${proId}`
@@ -188,7 +65,7 @@ export default function HomePage() {
 
   const displayPosts = isSearching ? searchResults : posts
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
@@ -203,9 +80,9 @@ export default function HomePage() {
         <div className="sticky top-0 bg-black/80 backdrop-blur-sm border-b border-gray-800 p-4 z-10">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-xl font-bold">
-              {isSearching ? "Search Results" : session?.user?.id ? "For You" : "Discover"}
+                              {isSearching ? "Search Results" : isAuthenticated ? "For You" : "Discover"}
             </h1>
-            {session?.user?.role === "PRO" && (
+            {isPro && (
               <Link href="/pro/dashboard">
                 <Badge variant="secondary" className="bg-blue-600 text-white">
                   Pro Dashboard
@@ -220,10 +97,7 @@ export default function HomePage() {
             <Input
               placeholder="Search posts, hashtags..."
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-                searchPosts(e.target.value)
-              }}
+              onChange={(e) => handleSearchChange(e.target.value)}
               className="bg-gray-800 border-gray-700 text-white pl-10 rounded-full"
             />
           </div>
@@ -235,7 +109,7 @@ export default function HomePage() {
             <Card
               key={post.id}
               className="bg-black border-gray-800 rounded-none border-x-0 border-t-0"
-              onMouseEnter={() => recordPostView(post)}
+              onMouseEnter={() => recordView(post.id)}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
