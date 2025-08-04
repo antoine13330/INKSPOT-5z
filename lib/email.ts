@@ -10,6 +10,28 @@ const transporter = nodemailer.createTransport({
   },
 })
 
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  text,
+}: {
+  to: string
+  subject: string
+  html?: string
+  text?: string
+}) {
+  const mailOptions = {
+    from: process.env.EMAIL_FROM,
+    to,
+    subject,
+    html,
+    text,
+  }
+
+  await transporter.sendMail(mailOptions)
+}
+
 export async function sendMagicLinkEmail(email: string, url: string) {
   const mailOptions = {
     from: process.env.EMAIL_FROM,

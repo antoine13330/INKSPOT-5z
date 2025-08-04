@@ -1,5 +1,4 @@
 import { sendPushNotification, subscribeToPush } from "@/lib/notifications"
-import jest from "jest"
 
 // Mock web-push
 jest.mock("web-push", () => ({
@@ -8,6 +7,10 @@ jest.mock("web-push", () => ({
 }))
 
 describe("Notifications", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe("sendPushNotification", () => {
     it("sends push notification successfully", async () => {
       const mockSubscription = {

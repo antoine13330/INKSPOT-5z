@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { uploadToS3, generateFileName } from "@/lib/s3";
+import { sendEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -81,8 +82,42 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Send verification email
+    try {
+      const verificationToken = crypto.randomUUID();
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+      await prisma.verificationToken.create({
+        data: {
+          identifier: email,
+          token: verificationToken,
+          expires: expiresAt,
+          userId: user.id,
+        },
+      });
+
+      const verificationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${verificationToken}`;
+      
+      await sendEmail({
+        to: email,
+        subject: "Welcome to INKSPOT! Please verify your email",
+        html: `
+          <h1>Welcome to INKSPOT!</h1>
+          <p>Thank you for creating an account. Please click the link below to verify your email address:</p>
+          <a href="${verificationUrl}" style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+            Verify Email
+          </a>
+          <p>This link will expire in 24 hours.</p>
+          <p>If you didn't create an account, you can safely ignore this email.</p>
+        `,
+      });
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+      // Don't fail registration if email fails
+    }
+
     return NextResponse.json({ 
-      message: "User created successfully",
+      message: "User created successfully. Please check your email to verify your account.",
       user: {
         id: user.id,
         email: user.email,

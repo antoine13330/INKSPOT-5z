@@ -144,19 +144,8 @@ export default function RegisterPage() {
 
       if (response.ok) {
         toast.success("Account created successfully!")
-        // Sign in automatically
-        const signInResult = await signIn("credentials", {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
-        })
-        
-        if (signInResult?.error) {
-          toast.error("Account created but sign-in failed. Please sign in manually.")
-          router.push(`/auth/login?callbackUrl=${encodeURIComponent(callbackUrl)}`)
-        } else {
-          router.push(callbackUrl)
-        }
+        // Redirect to verification page instead of auto-signin
+        router.push(`/auth/verify-email?email=${encodeURIComponent(formData.email)}`)
       } else {
         toast.error(data.error || "Failed to create account")
       }

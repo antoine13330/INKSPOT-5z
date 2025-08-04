@@ -37,6 +37,17 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
+        // Check if user is verified (optional for Google users)
+        if (!user.verified && !user.googleId) {
+          throw new Error("Please verify your email before signing in")
+        }
+
+        // Update last login
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() }
+        })
+
         return {
           id: user.id,
           email: user.email,
@@ -59,7 +70,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string
-        session.user.role = token.role as string
+        session.user.role = token.role as "CLIENT" | "PRO" | "ADMIN"
         session.user.verified = token.verified as boolean
       }
       return session
@@ -91,8 +102,8 @@ export const authOptions: NextAuthOptions = {
               firstName: user.name?.split(' ')[0] || '',
               lastName: user.name?.split(' ').slice(1).join(' ') || '',
               avatar: user.image || '',
-              verified: true,
-              role: "CLIENT",
+              verified: true, // Google users are automatically verified
+              role: "CLIENT" as const,
               googleId: profile?.sub || null,
             }
           })
@@ -126,6 +137,12 @@ export const authOptions: NextAuthOptions = {
           
           user.id = existingUser.id
         }
+
+        // Update last login
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() }
+        })
       }
       return true
     }
@@ -133,9 +150,11 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/login",
     newUser: "/auth/register", // Redirect new users to registration page
+    error: "/auth/login", // Redirect to login on error
   },
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
 }

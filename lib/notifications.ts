@@ -1,9 +1,13 @@
 import webpush from "web-push"
 import { prisma } from "./prisma"
 
-// Configure VAPID keys
+// Configure VAPID keys with proper mailto URL format
+const vapidSubject = process.env.EMAIL_FROM 
+  ? `mailto:${process.env.EMAIL_FROM}` 
+  : "mailto:noreply@yourdomain.com"
+
 webpush.setVapidDetails(
-  process.env.EMAIL_FROM || "mailto:noreply@yourdomain.com", 
+  vapidSubject,
   process.env.VAPID_PUBLIC_KEY!, 
   process.env.VAPID_PRIVATE_KEY!
 )
