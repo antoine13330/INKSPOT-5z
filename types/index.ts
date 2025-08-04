@@ -1,0 +1,407 @@
+// ===== TYPES DE BASE =====
+
+export interface BaseEntity {
+  id: string
+  createdAt: string
+  updatedAt: string
+}
+
+// ===== TYPES UTILISATEUR =====
+
+export interface User extends BaseEntity {
+  email: string
+  username: string
+  firstName?: string
+  lastName?: string
+  avatar?: string
+  bio?: string
+  location?: string
+  website?: string
+  phone?: string
+  role: UserRole
+  status: UserStatus
+  verified: boolean
+  emailVerified?: string
+  
+  // OAuth fields
+  googleId?: string
+  appleId?: string
+  
+  // Pro-specific fields
+  businessName?: string
+  businessAddress?: string
+  siret?: string
+  vatNumber?: string
+  hourlyRate?: number
+  specialties: string[]
+  portfolio: string[]
+  coverImage?: string
+  profileTheme?: ProfileTheme
+  
+  // Stripe fields
+  stripeCustomerId?: string
+  stripeAccountId?: string
+  
+  // Stats
+  lastLoginAt?: string
+}
+
+export type UserRole = 'CLIENT' | 'PRO' | 'ADMIN'
+export type UserStatus = 'ACTIVE' | 'SUSPENDED' | 'PENDING'
+
+export interface ProfileTheme {
+  primaryColor: string
+  secondaryColor: string
+  accentColor: string
+  backgroundColor: string
+  textColor: string
+  fontFamily: string
+}
+
+export interface UserStats {
+  postsCount: number
+  followersCount: number
+  followingCount: number
+  totalLikes: number
+  totalViews: number
+}
+
+// ===== TYPES DE CONVERSATION =====
+
+export interface Conversation extends BaseEntity {
+  participants: ConversationParticipant[]
+  lastMessage?: Message
+  unreadCount: number
+  isActive: boolean
+  type: ConversationType
+}
+
+export interface ConversationParticipant {
+  id: string
+  name: string
+  username: string
+  avatar?: string
+  role: UserRole
+  isOnline?: boolean
+}
+
+export type ConversationType = 'DIRECT' | 'GROUP' | 'COLLABORATION'
+
+// ===== TYPES DE MESSAGE =====
+
+export interface Message extends BaseEntity {
+  content: string
+  type: MessageType
+  mediaUrl?: string
+  isFromUser: boolean
+  conversationId: string
+  senderId: string
+  readBy: string[]
+  replyTo?: string
+}
+
+export type MessageType = 'TEXT' | 'IMAGE' | 'FILE' | 'AUDIO' | 'VIDEO'
+
+// ===== TYPES DE POST =====
+
+export interface Post extends BaseEntity {
+  content: string
+  images: string[]
+  hashtags: string[]
+  authorId: string
+  status: PostStatus
+  likesCount: number
+  commentsCount: number
+  viewsCount: number
+  publishedAt?: string
+  isCollaboration: boolean
+  collaborationId?: string
+}
+
+export type PostStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'
+
+// ===== TYPES DE NAVIGATION =====
+
+export interface NavItem {
+  href: string
+  label: string
+  icon?: React.ComponentType<any>
+  badge?: number
+  disabled?: boolean
+  children?: NavItem[]
+}
+
+export interface NavConfig {
+  base: NavItem[]
+  pro: NavItem[]
+  client: NavItem[]
+  admin: NavItem[]
+}
+
+// ===== TYPES DE FORMULAIRES =====
+
+export interface FormField {
+  name: string
+  label: string
+  type: 'text' | 'email' | 'password' | 'textarea' | 'select' | 'checkbox' | 'radio' | 'file'
+  placeholder?: string
+  required?: boolean
+  validation?: ValidationRule[]
+  options?: SelectOption[]
+}
+
+export interface ValidationRule {
+  type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom'
+  value?: any
+  message: string
+}
+
+export interface SelectOption {
+  value: string
+  label: string
+  disabled?: boolean
+}
+
+// ===== TYPES DE NOTIFICATIONS =====
+
+export interface Notification extends BaseEntity {
+  type: NotificationType
+  title: string
+  message: string
+  userId: string
+  read: boolean
+  data?: Record<string, any>
+  actionUrl?: string
+}
+
+export type NotificationType = 
+  | 'MESSAGE' 
+  | 'BOOKING' 
+  | 'PAYMENT' 
+  | 'REMINDER' 
+  | 'SYSTEM' 
+  | 'COLLABORATION_INVITE' 
+  | 'COLLABORATION_ACCEPTED' 
+  | 'COLLABORATION_REJECTED' 
+  | 'MENTION'
+
+// ===== TYPES DE RÉSERVATION =====
+
+export interface Booking extends BaseEntity {
+  clientId: string
+  proId: string
+  status: BookingStatus
+  startDate: string
+  endDate: string
+  description: string
+  amount: number
+  currency: string
+  location?: string
+  notes?: string
+}
+
+export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED'
+
+// ===== TYPES DE PAIEMENT =====
+
+export interface Payment extends BaseEntity {
+  bookingId: string
+  amount: number
+  currency: string
+  status: PaymentStatus
+  stripePaymentIntentId?: string
+  stripeTransferId?: string
+  description?: string
+}
+
+export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED'
+
+// ===== TYPES DE COLLABORATION =====
+
+export interface Collaboration extends BaseEntity {
+  initiatorId: string
+  recipientId: string
+  status: CollaborationStatus
+  title: string
+  description: string
+  projectType: string
+  budget?: number
+  deadline?: string
+}
+
+export type CollaborationStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED'
+
+// ===== TYPES DE RECHERCHE =====
+
+export interface SearchFilters {
+  query?: string
+  category?: string
+  location?: string
+  priceRange?: [number, number]
+  rating?: number
+  availability?: string[]
+  tags?: string[]
+}
+
+export interface SearchResult<T> {
+  items: T[]
+  total: number
+  page: number
+  limit: number
+  hasMore: boolean
+}
+
+// ===== TYPES DE COMPOSANTS =====
+
+export interface BaseComponentProps {
+  className?: string
+  children?: React.ReactNode
+}
+
+export interface LoadingState {
+  isLoading: boolean
+  error: string | null
+  data: any | null
+}
+
+export interface PaginationProps {
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  showFirstLast?: boolean
+  showPrevNext?: boolean
+}
+
+// ===== TYPES D'API =====
+
+export interface ApiResponse<T = any> {
+  success: boolean
+  data?: T
+  error?: string
+  message?: string
+}
+
+export interface ApiError {
+  code: string
+  message: string
+  details?: Record<string, any>
+}
+
+export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
+
+// ===== TYPES DE CONFIGURATION =====
+
+export interface AppConfig {
+  name: string
+  version: string
+  environment: 'development' | 'staging' | 'production'
+  apiUrl: string
+  features: Record<string, boolean>
+}
+
+export interface FeatureFlags {
+  chat: boolean
+  payments: boolean
+  collaborations: boolean
+  notifications: boolean
+  search: boolean
+}
+
+// ===== TYPES D'ÉVÉNEMENTS =====
+
+export interface AppEvent {
+  type: string
+  payload: any
+  timestamp: string
+  userId?: string
+}
+
+export interface WebSocketMessage {
+  type: string
+  data: any
+  timestamp: string
+}
+
+// ===== TYPES DE MÉTADONNÉES =====
+
+export interface MetaData {
+  title?: string
+  description?: string
+  keywords?: string[]
+  image?: string
+  url?: string
+}
+
+export interface SeoData extends MetaData {
+  canonical?: string
+  robots?: string
+  ogType?: string
+  twitterCard?: string
+}
+
+// ===== TYPES DE VALIDATION =====
+
+export interface ValidationResult {
+  isValid: boolean
+  errors: string[]
+  warnings?: string[]
+}
+
+export interface FormValidation {
+  [fieldName: string]: ValidationResult
+}
+
+// ===== TYPES DE GESTION D'ÉTAT =====
+
+export interface AppState {
+  user: User | null
+  theme: 'light' | 'dark' | 'system'
+  language: string
+  notifications: Notification[]
+  unreadCount: number
+}
+
+export interface Action {
+  type: string
+  payload?: any
+  meta?: Record<string, any>
+}
+
+// ===== TYPES DE HOOKS =====
+
+export interface UseApiOptions {
+  immediate?: boolean
+  retry?: number
+  retryDelay?: number
+  onSuccess?: (data: any) => void
+  onError?: (error: any) => void
+}
+
+export interface UseLocalStorageOptions {
+  defaultValue?: any
+  serializer?: (value: any) => string
+  deserializer?: (value: string) => any
+}
+
+// ===== TYPES DE TESTS =====
+
+export interface TestConfig {
+  timeout: number
+  retries: number
+  environment: 'jsdom' | 'node'
+}
+
+export interface MockData {
+  users: User[]
+  conversations: Conversation[]
+  messages: Message[]
+  posts: Post[]
+  notifications: Notification[]
+} 

@@ -1,0 +1,129 @@
+import { useState, useEffect, useCallback } from 'react'
+import { ApiResponse, UseApiOptions } from '@/types'
+import { handleError, retry } from '@/lib/utils'
+
+interface UseApiState<T> {
+  data: T | null
+  isLoading: boolean
+  error: string | null
+}
+
+interface UseApiReturn<T> extends UseApiState<T> {
+  execute: (params?: any) => Promise<void>
+  refetch: () => Promise<void>
+  reset: () => void
+}
+
+/**
+ * Hook personnalisé pour gérer les appels API
+ */
+export function useApi<T = any>(
+  apiFunction: (params?: any) => Promise<ApiResponse<T>>,
+  options: UseApiOptions = {}
+): UseApiReturn<T> {
+  const {
+    immediate = false,
+    retry: retryCount = 0,
+    retryDelay = 1000,
+    onSuccess,
+    onError
+  } = options
+
+  const [state, setState] = useState<UseApiState<T>>({
+    data: null,
+    isLoading: false,
+    error: null
+  })
+
+  const execute = useCallback(async (params?: any) => {
+    setState(prev => ({ ...prev, isLoading: true, error: null }))
+
+    try {
+      const executeWithRetry = () => apiFunction(params)
+      const response = retryCount > 0 
+        ? await retry(executeWithRetry, retryCount, retryDelay)
+        : await executeWithRetry()
+
+      if (response.success && response.data) {
+        setState({
+          data: response.data,
+          isLoading: false,
+          error: null
+        })
+        onSuccess?.(response.data)
+      } else {
+        const errorMessage = response.error || 'Une erreur s\'est produite'
+        setState({
+          data: null,
+          isLoading: false,
+          error: errorMessage
+        })
+        onError?.(new Error(errorMessage))
+      }
+    } catch (error) {
+      const errorMessage = handleError(error, 'API call')
+      setState({
+        data: null,
+        isLoading: false,
+        error: errorMessage
+      })
+      onError?.(error)
+    }
+  }, [apiFunction, retryCount, retryDelay, onSuccess, onError])
+
+  const refetch = useCallback(() => execute(), [execute])
+
+  const reset = useCallback(() => {
+    setState({
+      data: null,
+      isLoading: false,
+      error: null
+    })
+  }, [])
+
+  useEffect(() => {
+    if (immediate) {
+      execute()
+    }
+  }, [immediate, execute])
+
+  return {
+    ...state,
+    execute,
+    refetch,
+    reset
+  }
+}
+
+/**
+ * Hook pour les opérations de mutation (POST, PUT, DELETE)
+ */
+export function useMutation<T = any, P = any>(
+  mutationFunction: (params: P) => Promise<ApiResponse<T>>,
+  options: UseApiOptions = {}
+): UseApiReturn<T> & { mutate: (params: P) => Promise<void> } {
+  const apiHook = useApi(mutationFunction, { ...options, immediate: false })
+
+  const mutate = useCallback(async (params: P) => {
+    await apiHook.execute(params)
+  }, [apiHook])
+
+  return {
+    ...apiHook,
+    mutate
+  }
+}
+
+/**
+ * Hook pour les opérations de requête avec cache
+ */
+export function useQuery<T = any>(
+  queryFunction: (params?: any) => Promise<ApiResponse<T>>,
+  options: UseApiOptions & { cacheKey?: string } = {}
+): UseApiReturn<T> {
+  const { cacheKey, ...apiOptions } = options
+  
+  // TODO: Implémenter un système de cache simple
+  // Pour l'instant, on utilise le hook de base
+  return useApi(queryFunction, apiOptions)
+} 

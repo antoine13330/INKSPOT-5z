@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp } from "lucide-react"
+import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp, LogOut } from "lucide-react"
 import { useState } from "react"
 import { NotificationsPanel } from "@/components/notifications-panel"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { toast } from "sonner"
 
 export function BottomNavigation() {
   const { data: session } = useSession()
@@ -53,20 +54,30 @@ export function BottomNavigation() {
     ]
   }
 
+  const handleSignOut = async () => {
+    try {
+      await signOut({ callbackUrl: "/" })
+      toast.success("Déconnexion réussie")
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error)
+      toast.error("Erreur lors de la déconnexion")
+    }
+  }
+
   const navItems = getNavItems()
 
   return (
     <>
-      <nav className="modern-nav fixed bottom-0 left-0 right-0 z-50">
-        <div className="flex justify-around items-center py-3 px-4">
+      <nav className="bottom-navigation">
+        <div className="nav-container">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center py-2 px-3 text-muted-foreground hover:text-primary transition-colors"
+              className="nav-item"
             >
-              <item.icon className="w-5 h-5" />
-              <span className="text-xs mt-1">{item.label}</span>
+              <item.icon className="nav-icon" />
+              <span className="nav-label">{item.label}</span>
             </Link>
           ))}
           
@@ -74,13 +85,13 @@ export function BottomNavigation() {
           {session?.user?.role === "PRO" && (
             <button
               onClick={() => setShowProMenu(!showProMenu)}
-              className="flex flex-col items-center py-2 px-3 text-muted-foreground hover:text-primary transition-colors"
+              className="nav-item"
             >
               <div className="relative">
-                <Users className="w-5 h-5" />
+                <Users className="nav-icon" />
                 <ChevronUp className={`w-3 h-3 absolute -top-1 -right-1 transition-transform ${showProMenu ? 'rotate-180' : ''}`} />
               </div>
-              <span className="text-xs mt-1">PRO</span>
+              <span className="nav-label">PRO</span>
             </button>
           )}
           
@@ -88,37 +99,50 @@ export function BottomNavigation() {
           {session && (
             <button
               onClick={() => setShowNotifications(true)}
-              className="flex flex-col items-center py-2 px-3 text-muted-foreground hover:text-primary transition-colors"
+              className="nav-item"
             >
               <div className="relative">
-                <Bell className="w-5 h-5" />
+                <Bell className="nav-icon" />
                 {/* TODO: Add unread notification count badge */}
               </div>
-              <span className="text-xs mt-1">Notifications</span>
+              <span className="nav-label">Notifications</span>
+            </button>
+          )}
+
+          {/* Sign Out Button */}
+          {session && (
+            <button
+              onClick={handleSignOut}
+              className="nav-item"
+              style={{ color: 'var(--color-error)' }}
+              title="Se déconnecter"
+            >
+              <LogOut className="nav-icon" />
+              <span className="nav-label">Déconnexion</span>
             </button>
           )}
         </div>
 
         {/* PRO Submenu */}
         {showProMenu && session?.user?.role === "PRO" && (
-          <div className="absolute bottom-full left-0 right-0 bg-card border-t border-border">
-            <div className="flex justify-around items-center py-3 px-4">
+          <div className="bg-surface border-t border-border">
+            <div className="nav-container">
               <Link
                 href="/collaborations"
-                className="flex flex-col items-center py-2 px-3 text-muted-foreground hover:text-primary transition-colors"
+                className="nav-item"
                 onClick={() => setShowProMenu(false)}
               >
-                <Users className="w-4 h-4" />
-                <span className="text-xs mt-1">Collabs</span>
+                <Users className="nav-icon" />
+                <span className="nav-label">Collabs</span>
               </Link>
               
               <Link
                 href="/profile/edit"
-                className="flex flex-col items-center py-2 px-3 text-muted-foreground hover:text-primary transition-colors"
+                className="nav-item"
                 onClick={() => setShowProMenu(false)}
               >
-                <Settings className="w-4 h-4" />
-                <span className="text-xs mt-1">Settings</span>
+                <Settings className="nav-icon" />
+                <span className="nav-label">Settings</span>
               </Link>
             </div>
           </div>
