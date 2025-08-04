@@ -6,7 +6,14 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "monitoring:start": "docker-compose up -d",
+    "monitoring:stop": "docker-compose down",
+    "monitoring:logs": "docker-compose logs -f",
+    "monitoring:restart": "docker-compose restart",
+    "monitoring:status": "docker-compose ps",
+    "metrics:test": "curl http://localhost:3000/api/metrics",
+    "health:check": "curl http://localhost:3000/api/health"
   },
   "dependencies": {
     "@auth/core": "latest",
