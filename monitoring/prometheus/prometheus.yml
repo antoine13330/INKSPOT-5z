@@ -28,7 +28,7 @@ scrape_configs:
 
   # INKSPOT Application metrics
   - job_name: 'inkspot-app'
-    metrics_path: '/api/metrics'
+    metrics_path: '/api/metrics/public'
     static_configs:
       - targets: ['host.docker.internal:3000']  # Adjust based on your setup
     scrape_interval: 30s
