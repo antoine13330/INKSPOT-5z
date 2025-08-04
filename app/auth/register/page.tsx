@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { 
   Mail, 
   Lock, 
@@ -17,7 +18,9 @@ import {
   Upload,
   ArrowLeft,
   Eye,
-  EyeOff
+  EyeOff,
+  Palette,
+  UserCheck
 } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
@@ -30,6 +33,7 @@ interface RegisterFormData {
   confirmPassword: string
   firstName: string
   lastName: string
+  userType: "CLIENT" | "PRO"
   avatar?: File
 }
 
@@ -37,7 +41,7 @@ export default function RegisterPage() {
   const { data: session } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
+  const callbackUrl = searchParams?.get("callbackUrl") || "/"
   
   const [formData, setFormData] = useState<RegisterFormData>({
     email: "",
@@ -46,6 +50,7 @@ export default function RegisterPage() {
     confirmPassword: "",
     firstName: "",
     lastName: "",
+    userType: "CLIENT",
   })
   
   const [avatarPreview, setAvatarPreview] = useState<string>("")
@@ -86,6 +91,10 @@ export default function RegisterPage() {
     } else {
       setFormData(prev => ({ ...prev, [name]: value }))
     }
+  }
+
+  const handleUserTypeChange = (value: string) => {
+    setFormData(prev => ({ ...prev, userType: value as "CLIENT" | "PRO" }))
   }
 
   const handleGoogleSignUp = async () => {
@@ -130,6 +139,7 @@ export default function RegisterPage() {
       registerFormData.append("password", formData.password)
       registerFormData.append("firstName", formData.firstName)
       registerFormData.append("lastName", formData.lastName)
+      registerFormData.append("userType", formData.userType)
       
       if (formData.avatar) {
         registerFormData.append("avatar", formData.avatar)
@@ -144,8 +154,8 @@ export default function RegisterPage() {
 
       if (response.ok) {
         toast.success("Account created successfully!")
-        // Redirect to verification page instead of auto-signin
-        router.push(`/auth/verify-email?email=${encodeURIComponent(formData.email)}`)
+        // Redirect to login page since user is now verified
+        router.push("/auth/login")
       } else {
         toast.error(data.error || "Failed to create account")
       }
@@ -203,6 +213,37 @@ export default function RegisterPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* User Type Selection */}
+            <div className="space-y-3">
+              <Label className="text-gray-300">I am a:</Label>
+              <RadioGroup
+                value={formData.userType}
+                onValueChange={handleUserTypeChange}
+                className="grid grid-cols-2 gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="CLIENT" id="client" className="text-blue-600" />
+                  <Label htmlFor="client" className="flex items-center gap-2 text-gray-300 cursor-pointer">
+                    <UserCheck className="w-4 h-4" />
+                    Client
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="PRO" id="pro" className="text-blue-600" />
+                  <Label htmlFor="pro" className="flex items-center gap-2 text-gray-300 cursor-pointer">
+                    <Palette className="w-4 h-4" />
+                    Artist/Pro
+                  </Label>
+                </div>
+              </RadioGroup>
+              <p className="text-xs text-gray-400">
+                {formData.userType === "CLIENT" 
+                  ? "Browse and book artists for your projects"
+                  : "Offer your services and showcase your portfolio"
+                }
+              </p>
+            </div>
+
             {/* Name Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div>

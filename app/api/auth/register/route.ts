@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { uploadToS3, generateFileName } from "@/lib/s3";
 import { sendEmail } from "@/lib/email";
+import { createStripeCustomer, createStripeAccount } from "@/lib/stripe";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +13,7 @@ export async function POST(request: NextRequest) {
     const password = formData.get("password") as string;
     const firstName = formData.get("firstName") as string;
     const lastName = formData.get("lastName") as string;
+    const userType = formData.get("userType") as "CLIENT" | "PRO";
     const avatar = formData.get("avatar") as File | null;
 
     // Validation
@@ -21,6 +23,11 @@ export async function POST(request: NextRequest) {
 
     if (password.length < 6) {
       return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
+    }
+
+    // Validate user type
+    if (!userType || !["CLIENT", "PRO"].includes(userType)) {
+      return NextResponse.json({ error: "Invalid user type" }, { status: 400 });
     }
 
     // Check if user already exists
@@ -64,7 +71,41 @@ export async function POST(request: NextRequest) {
         avatarUrl = await uploadToS3(buffer, fileName, avatar.type);
       } catch (error) {
         console.error("Error uploading avatar:", error);
-        return NextResponse.json({ error: "Failed to upload avatar" }, { status: 500 });
+        // Don't fail registration if avatar upload fails, just continue without avatar
+        console.warn("Avatar upload failed, continuing without avatar");
+      }
+    }
+
+    // Create Stripe customer
+    let stripeCustomerId: string | undefined;
+    try {
+      const fullName = [firstName, lastName].filter(Boolean).join(" ");
+      const stripeCustomer = await createStripeCustomer(
+        `temp_${Date.now()}`, // Temporary ID, will be updated after user creation
+        email,
+        fullName || undefined
+      );
+      stripeCustomerId = stripeCustomer.id;
+    } catch (error) {
+      console.error("Error creating Stripe customer:", error);
+      // Don't fail registration if Stripe fails, just continue without Stripe customer
+      console.warn("Stripe customer creation failed, continuing without Stripe");
+    }
+
+    // Create Stripe Connect account for PRO users
+    let stripeAccountId: string | undefined;
+    if (userType === "PRO") {
+      try {
+        const stripeAccount = await createStripeAccount(
+          `temp_${Date.now()}`, // Temporary ID, will be updated after user creation
+          email,
+          'FR' // Default to France, can be made configurable later
+        );
+        stripeAccountId = stripeAccount.id;
+      } catch (error) {
+        console.error("Error creating Stripe Connect account:", error);
+        // Don't fail registration if Stripe Connect fails, just continue without it
+        console.warn("Stripe Connect account creation failed, continuing without Connect account");
       }
     }
 
@@ -77,10 +118,40 @@ export async function POST(request: NextRequest) {
         firstName: firstName || null,
         lastName: lastName || null,
         avatar: avatarUrl,
-        role: "CLIENT",
-        verified: false,
+        role: userType,
+        verified: true, // Temporarily set to true for testing - users can log in immediately
+        stripeCustomerId,
+        stripeAccountId,
       },
     });
+
+    // Update Stripe customer with actual user ID if customer was created
+    if (stripeCustomerId) {
+      try {
+        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
+        await stripe.customers.update(stripeCustomerId, {
+          metadata: {
+            userId: user.id,
+          },
+        });
+      } catch (error) {
+        console.error("Error updating Stripe customer metadata:", error);
+      }
+    }
+
+    // Update Stripe Connect account with actual user ID if account was created
+    if (stripeAccountId) {
+      try {
+        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
+        await stripe.accounts.update(stripeAccountId, {
+          metadata: {
+            userId: user.id,
+          },
+        });
+      } catch (error) {
+        console.error("Error updating Stripe Connect account metadata:", error);
+      }
+    }
 
     // Send verification email
     try {
@@ -117,7 +188,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ 
-      message: "User created successfully. Please check your email to verify your account.",
+      message: "User created successfully! You can now sign in to your account.",
       user: {
         id: user.id,
         email: user.email,
@@ -125,6 +196,9 @@ export async function POST(request: NextRequest) {
         firstName: user.firstName,
         lastName: user.lastName,
         avatar: user.avatar,
+        role: user.role,
+        stripeCustomerId: user.stripeCustomerId,
+        stripeAccountId: user.stripeAccountId,
       }
     });
   } catch (error) {

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -19,9 +19,11 @@ import {
   MessageCircle,
   Eye,
   Users,
-  Settings
+  Settings,
+  LogOut
 } from "lucide-react"
 import Image from "next/image"
+import { toast } from "sonner"
 
 interface User {
   id: string
@@ -110,6 +112,16 @@ export default function ProfilePage() {
     }
   }
 
+  const handleSignOut = async () => {
+    try {
+      await signOut({ callbackUrl: "/" })
+      toast.success("Déconnexion réussie")
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error)
+      toast.error("Erreur lors de la déconnexion")
+    }
+  }
+
   if (!session) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -167,11 +179,22 @@ export default function ProfilePage() {
                   </Badge>
                 </div>
               </div>
-              <Link href="/profile/edit">
-                <Button variant="outline" size="icon" className="modern-button">
-                  <Edit className="w-4 h-4" />
+              <div className="flex space-x-2">
+                <Link href="/profile/edit">
+                  <Button variant="outline" size="icon" className="modern-button">
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="modern-button text-red-500 hover:text-red-600 hover:bg-red-50"
+                  onClick={handleSignOut}
+                  title="Se déconnecter"
+                >
+                  <LogOut className="w-4 h-4" />
                 </Button>
-              </Link>
+              </div>
             </div>
 
             {/* Bio */}

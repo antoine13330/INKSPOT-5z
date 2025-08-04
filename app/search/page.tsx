@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { useSession } from "next-auth/react";
+import { Input, Button, Avatar, Badge, LoadingState, EmptyState } from "@/components/ui/base-components";
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { Search, Filter, Users, FileText, Calendar, TrendingUp, Heart, Eye } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { cn, debounce } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface User {
@@ -168,198 +166,175 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-md mx-auto bg-black min-h-screen">
+    <div className="min-h-screen bg-background pb-20">
+      <div className="container mx-auto px-4 py-6 max-w-lg">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Recherche</h1>
+            <p className="text-muted-foreground text-sm">Trouvez des artistes et des posts</p>
+          </div>
+        </div>
+
         {/* Search Header */}
-        <div className="p-4 border-b border-gray-800">
+        <div className="mb-6">
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              placeholder="Search artists, posts, or tags..."
+              placeholder="Rechercher des artistes, posts, ou tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-gray-800 border-gray-700 text-white pl-10 rounded-full"
+              className="pl-10"
             />
           </div>
 
-                     {/* Search Type Toggle */}
-           <div className="flex gap-2 mb-4">
-             <Button
-               variant={searchType === "artists" ? "default" : "outline"}
-               size="sm"
-               onClick={() => setSearchType("artists")}
-               className={`flex-1 ${
-                 searchType === "artists" 
-                   ? "bg-blue-600 text-white hover:bg-blue-700" 
-                   : "bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700"
-               }`}
-             >
-               <Users className="w-4 h-4 mr-2" />
-               Artists
-             </Button>
-             <Button
-               variant={searchType === "posts" ? "default" : "outline"}
-               size="sm"
-               onClick={() => setSearchType("posts")}
-               className={`flex-1 ${
-                 searchType === "posts" 
-                   ? "bg-blue-600 text-white hover:bg-blue-700" 
-                   : "bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700"
-               }`}
-             >
-               <FileText className="w-4 h-4 mr-2" />
-               Posts
-             </Button>
-           </div>
+          {/* Search Type Toggle */}
+          <div className="flex gap-2 mb-4">
+            <Button
+              variant={searchType === "artists" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSearchType("artists")}
+              className="flex-1"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Artistes
+            </Button>
+            <Button
+              variant={searchType === "posts" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSearchType("posts")}
+              className="flex-1"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Posts
+            </Button>
+          </div>
 
-                     {/* Filter Toggle */}
-           <Button
-             variant="outline"
-             size="sm"
-             onClick={() => setShowFilters(!showFilters)}
-             className="w-full bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700"
-           >
-             <Filter className="w-4 h-4 mr-2" />
-             Filters & Sort
-           </Button>
+          {/* Filter Toggle */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+            className="w-full"
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            Filtres & Tri
+          </Button>
         </div>
 
         {/* Filters Panel */}
         {showFilters && (
-          <div className="p-4 border-b border-gray-800 bg-gray-900">
+          <div className="card mb-6">
             {/* Sort Options */}
             <div className="mb-4">
-              <h3 className="text-sm font-medium mb-2">Sort by:</h3>
+              <h3 className="text-sm font-medium mb-2">Trier par :</h3>
               <div className="flex gap-2 flex-wrap">
-                                 <Button
-                   variant={sortBy === "popularity" ? "default" : "outline"}
-                   size="sm"
-                   onClick={() => setSortBy("popularity")}
-                   className={sortBy === "popularity" 
-                     ? "bg-blue-600 text-white hover:bg-blue-700" 
-                     : "bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700"
-                   }
-                 >
-                   <TrendingUp className="w-4 h-4 mr-1" />
-                   Popularity
-                 </Button>
-                 <Button
-                   variant={sortBy === "date" ? "default" : "outline"}
-                   size="sm"
-                   onClick={() => setSortBy("date")}
-                   className={sortBy === "date" 
-                     ? "bg-blue-600 text-white hover:bg-blue-700" 
-                     : "bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700"
-                   }
-                 >
-                   <Calendar className="w-4 h-4 mr-1" />
-                   Date
-                 </Button>
-                 {searchType === "posts" && (
-                   <Button
-                     variant={sortBy === "likes" ? "default" : "outline"}
-                     size="sm"
-                     onClick={() => setSortBy("likes")}
-                     className={sortBy === "likes" 
-                       ? "bg-blue-600 text-white hover:bg-blue-700" 
-                       : "bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700"
-                     }
-                   >
-                     <Heart className="w-4 h-4 mr-1" />
-                     Likes
-                   </Button>
-                 )}
-                 {searchType === "artists" && (
-                   <Button
-                     variant={sortBy === "name" ? "default" : "outline"}
-                     size="sm"
-                     onClick={() => setSortBy("name")}
-                     className={sortBy === "name" 
-                       ? "bg-blue-600 text-white hover:bg-blue-700" 
-                       : "bg-gray-800 text-gray-200 border-gray-600 hover:bg-gray-700"
-                     }
-                   >
-                     Name
-                   </Button>
-                 )}
+                <Button
+                  variant={sortBy === "popularity" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSortBy("popularity")}
+                >
+                  <TrendingUp className="w-4 h-4 mr-1" />
+                  Popularité
+                </Button>
+                <Button
+                  variant={sortBy === "date" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSortBy("date")}
+                >
+                  <Calendar className="w-4 h-4 mr-1" />
+                  Date
+                </Button>
+                {searchType === "posts" && (
+                  <Button
+                    variant={sortBy === "likes" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSortBy("likes")}
+                  >
+                    <Heart className="w-4 h-4 mr-1" />
+                    Likes
+                  </Button>
+                )}
+                {searchType === "artists" && (
+                  <Button
+                    variant={sortBy === "name" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSortBy("name")}
+                  >
+                    Nom
+                  </Button>
+                )}
               </div>
             </div>
 
-                         {/* Popular Tags */}
-             <div>
-               <h3 className="text-sm font-medium mb-2">Popular Tags:</h3>
-               <div className="flex gap-2 flex-wrap">
-                 {popularTags.map((tag) => (
-                   <Badge
-                     key={tag}
-                     variant={selectedTags.includes(tag) ? "default" : "secondary"}
-                     className={`cursor-pointer ${
-                       selectedTags.includes(tag) 
-                         ? "bg-blue-600 text-white hover:bg-blue-700" 
-                         : "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                     }`}
-                     onClick={() => handleTagToggle(tag)}
-                   >
-                     #{tag}
-                   </Badge>
-                 ))}
-               </div>
-             </div>
+            {/* Popular Tags */}
+            <div>
+              <h3 className="text-sm font-medium mb-2">Tags populaires :</h3>
+              <div className="flex gap-2 flex-wrap">
+                {popularTags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant={selectedTags.includes(tag) ? "default" : "secondary"}
+                    className="cursor-pointer"
+                    onClick={() => handleTagToggle(tag)}
+                  >
+                    #{tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
         {/* Loading State */}
         {loading && (
-          <div className="p-4 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
-            <p className="mt-2 text-gray-400">Searching...</p>
-          </div>
+          <LoadingState message="Recherche en cours..." />
         )}
 
         {/* Results */}
         {!loading && (
-          <div className="p-4">
+          <div>
             {searchType === "artists" ? (
               // Artists Results
               <div className="space-y-4">
                 {users.map((user) => (
                   <div
                     key={user.id}
-                    className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition-colors cursor-pointer"
+                    className="card hover:bg-surface-elevated transition-colors cursor-pointer"
                   >
                     <div className="flex items-start space-x-3">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={user.avatar} />
-                        <AvatarFallback>{user.username[1]}</AvatarFallback>
-                      </Avatar>
+                      <Avatar
+                        src={user.avatar}
+                        alt={user.username}
+                        fallback={user.username[0]}
+                        size="lg"
+                      />
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
-                          <span className="font-medium">@{user.username}</span>
+                          <span className="font-medium text-foreground">@{user.username}</span>
                           {user.verified && (
-                            <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
+                            <Badge variant="default" size="sm">✓</Badge>
                           )}
                         </div>
                         {user.businessName && (
-                          <p className="text-sm text-gray-300">{user.businessName}</p>
+                          <p className="text-sm text-secondary">{user.businessName}</p>
                         )}
                         {user.bio && (
-                          <p className="text-sm text-gray-400 mt-1">{user.bio}</p>
+                          <p className="text-sm text-muted-foreground mt-1">{user.bio}</p>
                         )}
                         {user.specialties.length > 0 && (
                           <div className="flex gap-1 mt-2 flex-wrap">
-                                                     {user.specialties.slice(0, 3).map((specialty) => (
-                           <Badge key={specialty} variant="secondary" className="text-xs bg-gray-700 text-gray-200">
-                             {specialty}
-                           </Badge>
-                         ))}
+                            {user.specialties.slice(0, 3).map((specialty) => (
+                              <Badge key={specialty} variant="secondary" size="sm">
+                                {specialty}
+                              </Badge>
+                            ))}
                           </div>
                         )}
-                        <div className="flex items-center space-x-4 mt-2 text-xs text-gray-400">
+                        <div className="flex items-center space-x-4 mt-2 text-xs text-muted-foreground">
                           <span>{user.postsCount} posts</span>
                           <span>{user.followersCount} followers</span>
-                          <span>{user.profileViews} views</span>
+                          <span>{user.profileViews} vues</span>
                         </div>
                       </div>
                     </div>
@@ -370,55 +345,56 @@ export default function SearchPage() {
               // Posts Results
               <div className="space-y-4">
                 {posts.map((post) => (
-                  <div key={post.id} className="bg-gray-900 rounded-lg p-4">
+                  <div key={post.id} className="card">
                     <div className="flex items-start space-x-3 mb-3">
-                      <Avatar className="w-10 h-10">
-                        <AvatarImage src={post.author.avatar} />
-                        <AvatarFallback>{post.author.username[1]}</AvatarFallback>
-                      </Avatar>
+                      <Avatar
+                        src={post.author.avatar}
+                        alt={post.author.username}
+                        fallback={post.author.username[0]}
+                        size="md"
+                      />
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
-                          <span className="font-medium">@{post.author.username}</span>
+                          <span className="font-medium text-foreground">@{post.author.username}</span>
                           {post.author.verified && (
-                            <div className="w-3 h-3 bg-blue-500 rounded-full flex items-center justify-center">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
+                            <Badge variant="default" size="sm">✓</Badge>
                           )}
                         </div>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-muted-foreground">
                           {formatDate(post.createdAt)}
                         </span>
                       </div>
                     </div>
                     
-                    <p className="text-sm mb-3">{post.content}</p>
+                    <p className="text-sm mb-3 text-foreground">{post.content}</p>
                     
-                                         {post.hashtags.length > 0 && (
-                       <div className="flex gap-1 mb-3 flex-wrap">
-                         {post.hashtags.map((tag) => (
-                           <Badge key={tag} variant="secondary" className="text-xs bg-gray-700 text-gray-200">
-                             #{tag}
-                           </Badge>
-                         ))}
-                       </div>
-                     )}
+                    {post.hashtags.length > 0 && (
+                      <div className="flex gap-1 mb-3 flex-wrap">
+                        {post.hashtags.map((tag) => (
+                          <Badge key={tag} variant="secondary" size="sm">
+                            #{tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                     
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4 text-sm text-gray-400">
+                      <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                         <button
                           onClick={() => handleLikePost(post.id)}
-                          className={`flex items-center space-x-1 ${
+                          className={cn(
+                            "flex items-center space-x-1 transition-colors",
                             post.liked ? "text-red-500" : "hover:text-red-400"
-                          }`}
+                          )}
                         >
-                          <Heart className={`w-4 h-4 ${post.liked ? "fill-current" : ""}`} />
+                          <Heart className={cn("w-4 h-4", post.liked && "fill-current")} />
                           <span>{post.likesCount}</span>
                         </button>
                         <div className="flex items-center space-x-1">
                           <Eye className="w-4 h-4" />
                           <span>{post.viewsCount}</span>
                         </div>
-                        <span>{post.commentsCount} comments</span>
+                        <span>{post.commentsCount} commentaires</span>
                       </div>
                     </div>
                   </div>
@@ -427,28 +403,16 @@ export default function SearchPage() {
             )}
             
             {users.length === 0 && posts.length === 0 && searchQuery.trim() && !loading && (
-              <div className="text-center py-8">
-                <p className="text-gray-400">No results found</p>
-                <p className="text-sm text-gray-500 mt-2">Try different keywords or tags</p>
-              </div>
+              <EmptyState
+                icon={Search}
+                title="Aucun résultat trouvé"
+                description="Essayez des mots-clés ou tags différents"
+              />
             )}
           </div>
         )}
-
-        <BottomNavigation />
       </div>
+      <BottomNavigation />
     </div>
   );
-}
-
-// Debounce utility function
-function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
 }

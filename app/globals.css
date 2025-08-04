@@ -1,61 +1,32 @@
+@import '../styles/design-system.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
+/* Override Tailwind with our design system */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 0 0% 6%;
+    --background: 0 0% 4%; /* #0a0a0a */
     --foreground: 0 0% 98%;
-    --card: 0 0% 8%;
+    --card: 0 0% 10%; /* #1a1a1a */
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 8%;
+    --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 217 91% 60%;
+    --primary: 217 91% 60%; /* #3b82f6 */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 12%;
+    --secondary: 0 0% 16%; /* #2a2a2a */
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 12%;
+    --muted: 0 0% 16%;
     --muted-foreground: 0 0% 64%;
-    --accent: 0 0% 12%;
+    --accent: 0 0% 16%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14%;
-    --input: 0 0% 14%;
+    --border: 0 0% 20%; /* #333333 */
+    --input: 0 0% 20%;
     --ring: 217 91% 60%;
+    --radius: 0.5rem;
   }
 }
 
@@ -67,6 +38,13 @@ body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+}
+
+/* Ensure our design system takes precedence */
+body {
+  font-family: var(--font-family) !important;
+  background-color: var(--color-background) !important;
+  color: var(--color-text-primary) !important;
 }
 
 /* Custom styles for modern design */
