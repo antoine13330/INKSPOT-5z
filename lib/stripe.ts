@@ -1,10 +1,25 @@
 import Stripe from 'stripe';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-06-30.basil',
-});
+// Create Stripe client only if the secret key is available
+const createStripeClient = () => {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    console.warn('STRIPE_SECRET_KEY not found - Stripe functionality will be disabled');
+    return null;
+  }
+  
+  return new Stripe(secretKey, {
+    apiVersion: '2025-07-30.basil',
+  });
+};
+
+export const stripe = createStripeClient();
 
 export async function createStripeCustomer(userId: string, email: string, name?: string) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const customer = await stripe.customers.create({
     email,
     name,
@@ -17,6 +32,10 @@ export async function createStripeCustomer(userId: string, email: string, name?:
 }
 
 export async function createStripeAccount(userId: string, email: string, country: string = 'FR') {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const account = await stripe.accounts.create({
     type: 'express',
     country,
@@ -34,6 +53,10 @@ export async function createStripeAccount(userId: string, email: string, country
 }
 
 export async function createPaymentIntent(amount: number, currency: string = 'eur', customerId?: string) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const paymentIntent = await stripe.paymentIntents.create({
     amount: Math.round(amount * 100), // Convert to cents
     currency,
@@ -54,6 +77,10 @@ export async function createCheckoutSession(params: {
   customerId?: string;
   metadata?: Record<string, string>;
 }) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: params.lineItems,
@@ -68,6 +95,10 @@ export async function createCheckoutSession(params: {
 }
 
 export async function createProduct(name: string, description?: string) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const product = await stripe.products.create({
     name,
     description,
@@ -77,6 +108,10 @@ export async function createProduct(name: string, description?: string) {
 }
 
 export async function createPrice(productId: string, amount: number, currency: string = 'eur', recurring?: { interval: 'day' | 'week' | 'month' | 'year' }) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const price = await stripe.prices.create({
     product: productId,
     unit_amount: Math.round(amount * 100),
@@ -88,6 +123,10 @@ export async function createPrice(productId: string, amount: number, currency: s
 }
 
 export async function createTransfer(amount: number, destination: string, currency: string = 'eur') {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const transfer = await stripe.transfers.create({
     amount: Math.round(amount * 100),
     currency,
@@ -98,6 +137,10 @@ export async function createTransfer(amount: number, destination: string, curren
 }
 
 export async function getAccountLink(accountId: string, refreshUrl: string, returnUrl: string) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
   const accountLink = await stripe.accountLinks.create({
     account: accountId,
     refresh_url: refreshUrl,
@@ -106,4 +149,31 @@ export async function getAccountLink(accountId: string, refreshUrl: string, retu
   });
 
   return accountLink;
+}
+
+export async function createPayout(amount: number, currency: string = 'eur', destination: string) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
+  const payout = await stripe.payouts.create({
+    amount: Math.round(amount * 100),
+    currency,
+    destination,
+  });
+
+  return payout;
+}
+
+export async function refundPayment(paymentIntentId: string, amount?: number) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured');
+  }
+  
+  const refund = await stripe.refunds.create({
+    payment_intent: paymentIntentId,
+    amount: amount ? Math.round(amount * 100) : undefined,
+  });
+
+  return refund;
 }

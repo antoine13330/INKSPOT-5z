@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { uploadToS3, generateS3Key } from "@/lib/s3"
+import { uploadToS3, generateS3Key, generateFileName } from "@/lib/s3"
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,8 +33,9 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Generate S3 key
-    const key = generateS3Key(session.user.id, type, file.name)
+    // Generate file name and S3 key
+    const fileName = generateFileName(file.name, session.user.id)
+    const key = generateS3Key(fileName, type)
 
     // Upload to S3
     const url = await uploadToS3(buffer, key, file.type)

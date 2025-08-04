@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { stripe, createPaymentIntent } from "@/lib/stripe"
+import { stripe, createPaymentIntent, refundPayment } from "@/lib/stripe"
 import { sendBookingConfirmationEmail } from "@/lib/email"
 
 export async function POST(request: NextRequest) {
@@ -65,9 +65,7 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await createPaymentIntent(
       depositAmount,
       "eur",
-      client.stripeCustomerId || undefined,
-      depositAmount * 0.1, // 10% platform fee
-      { destination: pro.stripeAccountId! },
+      client.stripeCustomerId || undefined
     )
 
     const booking = await prisma.booking.create({
@@ -240,9 +238,7 @@ export async function PATCH(request: NextRequest) {
             })
           } else {
             // Pro cancelled - refund deposit to client
-            await stripe.refunds.create({
-              payment_intent: depositPayment.stripePaymentIntentId!,
-            })
+            await refundPayment(depositPayment.stripePaymentIntentId!)
 
             await prisma.transaction.create({
               data: {
