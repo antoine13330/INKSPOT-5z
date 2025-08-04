@@ -1,196 +1,151 @@
 "use client"
 
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { BottomNavigation } from "@/components/bottom-navigation"
-import { Search, Check } from "lucide-react"
-import Link from "next/link"
+import React from 'react'
+import { useSession } from 'next-auth/react'
+import { Conversation } from '@/types'
+import { useApi } from '@/hooks/useApi'
+import { ConversationList } from '@/components/conversation/conversation-list'
+import { BottomNavigation } from '@/components/bottom-navigation'
+import { Container, EmptyState } from '@/components/ui/base-components'
+import { Button } from '@/components/ui/base-components'
+import { MessageCircle } from 'lucide-react'
 
-export default function ConversationsPage() {
-  const [activeTab, setActiveTab] = useState<"conversations" | "archives">("conversations")
-  const [searchQuery, setSearchQuery] = useState("")
-
-  const conversations = [
+// Mock API function
+const fetchConversations = async (): Promise<{ success: boolean; data?: Conversation[]; error?: string }> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  
+  // Mock data
+  const mockConversations: Conversation[] = [
     {
       id: "1",
-      user: {
-        name: "Despoteur Fou",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "typing",
+      participants: [
+        {
+          id: "user1",
+          name: "John Doe",
+          username: "@johndoe",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+          role: "PRO"
+        }
+      ],
+      lastMessage: {
+        id: "msg1",
+        content: "Salut ! J'ai regardé votre portfolio, c'est vraiment impressionnant.",
+        type: "TEXT",
+        isFromUser: false,
+        conversationId: "1",
+        senderId: "user1",
+        readBy: [],
+        createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+        updatedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString()
       },
-      lastMessage: "Is typing...",
-      timestamp: "12:34",
-      unread: false,
-      online: true,
+      unreadCount: 2,
+      isActive: true,
+      type: "DIRECT",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     },
     {
       id: "2",
-      user: {
-        name: "The Homelander",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "online",
+      participants: [
+        {
+          id: "user2",
+          name: "Jane Smith",
+          username: "@janesmith",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+          role: "CLIENT"
+        }
+      ],
+      lastMessage: {
+        id: "msg2",
+        content: "Parfait, je vous envoie les détails du projet.",
+        type: "TEXT",
+        isFromUser: true,
+        conversationId: "2",
+        senderId: "currentUser",
+        readBy: [],
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+        updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString()
       },
-      lastMessage: "Are you open for a new tattoo project ? I have some...",
-      timestamp: "12:30",
-      unread: true,
-      online: true,
+      unreadCount: 0,
+      isActive: true,
+      type: "DIRECT",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     },
     {
       id: "3",
-      user: {
-        name: "GorillouZ",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "offline",
+      participants: [
+        {
+          id: "user3",
+          name: "Mike Johnson",
+          username: "@mikejohnson",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+          role: "PRO"
+        }
+      ],
+      lastMessage: {
+        id: "msg3",
+        content: "Merci pour votre retour, je vais travailler sur les modifications.",
+        type: "TEXT",
+        isFromUser: false,
+        conversationId: "3",
+        senderId: "user3",
+        readBy: [],
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+        updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString()
       },
-      lastMessage: "Are you open for a new tattoo project ? I have some...",
-      timestamp: "12:10",
-      unread: false,
-      online: false,
-    },
-    {
-      id: "4",
-      user: {
-        name: "DoomSlayer",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "offline",
-      },
-      lastMessage: "",
-      timestamp: "12:09",
-      unread: false,
-      online: false,
-    },
-    {
-      id: "5",
-      user: {
-        name: "Sam sulek",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "offline",
-      },
-      lastMessage: "Are you open for a new tattoo project ? I have some...",
-      timestamp: "11:01",
-      unread: false,
-      online: false,
-    },
-    {
-      id: "6",
-      user: {
-        name: "BigDackDock",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "offline",
-      },
-      lastMessage: "Are you open for a new tattoo project ? I have some...",
-      timestamp: "8:59",
-      unread: false,
-      online: false,
-    },
-    {
-      id: "7",
-      user: {
-        name: "Gaufre Salée",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "offline",
-      },
-      lastMessage: "Are you open for a new tattoo project ? I have some...",
-      timestamp: "8:34",
-      unread: false,
-      online: false,
-    },
-    {
-      id: "8",
-      user: {
-        name: "Pajpal Roulant",
-        avatar: "/placeholder.svg?height=40&width=40",
-        status: "offline",
-      },
-      lastMessage: "Are you open for a new tattoo project ? I have some...",
-      timestamp: "7:40",
-      unread: false,
-      online: false,
-    },
+      unreadCount: 1,
+      isActive: true,
+      type: "DIRECT",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
   ]
 
-  const filteredConversations = conversations.filter((conv) =>
-    conv.user.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  return {
+    success: true,
+    data: mockConversations
+  }
+}
+
+export default function ConversationsPage() {
+  const { data: session } = useSession()
+  
+  const {
+    data: conversations,
+    isLoading,
+    error,
+    refetch
+  } = useApi(fetchConversations, {
+    immediate: !!session?.user?.id
+  })
+
+  if (!session) {
+    return (
+      <Container>
+        <EmptyState
+          icon={MessageCircle}
+          title="Connexion requise"
+          description="Connectez-vous pour voir vos conversations"
+          action={
+            <a href="/auth/login">
+              <Button>Se connecter</Button>
+            </a>
+          }
+        />
+      </Container>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-md mx-auto bg-black min-h-screen">
-        {/* Search Bar */}
-        <div className="p-4 border-b border-gray-800">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-gray-800 border-gray-700 text-white pl-10 rounded-full"
-            />
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex border-b border-gray-800">
-          <button
-            onClick={() => setActiveTab("conversations")}
-            className={`flex-1 py-3 text-center font-medium ${
-              activeTab === "conversations" ? "text-white border-b-2 border-blue-500" : "text-gray-400"
-            }`}
-          >
-            Conversations
-          </button>
-          <button
-            onClick={() => setActiveTab("archives")}
-            className={`flex-1 py-3 text-center font-medium ${
-              activeTab === "archives" ? "text-white border-b-2 border-blue-500" : "text-gray-400"
-            }`}
-          >
-            Archives
-          </button>
-        </div>
-
-        {/* Conversations List */}
-        <div className="flex-1">
-          {filteredConversations.map((conversation) => (
-            <Link key={conversation.id} href={`/conversations/${conversation.id}`} className="block">
-              <div className="flex items-center p-4 hover:bg-gray-900 border-b border-gray-800/50">
-                <div className="relative">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={conversation.user.avatar || "/placeholder.svg"} />
-                    <AvatarFallback>{conversation.user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  {conversation.online && (
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-black"></div>
-                  )}
-                </div>
-
-                <div className="flex-1 ml-3 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-white truncate">{conversation.user.name}</h3>
-                    <span className="text-xs text-gray-400">{conversation.timestamp}</span>
-                  </div>
-                  <div className="flex items-center justify-between mt-1">
-                    <p
-                      className={`text-sm truncate ${
-                        conversation.user.status === "typing" ? "text-blue-400" : "text-gray-400"
-                      }`}
-                    >
-                      {conversation.lastMessage || "No messages yet"}
-                    </p>
-                    <div className="flex items-center space-x-2">
-                      {conversation.unread && <div className="w-2 h-2 bg-red-500 rounded-full"></div>}
-                      <Check className="w-4 h-4 text-gray-400" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        <BottomNavigation />
-      </div>
-    </div>
+    <ConversationList 
+      conversations={conversations || []}
+      showSearch={true}
+      title="Messages"
+      loading={isLoading}
+      error={error}
+      onRetry={refetch}
+    />
   )
 }
