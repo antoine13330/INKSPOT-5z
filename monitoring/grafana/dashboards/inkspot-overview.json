@@ -1,273 +1,95 @@
 {
-  "dashboard": {
-    "id": null,
-    "title": "INKSPOT - Application Overview",
-    "tags": ["inkspot", "overview"],
-    "style": "dark",
-    "timezone": "browser",
-    "panels": [
-      {
-        "id": 1,
-        "title": "Total Users",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "inkspot_users_total",
-            "refId": "A"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          }
+  "id": null,
+  "title": "INKSPOT - Application Overview",
+  "tags": ["inkspot", "overview"],
+  "style": "dark",
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total Users",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "inkspot_users_total",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": ["lastNotNull"],
+          "fields": ""
         },
-        "options": {
-          "reduceOptions": {
-            "values": false,
-            "calcs": ["lastNotNull"],
-            "fields": ""
-          },
-          "orientation": "auto",
-          "textMode": "auto",
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto"
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 0
-        }
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto"
       },
-      {
-        "id": 2,
-        "title": "Active Users Today",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "inkspot_users_active_today",
-            "refId": "A"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          }
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 0
-        }
-      },
-      {
-        "id": 3,
-        "title": "Revenue Metrics",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "inkspot_revenue_total",
-            "refId": "A",
-            "legendFormat": "Total Revenue"
-          },
-          {
-            "expr": "inkspot_revenue_today",
-            "refId": "B",
-            "legendFormat": "Today's Revenue"
-          }
-        ],
-        "yAxes": [
-          {
-            "unit": "currencyEUR",
-            "min": 0
-          }
-        ],
-        "gridPos": {
-          "h": 8,
-          "w": 24,
-          "x": 0,
-          "y": 8
-        }
-      },
-      {
-        "id": 4,
-        "title": "User Growth",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "increase(inkspot_users_total[1d])",
-            "refId": "A",
-            "legendFormat": "New Users Per Day"
-          }
-        ],
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 16
-        }
-      },
-      {
-        "id": 5,
-        "title": "Booking Status Distribution",
-        "type": "piechart",
-        "targets": [
-          {
-            "expr": "inkspot_bookings_pending",
-            "refId": "A",
-            "legendFormat": "Pending"
-          },
-          {
-            "expr": "inkspot_bookings_confirmed",
-            "refId": "B",
-            "legendFormat": "Confirmed"
-          },
-          {
-            "expr": "inkspot_bookings_completed",
-            "refId": "C",
-            "legendFormat": "Completed"
-          }
-        ],
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 16
-        }
-      },
-      {
-        "id": 6,
-        "title": "Content Engagement",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "inkspot_posts_total",
-            "refId": "A",
-            "legendFormat": "Total Posts"
-          },
-          {
-            "expr": "inkspot_likes_total",
-            "refId": "B",
-            "legendFormat": "Total Likes"
-          },
-          {
-            "expr": "inkspot_comments_total",
-            "refId": "C",
-            "legendFormat": "Total Comments"
-          }
-        ],
-        "gridPos": {
-          "h": 8,
-          "w": 24,
-          "x": 0,
-          "y": 24
-        }
-      },
-      {
-        "id": 7,
-        "title": "Payment Success Rate",
-        "type": "stat",
-        "targets": [
-          {
-            "expr": "(inkspot_payments_successful / inkspot_payments_total) * 100",
-            "refId": "A"
-          }
-        ],
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "min": 0,
-            "max": 100,
-            "thresholds": {
-              "steps": [
-                {
-                  "color": "red",
-                  "value": 0
-                },
-                {
-                  "color": "yellow",
-                  "value": 80
-                },
-                {
-                  "color": "green",
-                  "value": 95
-                }
-              ]
-            }
-          }
-        },
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 32
-        }
-      },
-      {
-        "id": 8,
-        "title": "System Health",
-        "type": "table",
-        "targets": [
-          {
-            "expr": "up{job=\"inkspot-app\"}",
-            "refId": "A",
-            "format": "table"
-          }
-        ],
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 32
-        }
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
       }
-    ],
-    "time": {
-      "from": "now-7d",
-      "to": "now"
     },
-    "timepicker": {},
-    "templating": {
-      "list": []
-    },
-    "annotations": {
-      "list": []
-    },
-    "refresh": "1m",
-    "schemaVersion": 30,
-    "version": 0,
-    "links": []
-  }
+    {
+      "id": 2,
+      "title": "Active Users Today",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "inkspot_users_active_today",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      }
+    }
+  ]
 }
