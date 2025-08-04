@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { stripe, createPaymentIntent } from "@/lib/stripe"
+import { createPaymentIntent } from "@/lib/stripe"
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,19 +11,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
-    const { amount, currency = "eur", receiverId, description, bookingId } = await request.json()
+    const { amount, currency = "EUR", recipientId, description, bookingId } = await request.json()
 
-    if (!amount || !receiverId) {
-      return NextResponse.json({ message: "Amount and receiverId are required" }, { status: 400 })
+    if (!amount || !recipientId) {
+      return NextResponse.json({ message: "Amount and recipient are required" }, { status: 400 })
     }
 
-    // Verify receiver exists
-    const receiver = await prisma.user.findUnique({
-      where: { id: receiverId },
+    // Verify recipient exists
+    const recipient = await prisma.user.findUnique({
+      where: { id: recipientId },
     })
 
-    if (!receiver) {
-      return NextResponse.json({ message: "Receiver not found" }, { status: 404 })
+    if (!recipient) {
+      return NextResponse.json({ message: "Recipient not found" }, { status: 404 })
     }
 
     // Get sender info
@@ -38,10 +38,8 @@ export async function POST(request: NextRequest) {
     // Create Stripe payment intent
     const paymentIntent = await createPaymentIntent(
       amount,
-      currency,
-      sender.stripeCustomerId || undefined,
-      amount * 0.1, // 10% platform fee
-      receiver.stripeAccountId ? { destination: receiver.stripeAccountId } : undefined
+      currency.toLowerCase(),
+      sender.stripeCustomerId || undefined
     )
 
     // Create payment record in database
@@ -51,57 +49,35 @@ export async function POST(request: NextRequest) {
         currency: currency.toUpperCase(),
         status: "PENDING",
         stripePaymentIntentId: paymentIntent.id,
-        description: description || `Payment to ${receiver.username}`,
+        description: description || `Payment to ${recipient.username || recipient.email}`,
         senderId: session.user.id,
-        receiverId,
-        bookingId: bookingId || null,
+        receiverId: recipientId,
+        bookingId,
       },
       include: {
-        sender: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-          },
-        },
-        receiver: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-          },
-        },
-      },
-    })
-
-    // Create notification for receiver
-    await prisma.notification.create({
-      data: {
-        title: "Payment Received",
-        message: `You received a payment of €${amount} from ${sender.username}`,
-        type: "PAYMENT",
-        userId: receiverId,
-        data: {
-          paymentId: payment.id,
-          amount,
-          currency,
-          senderId: session.user.id,
-        },
+        sender: true,
+        receiver: true,
+        booking: true,
       },
     })
 
     return NextResponse.json({
       success: true,
-      payment,
-      paymentIntent: {
-        id: paymentIntent.id,
+      payment: {
+        id: payment.id,
+        amount: payment.amount,
+        currency: payment.currency,
+        status: payment.status,
         clientSecret: paymentIntent.client_secret,
-        amount,
+        stripePaymentIntentId: paymentIntent.id,
       },
     })
   } catch (error) {
-    console.error("Payment creation error:", error)
-    return NextResponse.json({ success: false, message: "Payment failed" }, { status: 500 })
+    console.error("Error creating payment:", error)
+    return NextResponse.json(
+      { success: false, message: "Payment failed", error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    )
   }
 }
 
@@ -112,24 +88,44 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
-    const { searchParams } = new URL(request.url)
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const limit = Number.parseInt(searchParams.get("limit") || "20")
-    const skip = (page - 1) * limit
+    const url = new URL(request.url)
+    const userId = url.searchParams.get("userId") || session.user.id
+    const type = url.searchParams.get("type") || "all" // "sent", "received", "all"
 
-    // Get user's payments (sent and received)
+    // Check if user can access this data
+    const isAdmin = session.user.role === "ADMIN"
+    const isOwner = session.user.id === userId
+
+    if (!isAdmin && !isOwner) {
+      return NextResponse.json({ message: "Not authorized to view this data" }, { status: 403 })
+    }
+
+    let whereClause = {}
+    
+    switch (type) {
+      case "sent":
+        whereClause = { senderId: userId }
+        break
+      case "received":
+        whereClause = { receiverId: userId }
+        break
+      default:
+        whereClause = {
+          OR: [
+            { senderId: userId },
+            { receiverId: userId },
+          ],
+        }
+    }
+
     const payments = await prisma.payment.findMany({
-      where: {
-        OR: [
-          { senderId: session.user.id },
-          { receiverId: session.user.id },
-        ],
-      },
+      where: whereClause,
       include: {
         sender: {
           select: {
             id: true,
             username: true,
+            email: true,
             avatar: true,
           },
         },
@@ -137,6 +133,7 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             username: true,
+            email: true,
             avatar: true,
           },
         },
@@ -144,26 +141,26 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             title: true,
+            startTime: true,
+            endTime: true,
           },
         },
       },
       orderBy: {
         createdAt: "desc",
       },
-      skip,
-      take: limit,
+      take: 50, // Limit to last 50 payments
     })
 
     return NextResponse.json({
+      success: true,
       payments,
-      pagination: {
-        page,
-        limit,
-        hasMore: payments.length === limit,
-      },
     })
   } catch (error) {
     console.error("Error fetching payments:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch payments" },
+      { status: 500 }
+    )
   }
 }
