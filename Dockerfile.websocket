@@ -1,0 +1,68 @@
+# WebSocket Server Dockerfile
+FROM node:18-alpine AS base
+
+# Install dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+# Build stage
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Create WebSocket server file with CommonJS syntax
+RUN echo 'const { createServer } = require("http");' > websocket-server.js && \
+    echo 'const { Server } = require("socket.io");' >> websocket-server.js && \
+    echo 'const httpServer = createServer();' >> websocket-server.js && \
+    echo 'const io = new Server(httpServer, {' >> websocket-server.js && \
+    echo '  cors: { origin: "*", methods: ["GET", "POST"] }' >> websocket-server.js && \
+    echo '});' >> websocket-server.js && \
+    echo 'io.on("connection", (socket) => {' >> websocket-server.js && \
+    echo '  console.log("Client connected:", socket.id);' >> websocket-server.js && \
+    echo '  socket.on("join-conversation", (conversationId) => {' >> websocket-server.js && \
+    echo '    socket.join(conversationId);' >> websocket-server.js && \
+    echo '    console.log(`Client ${socket.id} joined conversation ${conversationId}`);' >> websocket-server.js && \
+    echo '  });' >> websocket-server.js && \
+    echo '  socket.on("send-message", (data) => {' >> websocket-server.js && \
+    echo '    socket.to(data.conversationId).emit("new-message", data);' >> websocket-server.js && \
+    echo '  });' >> websocket-server.js && \
+    echo '  socket.on("typing", (data) => {' >> websocket-server.js && \
+    echo '    socket.to(data.conversationId).emit("user-typing", data);' >> websocket-server.js && \
+    echo '  });' >> websocket-server.js && \
+    echo '  socket.on("disconnect", () => {' >> websocket-server.js && \
+    echo '    console.log("Client disconnected:", socket.id);' >> websocket-server.js && \
+    echo '  });' >> websocket-server.js && \
+    echo '});' >> websocket-server.js && \
+    echo 'const PORT = process.env.WS_PORT || 3001;' >> websocket-server.js && \
+    echo 'httpServer.listen(PORT, () => {' >> websocket-server.js && \
+    echo '  console.log(`WebSocket server running on port ${PORT}`);' >> websocket-server.js && \
+    echo '});' >> websocket-server.js
+
+# Production stage
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy necessary files
+COPY --from=builder --chown=nextjs:nodejs /app/websocket-server.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+USER nextjs
+
+EXPOSE 3001
+
+CMD ["node", "websocket-server.js"] 
