@@ -1,407 +1,264 @@
-# 🚀 INKSPOT-5z - Remaining Steps to Complete
-
-## 📊 Project Status Summary
-- **Current Progress:** ~45% Complete
-- **Estimated Time to MVP:** 3-5 weeks
-- **Estimated Time to Production:** 7-9 weeks
-- **Total Remaining Hours:** ~150 hours
-
----
-
-## 🔴 **CRITICAL FIXES (Week 1)**
-
-### 1. ✅ Fix Test Configuration (2-4 hours) - **COMPLETED**
-**Issue:** 35 tests failing due to `ReferenceError: Request is not defined`
-**Files fixed:**
-- ✅ `jest.config.js` - Updated Next.js API route mocking
-- ✅ `__tests__/api/*.test.ts` - Fixed API route test setup
-- ✅ `jest.setup.js` - Added proper Request/Response mocking
-- ✅ `__tests__/helpers/api-test-helper.ts` - Created helper functions
-
-**Results:**
-- ✅ Post creation tests: 10/10 passing (was 7 failing, 3 passing)
-- ✅ All API route tests now properly configured for Next.js 14
-
-### 2. ✅ Fix VAPID Configuration (1-2 hours) - **COMPLETED**
-**Issue:** `Vapid subject is not a valid URL`
-**Files fixed:**
-- ✅ `lib/notifications.ts` - Fixed email format for VAPID subject
-- ✅ `.env.example` - Updated to show proper mailto format
-
-**Results:**
-- ✅ Notifications tests: 4/4 passing
-- ✅ VAPID subject now uses proper `mailto:` format
-
-### 3. ✅ Complete Authentication System (8-12 hours) - **COMPLETED**
-**Features implemented:**
-- ✅ Email verification system with token-based verification
-- ✅ Password recovery flow with secure reset tokens
-- ✅ Rate limiting for login attempts
-- ✅ Enhanced session management with 30-day sessions
-- ✅ Google OAuth integration with automatic verification
-- ✅ User verification status tracking
-- ✅ Last login tracking
-
-**Files created/modified:**
-- ✅ `app/api/auth/verify-email/route.ts` - Email verification API
-- ✅ `app/api/auth/reset-password/route.ts` - Password reset API
-- ✅ `app/auth/verify-email/page.tsx` - Email verification page
-- ✅ `app/auth/reset-password/page.tsx` - Password reset page
-- ✅ `lib/email.ts` - Enhanced email functionality
-- ✅ `lib/rate-limit.ts` - Rate limiting utility
-- ✅ `lib/auth.ts` - Enhanced auth configuration
-- ✅ `prisma/schema.prisma` - Added VerificationToken model
-- ✅ Updated login/register pages with new features
-
-**Results:**
-- ✅ Complete email verification flow
-- ✅ Secure password recovery system
-- ✅ Rate limiting protection
-- ✅ Enhanced session security
-- ✅ Google OAuth with proper user creation
-- ✅ Database schema updated with verification tokens
-
-**Commands completed:**
-```bash
-# Fixed VAPID configuration in notifications.ts
-# Updated .env.example with proper mailto format
-# All notification tests now passing
-# Complete authentication system implemented
-# Database schema updated with verification tokens
-```
-
----
-
-## 🟠 **HIGH PRIORITY FEATURES (Week 1-2)**
-
-### 3. Complete Authentication System (8-12 hours)
-**Missing Features:**
-- [ ] Two-factor authentication (2FA)
-- [ ] Password recovery flow
-- [ ] Email verification system
-- [ ] Rate limiting for login attempts
-- [ ] Session management improvements
-
-**Files to create/modify:**
-- `app/api/auth/verify-email/route.ts`
-- `app/api/auth/reset-password/route.ts`
-- `app/api/auth/2fa/route.ts`
-- `app/auth/verify-email/page.tsx`
-- `app/auth/reset-password/page.tsx`
-- `lib/rate-limit.ts`
-
-### 4. Real-time Messaging System (12-16 hours)
-**Missing Features:**
-- [ ] WebSocket implementation
-- [ ] Real-time message delivery
-- [ ] Message read status
-- [ ] Typing indicators
-- [ ] File/image sharing in messages
-- [ ] Message search functionality
-
-**Files to create/modify:**
-- `lib/websocket.ts` - WebSocket server setup
-- `app/api/messages/realtime/route.ts`
-- `components/chat/MessageInput.tsx`
-- `components/chat/MessageList.tsx`
-- `components/chat/TypingIndicator.tsx`
-- `hooks/useWebSocket.ts`
-
-### 5. Complete Payment System (8-12 hours)
-**Missing Features:**
-- [ ] Stripe webhooks implementation
-- [ ] Refund processing
-- [ ] Automatic payouts to PROs
-- [ ] Invoice generation
-- [ ] Payment dispute handling
-- [ ] Financial reporting
-
-**Files to create/modify:**
-- `app/api/stripe/webhooks/route.ts` - Complete webhook handlers
-- `app/api/payments/refund/route.ts`
-- `app/api/payments/payout/route.ts`
-- `lib/invoice-generator.ts`
-- `app/pro/dashboard/financial/page.tsx`
-
----
-
-## 🟡 **MEDIUM PRIORITY FEATURES (Week 2-3)**
 
 ### 6. Enhanced User Management (10-14 hours)
 **Missing Features:**
-- [ ] PRO account verification system
-- [ ] Portfolio management
-- [ ] User rating/review system
-- [ ] Profile customization for PROs
-- [ ] User blocking/reporting
-- [ ] Profile analytics
+
+#### 6.1 PRO Account Verification System (3-4 hours)
+**Description:** Comprehensive verification system for professional artists/photographers
+**Features:**
+- [ ] Identity verification (government ID upload)
+- [ ] Professional credential verification
+- [ ] Portfolio quality assessment
+- [ ] Social media account linking
+- [ ] Tax information collection (for payments)
+- [ ] Professional reference system
+- [ ] Automated verification scoring
+- [ ] Manual review workflow for edge cases
+
+**Technical Requirements:**
+- Document upload and secure storage
+- OCR integration for ID verification
+- Background check API integration
+- Tax form generation (1099, W-9)
+- Verification status workflow management
+
+#### 6.2 Advanced Portfolio Management (2-3 hours)
+**Description:** Comprehensive portfolio system for PRO users
+**Features:**
+- [ ] Multi-media portfolio support (images, videos, audio)
+- [ ] Portfolio categories and tags
+- [ ] Before/after showcase functionality
+- [ ] Client testimonial integration
+- [ ] Portfolio analytics (views, engagement)
+- [ ] Portfolio sharing and embedding
+- [ ] Collaborative portfolio creation
+- [ ] Portfolio versioning and history
+
+**Technical Requirements:**
+- Media optimization and CDN integration
+- Portfolio template system
+- SEO optimization for portfolios
+- Social sharing functionality
+
+#### 6.3 User Rating & Review System (2-3 hours)
+**Description:** Comprehensive rating system for all users
+**Features:**
+- [ ] Multi-dimensional rating system (quality, communication, timeliness)
+- [ ] Verified purchase/booking requirement for reviews
+- [ ] Photo/video review attachments
+- [ ] Response system for PROs
+- [ ] Review moderation and spam detection
+- [ ] Aggregate rating calculations
+- [ ] Review helpfulness voting
+- [ ] Anonymous review options
+- [ ] Review dispute resolution system
+
+**Technical Requirements:**
+- Rating algorithm implementation
+- Review spam detection ML model
+- Notification system for new reviews
+- Review analytics dashboard
+
+#### 6.4 Enhanced Profile Customization (1-2 hours)
+**Description:** Advanced customization options for PRO profiles
+**Features:**
+- [ ] Custom profile themes and layouts
+- [ ] Branded color schemes
+- [ ] Custom banner and header images
+- [ ] Social media integration display
+- [ ] Contact form customization
+- [ ] Availability calendar integration
+- [ ] Pricing tier display
+- [ ] Specialization badges
+- [ ] Location and service area mapping
+
+**Technical Requirements:**
+- Theme engine implementation
+- Real-time preview system
+- Mobile responsiveness for custom layouts
+
+#### 6.5 User Safety & Reporting System (1-2 hours)
+**Description:** Comprehensive user safety and moderation tools
+**Features:**
+- [ ] Multi-level user blocking (soft, hard, temporary)
+- [ ] Detailed reporting categories (harassment, spam, inappropriate content)
+- [ ] Evidence submission system (screenshots, messages)
+- [ ] Automated content filtering
+- [ ] User behavior pattern analysis
+- [ ] Escalation workflow for serious violations
+- [ ] Appeal process for blocked users
+- [ ] Trusted user program
+- [ ] Community moderation tools
+
+**Technical Requirements:**
+- ML-based content moderation
+- User behavior analytics
+- Automated action triggers
+- Moderation queue system
+
+#### 6.6 Profile Analytics & Insights (1-2 hours)
+**Description:** Comprehensive analytics for user profiles and performance
+**Features:**
+- [ ] Profile view analytics (daily, weekly, monthly)
+- [ ] Engagement metrics (messages received, bookings)
+- [ ] Conversion tracking (views to bookings)
+- [ ] Performance benchmarking against similar PROs
+- [ ] Revenue analytics and projections
+- [ ] Client demographic insights
+- [ ] Popular content analysis
+- [ ] SEO performance tracking
+- [ ] Competitive analysis tools
+
+**Technical Requirements:**
+- Analytics data pipeline
+- Real-time dashboard updates
+- Data export functionality
+- Comparative analytics engine
+
+**Database Schema Enhancements:**
+```sql
+-- PRO verification system
+CREATE TABLE pro_verifications (
+  id VARCHAR(255) PRIMARY KEY,
+  user_id VARCHAR(255) REFERENCES users(id),
+  verification_type ENUM('identity', 'professional', 'portfolio', 'tax'),
+  status ENUM('pending', 'approved', 'rejected', 'requires_review'),
+  documents JSONB,
+  verification_score INTEGER,
+  reviewed_by VARCHAR(255),
+  reviewed_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Portfolio system
+CREATE TABLE portfolios (
+  id VARCHAR(255) PRIMARY KEY,
+  user_id VARCHAR(255) REFERENCES users(id),
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  category VARCHAR(100),
+  tags TEXT[],
+  media_items JSONB,
+  is_featured BOOLEAN DEFAULT FALSE,
+  visibility ENUM('public', 'private', 'pro_only'),
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Review system
+CREATE TABLE user_reviews (
+  id VARCHAR(255) PRIMARY KEY,
+  reviewer_id VARCHAR(255) REFERENCES users(id),
+  reviewed_user_id VARCHAR(255) REFERENCES users(id),
+  booking_id VARCHAR(255) REFERENCES bookings(id),
+  ratings JSONB, -- {quality: 5, communication: 4, timeliness: 5}
+  review_text TEXT,
+  review_media TEXT[],
+  is_verified BOOLEAN DEFAULT FALSE,
+  helpfulness_votes INTEGER DEFAULT 0,
+  response TEXT,
+  response_date TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- User blocking/reporting
+CREATE TABLE user_blocks (
+  id VARCHAR(255) PRIMARY KEY,
+  blocker_id VARCHAR(255) REFERENCES users(id),
+  blocked_id VARCHAR(255) REFERENCES users(id),
+  block_type ENUM('soft', 'hard', 'temporary'),
+  reason TEXT,
+  expires_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE user_reports (
+  id VARCHAR(255) PRIMARY KEY,
+  reporter_id VARCHAR(255) REFERENCES users(id),
+  reported_user_id VARCHAR(255) REFERENCES users(id),
+  report_type VARCHAR(100),
+  description TEXT,
+  evidence JSONB,
+  status ENUM('pending', 'reviewing', 'resolved', 'dismissed'),
+  moderator_id VARCHAR(255),
+  resolution TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+**API Endpoints to Create:**
+```typescript
+// PRO verification
+POST /api/users/verify-pro
+GET /api/users/verification-status
+PUT /api/users/verification/{id}
+
+// Portfolio management
+POST /api/users/portfolio
+GET /api/users/{id}/portfolio
+PUT /api/users/portfolio/{id}
+DELETE /api/users/portfolio/{id}
+GET /api/portfolios/featured
+
+// Reviews
+POST /api/users/{id}/reviews
+GET /api/users/{id}/reviews
+PUT /api/reviews/{id}/response
+POST /api/reviews/{id}/helpful
+
+// User safety
+POST /api/users/block
+POST /api/users/report
+GET /api/users/blocked
+PUT /api/reports/{id}/resolve
+
+// Analytics
+GET /api/users/{id}/analytics
+GET /api/users/{id}/insights
+GET /api/analytics/benchmarks
+```
 
 **Files to create/modify:**
-- `app/api/users/verify-pro/route.ts`
-- `app/api/users/portfolio/route.ts`
-- `app/api/users/reviews/route.ts`
-- `app/profile/portfolio/page.tsx`
-- `app/profile/customize/page.tsx`
-- `components/profile/PortfolioEditor.tsx`
+- `app/api/users/verify-pro/route.ts` - PRO verification endpoints
+- `app/api/users/portfolio/route.ts` - Portfolio management
+- `app/api/users/reviews/route.ts` - Review system endpoints
+- `app/api/users/block/route.ts` - User blocking system
+- `app/api/users/report/route.ts` - User reporting system
+- `app/api/users/analytics/route.ts` - User analytics endpoints
+- `app/profile/portfolio/page.tsx` - Portfolio management page
+- `app/profile/customize/page.tsx` - Profile customization
+- `app/profile/analytics/page.tsx` - Analytics dashboard
+- `components/profile/PortfolioEditor.tsx` - Portfolio creation/editing
+- `components/profile/VerificationFlow.tsx` - PRO verification UI
+- `components/profile/ReviewSystem.tsx` - Review display and management
+- `components/profile/ProfileCustomizer.tsx` - Profile customization tools
+- `components/profile/AnalyticsDashboard.tsx` - Analytics visualization
+- `components/profile/SafetyTools.tsx` - Blocking and reporting UI
+- `lib/verification.ts` - Verification logic and scoring
+- `lib/portfolio.ts` - Portfolio management utilities
+- `lib/reviews.ts` - Review system logic
+- `lib/analytics.ts` - Analytics calculation engine
+- `lib/moderation.ts` - Content moderation and safety tools
 
-### 7. Advanced Search & Recommendations (8-12 hours)
-**Missing Features:**
-- [ ] AI-powered recommendations
-- [ ] Advanced search filters
-- [ ] Geographic search
-- [ ] Search analytics
-- [ ] Auto-complete suggestions
-- [ ] Search history management
+**Security Considerations:**
+- Document encryption for verification uploads
+- PII data protection and GDPR compliance
+- Rate limiting on reporting to prevent abuse
+- Audit trails for all moderation actions
+- Secure file upload with virus scanning
+- Privacy controls for analytics data
 
-**Files to create/modify:**
-- `lib/recommendations-ai.ts`
-- `app/api/search/advanced/route.ts`
-- `app/api/search/geographic/route.ts`
-- `components/search/AdvancedFilters.tsx`
-- `components/search/AutoComplete.tsx`
-- `hooks/useRecommendations.ts`
+**Testing Requirements:**
+- Unit tests for all new API endpoints
+- Integration tests for verification workflow
+- E2E tests for portfolio management
+- Load testing for analytics endpoints
+- Security testing for file uploads
+- Accessibility testing for all new UI components
 
-### 8. Push Notifications System (6-8 hours)
-**Missing Features:**
-- [ ] Real-time push notifications
-- [ ] Notification preferences
-- [ ] Notification templates
-- [ ] Scheduled notifications
-- [ ] Notification analytics
-
-**Files to create/modify:**
-- `app/api/notifications/push/route.ts`
-- `app/api/notifications/preferences/route.ts`
-- `components/notifications/PreferencesPanel.tsx`
-- `lib/notification-templates.ts`
-- `hooks/useNotifications.ts`
-
----
-
-## 🟢 **LOW PRIORITY FEATURES (Week 3-4)**
-
-### 9. Admin Dashboard (10-14 hours)
-**Missing Features:**
-- [ ] User management interface
-- [ ] Content moderation tools
-- [ ] Analytics dashboard
-- [ ] System configuration
-- [ ] Log monitoring
-- [ ] Backup management
-
-**Files to create/modify:**
-- `app/admin/users/page.tsx`
-- `app/admin/moderation/page.tsx`
-- `app/admin/analytics/page.tsx`
-- `app/admin/settings/page.tsx`
-- `components/admin/UserManagement.tsx`
-- `components/admin/ContentModeration.tsx`
-
-### 10. Performance Optimization (8-12 hours)
-**Missing Features:**
-- [ ] Redis caching implementation
-- [ ] Image optimization
-- [ ] Bundle optimization
-- [ ] CDN setup
-- [ ] Database query optimization
-- [ ] Service worker implementation
-
-**Files to create/modify:**
-- `lib/cache.ts` - Redis integration
-- `lib/image-optimization.ts`
-- `next.config.mjs` - Performance config
-- `public/sw.js` - Service worker
-- `lib/database-optimization.ts`
-
----
-
-## 📋 **TESTING & QUALITY ASSURANCE (Week 4-5)**
-
-### 11. Complete Test Suite (12-16 hours)
-**Missing Tests:**
-- [ ] Integration tests for all API routes
-- [ ] E2E tests with Playwright
-- [ ] Performance tests
-- [ ] Security tests
-- [ ] Accessibility tests
-- [ ] Mobile responsiveness tests
-
-**Files to create:**
-- `__tests__/integration/`
-- `__tests__/e2e/`
-- `__tests__/performance/`
-- `__tests__/security/`
-- `playwright.config.ts`
-
-### 12. Security Hardening (6-8 hours)
-**Missing Security Features:**
-- [ ] Rate limiting on all endpoints
-- [ ] Input validation and sanitization
-- [ ] CSRF protection
-- [ ] Security headers
-- [ ] Audit logging
-- [ ] Penetration testing
-
-**Files to create/modify:**
-- `middleware.ts` - Enhanced security
-- `lib/security.ts`
-- `lib/audit-logger.ts`
-- `next.config.mjs` - Security headers
-
----
-
-## 📚 **DOCUMENTATION & DEPLOYMENT (Week 5-6)**
-
-### 13. Complete Documentation (8-10 hours)
-**Missing Documentation:**
-- [ ] API documentation (OpenAPI/Swagger)
-- [ ] User guide
-- [ ] Developer documentation
-- [ ] Deployment guide
-- [ ] Troubleshooting guide
-- [ ] Architecture documentation
-
-**Files to create:**
-- `docs/api/`
-- `docs/user-guide/`
-- `docs/developer/`
-- `docs/deployment/`
-- `docs/architecture.md`
-
-### 14. Production Deployment (6-8 hours)
-**Missing Deployment Features:**
-- [ ] CI/CD pipeline setup
-- [ ] Environment configuration
-- [ ] Database migration scripts
-- [ ] Monitoring setup
-- [ ] Backup strategy
-- [ ] SSL certificate setup
-
-**Files to create:**
-- `.github/workflows/`
-- `scripts/deploy/`
-- `docker-compose.yml`
-- `monitoring/`
-
----
-
-## 🎯 **FINAL POLISHING (Week 6)**
-
-### 15. UI/UX Improvements (8-10 hours)
-**Missing UI Features:**
-- [ ] Dark mode implementation
-- [ ] Mobile app-like experience
-- [ ] Loading states and animations
-- [ ] Error boundaries
-- [ ] Accessibility improvements
-- [ ] Progressive Web App features
-
-**Files to create/modify:**
-- `components/ui/theme-provider.tsx`
-- `app/globals.css` - Dark mode styles
-- `components/ui/loading-states.tsx`
-- `components/ui/error-boundary.tsx`
-- `app/manifest.ts` - PWA manifest
-
-### 16. Final Testing & Bug Fixes (6-8 hours)
-**Final Steps:**
-- [ ] Cross-browser testing
-- [ ] Mobile device testing
-- [ ] Performance testing
-- [ ] Security audit
-- [ ] User acceptance testing
-- [ ] Bug fixes and refinements
-
----
-
-## 📅 **DEVELOPMENT TIMELINE**
-
-### **Week 1: Foundation** ✅ **COMPLETED**
-- ✅ Fix test configuration
-- ✅ Fix VAPID configuration
-- ✅ Complete authentication system
-- [ ] Start real-time messaging
-
-### **Week 2: Core Features**
-- [ ] Complete real-time messaging
-- [ ] Complete payment system
-- [ ] Start user management features
-
-### **Week 3: Advanced Features**
-- [ ] Complete user management
-- [ ] Advanced search & recommendations
-- [ ] Push notifications system
-
-### **Week 4: Admin & Performance**
-- [ ] Admin dashboard
-- [ ] Performance optimization
-- [ ] Start comprehensive testing
-
-### **Week 5: Testing & Security**
-- [ ] Complete test suite
-- [ ] Security hardening
-- [ ] Start documentation
-
-### **Week 6: Final Polish**
-- [ ] Complete documentation
-- [ ] Production deployment
-- [ ] UI/UX improvements
-- [ ] Final testing & bug fixes
-
----
-
-## 🚀 **READY FOR PRODUCTION CHECKLIST**
-
-### **Core Functionality** ✅
-- [x] User authentication
-- [x] Post creation and management
-- [x] Basic messaging
-- [x] Payment processing
-- [x] User profiles
-
-### **Advanced Features** 📋
-- [ ] Real-time messaging
-- [ ] Advanced search
-- [ ] Push notifications
-- [ ] Admin dashboard
-- [ ] Performance optimization
-
-### **Quality Assurance** 📋
-- [ ] Complete test coverage
-- [ ] Security audit
-- [ ] Performance testing
-- [ ] Documentation
-- [ ] Deployment pipeline
-
-### **Production Ready** 📋
-- [ ] Environment configuration
-- [ ] Monitoring setup
-- [ ] Backup strategy
-- [ ] SSL certificates
-- [ ] CDN configuration
-
----
-
-## 💡 **DEVELOPMENT TIPS**
-
-1. **Start with critical fixes** - Fix tests and VAPID first
-2. **Work incrementally** - Complete one feature at a time
-3. **Test continuously** - Run tests after each major change
-4. **Document as you go** - Keep documentation updated
-5. **Security first** - Implement security features early
-6. **Performance matters** - Optimize as you build
-
----
-
-## 📞 **SUPPORT & RESOURCES**
-
-- **Next.js Documentation:** https://nextjs.org/docs
-- **Prisma Documentation:** https://www.prisma.io/docs
-- **Stripe Documentation:** https://stripe.com/docs
-- **NextAuth Documentation:** https://next-auth.js.org
-- **Tailwind CSS:** https://tailwindcss.com/docs
-
----
-
-*Last Updated: January 2025*
-*Estimated Completion: March 2025* 
+**Performance Optimizations:**
+- Lazy loading for portfolio media
+- Caching for analytics data
+- Background processing for verification tasks
+- Image optimization for profile customization
+- Database indexing for review queries
