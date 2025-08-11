@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
+import { usePathname } from "next/navigation"
 import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp, LogOut } from "lucide-react"
 import { useState } from "react"
 import { NotificationsPanel } from "@/components/notifications-panel"
@@ -11,13 +12,13 @@ import { toast } from "sonner"
 
 export function BottomNavigation() {
   const { data: session } = useSession()
+  const pathname = usePathname()
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProMenu, setShowProMenu] = useState(false)
 
   // Navigation items for all users
   const baseNavItems = [
     { href: "/", icon: Home, label: "Home" },
-    { href: "/search", icon: Search, label: "Search" },
     { href: "/conversations", icon: MessageCircle, label: "Messages" },
   ]
 
@@ -66,32 +67,46 @@ export function BottomNavigation() {
 
   const navItems = getNavItems()
 
+  // Helper function to check if a nav item is active
+  const isActive = (href: string) => {
+    if (!pathname) return false
+    if (href === "/") {
+      return pathname === "/"
+    }
+    return pathname.startsWith(href)
+  }
+
   return (
     <>
       <nav className="bottom-navigation">
         <div className="nav-container">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="nav-item"
-            >
-              <item.icon className="nav-icon" />
-              <span className="nav-label">{item.label}</span>
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const active = isActive(item.href)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`nav-item ${active ? 'nav-item-active' : ''}`}
+              >
+                <item.icon className={`nav-icon ${active ? 'nav-icon-active' : ''}`} />
+                <span className={`nav-label ${active ? 'nav-label-active' : ''}`}>{item.label}</span>
+                {active && <div className="nav-indicator" />}
+              </Link>
+            )
+          })}
           
           {/* PRO Menu Button */}
           {session?.user?.role === "PRO" && (
             <button
               onClick={() => setShowProMenu(!showProMenu)}
-              className="nav-item"
+              className={`nav-item ${showProMenu ? 'nav-item-active' : ''}`}
             >
               <div className="relative">
-                <Users className="nav-icon" />
+                <Users className={`nav-icon ${showProMenu ? 'nav-icon-active' : ''}`} />
                 <ChevronUp className={`w-3 h-3 absolute -top-1 -right-1 transition-transform ${showProMenu ? 'rotate-180' : ''}`} />
               </div>
-              <span className="nav-label">PRO</span>
+              <span className={`nav-label ${showProMenu ? 'nav-label-active' : ''}`}>PRO</span>
+              {showProMenu && <div className="nav-indicator" />}
             </button>
           )}
           
@@ -129,20 +144,22 @@ export function BottomNavigation() {
             <div className="nav-container">
               <Link
                 href="/collaborations"
-                className="nav-item"
+                className={`nav-item ${isActive('/collaborations') ? 'nav-item-active' : ''}`}
                 onClick={() => setShowProMenu(false)}
               >
-                <Users className="nav-icon" />
-                <span className="nav-label">Collabs</span>
+                <Users className={`nav-icon ${isActive('/collaborations') ? 'nav-icon-active' : ''}`} />
+                <span className={`nav-label ${isActive('/collaborations') ? 'nav-label-active' : ''}`}>Collabs</span>
+                {isActive('/collaborations') && <div className="nav-indicator" />}
               </Link>
               
               <Link
                 href="/profile/edit"
-                className="nav-item"
+                className={`nav-item ${isActive('/profile/edit') ? 'nav-item-active' : ''}`}
                 onClick={() => setShowProMenu(false)}
               >
-                <Settings className="nav-icon" />
-                <span className="nav-label">Settings</span>
+                <Settings className={`nav-icon ${isActive('/profile/edit') ? 'nav-icon-active' : ''}`} />
+                <span className={`nav-label ${isActive('/profile/edit') ? 'nav-label-active' : ''}`}>Settings</span>
+                {isActive('/profile/edit') && <div className="nav-indicator" />}
               </Link>
             </div>
           </div>
