@@ -12,14 +12,7 @@ import {
   useLazyLoadPerformance,
 } from '@/components/ui/lazy-load'
 
-// Mock IntersectionObserver
-const mockIntersectionObserver = jest.fn()
-mockIntersectionObserver.mockReturnValue({
-  observe: () => null,
-  unobserve: () => null,
-  disconnect: () => null,
-})
-window.IntersectionObserver = mockIntersectionObserver
+// IntersectionObserver is mocked globally in jest.setup.js
 
 // Mock dynamic import
 jest.mock('react', () => ({
@@ -38,14 +31,6 @@ describe('LazyLoad Component', () => {
   })
 
   it('should render children when visible', () => {
-    const mockIntersectionObserver = jest.fn()
-    mockIntersectionObserver.mockReturnValue({
-      observe: () => null,
-      unobserve: () => null,
-      disconnect: () => null,
-    })
-    window.IntersectionObserver = mockIntersectionObserver
-
     render(
       <LazyLoad>
         <div data-testid="lazy-content">Lazy Content</div>
@@ -56,14 +41,6 @@ describe('LazyLoad Component', () => {
   })
 
   it('should render fallback when not visible', () => {
-    const mockIntersectionObserver = jest.fn()
-    mockIntersectionObserver.mockReturnValue({
-      observe: () => null,
-      unobserve: () => null,
-      disconnect: () => null,
-    })
-    window.IntersectionObserver = mockIntersectionObserver
-
     render(
       <LazyLoad fallback={<div data-testid="fallback">Loading...</div>}>
         <div data-testid="lazy-content">Lazy Content</div>

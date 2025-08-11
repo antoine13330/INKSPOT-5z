@@ -1,5 +1,20 @@
 require("@testing-library/jest-dom")
 
+// Mock IntersectionObserver
+global.IntersectionObserver = class MockIntersectionObserver {
+  constructor(callback) {
+    this.callback = callback
+  }
+  
+  observe() {
+    // Simulate element becoming visible immediately
+    this.callback([{ isIntersecting: true }], this)
+  }
+  
+  unobserve() {}
+  disconnect() {}
+}
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter() {

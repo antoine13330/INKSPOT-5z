@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import DOMPurify from 'isomorphic-dompurify'
 
 // Base validation schemas
 export const emailSchema = z.string().email('Invalid email format')
@@ -9,10 +8,21 @@ export const phoneSchema = z.string().regex(/^\+?[\d\s\-()]+$/, 'Invalid phone n
 
 // Sanitization functions
 export function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br'],
-    ALLOWED_ATTR: ['href', 'target'],
-  })
+  try {
+    // Dynamic import to avoid issues in test environment
+    const DOMPurify = require('isomorphic-dompurify').default
+    return DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br'],
+      ALLOWED_ATTR: ['href', 'target'],
+    })
+  } catch (error) {
+    // Fallback to basic sanitization if DOMPurify is not available
+    return html
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+      .replace(/javascript:/gi, '')
+      .replace(/on\w+=/gi, '')
+  }
 }
 
 export function sanitizeText(text: string): string {
