@@ -157,21 +157,21 @@ export function isActiveLink(pathname: string, href: string): boolean {
 /**
  * Gère l'état de chargement avec timeout
  */
-export function createLoadingState(timeout = 3000) {
+export function createLoadingState<T = unknown>(timeout = 3000) {
   return {
     isLoading: true,
     error: null as string | null,
-    data: null as any,
+    data: null as T | null,
     startLoading: () => ({ isLoading: true, error: null }),
     setError: (error: string) => ({ isLoading: false, error, data: null }),
-    setData: (data: any) => ({ isLoading: false, error: null, data }),
+    setData: (data: T) => ({ isLoading: false, error: null, data }),
   }
 }
 
 /**
  * Debounce une fonction
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -185,7 +185,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle une fonction
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -227,7 +227,7 @@ export function formatDateTime(date: Date | string, locale = 'fr-FR'): string {
 /**
  * Stocke des données dans le localStorage avec expiration
  */
-export function setLocalStorageWithExpiry(key: string, value: any, ttl: number): void {
+export function setLocalStorageWithExpiry(key: string, value: unknown, ttl: number): void {
   const item = {
     value,
     expiry: Date.now() + ttl,
@@ -238,7 +238,7 @@ export function setLocalStorageWithExpiry(key: string, value: any, ttl: number):
 /**
  * Récupère des données du localStorage avec vérification d'expiration
  */
-export function getLocalStorageWithExpiry(key: string): any {
+export function getLocalStorageWithExpiry(key: string): unknown {
   const itemStr = localStorage.getItem(key)
   if (!itemStr) return null
 

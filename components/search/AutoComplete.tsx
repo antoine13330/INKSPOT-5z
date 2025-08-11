@@ -38,6 +38,33 @@ interface SearchSuggestion {
   location?: string
 }
 
+// API response types
+interface UserData {
+  id: string
+  username: string
+  businessName?: string
+  firstName?: string
+  lastName?: string
+  avatar?: string
+  verified: boolean
+  location?: string
+}
+
+interface HashtagData {
+  tag: string
+  count: number
+}
+
+interface SearchHistoryData {
+  id: string
+  query: string
+}
+
+interface TrendingData {
+  tag?: string
+  query?: string
+}
+
 export function AutoComplete({
   query,
   onQueryChange,
@@ -118,7 +145,7 @@ export function AutoComplete({
 
       // Add user suggestions
       if (usersData.users) {
-        usersData.users.forEach((user: any) => {
+        usersData.users.forEach((user: UserData) => {
           newSuggestions.push({
             id: `user-${user.id}`,
             type: 'user',
@@ -133,7 +160,7 @@ export function AutoComplete({
 
       // Add hashtag suggestions
       if (hashtagsData.hashtags) {
-        hashtagsData.hashtags.forEach((hashtag: any) => {
+        hashtagsData.hashtags.forEach((hashtag: HashtagData) => {
           newSuggestions.push({
             id: `hashtag-${hashtag.tag}`,
             type: 'hashtag',
@@ -195,7 +222,7 @@ export function AutoComplete({
 
       // Add recent searches
       if (recentData.searches) {
-        recentData.searches.forEach((search: any) => {
+        recentData.searches.forEach((search: SearchHistoryData) => {
           newSuggestions.push({
             id: `recent-${search.id}`,
             type: 'recent',
@@ -207,7 +234,7 @@ export function AutoComplete({
 
       // Add trending hashtags
       if (trendingData.trending) {
-        trendingData.trending.forEach((item: any) => {
+        trendingData.trending.forEach((item: TrendingData) => {
           newSuggestions.push({
             id: `trending-${item.tag || item.query}`,
             type: 'trending',
