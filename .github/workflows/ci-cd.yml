@@ -44,7 +44,7 @@ jobs:
         run: npm ci
 
       - name: Install ESLint
-        run: npm install --save-dev eslint eslint-config-next
+        run: npm install --save-dev eslint@latest @eslint/js @next/eslint-plugin-next globals
 
       - name: Setup environment variables
         run: |
