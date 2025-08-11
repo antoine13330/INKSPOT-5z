@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     if (startDate) filters.startDate = new Date(startDate)
     if (endDate) filters.endDate = new Date(endDate)
 
-    const alerts = securityMonitor.getAlerts(filters)
+    const alerts = await securityMonitor.getAlerts(filters)
     const metrics = securityMonitor.getSecurityMetrics()
 
     // Log the request

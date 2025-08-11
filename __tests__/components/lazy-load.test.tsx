@@ -387,7 +387,7 @@ describe('useLazyLoadPerformance Hook', () => {
     expect(screen.getByTestId('error-count')).toHaveTextContent('0')
   })
 
-  it('should track load times', () => {
+  it('should track load times', async () => {
     const TestComponent = () => {
       const { metrics, trackLoad } = useLazyLoadPerformance()
       return (
@@ -403,10 +403,12 @@ describe('useLazyLoadPerformance Hook', () => {
     const trackButton = screen.getByText('Track Load')
     userEvent.click(trackButton)
 
-    expect(screen.getByTestId('load-time')).toHaveTextContent('100')
+    await waitFor(() => {
+      expect(screen.getByTestId('load-time')).toHaveTextContent('100')
+    })
   })
 
-  it('should track errors', () => {
+  it('should track errors', async () => {
     const TestComponent = () => {
       const { metrics, trackError } = useLazyLoadPerformance()
       return (
@@ -422,7 +424,9 @@ describe('useLazyLoadPerformance Hook', () => {
     const trackButton = screen.getByText('Track Error')
     userEvent.click(trackButton)
 
-    expect(screen.getByTestId('error-count')).toHaveTextContent('1')
+    await waitFor(() => {
+      expect(screen.getByTestId('error-count')).toHaveTextContent('1')
+    })
   })
 })
 

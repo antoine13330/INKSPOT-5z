@@ -3,10 +3,11 @@ require("@testing-library/jest-dom")
 // Expose a controllable IntersectionObserver mock
 const mockIntersectionObserver = jest.fn((callback, options) => {
   return {
-    observe: jest.fn(),
+    observe: jest.fn(() => {
+      // Do not auto-trigger; tests can call recorded callback via mockIntersectionObserver.mock.calls
+    }),
     unobserve: jest.fn(),
     disconnect: jest.fn(),
-    // Store the callback to allow tests to trigger it manually if needed
     _callback: callback,
     _options: options,
   }
@@ -19,6 +20,9 @@ global.IntersectionObserver = function (callback, options) {
   mockIntersectionObserver(callback, options)
   return mockIntersectionObserver.mock.results[mockIntersectionObserver.mock.calls.length - 1].value
 }
+
+// Ensure Redis uses the ioredis mock path in tests
+process.env.REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
 
 // Mock Next.js router
 jest.mock('next/router', () => ({
@@ -77,7 +81,11 @@ global.Request = class MockRequest {
     this.headers = new Headers(init.headers || {})
     this.body = init.body || null
     this.formData = jest.fn().mockResolvedValue(new Map())
-    this.json = jest.fn().mockResolvedValue({})
+    this.json = jest.fn().mockResolvedValue(
+      typeof this.body === 'string'
+        ? (() => { try { return JSON.parse(this.body) } catch { return {} } })()
+        : (this.body || {})
+    )
   }
 }
 

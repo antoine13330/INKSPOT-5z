@@ -109,12 +109,12 @@ jest.mock("lucide-react", () => ({
 }));
 
 const MockPostCreationPage = () => {
-  const mockRouter = {
-    push: jest.fn(),
-    back: jest.fn(),
-  };
+  const router = useRouter() as any
+  const { data, status } = (useSession as unknown as jest.Mock)() || { data: null, status: 'unauthenticated' }
 
-  (useRouter as jest.Mock).mockReturnValue(mockRouter);
+  if (!data || status === 'unauthenticated') {
+    router.push('/auth/login')
+  }
 
   // Mock the actual component behavior
   return (
@@ -129,7 +129,7 @@ const MockPostCreationPage = () => {
             accept="image/*"
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 5) {
-                toast.error("Maximum 5 images allowed");
+                toast.error("Maximum 5 images allowed")
               }
             }}
             aria-label="Click to upload or drag and drop"
@@ -142,7 +142,7 @@ const MockPostCreationPage = () => {
             placeholder="Share the story behind your artwork..."
             onChange={(e) => {
               if (!e.target.value.trim()) {
-                toast.error("Please add some content to your post");
+                toast.error("Please add some content to your post")
               }
             }}
           />
@@ -167,7 +167,7 @@ const MockPostCreationPage = () => {
           </div>
         </div>
         
-        <button type="button" onClick={() => mockRouter.back()}>Cancel</button>
+        <button type="button" onClick={() => (router as any).back()}>Cancel</button>
         <button type="submit">Create Post</button>
       </form>
     </div>
@@ -235,6 +235,8 @@ describe("PostCreationPage", () => {
       render(<MockPostCreationPage />);
 
       const textarea = screen.getByPlaceholderText("Share the story behind your artwork...");
+      // Type something then clear to ensure onChange triggers with empty string
+      fireEvent.change(textarea, { target: { value: "x" } });
       fireEvent.change(textarea, { target: { value: "" } });
 
       expect(toast.error).toHaveBeenCalledWith("Please add some content to your post");

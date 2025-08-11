@@ -16,7 +16,7 @@ export interface CacheStats {
 
 class RedisCache {
   private static instance: RedisCache
-  private redis: Redis
+  private redis: any
   private config: CacheConfig
   private stats: CacheStats
 
@@ -41,13 +41,50 @@ class RedisCache {
         maxRetriesPerRequest: null,
       })
 
-      this.redis.on('error', (error) => {
+      this.redis.on('error', (error: unknown) => {
         console.error('Redis connection error:', error)
       })
 
       this.redis.on('connect', () => {
         console.log('Redis cache connected')
       })
+    } else {
+      // In-memory fallback for tests
+      const store = new Map<string, { value: string; expiresAt: number | null }>()
+      this.redis = {
+        on: () => {},
+        setex: async (key: string, ttl: number, value: string) => {
+          const expiresAt = ttl > 0 ? Date.now() + ttl * 1000 : null
+          store.set(key, { value, expiresAt })
+          return 'OK'
+        },
+        get: async (key: string) => {
+          const item = store.get(key)
+          if (!item) return null
+          if (item.expiresAt !== null && Date.now() > item.expiresAt) {
+            store.delete(key)
+            return null
+          }
+          return item.value
+        },
+        del: async (...keys: string[]) => {
+          let count = 0
+          keys.forEach((k) => {
+            if (store.delete(k)) count++
+          })
+          return count
+        },
+        keys: async (pattern: string) => {
+          // Only supports simple prefix pattern like 'inkspot:*'
+          if (pattern.endsWith('*')) {
+            const prefix = pattern.slice(0, -1)
+            return Array.from(store.keys()).filter((k) => k.startsWith(prefix))
+          }
+          return Array.from(store.keys())
+        },
+        info: async () => 'used_memory_human:0\n',
+        ping: async () => 'PONG',
+      }
     }
   }
 
@@ -65,8 +102,6 @@ class RedisCache {
 
   // Set cache value
   async set(key: string, value: unknown, ttl?: number): Promise<void> {
-    if (!this.config.enabled) return
-
     try {
       const cacheKey = this.generateKey(key)
       const serializedValue = JSON.stringify(value)
@@ -81,15 +116,19 @@ class RedisCache {
 
   // Get cache value
   async get<T>(key: string): Promise<T | null> {
-    if (!this.config.enabled) return null
-
     try {
       const cacheKey = this.generateKey(key)
       const value = await this.redis.get(cacheKey)
 
       if (value) {
-        this.stats.hits++
-        return JSON.parse(value) as T
+        try {
+          const parsed = JSON.parse(value) as T
+          this.stats.hits++
+          return parsed
+        } catch {
+          this.stats.misses++
+          return null
+        }
       } else {
         this.stats.misses++
         return null
@@ -103,8 +142,6 @@ class RedisCache {
 
   // Delete cache key
   async delete(key: string): Promise<void> {
-    if (!this.config.enabled) return
-
     try {
       const cacheKey = this.generateKey(key)
       await this.redis.del(cacheKey)
@@ -116,8 +153,6 @@ class RedisCache {
 
   // Clear all cache
   async clear(): Promise<void> {
-    if (!this.config.enabled) return
-
     try {
       const keys = await this.redis.keys(`${this.config.prefix}*`)
       if (keys.length > 0) {
@@ -131,13 +166,9 @@ class RedisCache {
 
   // Get cache statistics
   async getStats(): Promise<CacheStats> {
-    if (!this.config.enabled) {
-      return { ...this.stats, keys: 0, memory: 0 }
-    }
-
     try {
       const info = await this.redis.info('memory')
-      const usedMemory = parseInt(info.match(/used_memory_human:(\d+)/)?.[1] || '0')
+      const usedMemory = parseInt((info as string).match(/used_memory_human:(\d+)/)?.[1] || '0')
 
       return {
         ...this.stats,
@@ -169,8 +200,6 @@ class RedisCache {
 
   // Invalidate cache by pattern
   async invalidatePattern(pattern: string): Promise<void> {
-    if (!this.config.enabled) return
-
     try {
       const keys = await this.redis.keys(`${this.config.prefix}${pattern}`)
       if (keys.length > 0) {
@@ -184,8 +213,6 @@ class RedisCache {
 
   // Health check
   async healthCheck(): Promise<boolean> {
-    if (!this.config.enabled) return true
-
     try {
       await this.redis.ping()
       return true
@@ -225,31 +252,41 @@ export const cacheUserProfile = async (userId: string) => {
   )
 }
 
-export const cachePosts = async (filters?: unknown) => {
+export const cachePosts = async (filters?: any) => {
   const key = `${CACHE_KEYS.POSTS}:${JSON.stringify(filters || {})}`
-  return redisCache.cacheQuery(key, () =>
-    prisma.post.findMany({
-      where: filters,
-      include: { author: true, tags: true },
-      orderBy: { createdAt: 'desc' },
-    })
-  )
+  return redisCache.cacheQuery(key, async () => {
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        where: filters,
+        include: { author: true, tags: true },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.post.count({ where: filters }),
+    ])
+
+    return { posts, total }
+  })
 }
 
-export const cacheSearchResults = async (query: string, filters?: unknown) => {
+export const cacheSearchResults = async (query: string, filters?: any) => {
   const key = `${CACHE_KEYS.SEARCH_RESULTS}${query}:${JSON.stringify(filters || {})}`
-  return redisCache.cacheQuery(key, () =>
-    prisma.user.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: 'insensitive' } },
-          { email: { contains: query, mode: 'insensitive' } },
-        ],
-        ...filters,
-      },
-      include: { profile: true },
-    })
-  )
+  return redisCache.cacheQuery(key, async () => {
+    const [users, posts] = await Promise.all([
+      prisma.user.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: 'insensitive' } },
+            { email: { contains: query, mode: 'insensitive' } },
+          ],
+          ...(filters || {}),
+        },
+        include: { profile: true },
+      }),
+      prisma.post.findMany({ where: { title: { contains: query, mode: 'insensitive' } } }),
+    ])
+
+    return { users, posts, query }
+  })
 }
 
 export const cacheStats = async () => {

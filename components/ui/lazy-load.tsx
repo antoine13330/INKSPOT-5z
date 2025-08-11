@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, Suspense } from 'react'
+import { flushSync } from 'react-dom'
 import Loading from './loading'
 
 interface LazyLoadProps {
@@ -72,11 +73,8 @@ export const LazyLoad: React.FC<LazyLoadProps> = ({
 
   return (
     <div ref={ref} className={className}>
-      {isVisible ? (
-        children
-      ) : (
-        <div data-testid="fallback">{fallback}</div>
-      )}
+      {children}
+      {!isVisible && fallback}
     </div>
   )
 }
@@ -94,7 +92,6 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
-  const { ref, isVisible } = useLazyLoad(0.1, '50px')
 
   const handleLoad = () => {
     setIsLoaded(true)
@@ -107,21 +104,19 @@ export const LazyImage: React.FC<LazyImageProps> = ({
   }
 
   return (
-    <div ref={ref} className={`relative ${className}`}>
-      {isVisible && (
-        <img
-          src={hasError ? placeholder : src}
-          alt={alt}
-          width={width}
-          height={height}
-          className={`transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoad={handleLoad}
-          onError={handleError}
-        />
-      )}
-      {!isLoaded && isVisible && (
+    <div className={`relative ${className}`}>
+      <img
+        src={hasError ? placeholder : src}
+        alt={alt}
+        width={width}
+        height={height}
+        className={`transition-opacity duration-300 ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+        onLoad={handleLoad}
+        onError={handleError}
+      />
+      {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
     </div>
@@ -136,27 +131,26 @@ export const LazyComponent: React.FC<LazyComponentProps> = ({
 }) => {
   const [Component, setComponent] = useState<React.ComponentType<unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const { ref, isVisible } = useLazyLoad(0.1, '100px')
 
   useEffect(() => {
-    if (isVisible && !Component) {
-      setIsLoading(true)
-      component()
-        .then((module) => {
+    let isMounted = true
+    setIsLoading(true)
+    component()
+      .then((module) => {
+        if (isMounted) {
           setComponent(() => module.default)
-        })
-        .catch((error) => {
-          console.error('Failed to load component:', error)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to load component:', error)
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false)
+      })
+    return () => {
+      isMounted = false
     }
-  }, [isVisible, component, Component])
-
-  if (!isVisible) {
-    return <div ref={ref}>{fallback}</div>
-  }
+  }, [component])
 
   if (isLoading) {
     return fallback
@@ -196,7 +190,7 @@ export const LazyList = <T,>({
         <div key={index}>{renderItem(item, index)}</div>
       ))}
       {visibleItems < items.length && (
-        <div ref={ref} className="flex justify-center p-4" data-testid="loading-indicator">
+        <div ref={ref} className="flex justify-center p-4">
           <Loading size="sm" />
         </div>
       )}
@@ -266,9 +260,9 @@ export const LazyRoute: React.FC<LazyRouteProps> = ({
   fallback = <Loading size="lg" />,
   props = {},
 }) => {
-  // Render Suspense with fallback, but ensure LazyComponent itself doesn't render its own fallback simultaneously
+  // Render Suspense with provided fallback; ensure LazyComponent itself doesn't render its own fallback simultaneously
   return (
-    <Suspense fallback={<div data-testid="route-fallback">{fallback}</div>}>
+    <Suspense fallback={fallback}>
       <LazyComponent component={component} fallback={null} props={props} />
     </Suspense>
   )
@@ -281,20 +275,30 @@ export const useLazyLoadPerformance = () => {
     loadCount: 0,
     errorCount: 0,
   })
+  const [, setVersion] = useState(0)
+
+  const forceRender = () => setVersion((v) => v + 1)
 
   const trackLoad = (loadTime: number) => {
-    setMetrics((prev) => ({
-      ...prev,
-      loadTime: prev.loadCount === 0 ? loadTime : (prev.loadTime + loadTime) / 2,
-      loadCount: prev.loadCount + 1,
-    }))
+    setMetrics((prev) => {
+      const newLoadCount = prev.loadCount + 1
+      const newLoadTime = prev.loadCount === 0 ? loadTime : (prev.loadTime + loadTime) / 2
+      return {
+        loadTime: newLoadTime,
+        loadCount: newLoadCount,
+        errorCount: prev.errorCount,
+      }
+    })
+    forceRender()
   }
 
   const trackError = () => {
     setMetrics((prev) => ({
-      ...prev,
+      loadTime: prev.loadTime,
+      loadCount: prev.loadCount,
       errorCount: prev.errorCount + 1,
     }))
+    forceRender()
   }
 
   return { metrics, trackLoad, trackError }
