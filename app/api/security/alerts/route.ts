@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-export const dynamic = "force-dynamic"
 import { securityMonitor } from '@/lib/security-monitor'
-export const dynamic = "force-dynamic"
 import { auditLogger } from '@/lib/audit-logger'
 export const dynamic = "force-dynamic"
 

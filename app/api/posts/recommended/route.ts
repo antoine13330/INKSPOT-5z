@@ -1,11 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
-export const dynamic = "force-dynamic"
 import { getServerSession } from "next-auth"
-export const dynamic = "force-dynamic"
 import { authOptions } from "@/lib/auth"
-export const dynamic = "force-dynamic"
 import { getRecommendedPosts } from "@/lib/recommendations"
-export const dynamic = "force-dynamic"
 import { getAIRecommendedPosts } from "@/lib/recommendations-ai"
 export const dynamic = "force-dynamic"
 

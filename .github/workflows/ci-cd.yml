@@ -19,8 +19,8 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: inkspot_user
-          POSTGRES_PASSWORD: inkspot_password
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: inkspot_test
         options: >-
           --health-cmd pg_isready
@@ -45,17 +45,20 @@ jobs:
         env:
           NODE_ENV: ci
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install ESLint
         run: npm install --save-dev eslint@latest @eslint/js typescript-eslint
 
       - name: Setup environment variables
         run: |
-          echo "DATABASE_URL=postgresql://inkspot_user:inkspot_password@localhost:5432/inkspot_test" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/inkspot_test" >> $GITHUB_ENV
           echo "NEXTAUTH_SECRET=test-secret-key" >> $GITHUB_ENV
           echo "NEXTAUTH_URL=http://localhost:3000" >> $GITHUB_ENV
           echo "NODE_ENV=test" >> $GITHUB_ENV
-          echo "POSTGRES_USER=inkspot_user" >> $GITHUB_ENV
-          echo "POSTGRES_PASSWORD=inkspot_password" >> $GITHUB_ENV
+          echo "POSTGRES_USER=postgres" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=postgres" >> $GITHUB_ENV
           echo "POSTGRES_DB=inkspot_test" >> $GITHUB_ENV
 
       - name: Setup database

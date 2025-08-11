@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-export const dynamic = "force-dynamic"
 import { getServerSession } from "next-auth";
-export const dynamic = "force-dynamic"
 import { authOptions } from "@/lib/auth";
-export const dynamic = "force-dynamic"
 import { prisma } from "@/lib/prisma";
-export const dynamic = "force-dynamic"
 import { createPaymentIntent, createStripeCustomer } from "@/lib/stripe";
 export const dynamic = "force-dynamic"
 
