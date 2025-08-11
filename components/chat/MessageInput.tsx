@@ -20,8 +20,6 @@ export function MessageInput({
   onSendMessage,
   onStartTyping,
   onStopTyping,
-  conversationId,
-  senderId,
   disabled = false,
   placeholder = "Tapez votre message...",
   className
@@ -84,13 +82,17 @@ export function MessageInput({
     const file = e.target.files?.[0]
     if (file) {
       // TODO: Implement file upload
-      console.log('File selected:', file)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('File selected:', file)
+      }
     }
   }
 
   const handleVoiceMessage = () => {
     // TODO: Implement voice message recording
-    console.log('Voice message recording...')
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Voice message recording...')
+    }
   }
 
   return (

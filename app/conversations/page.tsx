@@ -4,11 +4,7 @@ import React from 'react'
 import { useSession } from 'next-auth/react'
 import { Conversation } from '@/types'
 import { useApi } from '@/hooks/useApi'
-import { ConversationList } from '@/components/conversation/conversation-list'
-import { BottomNavigation } from '@/components/bottom-navigation'
-import { Container, EmptyState } from '@/components/ui/base-components'
-import { Button } from '@/components/ui/base-components'
-import { MessageCircle } from 'lucide-react'
+
 
 // Mock API function
 const fetchConversations = async (): Promise<{ success: boolean; data?: Conversation[]; error?: string }> => {
@@ -111,41 +107,27 @@ const fetchConversations = async (): Promise<{ success: boolean; data?: Conversa
 
 export default function ConversationsPage() {
   const { data: session } = useSession()
-  
-  const {
-    data: conversations,
-    isLoading,
-    error,
-    refetch
-  } = useApi(fetchConversations, {
-    immediate: !!session?.user?.id
-  })
 
   if (!session) {
     return (
-      <Container>
-        <EmptyState
-          icon={MessageCircle}
-          title="Connexion requise"
-          description="Connectez-vous pour voir vos conversations"
-          action={
-            <a href="/auth/login">
-              <Button>Se connecter</Button>
-            </a>
-          }
-        />
-      </Container>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Connexion requise</h2>
+          <p className="text-muted-foreground">Connectez-vous pour voir vos conversations</p>
+          <a href="/auth/login" className="text-primary hover:underline">
+            Se connecter
+          </a>
+        </div>
+      </div>
     )
   }
 
   return (
-    <ConversationList 
-      conversations={conversations || []}
-      showSearch={true}
-      title="Messages"
-      loading={isLoading}
-      error={error}
-      onRetry={refetch}
-    />
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold mb-6">Messages</h1>
+        <p className="text-muted-foreground">Fonctionnalité en cours de développement...</p>
+      </div>
+    </div>
   )
 }

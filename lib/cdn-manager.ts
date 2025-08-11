@@ -244,7 +244,7 @@ export const CDN_PATHS = {
 } as const
 
 // CDN helpers
-export const uploadImage = async (file: File, category: string = 'images') => {
+export const uploadImage = async (file: File, category = 'images') => {
   const timestamp = Date.now()
   const extension = file.name.split('.').pop()
   const path = `${CDN_PATHS.IMAGES}/${category}/${timestamp}.${extension}`

@@ -19,7 +19,6 @@ import {
   MessageCircle,
   Eye,
   Users,
-  Settings,
   LogOut
 } from "lucide-react"
 import Image from "next/image"
@@ -82,7 +81,10 @@ export default function ProfilePage() {
         setUser(userData)
       }
     } catch (error) {
-      console.error("Error fetching user data:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching user data:", error)
+      }
     }
   }
 
@@ -94,7 +96,10 @@ export default function ProfilePage() {
         setStats(statsData)
       }
     } catch (error) {
-      console.error("Error fetching user stats:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching user stats:", error)
+      }
     }
   }
 
@@ -106,7 +111,10 @@ export default function ProfilePage() {
         setPosts(data.posts)
       }
     } catch (error) {
-      console.error("Error fetching user posts:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching user posts:", error)
+      }
     } finally {
       setLoading(false)
     }
@@ -117,7 +125,10 @@ export default function ProfilePage() {
       await signOut({ callbackUrl: "/" })
       toast.success("Déconnexion réussie")
     } catch (error) {
-      console.error("Erreur lors de la déconnexion:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Erreur lors de la déconnexion:", error)
+      }
       toast.error("Erreur lors de la déconnexion")
     }
   }

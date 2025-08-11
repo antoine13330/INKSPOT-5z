@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -13,7 +13,6 @@ import {
   MoreVertical, 
   Phone, 
   Video,
-  Image as ImageIcon,
   MessageCircle
 } from "lucide-react"
 

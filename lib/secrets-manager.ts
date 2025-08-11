@@ -54,7 +54,7 @@ class SecretsManager {
   }
 
   // Store a secret
-  async storeSecret(name: string, value: string, environment: string = 'production'): Promise<void> {
+  async storeSecret(name: string, value: string, environment = 'production'): Promise<void> {
     const encrypted = this.encrypt(value)
     
     const secret: SecretConfig = {
@@ -73,7 +73,7 @@ class SecretsManager {
   }
 
   // Retrieve a secret
-  async getSecret(name: string, environment: string = 'production'): Promise<string | null> {
+  async getSecret(name: string, environment = 'production'): Promise<string | null> {
     const secret = this.secrets.get(name)
     
     if (!secret || secret.environment !== environment) {
@@ -88,7 +88,7 @@ class SecretsManager {
   }
 
   // Rotate a secret
-  async rotateSecret(name: string, newValue: string, environment: string = 'production'): Promise<void> {
+  async rotateSecret(name: string, newValue: string, environment = 'production'): Promise<void> {
     await this.storeSecret(name, newValue, environment)
     console.log(`Secret '${name}' rotated for environment '${environment}'`)
   }
@@ -105,7 +105,7 @@ class SecretsManager {
   }
 
   // Delete a secret
-  async deleteSecret(name: string, environment: string = 'production'): Promise<boolean> {
+  async deleteSecret(name: string, environment = 'production'): Promise<boolean> {
     const secret = this.secrets.get(name)
     
     if (secret && secret.environment === environment) {

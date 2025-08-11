@@ -110,7 +110,10 @@ export default function CustomizeProfilePage() {
         })
       }
     } catch (error) {
-      console.error("Error fetching profile:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching profile:", error)
+      }
     } finally {
       setLoading(false)
     }
@@ -167,7 +170,10 @@ export default function CustomizeProfilePage() {
         }
       }
     } catch (error) {
-      console.error("Error uploading image:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error uploading image:", error)
+      }
     }
   }
 
@@ -193,7 +199,10 @@ export default function CustomizeProfilePage() {
         alert("Failed to save profile")
       }
     } catch (error) {
-      console.error("Error saving profile:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error saving profile:", error)
+      }
       alert("Failed to save profile")
     } finally {
       setSaving(false)

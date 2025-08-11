@@ -89,7 +89,10 @@ export default function ProDashboard() {
       setRecentBookings(bookingsData.bookings || [])
       setRecentInvoices(invoicesData.invoices || [])
     } catch (error) {
-      console.error("Error fetching dashboard data:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching dashboard data:", error)
+      }
     } finally {
       setLoading(false)
     }

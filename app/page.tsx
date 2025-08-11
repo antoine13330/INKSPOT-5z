@@ -70,7 +70,10 @@ export default function HomePage() {
         setPosts(data.posts)
       }
     } catch (error) {
-      console.error("Error fetching posts:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching posts:", error)
+      }
     } finally {
       setLoading(false)
     }
@@ -93,7 +96,10 @@ export default function HomePage() {
         toast.success("Post liked!")
       }
     } catch (error) {
-      console.error("Error liking post:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error liking post:", error)
+      }
       toast.error("Failed to like post")
     }
   }

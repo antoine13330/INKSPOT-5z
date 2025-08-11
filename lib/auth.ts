@@ -78,8 +78,11 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
         // Check if user exists
+        if (!user.email) {
+          throw new Error('Email is required for Google sign-in')
+        }
         const existingUser = await prisma.user.findUnique({
-          where: { email: user.email! }
+          where: { email: user.email }
         })
 
         if (!existingUser) {
@@ -97,7 +100,7 @@ export const authOptions: NextAuthOptions = {
           // Create new user from Google with better data mapping
           const newUser = await prisma.user.create({
             data: {
-              email: user.email!,
+              email: user.email,
               username: username,
               firstName: user.name?.split(' ')[0] || '',
               lastName: user.name?.split(' ').slice(1).join(' ') || '',
@@ -135,7 +138,7 @@ export const authOptions: NextAuthOptions = {
 
           if (Object.keys(updateData).length > 0) {
             await prisma.user.update({
-              where: { email: user.email! },
+              where: { email: user.email },
               data: updateData
             })
           }

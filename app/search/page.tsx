@@ -106,7 +106,10 @@ export default function SearchPage() {
           });
         }
       } catch (error) {
-        console.error("Search error:", error);
+        // Log error for debugging (in production, send to monitoring service)
+        if (process.env.NODE_ENV === 'development') {
+          console.error("Search error:", error);
+        }
         toast.error("Failed to perform search");
       } finally {
         setLoading(false);
@@ -149,7 +152,10 @@ export default function SearchPage() {
         );
       }
     } catch (error) {
-      console.error("Error liking post:", error);
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error liking post:", error);
+      }
       toast.error("Failed to like post");
     }
   };

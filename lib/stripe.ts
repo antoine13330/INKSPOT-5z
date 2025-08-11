@@ -31,7 +31,7 @@ export async function createStripeCustomer(userId: string, email: string, name?:
   return customer;
 }
 
-export async function createStripeAccount(userId: string, email: string, country: string = 'FR') {
+export async function createStripeAccount(userId: string, email: string, country = 'FR') {
   if (!stripe) {
     throw new Error('Stripe is not configured');
   }
@@ -52,7 +52,7 @@ export async function createStripeAccount(userId: string, email: string, country
   return account;
 }
 
-export async function createPaymentIntent(amount: number, currency: string = 'eur', customerId?: string) {
+export async function createPaymentIntent(amount: number, currency = 'eur', customerId?: string) {
   if (!stripe) {
     throw new Error('Stripe is not configured');
   }
@@ -107,7 +107,7 @@ export async function createProduct(name: string, description?: string) {
   return product;
 }
 
-export async function createPrice(productId: string, amount: number, currency: string = 'eur', recurring?: { interval: 'day' | 'week' | 'month' | 'year' }) {
+export async function createPrice(productId: string, amount: number, currency = 'eur', recurring?: { interval: 'day' | 'week' | 'month' | 'year' }) {
   if (!stripe) {
     throw new Error('Stripe is not configured');
   }
@@ -122,7 +122,7 @@ export async function createPrice(productId: string, amount: number, currency: s
   return price;
 }
 
-export async function createTransfer(amount: number, destination: string, currency: string = 'eur') {
+export async function createTransfer(amount: number, destination: string, currency = 'eur') {
   if (!stripe) {
     throw new Error('Stripe is not configured');
   }

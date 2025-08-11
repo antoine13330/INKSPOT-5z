@@ -173,7 +173,10 @@ export function AutoComplete({
 
       setSuggestions(newSuggestions)
     } catch (error) {
-      console.error('Error fetching suggestions:', error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching suggestions:', error)
+      }
       setSuggestions([])
     } finally {
       setIsLoading(false)
@@ -247,7 +250,10 @@ export function AutoComplete({
 
       setSuggestions(newSuggestions)
     } catch (error) {
-      console.error('Error fetching default suggestions:', error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error fetching default suggestions:', error)
+      }
       setSuggestions([])
     }
   }

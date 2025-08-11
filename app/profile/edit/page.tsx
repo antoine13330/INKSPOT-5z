@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+
 import { BottomNavigation } from "@/components/bottom-navigation"
 import { 
   Camera, 
@@ -19,12 +19,11 @@ import {
   Mail,
   MapPin,
   Globe,
-  Phone,
-  Edit3
+  Phone
 } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
-import Image from "next/image"
+
 
 interface ProfileFormData {
   username: string

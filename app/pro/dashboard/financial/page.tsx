@@ -10,7 +10,6 @@ import {
   DollarSign, 
   TrendingUp, 
   Calendar, 
-  Download,
   CreditCard,
   ArrowUpRight,
   ArrowDownRight,

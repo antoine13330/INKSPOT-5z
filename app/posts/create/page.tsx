@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { MentionAutocomplete } from "@/components/mention-autocomplete";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,8 +21,7 @@ import {
   Image as ImageIcon,
   Plus,
   Users,
-  FileText,
-  AtSign
+  FileText
 } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";

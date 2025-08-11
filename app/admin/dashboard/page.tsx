@@ -107,7 +107,10 @@ export default function AdminDashboard() {
       setUsers(usersData.users || [])
       setReportedContent(reportsData.reports || [])
     } catch (error) {
-      console.error("Error fetching admin data:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching admin data:", error)
+      }
     } finally {
       setLoading(false)
     }
@@ -127,7 +130,10 @@ export default function AdminDashboard() {
         fetchAdminData() // Refresh data
       }
     } catch (error) {
-      console.error("Error updating user:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error updating user:", error)
+      }
     }
   }
 
@@ -145,7 +151,10 @@ export default function AdminDashboard() {
         fetchAdminData() // Refresh data
       }
     } catch (error) {
-      console.error("Error updating report:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error updating report:", error)
+      }
     }
   }
 

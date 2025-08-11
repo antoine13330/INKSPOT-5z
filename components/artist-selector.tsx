@@ -29,7 +29,7 @@ interface ArtistSelectorProps {
   onArtistClear: () => void;
 }
 
-export function ArtistSelector({ selectedArtistId, onArtistSelect, onArtistClear }: ArtistSelectorProps) {
+export function ArtistSelector({ onArtistSelect, onArtistClear }: ArtistSelectorProps) {
   const [query, setQuery] = useState("");
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(false);
@@ -37,24 +37,12 @@ export function ArtistSelector({ selectedArtistId, onArtistSelect, onArtistClear
 
   // Fetch selected artist details if artistId is provided
   useEffect(() => {
-    if (selectedArtistId && !selectedArtist) {
-      fetchSelectedArtist();
+    if (selectedArtist) {
+      // Artist already selected, no need to fetch
     }
-  }, [selectedArtistId]);
+  }, [selectedArtist]);
 
-  const fetchSelectedArtist = async () => {
-    try {
-      const response = await fetch(`/api/artists/search?q=${selectedArtistId}&limit=1`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.artists.length > 0) {
-          setSelectedArtist(data.artists[0]);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching selected artist:", error);
-    }
-  };
+
 
   const searchArtists = async (searchQuery: string) => {
     if (!searchQuery.trim()) {

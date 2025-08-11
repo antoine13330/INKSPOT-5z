@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { AtSign, Users } from "lucide-react"
+import { Users } from "lucide-react"
 
 interface Pro {
   id: string
@@ -27,7 +27,6 @@ export function MentionAutocomplete({ query, onSelect, onClose }: MentionAutocom
   const [pros, setPros] = useState<Pro[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!query.trim()) {
@@ -88,7 +87,7 @@ export function MentionAutocomplete({ query, onSelect, onClose }: MentionAutocom
   }
 
   return (
-    <Card ref={containerRef} className="absolute top-full left-0 right-0 z-50 bg-gray-800 border-gray-600 shadow-lg">
+    <Card className="absolute top-full left-0 right-0 z-50 bg-gray-800 border-gray-600 shadow-lg">
       <CardContent className="p-2">
         {loading ? (
           <div className="flex items-center justify-center py-4">

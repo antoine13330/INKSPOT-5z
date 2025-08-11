@@ -66,7 +66,7 @@ export async function generateInvoicePDF(invoice: unknown): Promise<Buffer> {
 }
 
 export function generateInvoiceHTML(invoice: unknown): string {
-  const formatCurrency = (amount: number, currency: string = 'EUR') => {
+  const formatCurrency = (amount: number, currency = 'EUR') => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: currency,

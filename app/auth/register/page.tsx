@@ -15,7 +15,6 @@ import {
   Lock, 
   User, 
   Camera, 
-  Upload,
   ArrowLeft,
   Eye,
   EyeOff,
@@ -24,7 +23,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
-import Image from "next/image"
+
 
 interface RegisterFormData {
   email: string

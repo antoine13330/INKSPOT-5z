@@ -41,9 +41,8 @@ export function ConversationList({
   showSearch = false,
   title = "Conversations"
 }: ConversationListProps) {
-  const { data: session } = useSession()
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedDate, setSelectedDate] = useState("")
+
   const [filteredConversations, setFilteredConversations] = useState<Conversation[]>(conversations)
 
   // Filter conversations based on search term

@@ -69,7 +69,10 @@ export default function BookingPage({ params }: { params: { proId: string } }) {
       const data = await response.json()
       setPro(data.user)
     } catch (error) {
-      console.error("Error fetching pro data:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching pro data:", error)
+      }
     } finally {
       setLoading(false)
     }
@@ -83,7 +86,10 @@ export default function BookingPage({ params }: { params: { proId: string } }) {
       const data = await response.json()
       setAvailableSlots(data.slots || [])
     } catch (error) {
-      console.error("Error fetching availability:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error fetching availability:", error)
+      }
     }
   }
 
@@ -124,7 +130,10 @@ export default function BookingPage({ params }: { params: { proId: string } }) {
         alert("Booking failed. Please try again.")
       }
     } catch (error) {
-      console.error("Error creating booking:", error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error creating booking:", error)
+      }
       alert("Booking failed. Please try again.")
     } finally {
       setSubmitting(false)

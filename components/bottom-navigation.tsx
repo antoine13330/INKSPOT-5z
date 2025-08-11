@@ -5,8 +5,7 @@ import { useSession, signOut } from "next-auth/react"
 import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp, LogOut } from "lucide-react"
 import { useState } from "react"
 import { NotificationsPanel } from "@/components/notifications-panel"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+
 import { toast } from "sonner"
 
 export function BottomNavigation() {

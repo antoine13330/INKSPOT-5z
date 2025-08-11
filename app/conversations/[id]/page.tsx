@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { ArrowLeft, Phone, Video, MoreHorizontal, Wifi } from "lucide-react"
 import { Button, Avatar, Badge, LoadingState, ErrorState } from "@/components/ui/base-components"
 import { MessageList } from "@/components/chat/MessageList"
@@ -11,7 +11,7 @@ import { TypingIndicator } from "@/components/chat/TypingIndicator"
 import { BottomNavigation } from "@/components/bottom-navigation"
 import { useApi } from "@/hooks/useApi"
 import { Message, Conversation } from "@/types"
-import { cn, getInitials } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 interface ConversationPageProps {
   params: { id: string }
@@ -22,7 +22,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
   const router = useRouter()
   const conversationId = params.id
   
-  const [messages, setMessages] = useState<Message[]>([])
+    const [messages, setMessages] = useState<Message[]>([])
   const [typingUsers, setTypingUsers] = useState<{ userId: string; userName: string }[]>([])
   const [conversationInfo, setConversationInfo] = useState<Conversation | null>(null)
 
@@ -148,7 +148,12 @@ export default function ConversationPage({ params }: ConversationPageProps) {
   )
 
   const displayName = otherParticipant?.name || otherParticipant?.username || "Utilisateur"
-  const initials = getInitials(displayName)
+  const initials = displayName
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
 
   // Handle send message
   const handleSendMessage = (messageData: { content: string; type: string }) => {

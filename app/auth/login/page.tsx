@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { signIn, getSession } from "next-auth/react"
+import { signIn } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import Link from "next/link"
-import { Eye, EyeOff, Mail, Lock, Github } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -19,7 +19,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
+  const callbackUrl = searchParams?.get("callbackUrl") || "/"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

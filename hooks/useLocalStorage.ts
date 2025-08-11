@@ -15,7 +15,10 @@ export function useLocalStorageWithExpiry<T>(
       const item = getLocalStorageWithExpiry(key)
       return item !== null ? item : initialValue
     } catch (error) {
-      console.error(`Error reading localStorage key "${key}":`, error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error reading localStorage key "${key}":`, error)
+      }
       return initialValue
     }
   })
@@ -26,7 +29,10 @@ export function useLocalStorageWithExpiry<T>(
       setStoredValue(valueToStore)
       setLocalStorageWithExpiry(key, valueToStore, ttl)
     } catch (error) {
-      console.error(`Error setting localStorage key "${key}":`, error)
+      // Log error for debugging (in production, send to monitoring service)
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error setting localStorage key "${key}":`, error)
+      }
     }
   }, [key, storedValue, ttl])
 

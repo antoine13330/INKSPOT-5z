@@ -19,8 +19,7 @@ export function MessageList({
   currentUserId,
   readStatus = {},
   onMessageRead,
-  className,
-  ...props
+  className
 }: MessageListProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -80,7 +79,6 @@ export function MessageList({
         "flex-1 overflow-y-auto p-4 space-y-4",
         className
       )}
-      {...props}
     >
       {messages.map((message) => (
         <div
