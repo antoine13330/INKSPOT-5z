@@ -2,9 +2,9 @@ name: INKSPOT CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, test/ci-cd-pipeline ]
   pull_request:
-    branches: [ main, dev ]
+    branches: [ main, dev, test/ci-cd-pipeline ]
 
 env:
   NODE_VERSION: '18'
