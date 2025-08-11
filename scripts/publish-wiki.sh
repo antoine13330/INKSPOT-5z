@@ -10,19 +10,31 @@ if [ -z "$git_remote_url" ]; then
   exit 1
 fi
 
-# Normalize to HTTPS URL for .wiki clone
-if [[ "$git_remote_url" == git@* ]]; then
-  # SSH → HTTPS (git@github.com:owner/repo.git)
-  owner_repo=$(echo "$git_remote_url" | sed -E 's#git@github.com:(.*)\.git#\1#')
-  base_url="https://github.com/$owner_repo"
-elif [[ "$git_remote_url" == http* ]]; then
-  base_url=$(echo "$git_remote_url" | sed -E 's#\.git$##')
-else
-  echo "Unrecognized remote URL: $git_remote_url" >&2
+# Extract owner/repo robustly (works for SSH and HTTPS with or without token)
+owner_repo=$(echo "$git_remote_url" | sed -E 's#.*github.com/([^/]+/[^/]+)(\.git)?$#\1#')
+if [ -z "$owner_repo" ]; then
+  echo "Failed to parse owner/repo from origin URL: $git_remote_url" >&2
   exit 1
 fi
 
-wiki_url="${base_url}.wiki.git"
+# Base wiki URL without credentials
+wiki_url="https://github.com/${owner_repo}.wiki.git"
+
+# Determine token to use
+embedded_token=$(echo "$git_remote_url" | sed -nE 's#https://x-access-token:([^@]+)@github.com/.*#\1#p')
+use_token=""
+if [ -n "$GITHUB_TOKEN" ]; then
+  use_token="$GITHUB_TOKEN"
+elif [ -n "$embedded_token" ]; then
+  use_token="$embedded_token"
+fi
+
+# Construct clone/push URL
+if [ -n "$use_token" ]; then
+  clone_url="https://x-access-token:${use_token}@github.com/${owner_repo}.wiki.git"
+else
+  clone_url="$wiki_url"
+fi
 
 echo "Publishing wiki to: $wiki_url"
 
@@ -30,14 +42,26 @@ echo "Publishing wiki to: $wiki_url"
 tmp_dir=$(mktemp -d)
 trap 'rm -rf "$tmp_dir"' EXIT
 
-# Clone wiki
-GIT_ASKPASS=echo git clone "$wiki_url" "$tmp_dir/wiki"
+# Clone wiki (use token URL if available)
+GIT_ASKPASS=echo git clone "$clone_url" "$tmp_dir/wiki"
 
-# Copy content
-rsync -a --delete wiki/ "$tmp_dir/wiki/"
+# Copy content (rsync if available, else cp)
+if command -v rsync >/dev/null 2>&1; then
+  rsync -a --delete wiki/ "$tmp_dir/wiki/"
+else
+  mkdir -p "$tmp_dir/wiki"
+  cp -a wiki/. "$tmp_dir/wiki/"
+fi
 
 # Commit and push
 pushd "$tmp_dir/wiki" >/dev/null
+  # Ensure push URL uses token if provided
+  if [ -n "$use_token" ]; then
+    git remote set-url origin "$clone_url"
+  fi
+  # Set author identity if missing
+  git config user.name >/dev/null 2>&1 || git config user.name "Wiki Publisher"
+  git config user.email >/dev/null 2>&1 || git config user.email "wiki@local"
   git add .
   if git diff --cached --quiet; then
     echo "No wiki changes to publish."
