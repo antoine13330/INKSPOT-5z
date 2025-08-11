@@ -186,17 +186,17 @@ class PerformanceBudgets {
         }
         break
         
-      case 'dbQueryTime':
-{
+      case 'dbQueryTime': {
         const queryStats = databaseOptimizer.getQueryStats()
         currentValue = queryStats.reduce((sum, stat) => sum + stat.executionTime, 0) / queryStats.length
         break
+      }
         
-      case 'cacheHitRate':
-{
+      case 'cacheHitRate': {
         const cacheStats = await redisCache.getStats()
         currentValue = cacheStats.hits / (cacheStats.hits + cacheStats.misses)
         break
+      }
         
       case 'apiResponseTime':
         // This would be measured from API middleware
