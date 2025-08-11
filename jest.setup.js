@@ -1,28 +1,40 @@
 require("@testing-library/jest-dom")
 
-// Expose a controllable IntersectionObserver mock
-const mockIntersectionObserver = jest.fn((callback, options) => {
-  return {
-    observe: jest.fn(() => {
-      // Do not auto-trigger; tests can call recorded callback via mockIntersectionObserver.mock.calls
-    }),
-    unobserve: jest.fn(),
-    disconnect: jest.fn(),
-    _callback: callback,
-    _options: options,
+// Mock IntersectionObserver
+global.IntersectionObserver = class MockIntersectionObserver {
+  constructor(callback, options = {}) {
+    this.callback = callback
+    this.options = options
+    this.observedElements = new Set()
   }
-})
-
-global.mockIntersectionObserver = mockIntersectionObserver
-
-global.IntersectionObserver = function (callback, options) {
-  // Record the constructor call and return a mocked instance
-  mockIntersectionObserver(callback, options)
-  return mockIntersectionObserver.mock.results[mockIntersectionObserver.mock.calls.length - 1].value
+  
+  observe(element) {
+    this.observedElements.add(element)
+    // Don't trigger callback immediately - let tests control when elements become visible
+  }
+  
+  unobserve(element) {
+    this.observedElements.delete(element)
+  }
+  
+  disconnect() {
+    this.observedElements.clear()
+  }
+  
+  // Helper method for tests to trigger intersection
+  triggerIntersection(element, isIntersecting = true) {
+    if (this.observedElements.has(element)) {
+      this.callback([{ 
+        isIntersecting, 
+        target: element,
+        intersectionRatio: isIntersecting ? 1 : 0,
+        boundingClientRect: element.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now()
+      }], this)
+    }
+  }
 }
-
-// Ensure Redis uses the ioredis mock path in tests
-process.env.REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379'
 
 // Mock Next.js router
 jest.mock('next/router', () => ({
@@ -81,11 +93,7 @@ global.Request = class MockRequest {
     this.headers = new Headers(init.headers || {})
     this.body = init.body || null
     this.formData = jest.fn().mockResolvedValue(new Map())
-    this.json = jest.fn().mockResolvedValue(
-      typeof this.body === 'string'
-        ? (() => { try { return JSON.parse(this.body) } catch { return {} } })()
-        : (this.body || {})
-    )
+    this.json = jest.fn().mockResolvedValue({})
   }
 }
 
@@ -108,15 +116,14 @@ jest.mock('next/server', () => ({
   },
 }))
 
-// Improved Mock URL to parse search params
+// Mock URL constructor
 global.URL = class MockURL {
   constructor(url, base) {
     this.href = url
-    this.protocol = typeof url === 'string' && url.startsWith('https:') ? 'https:' : (typeof url === 'string' && url.startsWith('http:') ? 'http:' : 'file:')
-    const queryIndex = typeof url === 'string' ? url.indexOf('?') : -1
-    const query = queryIndex !== -1 ? url.slice(queryIndex + 1) : ''
-    this.searchParams = new URLSearchParams(query)
+    this.protocol = url.startsWith('https:') ? 'https:' : url.startsWith('http:') ? 'http:' : 'file:'
+    this.searchParams = new URLSearchParams()
   }
+  
   toString() {
     return this.href
   }
@@ -129,10 +136,10 @@ global.URLSearchParams = class MockURLSearchParams {
     if (init) {
       if (typeof init === 'string') {
         // Parse query string
-        const pairs = init.split('&').filter(Boolean)
+        const pairs = init.split('&')
         pairs.forEach(pair => {
-          const [rawKey, rawValue] = pair.split('=')
-          if (rawKey) this.params.set(decodeURIComponent(rawKey), decodeURIComponent(rawValue || ''))
+          const [key, value] = pair.split('=')
+          if (key) this.params.set(key, value || '')
         })
       } else if (Array.isArray(init)) {
         // Array of key-value pairs
@@ -170,7 +177,7 @@ global.URLSearchParams = class MockURLSearchParams {
 
   toString() {
     return Array.from(this.params.entries())
-      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .map(([key, value]) => `${key}=${value}`)
       .join('&')
   }
 }
