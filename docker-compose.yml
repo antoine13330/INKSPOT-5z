@@ -7,19 +7,18 @@ services:
     container_name: inkspot_postgres
     environment:
       POSTGRES_DB: inkspot
-      POSTGRES_USER: inkspot_user
-      POSTGRES_PASSWORD: inkspot_password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
     networks:
       - inkspot_network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U inkspot_user -d inkspot"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d inkspot"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -49,7 +48,7 @@ services:
     container_name: inkspot_app
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://inkspot_user:inkspot_password@postgres:5432/inkspot
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inkspot
       - REDIS_URL=redis://redis:6379
       - NEXTAUTH_URL=http://localhost:3000
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your-nextauth-secret-key-here}
@@ -91,7 +90,7 @@ services:
     container_name: inkspot_websocket
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://inkspot_user:inkspot_password@postgres:5432/inkspot
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inkspot
       - REDIS_URL=redis://redis:6379
       - WS_PORT=3001
     ports:
@@ -186,7 +185,7 @@ services:
     ports:
       - "9187:9187"
     environment:
-      DATA_SOURCE_NAME: "postgresql://inkspot_user:inkspot_password@postgres:5432/inkspot?sslmode=disable"
+      DATA_SOURCE_NAME: "postgresql://postgres:postgres@postgres:5432/inkspot?sslmode=disable"
     networks:
       - inkspot_network
     restart: unless-stopped
@@ -213,7 +212,7 @@ services:
       dockerfile: Dockerfile.prisma-studio
     container_name: inkspot_prisma_studio
     environment:
-      - DATABASE_URL=postgresql://inkspot_user:inkspot_password@postgres:5432/inkspot
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inkspot
     ports:
       - "5555:5555"
     depends_on:
