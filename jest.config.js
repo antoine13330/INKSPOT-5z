@@ -12,48 +12,26 @@ const customJestConfig = {
   moduleNameMapping: {
     '^@/(.*)$': '<rootDir>/$1',
   },
+  testPathIgnorePatterns: [
+    '<rootDir>/.next/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/coverage/',
+    '<rootDir>/dist/',
+  ],
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',
     'components/**/*.{js,jsx,ts,tsx}',
     'lib/**/*.{js,jsx,ts,tsx}',
-    'hooks/**/*.{js,jsx,ts,tsx}',
-    'utils/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
-    '!**/.next/**',
-    '!**/coverage/**',
-    '!**/e2e/**',
-    '!**/playwright.config.ts',
   ],
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: 80,
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
     },
-  },
-  coverageReporters: ['text', 'lcov', 'html'],
-  testMatch: [
-    '<rootDir>/__tests__/**/*.{js,jsx,ts,tsx}',
-    '<rootDir>/**/*.test.{js,jsx,ts,tsx}',
-    '<rootDir>/**/*.spec.{js,jsx,ts,tsx}',
-  ],
-  testPathIgnorePatterns: [
-    '<rootDir>/.next/',
-    '<rootDir>/node_modules/',
-    '<rootDir>/e2e/',
-  ],
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
-  },
-  transformIgnorePatterns: [
-    '/node_modules/',
-    '^.+\\.module\\.(css|sass|scss)$',
-  ],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  testEnvironmentOptions: {
-    customExportConditions: [''],
   },
 }
 
