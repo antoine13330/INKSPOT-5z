@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install ESLint
+        run: npm install --save-dev eslint @next/eslint-config-next
+
       - name: Setup environment variables
         run: |
           echo "DATABASE_URL=postgresql://inkspot_user:inkspot_password@localhost:5432/inkspot_test" >> $GITHUB_ENV
