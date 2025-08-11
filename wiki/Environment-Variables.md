@@ -52,8 +52,19 @@ Local dev uses Mailhog via Docker.
 - `SMTP_HOST=localhost`
 - `SMTP_PORT=1025`
 - `SMTP_USER`, `SMTP_PASS` empty for local.
+- `EMAIL_FROM` for notifications (used to set VAPID subject): e.g. `noreply@localhost`
 
 Mailhog UI: http://localhost:8025
+
+## Web Push (VAPID)
+- `VAPID_PUBLIC_KEY`
+- `VAPID_PRIVATE_KEY`
+
+Generate keys:
+```bash
+pnpm run generate-vapid
+# then add VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY to .env
+```
 
 ## WebSocket
 - `WS_PORT=3001` (default for the separate WebSocket service){.note}

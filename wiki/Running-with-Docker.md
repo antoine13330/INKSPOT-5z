@@ -16,13 +16,27 @@ Use the helper script to manage Docker Compose services.
 # Webhook URL: https://inkspot-webhook.loca.lt/api/stripe/webhook
 ```
 
-## Other commands
+## Direct docker-compose usage
 ```bash
-./scripts/start-docker.sh status
-./scripts/start-docker.sh logs
-./scripts/start-docker.sh restart
-./scripts/start-docker.sh stop
-./scripts/start-docker.sh clean   # removes containers/volumes (danger)
+docker-compose up -d postgres redis app websocket mailhog
+# Stop / status / logs
+docker-compose down
+docker-compose ps
+docker-compose logs -f
+```
+
+## Monitoring profile
+```bash
+docker-compose --profile monitoring up -d
+# Grafana:   http://localhost:3002
+# Prometheus http://localhost:9090
+```
+
+## Cleanup
+```bash
+./scripts/start-docker.sh clean
+# or
+docker-compose down -v --remove-orphans
 ```
 
 ## Services and ports

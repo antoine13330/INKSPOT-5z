@@ -24,6 +24,22 @@ The project supports automated CI/CD with Docker images and GitHub Actions, plus
 ./scripts/deploy.sh health-check
 ```
 
+## Docker Compose profiles
+```bash
+# Staging profile
+docker-compose --profile staging up -d
+
+# Production profile
+docker-compose --profile production up -d
+
+# Monitoring only
+docker-compose --profile monitoring up -d
+```
+
+## Nginx reverse proxy (prod)
+- Config at `nginx/nginx.conf` (SSL, headers). Mounts provided in `docker-compose.prod.yml`.
+- Provide certificates at `nginx/ssl/`.
+
 ## Production env example
 See `docker-compose.prod.yml` for variables like `NEXTAUTH_URL`, Stripe keys, S3, SMTP, and DB credentials. Also set `GRAFANA_PASSWORD` if monitoring is enabled.
 
