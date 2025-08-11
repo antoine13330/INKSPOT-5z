@@ -178,13 +178,13 @@ class PerformanceBudgets {
       case 'largestContentfulPaint':
       case 'cumulativeLayoutShift':
       case 'firstInputDelay':
-      case 'memoryUsage':
-{
+      case 'memoryUsage': {
         const metrics = performanceMonitor.getLatestMetrics()
         if (metrics) {
           currentValue = metrics[budget.metric as keyof typeof metrics] || 0
         }
         break
+      }
         
       case 'dbQueryTime': {
         const queryStats = databaseOptimizer.getQueryStats()
@@ -248,7 +248,9 @@ class PerformanceBudgets {
   // Send alert notification
   private async sendAlertNotification(alert: PerformanceAlert): Promise<void> {
     // Implementation would integrate with notification service
-    console.log(`[${alert.severity}] Performance Alert: ${alert.message}`, alert.details)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[${alert.severity}] Performance Alert: ${alert.message}`, alert.details)
+    }
     
     // Send to external monitoring service
     if (process.env.PERFORMANCE_MONITORING_URL) {
@@ -262,7 +264,9 @@ class PerformanceBudgets {
           body: JSON.stringify(alert),
         })
       } catch (error) {
-        console.error('Failed to send performance alert:', error)
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Failed to send performance alert:', error)
+        }
       }
     }
   }
