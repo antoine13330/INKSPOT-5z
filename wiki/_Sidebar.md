@@ -1,0 +1,21 @@
+- [Home](Home)
+- **Start here**
+  - [Getting Started](Getting-Started)
+  - [Environment Variables](Environment-Variables)
+- **Architecture**
+  - [Architecture](Architecture)
+  - [Realtime Messaging](Realtime-Messaging)
+  - [Design System](Design-System)
+- **Operate**
+  - [Running with Docker](Running-with-Docker)
+  - [Deployment](Deployment)
+  - [Monitoring & Observability](Monitoring)
+  - [Database](Database)
+  - [Security](Security)
+  - [Performance](Performance)
+- **Develop**
+  - [Testing](Testing)
+  - [Useful Commands](Useful-Commands)
+  - [Troubleshooting / FAQ](Troubleshooting)
+- **Meta**
+  - [Publish the Wiki](Publishing-the-Wiki)
