@@ -43,6 +43,7 @@
     "@aws-sdk/s3-request-presigner": "latest",
     "@hookform/resolvers": "^3.9.1",
     "@next-auth/prisma-adapter": "latest",
+    "@playwright/test": "^1.40.0",
     "@prisma/client": "latest",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -71,6 +72,7 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
+    "@supabase/supabase-js": "^2.38.0",
     "@testing-library/dom": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
@@ -83,6 +85,8 @@
     "date-fns": "latest",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
+    "ioredis": "^5.3.2",
+    "isomorphic-dompurify": "^1.9.0",
     "jest": "latest",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
@@ -105,11 +109,7 @@
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
     "web-push": "latest",
-    "zod": "^3.24.1",
-    "@playwright/test": "^1.40.0",
-    "ioredis": "^5.3.2",
-    "@supabase/supabase-js": "^2.38.0",
-    "isomorphic-dompurify": "^1.9.0"
+    "zod": "^3.24.1"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -118,6 +118,7 @@
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "jest-environment-jsdom": "^30.0.5",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
