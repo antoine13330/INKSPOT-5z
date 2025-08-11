@@ -70,7 +70,9 @@ export const useWebSocket = (options: UseWebSocketOptions = {}): UseWebSocketRet
 
     // Connection event handlers
     socketIO.on("connect", () => {
-      console.log("Connected to WebSocket server")
+      if (process.env.NODE_ENV === 'development') {
+        console.log("Connected to WebSocket server")
+      }
       setIsConnected(true)
       
       // Join specific conversation if provided
@@ -80,7 +82,9 @@ export const useWebSocket = (options: UseWebSocketOptions = {}): UseWebSocketRet
     })
 
     socketIO.on("disconnect", () => {
-      console.log("Disconnected from WebSocket server")
+      if (process.env.NODE_ENV === 'development') {
+        console.log("Disconnected from WebSocket server")
+      }
       setIsConnected(false)
     })
 
@@ -128,7 +132,9 @@ export const useWebSocket = (options: UseWebSocketOptions = {}): UseWebSocketRet
   // Send message function
   const sendMessage = useCallback((message: Omit<MessageData, 'id' | 'createdAt'>) => {
     if (!socket || !isConnected) {
-      console.error("Socket not connected")
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Socket not connected")
+      }
       return
     }
 

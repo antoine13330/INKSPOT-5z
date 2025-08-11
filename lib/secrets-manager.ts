@@ -69,7 +69,9 @@ class SecretsManager {
     
     // In a real implementation, this would be stored in a secure database
     // or external secrets management service like AWS Secrets Manager
-    console.log(`Secret '${name}' stored for environment '${environment}'`)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Secret '${name}' stored for environment '${environment}'`)
+    }
   }
 
   // Retrieve a secret
@@ -90,7 +92,9 @@ class SecretsManager {
   // Rotate a secret
   async rotateSecret(name: string, newValue: string, environment = 'production'): Promise<void> {
     await this.storeSecret(name, newValue, environment)
-    console.log(`Secret '${name}' rotated for environment '${environment}'`)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Secret '${name}' rotated for environment '${environment}'`)
+    }
   }
 
   // List all secrets
@@ -110,7 +114,9 @@ class SecretsManager {
     
     if (secret && secret.environment === environment) {
       this.secrets.delete(name)
-      console.log(`Secret '${name}' deleted from environment '${environment}'`)
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Secret '${name}' deleted from environment '${environment}'`)
+      }
       return true
     }
     

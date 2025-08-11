@@ -80,7 +80,9 @@ export function withMonitoring(
       response = await handler(req)
       statusCode = response.status
     } catch (error) {
-      console.error('Request handler error:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Request handler error:', error)
+      }
       statusCode = 500
       response = NextResponse.json(
         { error: 'Internal server error' },
@@ -124,7 +126,9 @@ export function trackUserAction(action: string, userId?: string, metadata?: Reco
   }
   
   // Log action for debugging
-  console.log(`User action: ${action}`, { userId, metadata, timestamp: new Date().toISOString() })
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`User action: ${action}`, { userId, metadata, timestamp: new Date().toISOString() })
+  }
 }
 
 // Middleware for tracking business events
@@ -136,7 +140,9 @@ export function trackBusinessEvent(event: string, value?: number, metadata?: Rec
     metricsStore.setGauge(`business_events_${event}_value`, value)
   }
   
-  console.log(`Business event: ${event}`, { value, metadata, timestamp: new Date().toISOString() })
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Business event: ${event}`, { value, metadata, timestamp: new Date().toISOString() })
+  }
 }
 
 // Export metrics in Prometheus format
