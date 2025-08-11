@@ -82,6 +82,24 @@ body {
   @apply bg-card/80 backdrop-blur-sm border-t border-border;
 }
 
+/* Enhanced search interface */
+.search-active {
+  @apply ring-2 ring-primary ring-opacity-50;
+}
+
+.search-status {
+  @apply bg-primary/10 border border-primary/20 rounded-lg;
+}
+
+.posts-header {
+  @apply bg-muted/30 border border-border rounded-lg;
+}
+
+/* Smooth transitions for search mode */
+.search-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
 /* Gradient accents */
 .gradient-primary {
   background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 100%);
