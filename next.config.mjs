@@ -32,12 +32,6 @@ const nextConfig = {
       allowedOrigins: ['localhost:3000'],
     },
   },
-  // Force dynamic rendering for API routes
-  experimental: {
-    serverActions: {
-      allowedOrigins: ['localhost:3000'],
-    },
-  },
   // Ignore build errors for API routes during build
   onDemandEntries: {
     maxInactiveAge: 25 * 1000,
