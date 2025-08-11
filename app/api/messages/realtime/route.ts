@@ -202,7 +202,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Build search conditions
-    const searchConditions: any = {
+    const searchConditions: unknown = {
       conversationId,
       content: {
         contains: query,

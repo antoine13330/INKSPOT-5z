@@ -156,7 +156,7 @@ class SecretsManager {
   }
 
   // Generate a secure random secret
-  generateSecureSecret(length: number = 32): string {
+  generateSecureSecret(length = 32): string {
     return crypto.randomBytes(length).toString('base64')
   }
 

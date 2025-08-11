@@ -109,7 +109,7 @@ export async function PUT(
     }
 
     // Update user
-    const updateData: any = {
+    const updateData: unknown = {
       username: username.trim(),
       firstName: firstName?.trim() || null,
       lastName: lastName?.trim() || null,

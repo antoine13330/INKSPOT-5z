@@ -14,7 +14,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const { action } = body
     const userId = params.id
 
-    let updateData: any = {}
+    let updateData: unknown = {}
 
     switch (action) {
       case "suspend":

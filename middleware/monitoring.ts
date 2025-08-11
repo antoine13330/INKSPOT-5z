@@ -5,7 +5,7 @@ class MetricsStore {
   private metrics: Map<string, number> = new Map()
   private histograms: Map<string, number[]> = new Map()
 
-  incrementCounter(name: string, value: number = 1) {
+  incrementCounter(name: string, value = 1) {
     this.metrics.set(name, (this.metrics.get(name) || 0) + value)
   }
 

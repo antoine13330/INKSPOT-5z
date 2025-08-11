@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const diversify = searchParams.get("diversify") !== "false"
     const boostTrending = searchParams.get("boostTrending") !== "false"
 
-    let posts: any[]
+    let posts: unknown[]
 
     if (useAI) {
       // Use AI-powered recommendations

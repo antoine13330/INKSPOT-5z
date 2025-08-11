@@ -18,7 +18,7 @@ export interface CDNStats {
 class CDNManager {
   private static instance: CDNManager
   private config: CDNConfig
-  private supabase: any
+  private supabase: unknown
   private stats: CDNStats
 
   private constructor() {
@@ -37,8 +37,8 @@ class CDNManager {
 
     if (this.config.enabled && this.config.provider === 'supabase') {
       this.supabase = createClient(
-        process.env.SUPABASE_URL!,
-        process.env.SUPABASE_ANON_KEY!
+        process.env.SUPABASE_URL || '',
+        process.env.SUPABASE_ANON_KEY || ''
       )
     }
   }
@@ -133,7 +133,7 @@ class CDNManager {
 
       if (error) throw error
 
-      return data.map((file: any) => file.name)
+      return data.map((file: unknown) => file.name)
     } catch (error) {
       console.error('CDN list error:', error)
       return []
@@ -269,7 +269,7 @@ export const getOptimizedImageUrl = (
   url: string,
   width?: number,
   height?: number,
-  quality: number = 80
+  quality = 80
 ) => {
   return cdnManager.generateOptimizedImageUrl(url, {
     width,

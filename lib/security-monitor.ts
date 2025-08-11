@@ -176,7 +176,7 @@ class SecurityMonitor {
   // Send to external security service
   private async sendToExternalService(alert: SecurityAlert): Promise<void> {
     try {
-      await fetch(process.env.SECURITY_SERVICE_URL!, {
+      await fetch(process.env.SECURITY_SERVICE_URL || '', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

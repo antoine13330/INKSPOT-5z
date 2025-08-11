@@ -138,7 +138,7 @@ export function getBorderRadius(radius: keyof typeof designTokens.borderRadius):
 /**
  * Génère un lien de navigation
  */
-export function createNavLink(href: string, label: string, icon?: React.ComponentType<any>) {
+export function createNavLink(href: string, label: string, icon?: React.ComponentType<unknown>) {
   return { href, label, icon }
 }
 

@@ -66,7 +66,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized user queries
-  async getUsersWithPagination(page: number = 1, limit: number = 20, filters?: any) {
+  async getUsersWithPagination(page = 1, limit = 20, filters?: unknown) {
     const cacheKey = `users:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -108,7 +108,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized post queries
-  async getPostsWithOptimization(filters?: any, page: number = 1, limit: number = 20) {
+  async getPostsWithOptimization(filters?: unknown, page = 1, limit = 20) {
     const cacheKey = `posts:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -163,7 +163,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized search queries
-  async searchWithFullText(query: string, filters?: any, page: number = 1, limit: number = 20) {
+  async searchWithFullText(query: string, filters?: unknown, page = 1, limit = 20) {
     const cacheKey = `search:${query}:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -228,7 +228,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized booking queries
-  async getBookingsWithOptimization(userId?: string, filters?: any, page: number = 1, limit: number = 20) {
+  async getBookingsWithOptimization(userId?: string, filters?: unknown, page = 1, limit = 20) {
     const cacheKey = `bookings:${userId}:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -283,8 +283,8 @@ class DatabaseOptimizer {
   }
 
   // Build optimized where clauses
-  private buildUserWhereClause(filters?: any) {
-    const where: any = {}
+  private buildUserWhereClause(filters?: unknown) {
+    const where: unknown = {}
     
     if (filters?.search) {
       where.OR = [
@@ -304,8 +304,8 @@ class DatabaseOptimizer {
     return where
   }
 
-  private buildPostWhereClause(filters?: any) {
-    const where: any = { isPublic: true }
+  private buildPostWhereClause(filters?: unknown) {
+    const where: unknown = { isPublic: true }
     
     if (filters?.authorId) {
       where.authorId = filters.authorId
@@ -337,8 +337,8 @@ class DatabaseOptimizer {
     return where
   }
 
-  private buildBookingWhereClause(filters?: any) {
-    const where: any = {}
+  private buildBookingWhereClause(filters?: unknown) {
+    const where: unknown = {}
     
     if (filters?.status) {
       where.status = filters.status
@@ -432,7 +432,7 @@ class DatabaseOptimizer {
   }
 
   // Batch operations for better performance
-  async batchCreateUsers(users: any[]) {
+  async batchCreateUsers(users: unknown[]) {
     const startTime = Date.now()
     
     const result = await prisma.user.createMany({
@@ -446,7 +446,7 @@ class DatabaseOptimizer {
     return result
   }
 
-  async batchUpdatePosts(posts: { id: string; data: any }[]) {
+  async batchUpdatePosts(posts: { id: string; data: unknown }[]) {
     const startTime = Date.now()
     
     const results = await Promise.all(

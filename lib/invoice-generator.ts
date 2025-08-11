@@ -47,7 +47,7 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
   }
 }
 
-export async function generateInvoicePDF(invoice: any): Promise<Buffer> {
+export async function generateInvoicePDF(invoice: unknown): Promise<Buffer> {
   // This is a simplified PDF generation
   // In a real application, you'd use a library like PDFKit or Puppeteer
   
@@ -65,7 +65,7 @@ export async function generateInvoicePDF(invoice: any): Promise<Buffer> {
   return Buffer.from(htmlContent, 'utf-8')
 }
 
-export function generateInvoiceHTML(invoice: any): string {
+export function generateInvoiceHTML(invoice: unknown): string {
   const formatCurrency = (amount: number, currency: string = 'EUR') => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',

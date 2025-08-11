@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ users: [] })
     }
 
-    const whereConditions: any = {
+    const whereConditions: unknown = {
       status: 'ACTIVE',
       OR: [
         {

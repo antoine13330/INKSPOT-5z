@@ -229,7 +229,7 @@ export function usePostRecommendations(options: UseRecommendationsOptions = {}):
  */
 export function useGeographicRecommendations(
   location: string | { lat: number; lng: number },
-  radius: number = 50,
+  radius = 50,
   options: UseRecommendationsOptions = {}
 ): UseRecommendationsReturn {
   const { data: session } = useSession()
@@ -358,7 +358,7 @@ export function useInteractionTracking() {
   const recordInteraction = useCallback(async (
     targetUserId: string,
     interactionType: 'view' | 'like' | 'comment' | 'message' | 'book',
-    weight: number = 1
+    weight = 1
   ) => {
     if (!session?.user?.id || session.user.id === targetUserId) return
 

@@ -80,8 +80,8 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    let users: any[] = []
-    let posts: any[] = []
+    let users: unknown[] = []
+    let posts: unknown[] = []
 
     // Search users if requested
     if (params.contentType === 'users' || params.contentType === 'both') {
@@ -119,7 +119,7 @@ async function searchUsersByLocation(
   skip: number,
   limit: number,
   currentUserId?: string
-): Promise<any[]> {
+): Promise<unknown[]> {
   // Get all users with locations
   const allUsers = await prisma.user.findMany({
     where: {
@@ -215,7 +215,7 @@ async function searchPostsByLocation(
   skip: number,
   limit: number,
   currentUserId?: string
-): Promise<any[]> {
+): Promise<unknown[]> {
   // Get all posts with author locations
   const allPosts = await prisma.post.findMany({
     where: {

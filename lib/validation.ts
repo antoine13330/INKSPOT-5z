@@ -5,7 +5,7 @@ import DOMPurify from 'isomorphic-dompurify'
 export const emailSchema = z.string().email('Invalid email format')
 export const passwordSchema = z.string().min(8, 'Password must be at least 8 characters')
 export const usernameSchema = z.string().min(3, 'Username must be at least 3 characters').max(30, 'Username must be less than 30 characters')
-export const phoneSchema = z.string().regex(/^\+?[\d\s\-\(\)]+$/, 'Invalid phone number format')
+export const phoneSchema = z.string().regex(/^\+?[\d\s\-()]+$/, 'Invalid phone number format')
 
 // Sanitization functions
 export function sanitizeHtml(html: string): string {
@@ -134,7 +134,7 @@ export const fileUploadSchema = z.object({
 
 export function validateFileUpload(
   file: File,
-  maxSize: number = 5 * 1024 * 1024,
+  maxSize = 5 * 1024 * 1024,
   allowedTypes: string[] = ['image/jpeg', 'image/png', 'image/webp']
 ): { valid: boolean; error?: string } {
   if (file.size > maxSize) {

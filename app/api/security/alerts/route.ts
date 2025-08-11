@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const filters: any = {}
+    const filters: unknown = {}
     if (type) filters.type = type
     if (severity) filters.severity = severity
     if (resolved !== null) filters.resolved = resolved === 'true'

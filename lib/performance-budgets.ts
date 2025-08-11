@@ -24,7 +24,7 @@ export interface PerformanceAlert {
   type: 'BUDGET_VIOLATION' | 'PERFORMANCE_DEGRADATION' | 'RESOURCE_EXHAUSTION'
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
   message: string
-  details: any
+  details: unknown
   timestamp: Date
   resolved: boolean
   resolvedAt?: Date
@@ -170,7 +170,7 @@ class PerformanceBudgets {
 
   // Check individual budget
   private async checkBudget(budget: PerformanceBudget): Promise<BudgetViolation | null> {
-    let currentValue: number = 0
+    let currentValue = 0
     
     switch (budget.metric) {
       case 'pageLoadTime':
@@ -179,6 +179,7 @@ class PerformanceBudgets {
       case 'cumulativeLayoutShift':
       case 'firstInputDelay':
       case 'memoryUsage':
+{
         const metrics = performanceMonitor.getLatestMetrics()
         if (metrics) {
           currentValue = metrics[budget.metric as keyof typeof metrics] || 0
@@ -186,11 +187,13 @@ class PerformanceBudgets {
         break
         
       case 'dbQueryTime':
+{
         const queryStats = databaseOptimizer.getQueryStats()
         currentValue = queryStats.reduce((sum, stat) => sum + stat.executionTime, 0) / queryStats.length
         break
         
       case 'cacheHitRate':
+{
         const cacheStats = await redisCache.getStats()
         currentValue = cacheStats.hits / (cacheStats.hits + cacheStats.misses)
         break
@@ -416,7 +419,7 @@ export const performanceBudgets = PerformanceBudgets.getInstance()
 export const usePerformanceBudgets = () => {
   const [violations, setViolations] = useState<BudgetViolation[]>([])
   const [alerts, setAlerts] = useState<PerformanceAlert[]>([])
-  const [summary, setSummary] = useState<any>(null)
+  const [summary, setSummary] = useState<unknown>(null)
 
   useEffect(() => {
     const updateBudgets = async () => {

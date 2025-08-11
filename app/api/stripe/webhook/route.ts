@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET || ''
     );
   } catch (err) {
     console.error("Webhook signature verification failed:", err);
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handlePaymentSucceeded(paymentIntent: any) {
+async function handlePaymentSucceeded(paymentIntent: unknown) {
   const { customer, amount, currency, metadata } = paymentIntent;
 
   // Update booking status if it's a booking payment
@@ -120,7 +120,7 @@ async function handlePaymentSucceeded(paymentIntent: any) {
   }
 }
 
-async function handlePaymentFailed(paymentIntent: any) {
+async function handlePaymentFailed(paymentIntent: unknown) {
   const { metadata } = paymentIntent;
 
   if (metadata.bookingId) {
@@ -153,7 +153,7 @@ async function handlePaymentFailed(paymentIntent: any) {
   }
 }
 
-async function handleCheckoutCompleted(session: any) {
+async function handleCheckoutCompleted(session: unknown) {
   const { customer, metadata } = session;
 
   // Update user with Stripe customer ID if not already set
@@ -165,7 +165,7 @@ async function handleCheckoutCompleted(session: any) {
   }
 }
 
-async function handleCustomerCreated(customer: any) {
+async function handleCustomerCreated(customer: unknown) {
   const { id, email, metadata } = customer;
 
   if (metadata.userId) {
@@ -176,7 +176,7 @@ async function handleCustomerCreated(customer: any) {
   }
 }
 
-async function handleTransferCreated(transfer: any) {
+async function handleTransferCreated(transfer: unknown) {
   try {
     // Handle transfer creation (payouts to connected accounts)
     const payment = await prisma.payment.findFirst({
@@ -209,7 +209,7 @@ async function handleTransferCreated(transfer: any) {
   }
 }
 
-async function handlePayoutFailed(payout: any) {
+async function handlePayoutFailed(payout: unknown) {
   try {
     // Update transaction status to failed
     const transaction = await prisma.transaction.findFirst({
@@ -252,7 +252,7 @@ async function handlePayoutFailed(payout: any) {
   }
 }
 
-async function handleDisputeCreated(dispute: any) {
+async function handleDisputeCreated(dispute: unknown) {
   try {
     // Find the payment associated with this dispute
     const payment = await prisma.payment.findFirst({
@@ -307,7 +307,7 @@ async function handleDisputeCreated(dispute: any) {
   }
 }
 
-async function handleDisputeUpdated(dispute: any) {
+async function handleDisputeUpdated(dispute: unknown) {
   try {
     // Find the payment associated with this dispute
     const payment = await prisma.payment.findFirst({
@@ -375,7 +375,7 @@ async function handleDisputeUpdated(dispute: any) {
   }
 }
 
-async function handleRefundCreated(refund: any) {
+async function handleRefundCreated(refund: unknown) {
   try {
     // Find the payment associated with this refund
     const payment = await prisma.payment.findFirst({
@@ -423,7 +423,7 @@ async function handleRefundCreated(refund: any) {
   }
 }
 
-async function handleRefundUpdated(refund: any) {
+async function handleRefundUpdated(refund: unknown) {
   try {
     // Handle refund status updates (succeeded, failed, etc.)
     const payment = await prisma.payment.findFirst({
@@ -458,7 +458,7 @@ async function handleRefundUpdated(refund: any) {
   }
 }
 
-async function handleAccountUpdated(account: any) {
+async function handleAccountUpdated(account: unknown) {
   try {
     // Update user's Stripe account status
     await prisma.user.updateMany({

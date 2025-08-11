@@ -23,14 +23,14 @@ interface LazyImageProps {
 }
 
 interface LazyComponentProps {
-  component: () => Promise<{ default: React.ComponentType<any> }>
+  component: () => Promise<{ default: React.ComponentType<unknown> }>
   fallback?: React.ReactNode
-  props?: any
+  props?: unknown
 }
 
 // Lazy Load Hook
 export const useLazyLoad = (
-  threshold: number = 0.1,
+  threshold = 0.1,
   rootMargin: string = '50px'
 ) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -130,7 +130,7 @@ export const LazyComponent: React.FC<LazyComponentProps> = ({
   fallback = <Loading size="md" />,
   props = {},
 }) => {
-  const [Component, setComponent] = useState<React.ComponentType<any> | null>(null)
+  const [Component, setComponent] = useState<React.ComponentType<unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { ref, isVisible } = useLazyLoad(0.1, '100px')
 
@@ -204,9 +204,9 @@ export const LazyList = <T,>({
 interface LazyModalProps {
   isOpen: boolean
   onClose: () => void
-  component: () => Promise<{ default: React.ComponentType<any> }>
+  component: () => Promise<{ default: React.ComponentType<unknown> }>
   fallback?: React.ReactNode
-  props?: any
+  props?: unknown
 }
 
 export const LazyModal: React.FC<LazyModalProps> = ({
@@ -216,7 +216,7 @@ export const LazyModal: React.FC<LazyModalProps> = ({
   fallback = <Loading size="lg" />,
   props = {},
 }) => {
-  const [ModalComponent, setModalComponent] = useState<React.ComponentType<any> | null>(null)
+  const [ModalComponent, setModalComponent] = useState<React.ComponentType<unknown> | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -252,9 +252,9 @@ export const LazyModal: React.FC<LazyModalProps> = ({
 
 // Lazy Route Component
 interface LazyRouteProps {
-  component: () => Promise<{ default: React.ComponentType<any> }>
+  component: () => Promise<{ default: React.ComponentType<unknown> }>
   fallback?: React.ReactNode
-  props?: any
+  props?: unknown
 }
 
 export const LazyRoute: React.FC<LazyRouteProps> = ({

@@ -423,7 +423,7 @@ export async function getAIRecommendedPosts(
     diversify?: boolean
     boostTrending?: boolean
   } = {}
-): Promise<any[]> {
+): Promise<unknown[]> {
   const {
     limit = 20,
     includeFollowing = true,
@@ -514,8 +514,8 @@ export async function getAIRecommendedPosts(
 /**
  * Diversify post recommendations to avoid echo chambers
  */
-function diversifyPostRecommendations(posts: any[], userRecommendations: RecommendationScore[], limit: number): any[] {
-  const diversified: any[] = []
+function diversifyPostRecommendations(posts: unknown[], userRecommendations: RecommendationScore[], limit: number): unknown[] {
+  const diversified: unknown[] = []
   const usedHashtags = new Set<string>()
   const usedAuthors = new Set<string>()
 
@@ -552,7 +552,7 @@ function diversifyPostRecommendations(posts: any[], userRecommendations: Recomme
   return diversified
 }
 
-function calculatePostDiversityScore(post: any, usedHashtags: Set<string>, usedAuthors: Set<string>): number {
+function calculatePostDiversityScore(post: unknown, usedHashtags: Set<string>, usedAuthors: Set<string>): number {
   let score = 0
   
   // Boost for new hashtags

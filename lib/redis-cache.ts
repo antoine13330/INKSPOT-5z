@@ -35,7 +35,7 @@ class RedisCache {
     }
 
     if (this.config.enabled) {
-      this.redis = new Redis(process.env.REDIS_URL!, {
+      this.redis = new Redis(process.env.REDIS_URL || '', {
         retryDelayOnFailover: 100,
         enableReadyCheck: false,
         maxRetriesPerRequest: null,
@@ -64,7 +64,7 @@ class RedisCache {
   }
 
   // Set cache value
-  async set(key: string, value: any, ttl?: number): Promise<void> {
+  async set(key: string, value: unknown, ttl?: number): Promise<void> {
     if (!this.config.enabled) return
 
     try {
@@ -225,7 +225,7 @@ export const cacheUserProfile = async (userId: string) => {
   )
 }
 
-export const cachePosts = async (filters?: any) => {
+export const cachePosts = async (filters?: unknown) => {
   const key = `${CACHE_KEYS.POSTS}:${JSON.stringify(filters || {})}`
   return redisCache.cacheQuery(key, () =>
     prisma.post.findMany({
@@ -236,7 +236,7 @@ export const cachePosts = async (filters?: any) => {
   )
 }
 
-export const cacheSearchResults = async (query: string, filters?: any) => {
+export const cacheSearchResults = async (query: string, filters?: unknown) => {
   const key = `${CACHE_KEYS.SEARCH_RESULTS}${query}:${JSON.stringify(filters || {})}`
   return redisCache.cacheQuery(key, () =>
     prisma.user.findMany({

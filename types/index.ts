@@ -125,7 +125,7 @@ export type PostStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'
 export interface NavItem {
   href: string
   label: string
-  icon?: React.ComponentType<any>
+  icon?: React.ComponentType<unknown>
   badge?: number
   disabled?: boolean
   children?: NavItem[]
@@ -152,7 +152,7 @@ export interface FormField {
 
 export interface ValidationRule {
   type: 'required' | 'email' | 'minLength' | 'maxLength' | 'pattern' | 'custom'
-  value?: any
+  value?: unknown
   message: string
 }
 
@@ -261,7 +261,7 @@ export interface BaseComponentProps {
 export interface LoadingState {
   isLoading: boolean
   error: string | null
-  data: any | null
+  data: unknown | null
 }
 
 export interface PaginationProps {
@@ -318,14 +318,14 @@ export interface FeatureFlags {
 
 export interface AppEvent {
   type: string
-  payload: any
+  payload: unknown
   timestamp: string
   userId?: string
 }
 
 export interface WebSocketMessage {
   type: string
-  data: any
+  data: unknown
   timestamp: string
 }
 
@@ -370,7 +370,7 @@ export interface AppState {
 
 export interface Action {
   type: string
-  payload?: any
+  payload?: unknown
   meta?: Record<string, any>
 }
 
@@ -380,13 +380,13 @@ export interface UseApiOptions {
   immediate?: boolean
   retry?: number
   retryDelay?: number
-  onSuccess?: (data: any) => void
-  onError?: (error: any) => void
+  onSuccess?: (data: unknown) => void
+  onError?: (error: unknown) => void
 }
 
 export interface UseLocalStorageOptions {
-  defaultValue?: any
-  serializer?: (value: any) => string
+  defaultValue?: unknown
+  serializer?: (value: unknown) => string
   deserializer?: (value: string) => any
 }
 

@@ -158,10 +158,10 @@ class AuditLogger {
       startDate?: Date
       endDate?: Date
     },
-    page: number = 1,
-    limit: number = 50
+    page = 1,
+    limit = 50
   ) {
-    const where: any = {}
+    const where: unknown = {}
 
     if (filters.userId) where.userId = filters.userId
     if (filters.action) where.action = filters.action

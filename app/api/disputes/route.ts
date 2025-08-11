@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     // If evidence is provided, create evidence records
     if (evidence && evidence.length > 0) {
       await Promise.all(
-        evidence.map((item: any) =>
+        evidence.map((item: unknown) =>
           prisma.disputeEvidence.create({
             data: {
               disputeId: dispute.id,
@@ -161,7 +161,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: "Not authorized to view this data" }, { status: 403 })
     }
 
-    let whereClause: any = {}
+    let whereClause: unknown = {}
 
     if (isAdmin) {
       // Admin can see all disputes

@@ -8,8 +8,8 @@ const vapidSubject = process.env.EMAIL_FROM
 
 webpush.setVapidDetails(
   vapidSubject,
-  process.env.VAPID_PUBLIC_KEY!, 
-  process.env.VAPID_PRIVATE_KEY!
+  process.env.VAPID_PUBLIC_KEY || '', 
+  process.env.VAPID_PRIVATE_KEY || ''
 )
 
 export interface PushSubscription {
@@ -25,7 +25,7 @@ export interface NotificationPayload {
   body: string
   icon?: string
   badge?: string
-  data?: any
+  data?: unknown
   actions?: Array<{
     action: string
     title: string
@@ -87,7 +87,7 @@ export async function createNotificationReminder(
   title: string,
   message: string,
   scheduledFor: Date,
-  data?: any,
+  data?: unknown,
 ) {
   // Create notification in database
   const notification = await prisma.notification.create({

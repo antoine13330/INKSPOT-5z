@@ -25,7 +25,7 @@ interface Notification {
   message: string
   type: string
   read: boolean
-  data?: any
+  data?: unknown
   createdAt: string
 }
 

@@ -116,7 +116,7 @@ export default function CustomizeProfilePage() {
     }
   }
 
-  const handleInputChange = (field: keyof ProfileData, value: any) => {
+  const handleInputChange = (field: keyof ProfileData, value: unknown) => {
     setProfileData((prev) => ({
       ...prev,
       [field]: value,

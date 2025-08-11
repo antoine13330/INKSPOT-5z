@@ -117,7 +117,7 @@ async function resetDatabase() {
     // Update Stripe entities with actual user ID
     if (pro1StripeCustomerId) {
       try {
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' })
         await stripe.customers.update(pro1StripeCustomerId, {
           metadata: { userId: pro1.id },
         })
@@ -128,7 +128,7 @@ async function resetDatabase() {
 
     if (pro1StripeAccountId) {
       try {
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' })
         await stripe.accounts.update(pro1StripeAccountId, {
           metadata: { userId: pro1.id },
         })
@@ -197,7 +197,7 @@ async function resetDatabase() {
     // Update Stripe entities with actual user ID
     if (pro2StripeCustomerId) {
       try {
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' })
         await stripe.customers.update(pro2StripeCustomerId, {
           metadata: { userId: pro2.id },
         })
@@ -208,7 +208,7 @@ async function resetDatabase() {
 
     if (pro2StripeAccountId) {
       try {
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' })
         await stripe.accounts.update(pro2StripeAccountId, {
           metadata: { userId: pro2.id },
         })
@@ -253,7 +253,7 @@ async function resetDatabase() {
 
         if (stripeCustomerId) {
           try {
-            const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' })
             await stripe.customers.update(stripeCustomerId, {
               metadata: { userId: client.id },
             })
@@ -296,7 +296,7 @@ async function resetDatabase() {
 
         if (stripeCustomerId) {
           try {
-            const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' })
             await stripe.customers.update(stripeCustomerId, {
               metadata: { userId: client.id },
             })
@@ -339,7 +339,7 @@ async function resetDatabase() {
 
         if (stripeCustomerId) {
           try {
-            const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!)
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' })
             await stripe.customers.update(stripeCustomerId, {
               metadata: { userId: client.id },
             })

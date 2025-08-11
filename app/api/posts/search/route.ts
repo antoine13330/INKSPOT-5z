@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const textQuery = query.replace(hashtagRegex, "").trim();
 
     // Build search conditions
-    const searchConditions: any[] = [];
+    const searchConditions: unknown[] = [];
 
     // Search by hashtags from query
     if (hashtags.length > 0) {
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Determine sort order
-    let orderBy: any[] = [];
+    let orderBy: unknown[] = [];
     switch (sortBy) {
       case "popularity":
         orderBy = [

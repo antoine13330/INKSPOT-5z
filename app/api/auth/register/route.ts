@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import Stripe from 'stripe';
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { uploadToS3, generateFileName } from "@/lib/s3";
@@ -128,7 +129,7 @@ export async function POST(request: NextRequest) {
     // Update Stripe customer with actual user ID if customer was created
     if (stripeCustomerId) {
       try {
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' });
         await stripe.customers.update(stripeCustomerId, {
           metadata: {
             userId: user.id,
@@ -142,7 +143,7 @@ export async function POST(request: NextRequest) {
     // Update Stripe Connect account with actual user ID if account was created
     if (stripeAccountId) {
       try {
-        const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2025-07-30.basil' });
         await stripe.accounts.update(stripeAccountId, {
           metadata: {
             userId: user.id,

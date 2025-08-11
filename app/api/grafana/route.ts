@@ -42,7 +42,7 @@ async function handleSearch() {
   return NextResponse.json(targets)
 }
 
-async function handleQuery(body: any) {
+async function handleQuery(body: unknown) {
   const { targets, range } = body
   const from = new Date(range.from)
   const to = new Date(range.to)

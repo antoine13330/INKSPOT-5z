@@ -58,8 +58,8 @@ export async function GET(request: NextRequest) {
       await logSearchAnalytics(session.user.id, filters)
     }
 
-    let users: any[] = []
-    let posts: any[] = []
+    let users: unknown[] = []
+    let posts: unknown[] = []
 
     // Search users if requested
     if (filters.contentType === 'users' || filters.contentType === 'both') {
@@ -92,8 +92,8 @@ async function searchUsers(
   skip: number,
   limit: number,
   currentUserId?: string
-): Promise<any[]> {
-  const whereConditions: any = {
+): Promise<unknown[]> {
+  const whereConditions: unknown = {
     status: 'ACTIVE',
   }
 
@@ -263,8 +263,8 @@ async function searchPosts(
   skip: number,
   limit: number,
   currentUserId?: string
-): Promise<any[]> {
-  const whereConditions: any = {
+): Promise<unknown[]> {
+  const whereConditions: unknown = {
     status: 'PUBLISHED',
   }
 
@@ -324,7 +324,7 @@ async function searchPosts(
   }
 
   // Author filters
-  const authorFilters: any = {}
+  const authorFilters: unknown = {}
   if (filters.userType) {
     authorFilters.role = filters.userType
   }
@@ -399,7 +399,7 @@ async function searchPosts(
   }))
 }
 
-function buildUserOrderBy(sortBy?: string): any {
+function buildUserOrderBy(sortBy?: string): unknown {
   switch (sortBy) {
     case 'rating':
       // This is complex with aggregations, so we'll sort by profile views for now
@@ -417,7 +417,7 @@ function buildUserOrderBy(sortBy?: string): any {
   }
 }
 
-function buildPostOrderBy(sortBy?: string): any {
+function buildPostOrderBy(sortBy?: string): unknown {
   switch (sortBy) {
     case 'recent':
       return [{ createdAt: 'desc' }]
