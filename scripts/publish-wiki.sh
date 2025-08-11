@@ -11,7 +11,7 @@ if [ -z "$git_remote_url" ]; then
 fi
 
 # Extract owner/repo robustly (works for SSH and HTTPS with or without token)
-owner_repo=$(echo "$git_remote_url" | sed -E 's#.*github.com/([^/]+/[^/]+)(\.git)?$#\1#')
+owner_repo=$(echo "$git_remote_url" | sed -E 's#.*github.com/([^/]+/[^/]+)(\.git)?$#\1#' | sed 's/\.git$//')
 if [ -z "$owner_repo" ]; then
   echo "Failed to parse owner/repo from origin URL: $git_remote_url" >&2
   exit 1
@@ -43,14 +43,15 @@ tmp_dir=$(mktemp -d)
 trap 'rm -rf "$tmp_dir"' EXIT
 
 # Clone wiki (use token URL if available)
-GIT_ASKPASS=echo git clone "$clone_url" "$tmp_dir/wiki"
+git clone "$clone_url" "$tmp_dir/wiki"
 
-# Copy content (rsync if available, else cp)
+# Copy content (rsync if available, else cp) - but preserve .git directory
 if command -v rsync >/dev/null 2>&1; then
-  rsync -a --delete wiki/ "$tmp_dir/wiki/"
+  # Use rsync but exclude .git directory to preserve it
+  rsync -a --delete --exclude='.git' wiki/ "$tmp_dir/wiki/"
 else
-  mkdir -p "$tmp_dir/wiki"
-  cp -a wiki/. "$tmp_dir/wiki/"
+  # Copy everything except .git directory
+  find wiki -type f -not -path 'wiki/.git/*' -exec cp --parents {} "$tmp_dir/wiki/" \;
 fi
 
 # Commit and push
