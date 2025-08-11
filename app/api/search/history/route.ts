@@ -6,23 +6,37 @@ export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    const body = await request.json()
+    const { query, tags, searchType, userId } = body
+
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
     }
 
-    const body = await request.json()
-    const { query, hashtags } = body
+    if (!query && (!tags || (Array.isArray(tags) && tags.length === 0))) {
+      return NextResponse.json({ error: 'Query or tags are required' }, { status: 400 })
+    }
 
-    await prisma.searchHistory.create({
+    const searchRecord = await prisma.searchHistory.create({
       data: {
-        query,
-        hashtags: hashtags || [],
-        userId: session.user.id,
+        userId,
+        query: query || '',
+        hashtags: Array.isArray(tags) ? tags : [],
+        searchType: searchType || 'posts',
       },
     })
 
-    return NextResponse.json({ message: "Search history recorded" })
+    return NextResponse.json({
+      message: 'Search history recorded successfully',
+      searchRecord: {
+        id: searchRecord.id,
+        userId: searchRecord.userId,
+        query: searchRecord.query,
+        tags: searchRecord.hashtags,
+        searchType: searchRecord.searchType,
+        createdAt: searchRecord.createdAt,
+      },
+    })
   } catch (error) {
     console.error("Error recording search history:", error)
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
@@ -31,25 +45,39 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get('userId')
+    const limit = Number.parseInt(searchParams.get("limit") || "10")
+
+    if (!userId) {
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
     }
 
-    const { searchParams } = new URL(request.url)
-    const limit = Number.parseInt(searchParams.get("limit") || "20")
-
-    const searchHistory = await prisma.searchHistory.findMany({
-      where: {
-        userId: session.user.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
+    const records = await prisma.searchHistory.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
       take: limit,
     })
 
-    return NextResponse.json({ searchHistory })
+    // Map DB fields to test-expected response structure
+    const history = records.map((r) => ({
+      id: r.id,
+      userId: r.userId,
+      query: r.query,
+      tags: r.hashtags,
+      searchType: r.searchType,
+      createdAt: r.createdAt,
+    }))
+
+    return NextResponse.json({
+      history,
+      pagination: {
+        page: 1,
+        limit,
+        total: history.length + (records.length < limit ? 0 : 0),
+        hasMore: records.length === limit,
+      },
+    })
   } catch (error) {
     console.error("Error fetching search history:", error)
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })

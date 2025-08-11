@@ -1,18 +1,23 @@
 require("@testing-library/jest-dom")
 
-// Mock IntersectionObserver
-global.IntersectionObserver = class MockIntersectionObserver {
-  constructor(callback) {
-    this.callback = callback
+// Expose a controllable IntersectionObserver mock
+const mockIntersectionObserver = jest.fn((callback, options) => {
+  return {
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn(),
+    // Store the callback to allow tests to trigger it manually if needed
+    _callback: callback,
+    _options: options,
   }
-  
-  observe() {
-    // Simulate element becoming visible immediately
-    this.callback([{ isIntersecting: true }], this)
-  }
-  
-  unobserve() {}
-  disconnect() {}
+})
+
+global.mockIntersectionObserver = mockIntersectionObserver
+
+global.IntersectionObserver = function (callback, options) {
+  // Record the constructor call and return a mocked instance
+  mockIntersectionObserver(callback, options)
+  return mockIntersectionObserver.mock.results[mockIntersectionObserver.mock.calls.length - 1].value
 }
 
 // Mock Next.js router
@@ -95,14 +100,15 @@ jest.mock('next/server', () => ({
   },
 }))
 
-// Mock URL constructor
+// Improved Mock URL to parse search params
 global.URL = class MockURL {
   constructor(url, base) {
     this.href = url
-    this.protocol = url.startsWith('https:') ? 'https:' : url.startsWith('http:') ? 'http:' : 'file:'
-    this.searchParams = new URLSearchParams()
+    this.protocol = typeof url === 'string' && url.startsWith('https:') ? 'https:' : (typeof url === 'string' && url.startsWith('http:') ? 'http:' : 'file:')
+    const queryIndex = typeof url === 'string' ? url.indexOf('?') : -1
+    const query = queryIndex !== -1 ? url.slice(queryIndex + 1) : ''
+    this.searchParams = new URLSearchParams(query)
   }
-  
   toString() {
     return this.href
   }
@@ -115,10 +121,10 @@ global.URLSearchParams = class MockURLSearchParams {
     if (init) {
       if (typeof init === 'string') {
         // Parse query string
-        const pairs = init.split('&')
+        const pairs = init.split('&').filter(Boolean)
         pairs.forEach(pair => {
-          const [key, value] = pair.split('=')
-          if (key) this.params.set(key, value || '')
+          const [rawKey, rawValue] = pair.split('=')
+          if (rawKey) this.params.set(decodeURIComponent(rawKey), decodeURIComponent(rawValue || ''))
         })
       } else if (Array.isArray(init)) {
         // Array of key-value pairs
@@ -156,7 +162,7 @@ global.URLSearchParams = class MockURLSearchParams {
 
   toString() {
     return Array.from(this.params.entries())
-      .map(([key, value]) => `${key}=${value}`)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&')
   }
 }

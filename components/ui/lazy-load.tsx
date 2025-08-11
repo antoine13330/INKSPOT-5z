@@ -72,7 +72,11 @@ export const LazyLoad: React.FC<LazyLoadProps> = ({
 
   return (
     <div ref={ref} className={className}>
-      {isVisible ? children : fallback}
+      {isVisible ? (
+        children
+      ) : (
+        <div data-testid="fallback">{fallback}</div>
+      )}
     </div>
   )
 }
@@ -158,7 +162,7 @@ export const LazyComponent: React.FC<LazyComponentProps> = ({
     return fallback
   }
 
-  return Component ? <Component {...props} /> : fallback
+  return Component ? <Component {...(props as any)} /> : fallback
 }
 
 // Lazy List Component
@@ -192,7 +196,7 @@ export const LazyList = <T,>({
         <div key={index}>{renderItem(item, index)}</div>
       ))}
       {visibleItems < items.length && (
-        <div ref={ref} className="flex justify-center p-4">
+        <div ref={ref} className="flex justify-center p-4" data-testid="loading-indicator">
           <Loading size="sm" />
         </div>
       )}
@@ -243,7 +247,7 @@ export const LazyModal: React.FC<LazyModalProps> = ({
         {isLoading ? (
           fallback
         ) : (
-          ModalComponent && <ModalComponent {...props} onClose={onClose} />
+          ModalComponent && <ModalComponent {...(props as any)} onClose={onClose} />
         )}
       </div>
     </div>
@@ -262,9 +266,10 @@ export const LazyRoute: React.FC<LazyRouteProps> = ({
   fallback = <Loading size="lg" />,
   props = {},
 }) => {
+  // Render Suspense with fallback, but ensure LazyComponent itself doesn't render its own fallback simultaneously
   return (
-    <Suspense fallback={fallback}>
-      <LazyComponent component={component} fallback={fallback} props={props} />
+    <Suspense fallback={<div data-testid="route-fallback">{fallback}</div>}>
+      <LazyComponent component={component} fallback={null} props={props} />
     </Suspense>
   )
 }
@@ -280,7 +285,7 @@ export const useLazyLoadPerformance = () => {
   const trackLoad = (loadTime: number) => {
     setMetrics((prev) => ({
       ...prev,
-      loadTime: (prev.loadTime + loadTime) / 2,
+      loadTime: prev.loadCount === 0 ? loadTime : (prev.loadTime + loadTime) / 2,
       loadCount: prev.loadCount + 1,
     }))
   }

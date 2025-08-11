@@ -13,7 +13,7 @@ export default function Loading({ size = "md", className = "" }: LoadingProps) {
   }
 
   return (
-    <div className={`flex items-center justify-center p-4 ${className}`}>
+    <div className={`flex items-center justify-center p-4 ${className}`} data-testid="loading-indicator">
       <Loader2 className={`animate-spin ${sizeClasses[size]}`} />
     </div>
   )

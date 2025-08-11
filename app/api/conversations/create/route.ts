@@ -33,18 +33,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    // Check if the artist exists and is a PRO user
-    const artist = await prisma.user.findUnique({
-      where: { id: artistId },
-    });
-
-    if (!artist) {
-      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
-    }
-
-    if (artist.role !== "PRO") {
+    // Validate that the post belongs to the specified artist
+    if (post.authorId !== artistId) {
       return NextResponse.json(
-        { error: "Specified user is not an artist" },
+        { error: "Post does not belong to the specified artist" },
         { status: 400 }
       );
     }
@@ -62,17 +54,7 @@ export async function POST(request: NextRequest) {
         isGroup: false,
       },
       include: {
-        members: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                businessName: true,
-              },
-            },
-          },
-        },
+        members: true,
       },
     });
 
@@ -112,8 +94,8 @@ export async function POST(request: NextRequest) {
     await prisma.notification.create({
       data: {
         type: "MESSAGE",
-        title: "New collaboration request",
-        message: `Someone wants to collaborate with you on a post and discuss pricing.`,
+        title: "New conversation request",
+        message: "Someone is interested in your post and wants to discuss pricing.",
         userId: artistId,
         data: {
           conversationId: conversationId,
