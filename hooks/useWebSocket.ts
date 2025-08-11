@@ -3,6 +3,16 @@ import { io, Socket } from "socket.io-client"
 import { useSession } from "next-auth/react"
 import { MessageData, TypingData, MessageReadData, UserStatus } from "@/lib/websocket"
 
+// Type for message with sender information
+interface MessageWithSender extends MessageData {
+  sender: {
+    id: string;
+    username: string;
+    avatar?: string;
+    verified: boolean;
+  };
+}
+
 interface UseWebSocketOptions {
   conversationId?: string
   autoConnect?: boolean
@@ -17,7 +27,7 @@ interface UseWebSocketReturn {
   markMessageAsRead: (messageId: string, conversationId: string) => void
   joinConversation: (conversationId: string) => void
   leaveConversation: (conversationId: string) => void
-  onNewMessage: (callback: (message: MessageData & { sender: any }) => void) => void
+  onNewMessage: (callback: (message: MessageWithSender) => void) => void
   onTyping: (callback: (data: TypingData) => void) => void
   onStopTyping: (callback: (data: TypingData) => void) => void
   onMessageRead: (callback: (data: MessageReadData) => void) => void
@@ -34,7 +44,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}): UseWebSocketRet
   
   // Store callbacks using refs to avoid stale closures
   const callbacksRef = useRef<{
-    onNewMessage?: (message: MessageData & { sender: any }) => void
+    onNewMessage?: (message: MessageWithSender) => void
     onTyping?: (data: TypingData) => void
     onStopTyping?: (data: TypingData) => void
     onMessageRead?: (data: MessageReadData) => void
@@ -75,7 +85,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}): UseWebSocketRet
     })
 
     // Message event handlers
-    socketIO.on("new-message", (message: MessageData & { sender: any }) => {
+    socketIO.on("new-message", (message: MessageWithSender) => {
       callbacksRef.current.onNewMessage?.(message)
     })
 
@@ -189,7 +199,7 @@ export const useWebSocket = (options: UseWebSocketOptions = {}): UseWebSocketRet
   }, [socket, isConnected])
 
   // Event listener registration functions
-  const onNewMessage = useCallback((callback: (message: MessageData & { sender: any }) => void) => {
+  const onNewMessage = useCallback((callback: (message: MessageWithSender) => void) => {
     callbacksRef.current.onNewMessage = callback
   }, [])
 

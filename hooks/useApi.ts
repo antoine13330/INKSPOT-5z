@@ -8,8 +8,8 @@ interface UseApiState<T> {
   error: string | null
 }
 
-interface UseApiReturn<T> extends UseApiState<T> {
-  execute: (params?: any) => Promise<void>
+interface UseApiReturn<T, P = unknown> extends UseApiState<T> {
+  execute: (params?: P) => Promise<void>
   refetch: () => Promise<void>
   reset: () => void
 }
@@ -17,10 +17,10 @@ interface UseApiReturn<T> extends UseApiState<T> {
 /**
  * Hook personnalisé pour gérer les appels API
  */
-export function useApi<T = any>(
-  apiFunction: (params?: any) => Promise<ApiResponse<T>>,
+export function useApi<T = unknown, P = unknown>(
+  apiFunction: (params?: P) => Promise<ApiResponse<T>>,
   options: UseApiOptions = {}
-): UseApiReturn<T> {
+): UseApiReturn<T, P> {
   const {
     immediate = false,
     retry: retryCount = 0,
@@ -35,7 +35,7 @@ export function useApi<T = any>(
     error: null
   })
 
-  const execute = useCallback(async (params?: any) => {
+  const execute = useCallback(async (params?: P) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }))
 
     try {
@@ -117,10 +117,10 @@ export function useMutation<T = any, P = any>(
 /**
  * Hook pour les opérations de requête avec cache
  */
-export function useQuery<T = any>(
-  queryFunction: (params?: any) => Promise<ApiResponse<T>>,
+export function useQuery<T = unknown, P = unknown>(
+  queryFunction: (params?: P) => Promise<ApiResponse<T>>,
   options: UseApiOptions & { cacheKey?: string } = {}
-): UseApiReturn<T> {
+): UseApiReturn<T, P> {
   const { cacheKey, ...apiOptions } = options
   
   // TODO: Implémenter un système de cache simple

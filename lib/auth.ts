@@ -110,7 +110,12 @@ export const authOptions: NextAuthOptions = {
           user.id = newUser.id
         } else {
           // Update existing user with Google info if needed
-          const updateData: any = {}
+          const updateData: Partial<{
+            avatar: string;
+            firstName: string;
+            lastName: string;
+            googleId: string;
+          }> = {}
           
           if (!existingUser.avatar && user.image) {
             updateData.avatar = user.image
