@@ -1,6 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
+export const dynamic = "force-dynamic"
 import { getServerSession } from "next-auth"
+export const dynamic = "force-dynamic"
 import { prisma } from "@/lib/prisma"
+export const dynamic = "force-dynamic"
 
 // Get conversation details
 export async function GET(

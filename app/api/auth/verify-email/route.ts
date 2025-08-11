@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic"
 import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic"
 import { sendEmail } from "@/lib/email";
+export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
   try {

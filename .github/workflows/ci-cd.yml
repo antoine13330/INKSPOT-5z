@@ -54,6 +54,17 @@ jobs:
           echo "NEXTAUTH_SECRET=test-secret-key" >> $GITHUB_ENV
           echo "NEXTAUTH_URL=http://localhost:3000" >> $GITHUB_ENV
           echo "NODE_ENV=test" >> $GITHUB_ENV
+          echo "POSTGRES_USER=inkspot_user" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=inkspot_password" >> $GITHUB_ENV
+          echo "POSTGRES_DB=inkspot_test" >> $GITHUB_ENV
+
+      - name: Setup database
+        run: |
+          echo "Waiting for PostgreSQL to be ready..."
+          sleep 10
+          echo "Creating database schema with Prisma..."
+          npx prisma db push --force-reset
+          echo "Database setup complete"
 
       - name: Run linting
         run: npm run lint

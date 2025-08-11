@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic"
 import Stripe from 'stripe';
+export const dynamic = "force-dynamic"
 import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic"
 import bcrypt from "bcryptjs";
+export const dynamic = "force-dynamic"
 import { uploadToS3, generateFileName } from "@/lib/s3";
+export const dynamic = "force-dynamic"
 import { sendEmail } from "@/lib/email";
+export const dynamic = "force-dynamic"
 import { createStripeCustomer, createStripeAccount } from "@/lib/stripe";
+export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
   try {

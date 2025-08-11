@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
+export const dynamic = "force-dynamic"
 import { prisma } from "@/lib/prisma"
+export const dynamic = "force-dynamic"
 
 // Prometheus metrics format helper
 function formatMetric(name: string, value: number, labels: Record<string, string> = {}, help?: string): string {
