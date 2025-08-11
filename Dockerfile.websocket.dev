@@ -1,0 +1,30 @@
+# Development Dockerfile for WebSocket server
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* pnpm-lock.yaml* ./
+
+# Install dependencies
+RUN \
+  if [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+# Copy source code
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Expose port
+EXPOSE 3001
+
+# Set development environment
+ENV NODE_ENV=development
+ENV WS_PORT=3001
+
+# Start development server (assuming you have a dev:websocket script)
+CMD ["npm", "run", "dev:websocket"]

@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: inkspot_postgres_dev
+    environment:
+      POSTGRES_DB: inkspot_dev
+      POSTGRES_USER: inkspot_user
+      POSTGRES_PASSWORD: inkspot_password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./scripts/init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
+    networks:
+      - inkspot_dev_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inkspot_user -d inkspot_dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for caching and sessions
+  redis:
+    image: redis:7-alpine
+    container_name: inkspot_redis_dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - inkspot_dev_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Next.js Application (Development Mode)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: inkspot_app_dev
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://inkspot_user:inkspot_password@postgres:5432/inkspot_dev
+      - REDIS_URL=redis://redis:6379
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your-nextauth-secret-key-here}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_your-stripe-secret-key}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_WEBHOOK_SECRET:-whsec_your-stripe-webhook-secret}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET:-}
+      - SMTP_HOST=${SMTP_HOST:-localhost}
+      - SMTP_PORT=${SMTP_PORT:-1025}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+      - ./public/uploads:/app/public/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - inkspot_dev_network
+    restart: unless-stopped
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  # WebSocket Server (Development Mode)
+  websocket:
+    build:
+      context: .
+      dockerfile: Dockerfile.websocket.dev
+    container_name: inkspot_websocket_dev
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://inkspot_user:inkspot_password@postgres:5432/inkspot_dev
+      - REDIS_URL=redis://redis:6379
+      - WS_PORT=3001
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - inkspot_dev_network
+    restart: unless-stopped
+    command: npm run dev:websocket
+
+  # Mailhog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: inkspot_mailhog_dev
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - inkspot_dev_network
+    restart: unless-stopped
+
+  # Prisma Studio (Development)
+  prisma-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile.prisma-studio
+    container_name: inkspot_prisma_studio_dev
+    environment:
+      - DATABASE_URL=postgresql://inkspot_user:inkspot_password@postgres:5432/inkspot_dev
+    ports:
+      - "5555:5555"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - inkspot_dev_network
+    restart: unless-stopped
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+
+networks:
+  inkspot_dev_network:
+    driver: bridge
