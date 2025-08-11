@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs"
 
 // Mock Prisma
 jest.mock("@/lib/prisma", () => ({

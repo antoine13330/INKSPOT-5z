@@ -1,5 +1,3 @@
-import { NextRequest } from "next/server"
-
 // Mock dependencies
 jest.mock("next-auth")
 jest.mock("@/lib/prisma", () => ({

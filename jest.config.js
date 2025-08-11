@@ -9,7 +9,7 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
   testPathIgnorePatterns: [
@@ -17,6 +17,7 @@ const customJestConfig = {
     '<rootDir>/node_modules/',
     '<rootDir>/coverage/',
     '<rootDir>/dist/',
+    '<rootDir>/e2e/',
   ],
   collectCoverageFrom: [
     'app/**/*.{js,jsx,ts,tsx}',
