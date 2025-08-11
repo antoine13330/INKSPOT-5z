@@ -133,7 +133,9 @@ export function createSecurityMiddleware(config: Partial<SecurityConfig> = {}) {
 
       return response
     } catch (error) {
-      console.error('Security middleware error:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Security middleware error:', error)
+      }
       
       await auditLogger.logSecurityEvent({
         action: 'SECURITY_ERROR',

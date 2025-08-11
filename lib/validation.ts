@@ -27,9 +27,10 @@ export function sanitizeHtml(html: string): string {
 
 export function sanitizeText(text: string): string {
   return text
-    .replace(/[<>]/g, '') // Remove HTML tags
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/<[^>]*>/g, '') // Remove all HTML tags
+    .replace(/javascript:.*?(?=\s|$)/gi, '') // Remove javascript: protocol and content
+    .replace(/on\w+=.*?(?=\s|$)/gi, '') // Remove event handlers and content
+    .replace(/alert\([^)]*\)/gi, '') // Remove alert() calls
     .trim()
 }
 

@@ -61,7 +61,9 @@ export function useLocalStorage<T>(
       }
       return defaultValue !== undefined ? defaultValue : initialValue
     } catch (error) {
-      console.error(`Error reading localStorage key "${key}":`, error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error reading localStorage key "${key}":`, error)
+      }
       return defaultValue !== undefined ? defaultValue : initialValue
     }
   })
@@ -72,7 +74,9 @@ export function useLocalStorage<T>(
       setStoredValue(valueToStore)
       window.localStorage.setItem(key, serializer(valueToStore))
     } catch (error) {
-      console.error(`Error setting localStorage key "${key}":`, error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error setting localStorage key "${key}":`, error)
+      }
     }
   }, [key, storedValue, serializer])
 
@@ -81,7 +85,9 @@ export function useLocalStorage<T>(
       setStoredValue(initialValue)
       window.localStorage.removeItem(key)
     } catch (error) {
-      console.error(`Error removing localStorage key "${key}":`, error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`Error removing localStorage key "${key}":`, error)
+      }
     }
   }, [key, initialValue])
 

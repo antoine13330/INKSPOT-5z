@@ -3,17 +3,23 @@ import { getSocketIO, NextApiResponseServerIO } from "@/lib/websocket"
 
 export default function handler(req: NextApiRequest, res: NextApiResponseServerIO) {
   if (res.socket.server.io) {
-    console.log("Socket.IO already initialized")
+    if (process.env.NODE_ENV === 'development') {
+      console.log("Socket.IO already initialized")
+    }
     res.end()
     return
   }
 
-  console.log("Initializing Socket.IO server...")
+  if (process.env.NODE_ENV === 'development') {
+    console.log("Initializing Socket.IO server...")
+  }
   
   // Initialize Socket.IO
   const io = getSocketIO(res)
   
-  console.log("Socket.IO server initialized successfully")
+  if (process.env.NODE_ENV === 'development') {
+    console.log("Socket.IO server initialized successfully")
+  }
   res.end()
 }
 

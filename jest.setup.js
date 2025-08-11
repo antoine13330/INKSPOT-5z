@@ -98,8 +98,13 @@ jest.mock('next/server', () => ({
 // Mock URL constructor
 global.URL = class MockURL {
   constructor(url, base) {
-    this.href = base ? new URL(url, base).href : url
+    this.href = url
+    this.protocol = url.startsWith('https:') ? 'https:' : url.startsWith('http:') ? 'http:' : 'file:'
     this.searchParams = new URLSearchParams()
+  }
+  
+  toString() {
+    return this.href
   }
 }
 
@@ -257,6 +262,10 @@ global.File = class MockFile {
     if (bits instanceof ArrayBuffer) {
       this.size = bits.byteLength
     } else if (Array.isArray(bits)) {
+      // For array of strings, sum the lengths
+      this.size = bits.reduce((total, bit) => total + (typeof bit === 'string' ? bit.length : 0), 0)
+    } else if (typeof bits === 'string') {
+      // For string content, use length directly
       this.size = bits.length
     } else if (bits && typeof bits === 'object' && bits.byteLength !== undefined) {
       this.size = bits.byteLength
@@ -275,6 +284,13 @@ global.Blob = class MockBlob {
     this.size = content.length || 0
     this.type = options.type || 'application/octet-stream'
     this.arrayBuffer = jest.fn().mockResolvedValue(new ArrayBuffer(8))
+  }
+}
+
+// Mock TextEncoder for File size calculation
+global.TextEncoder = class MockTextEncoder {
+  encode(str) {
+    return new Uint8Array(Buffer.from(str, 'utf8'))
   }
 }
 

@@ -389,8 +389,10 @@ describe('Security Functions', () => {
     })
 
     it('should reject file that is too large', () => {
-      const largeFile = new File(['x'.repeat(10 * 1024 * 1024)], 'large.jpg', { type: 'image/jpeg' })
-      const result = validateFileUpload(largeFile, 5 * 1024 * 1024) // 5MB limit
+      const largeFile = new File(['x'.repeat(100)], 'large.jpg', { type: 'image/jpeg' })
+      // Debug: check file size
+      expect(largeFile.size).toBe(100)
+      const result = validateFileUpload(largeFile, 50) // 50 bytes limit
       
       expect(result.valid).toBe(false)
       expect(result.error).toBe('File too large')
