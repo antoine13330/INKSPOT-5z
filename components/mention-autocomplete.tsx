@@ -88,8 +88,8 @@ export function MentionAutocomplete({ query, onSelect, onClose }: MentionAutocom
   }
 
   return (
-    <Card ref={containerRef} className="absolute top-full left-0 right-0 z-50 bg-gray-800 border-gray-600 shadow-lg">
-      <CardContent className="p-2">
+    <Card ref={containerRef} className="p-0 absolute top-full left-0 right-0 z-50 bg-gray-800 border-gray-600 shadow-lg">
+      <CardContent className="p-0">
         {loading ? (
           <div className="flex items-center justify-center py-4">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
