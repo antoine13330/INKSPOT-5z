@@ -54,7 +54,7 @@ jobs:
           echo "NODE_ENV=test" >> $GITHUB_ENV
 
       - name: Run linting
-        run: npm run lint -- --max-warnings 0
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0
         env:
           CI: true
 
