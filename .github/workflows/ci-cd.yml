@@ -3,6 +3,11 @@ name: INKSPOT CI/CD Pipeline
 # IMPORTANT: Enable code scanning in your repository settings:
 # Go to Settings > Security > Code security and analysis > Code scanning
 # Enable "GitHub Advanced Security" and "Code scanning"
+#
+# IMPORTANT: Set up Container Registry permissions:
+# 1. Create Personal Access Token (PAT) with 'write:packages' and 'read:packages' permissions
+# 2. Add it as secret 'CR_PAT' in Settings > Secrets and variables > Actions
+# 3. This allows pushing Docker images to ghcr.io
 
 on:
   push:
@@ -191,7 +196,15 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Verify Container Registry access
+        run: |
+          echo "🔍 Verifying access to GitHub Container Registry..."
+          docker pull hello-world:latest
+          echo "✅ Docker access verified"
+          echo "🔐 Logged in as: ${{ github.actor }}"
+          echo "🏗️  Repository: ${{ github.repository }}"
 
       - name: Extract metadata
         id: meta
