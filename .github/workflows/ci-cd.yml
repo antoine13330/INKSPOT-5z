@@ -46,10 +46,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install --no-optional --no-audit
+          npm install --omit=optional --no-audit
           # Installer le bon SWC selon la plateforme
           chmod +x scripts/install-swc.sh
-          ./scripts/install-swc.sh
+          ./scripts/install-swc.sh || echo "⚠️  SWC installation failed, continuing with build..."
         env:
           NODE_ENV: ci
 
@@ -111,7 +111,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --no-optional --no-audit
+        run: npm install --omit=optional --no-audit
         env:
           NODE_ENV: ci
 
