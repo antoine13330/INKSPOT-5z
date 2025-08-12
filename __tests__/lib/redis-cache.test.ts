@@ -19,25 +19,25 @@ jest.mock('@/lib/prisma', () => ({
   },
 }))
 
-// Mock Redis
-jest.mock('ioredis', () => {
-  const mockRedis = {
-    on: jest.fn(),
-    setex: jest.fn(),
-    get: jest.fn(),
-    del: jest.fn(),
-    keys: jest.fn(),
-    info: jest.fn(),
-    ping: jest.fn(),
-  }
-  return jest.fn(() => mockRedis)
-})
-
 describe('RedisCache', () => {
+  let mockRedis: any
+
   beforeEach(() => {
     jest.clearAllMocks()
-    // Reset singleton instance
-    ;(redisCache as any).instance = null
+    
+    // Create a fresh mock Redis instance
+    mockRedis = {
+      on: jest.fn(),
+      setex: jest.fn(),
+      get: jest.fn(),
+      del: jest.fn(),
+      keys: jest.fn(),
+      info: jest.fn(),
+      ping: jest.fn(),
+    }
+    
+    // Directly replace the Redis instance on the singleton
+    ;(redisCache as any).redis = mockRedis
   })
 
   describe('Cache Configuration', () => {
@@ -50,6 +50,8 @@ describe('RedisCache', () => {
       const originalEnv = process.env.REDIS_URL
       delete process.env.REDIS_URL
       
+      // Reset instance to test disabled cache
+      ;(redisCache as any).instance = null
       const cache = redisCache
       expect(cache).toBeDefined()
       
@@ -59,7 +61,6 @@ describe('RedisCache', () => {
 
   describe('Cache Operations', () => {
     it('should set cache value', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.setex.mockResolvedValue('OK')
       
       await redisCache.set('test-key', { data: 'test' })
@@ -72,7 +73,6 @@ describe('RedisCache', () => {
     })
 
     it('should get cache value', async () => {
-      const mockRedis = require('ioredis')()
       const cachedData = JSON.stringify({ data: 'test' })
       mockRedis.get.mockResolvedValue(cachedData)
       
@@ -83,7 +83,6 @@ describe('RedisCache', () => {
     })
 
     it('should return null for non-existent key', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.get.mockResolvedValue(null)
       
       const result = await redisCache.get('non-existent')
@@ -92,7 +91,6 @@ describe('RedisCache', () => {
     })
 
     it('should delete cache key', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.del.mockResolvedValue(1)
       
       await redisCache.delete('test-key')
@@ -101,7 +99,6 @@ describe('RedisCache', () => {
     })
 
     it('should clear all cache', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.keys.mockResolvedValue(['inkspot:key1', 'inkspot:key2'])
       mockRedis.del.mockResolvedValue(2)
       
@@ -115,7 +112,6 @@ describe('RedisCache', () => {
   describe('Cache Query Decorators', () => {
     it('should cache user profile query', async () => {
       const mockUser = { id: '1', name: 'Test User' }
-      const mockRedis = require('ioredis')()
       mockRedis.get.mockResolvedValue(null) // Cache miss
       mockRedis.setex.mockResolvedValue('OK')
       
@@ -132,7 +128,6 @@ describe('RedisCache', () => {
 
     it('should cache posts query', async () => {
       const mockPosts = [{ id: '1', title: 'Test Post' }]
-      const mockRedis = require('ioredis')()
       mockRedis.get.mockResolvedValue(null) // Cache miss
       mockRedis.setex.mockResolvedValue('OK')
       
@@ -148,7 +143,6 @@ describe('RedisCache', () => {
     it('should cache search results', async () => {
       const mockUsers = [{ id: '1', name: 'Test User' }]
       const mockPosts = [{ id: '1', title: 'Test Post' }]
-      const mockRedis = require('ioredis')()
       mockRedis.get.mockResolvedValue(null) // Cache miss
       mockRedis.setex.mockResolvedValue('OK')
       
@@ -164,7 +158,6 @@ describe('RedisCache', () => {
 
     it('should cache stats query', async () => {
       const mockStats = { userCount: 10, postCount: 20, bookingCount: 5 }
-      const mockRedis = require('ioredis')()
       mockRedis.get.mockResolvedValue(null) // Cache miss
       mockRedis.setex.mockResolvedValue('OK')
       
@@ -182,7 +175,6 @@ describe('RedisCache', () => {
 
   describe('Cache Statistics', () => {
     it('should get cache statistics', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.info.mockResolvedValue('used_memory_human:50M\n')
       
       const stats = await redisCache.getStats()
@@ -194,7 +186,6 @@ describe('RedisCache', () => {
     })
 
     it('should handle Redis errors gracefully', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.info.mockRejectedValue(new Error('Redis error'))
       
       const stats = await redisCache.getStats()
@@ -208,7 +199,6 @@ describe('RedisCache', () => {
 
   describe('Health Check', () => {
     it('should return true for successful health check', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.ping.mockResolvedValue('PONG')
       
       const isHealthy = await redisCache.healthCheck()
@@ -217,7 +207,6 @@ describe('RedisCache', () => {
     })
 
     it('should return false for failed health check', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.ping.mockRejectedValue(new Error('Connection failed'))
       
       const isHealthy = await redisCache.healthCheck()
@@ -238,7 +227,6 @@ describe('RedisCache', () => {
 
   describe('Error Handling', () => {
     it('should handle Redis connection errors', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.setex.mockRejectedValue(new Error('Connection error'))
       
       // Should not throw error
@@ -246,7 +234,6 @@ describe('RedisCache', () => {
     })
 
     it('should handle JSON parsing errors', async () => {
-      const mockRedis = require('ioredis')()
       mockRedis.get.mockResolvedValue('invalid-json')
       
       const result = await redisCache.get('test')
