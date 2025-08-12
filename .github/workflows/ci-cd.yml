@@ -168,6 +168,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js and pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Verify pnpm installation
+        run: |
+          echo "🔍 Verifying pnpm installation..."
+          pnpm --version
+          echo "✅ pnpm is ready for Docker build"
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 

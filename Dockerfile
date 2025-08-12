@@ -12,7 +12,7 @@ COPY package.json package-lock.json* pnpm-lock.yaml* ./
 # Install only production dependencies first
 RUN \
   if [ -f package-lock.json ]; then npm ci --only=production; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile --prod; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@latest --activate && pnpm i --frozen-lockfile --prod; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -25,7 +25,7 @@ COPY . .
 # Install dev dependencies for build
 RUN \
   if [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@latest --activate && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
