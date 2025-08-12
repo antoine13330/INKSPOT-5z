@@ -8,6 +8,8 @@ const mockUsersGET = async (url: string) => {
   const page = Number.parseInt(searchParams.get("page") || "1");
   const limit = Number.parseInt(searchParams.get("limit") || "20");
 
+  console.log('🔍 Mock Debug:', { query, tags, role, sortBy, page, limit });
+
   // Mock users data
   const mockUsers = [
     {
@@ -60,30 +62,39 @@ const mockUsersGET = async (url: string) => {
     },
   ];
 
+  console.log('📊 Initial users:', mockUsers.length);
+
   // Filter users based on query, tags, and role
   let filteredUsers = mockUsers.filter(user => user.role === role);
+  console.log('🎭 After role filter:', filteredUsers.length);
 
+  // Apply query filtering if query is provided
   if (query.trim()) {
-    const queryLower = query.toLowerCase()
+    const queryLower = query.toLowerCase();
+    console.log('🔍 Query filter:', queryLower);
     
     filteredUsers = filteredUsers.filter(user => {
-      const usernameMatch = user.username.toLowerCase().includes(queryLower)
-      const businessMatch = user.businessName?.toLowerCase().includes(queryLower)
-      const bioMatch = user.bio.toLowerCase().includes(queryLower)
+      const usernameMatch = user.username.toLowerCase().includes(queryLower);
+      const businessMatch = user.businessName?.toLowerCase().includes(queryLower);
+      const bioMatch = user.bio.toLowerCase().includes(queryLower);
       
-      return usernameMatch || businessMatch || bioMatch
-    })
+      const matches = usernameMatch || businessMatch || bioMatch;
+      console.log(`  ${user.username}: username=${usernameMatch}, business=${businessMatch}, bio=${bioMatch} => ${matches}`);
+      
+      return matches;
+    });
+    console.log('🔍 After query filter:', filteredUsers.length);
   }
 
+  // Apply tags filtering if tags are provided
   if (tags.length > 0) {
-    filteredUsers = filteredUsers.filter(user =>
-      user.specialties.some(specialty => tags.includes(specialty))
-    );
-  }
-
-  // If no query and no tags, return all users of the specified role
-  if (!query.trim() && tags.length === 0) {
-    // Keep all users for this role
+    console.log('🏷️ Tags filter:', tags);
+    filteredUsers = filteredUsers.filter(user => {
+      const hasTag = user.specialties.some(specialty => tags.includes(specialty));
+      console.log(`  ${user.username}: specialties=${user.specialties}, hasTag=${hasTag}`);
+      return hasTag;
+    });
+    console.log('🏷️ After tags filter:', filteredUsers.length);
   }
 
   // Sort users based on sortBy parameter
@@ -104,6 +115,7 @@ const mockUsersGET = async (url: string) => {
   // Pagination
   const skip = (page - 1) * limit;
   const paginatedUsers = filteredUsers.slice(skip, skip + limit);
+  console.log('📄 Pagination:', { skip, limit, total: filteredUsers.length, returned: paginatedUsers.length });
 
   return {
     status: 200,
@@ -265,24 +277,13 @@ describe('Search Users API', () => {
   });
 
   it('debug: test mock without console.log', async () => {
-    // Test direct du mock sans console.log
+    // Test que le mock fonctionne maintenant correctement
     const response = await mockUsersGET('http://localhost:3000/api/users/search?q=pierce');
     const data = await response.json();
     
-    // Le mock devrait retourner seulement 1 utilisateur pour la recherche "pierce"
-    // Mais il retourne 3, ce qui signifie que le filtrage ne fonctionne pas
-    
-    // Vérifions que le mock retourne au moins les bonnes données
-    expect(data.users.length).toBeGreaterThan(0);
-    
-    // Vérifions que tous les utilisateurs retournés ont le rôle PRO
-    data.users.forEach(user => {
-      expect(user.role).toBe('PRO');
-    });
-    
-    // Le problème est que le mock ne filtre pas par query
-    // Il retourne toujours tous les utilisateurs PRO
-    expect(data.users.length).toBe(3); // Tous les utilisateurs PRO
+    // Maintenant que le mock fonctionne, il devrait retourner 1 utilisateur pour "pierce"
+    expect(data.users.length).toBe(1);
+    expect(data.users[0].username).toBe('@pierce');
   });
 
   it('debug: test mock logic directly', () => {
@@ -379,33 +380,20 @@ describe('Search Users API', () => {
   });
 
   it('debug: test mock step by step without console.log', async () => {
-    // Test du mock étape par étape sans console.log
-    const response = await mockUsersGET('http://localhost:3000/api/users/search?q=pierce');
-    const data = await response.json();
+    // Test que le mock fonctionne maintenant correctement
+    const response1 = await mockUsersGET('http://localhost:3000/api/users/search?q=pierce');
+    const data1 = await response1.json();
     
-    // Le mock devrait retourner seulement 1 utilisateur pour la recherche "pierce"
-    // Mais il retourne 3, ce qui signifie que le filtrage ne fonctionne pas
+    // "pierce" devrait retourner 1 utilisateur
+    expect(data1.users.length).toBe(1);
+    expect(data1.users[0].username).toBe('@pierce');
     
-    // Vérifions que le mock retourne au moins les bonnes données
-    expect(data.users.length).toBeGreaterThan(0);
-    
-    // Vérifions que tous les utilisateurs retournés ont le rôle PRO
-    data.users.forEach(user => {
-      expect(user.role).toBe('PRO');
-    });
-    
-    // Le problème est que le mock ne filtre pas par query
-    // Il retourne toujours tous les utilisateurs PRO
-    expect(data.users.length).toBe(3); // Tous les utilisateurs PRO
-    
-    // Vérifions que le mock ne filtre pas du tout
-    // Même avec une recherche qui ne devrait rien retourner
+    // Test avec une recherche qui ne devrait rien retourner
     const response2 = await mockUsersGET('http://localhost:3000/api/users/search?q=nonexistent');
     const data2 = await response2.json();
     
-    // Le mock devrait retourner 0 utilisateurs pour "nonexistent"
-    // Mais il retourne probablement 3, ce qui confirme que le filtrage ne fonctionne pas
-    expect(data2.users.length).toBe(0); // Ce test devrait échouer si le mock ne filtre pas
+    // "nonexistent" devrait retourner 0 utilisateurs
+    expect(data2.users.length).toBe(0);
   });
 
   it('returns users filtered by query', async () => {

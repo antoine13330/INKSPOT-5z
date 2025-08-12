@@ -107,9 +107,36 @@ global.Response = class MockResponse {
   }
 }
 
-// Mock NextResponse
+// Mock NextRequest properly for API tests
 jest.mock('next/server', () => ({
-  NextRequest: global.Request,
+  NextRequest: class MockNextRequest {
+    constructor(url, init = {}) {
+      this.url = url
+      this.method = init.method || 'GET'
+      this.headers = new Headers(init.headers || {})
+      this.body = init.body || null
+      this.ip = '127.0.0.1'
+      
+      // Parse body if it's a string
+      if (typeof this.body === 'string') {
+        try {
+          this._parsedBody = JSON.parse(this.body)
+        } catch {
+          this._parsedBody = {}
+        }
+      } else {
+        this._parsedBody = this.body || {}
+      }
+    }
+    
+    async json() {
+      return Promise.resolve(this._parsedBody)
+    }
+    
+    async formData() {
+      return Promise.resolve(new Map())
+    }
+  },
   NextResponse: {
     json: jest.fn((data, init) => new global.Response(data, init)),
     redirect: jest.fn((url) => new global.Response(null, { status: 302, headers: { Location: url } })),
@@ -121,7 +148,11 @@ global.URL = class MockURL {
   constructor(url, base) {
     this.href = url
     this.protocol = url.startsWith('https:') ? 'https:' : url.startsWith('http:') ? 'http:' : 'file:'
-    this.searchParams = new URLSearchParams()
+    
+    // Parse query parameters properly
+    const urlParts = url.split('?')
+    this.pathname = urlParts[0]
+    this.searchParams = new global.URLSearchParams(urlParts[1] || '')
   }
   
   toString() {
@@ -135,11 +166,15 @@ global.URLSearchParams = class MockURLSearchParams {
     this.params = new Map()
     if (init) {
       if (typeof init === 'string') {
-        // Parse query string
+        // Parse query string properly
         const pairs = init.split('&')
         pairs.forEach(pair => {
           const [key, value] = pair.split('=')
-          if (key) this.params.set(key, value || '')
+          if (key) {
+            const decodedKey = decodeURIComponent(key)
+            const decodedValue = value ? decodeURIComponent(value) : ''
+            this.params.set(decodedKey, decodedValue)
+          }
         })
       } else if (Array.isArray(init)) {
         // Array of key-value pairs
@@ -177,7 +212,7 @@ global.URLSearchParams = class MockURLSearchParams {
 
   toString() {
     return Array.from(this.params.entries())
-      .map(([key, value]) => `${key}=${value}`)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
       .join('&')
   }
 }

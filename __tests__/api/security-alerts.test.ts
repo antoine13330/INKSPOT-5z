@@ -98,17 +98,15 @@ describe('Security Alerts API', () => {
         'GET_SECURITY_ALERTS',
         'security/alerts',
         true,
+        '127.0.0.1',
         'unknown',
-        'unknown',
-        expect.objectContaining({
-          filters: expect.any(Object),
-          alertCount: 0,
-        })
+        { filters: {}, alertCount: 0 }
       )
     })
 
     it('should handle errors gracefully', async () => {
       ;(securityMonitor.getAlerts as jest.Mock).mockRejectedValue(new Error('Database error'))
+      ;(securityMonitor.getSecurityMetrics as jest.Mock).mockReturnValue({})
       ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)
 
       const request = new NextRequest('http://localhost:3000/api/security/alerts')
@@ -122,11 +120,9 @@ describe('Security Alerts API', () => {
         'GET_SECURITY_ALERTS',
         'security/alerts',
         false,
+        '127.0.0.1',
         'unknown',
-        'unknown',
-        expect.objectContaining({
-          error: 'Database error',
-        })
+        { error: 'Database error' }
       )
     })
   })
@@ -143,8 +139,14 @@ describe('Security Alerts API', () => {
       }
 
       const mockAlertId = 'alert-123'
-      ;(securityMonitor.createAlert as jest.Mock).mockResolvedValue(mockAlertId)
-      ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)
+      
+      // Configure mocks properly
+      const createAlertMock = jest.fn().mockResolvedValue(mockAlertId)
+      const logDataAccessEventMock = jest.fn().mockResolvedValue(undefined)
+      
+      // Replace the mocked functions
+      ;(securityMonitor.createAlert as jest.Mock).mockImplementation(createAlertMock)
+      ;(auditLogger.logDataAccessEvent as jest.Mock).mockImplementation(logDataAccessEventMock)
 
       const request = new NextRequest('http://localhost:3000/api/security/alerts', {
         method: 'POST',
@@ -157,10 +159,16 @@ describe('Security Alerts API', () => {
       const response = await POST(request)
       const data = await response.json()
 
+      // Debug: afficher ce qui s'est passé
+      console.log('Response status:', response.status)
+      console.log('Response data:', data)
+      console.log('CreateAlert called:', createAlertMock.mock.calls)
+      console.log('LogDataAccessEvent called:', logDataAccessEventMock.mock.calls)
+
       expect(response.status).toBe(200)
       expect(data.alertId).toBe(mockAlertId)
       expect(data.message).toBe('Security alert created successfully')
-      expect(securityMonitor.createAlert).toHaveBeenCalledWith(
+      expect(createAlertMock).toHaveBeenCalledWith(
         'THREAT',
         'HIGH',
         'Test Alert',
@@ -201,8 +209,13 @@ describe('Security Alerts API', () => {
       }
 
       const mockAlertId = 'alert-123'
-      ;(securityMonitor.createAlert as jest.Mock).mockResolvedValue(mockAlertId)
-      ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)
+      
+      // Configure mocks properly
+      const createAlertMock = jest.fn().mockResolvedValue(mockAlertId)
+      const logDataAccessEventMock = jest.fn().mockResolvedValue(undefined)
+      
+      ;(securityMonitor.createAlert as jest.Mock).mockImplementation(createAlertMock)
+      ;(auditLogger.logDataAccessEvent as jest.Mock).mockImplementation(logDataAccessEventMock)
 
       const request = new NextRequest('http://localhost:3000/api/security/alerts', {
         method: 'POST',
@@ -214,12 +227,12 @@ describe('Security Alerts API', () => {
 
       await POST(request)
 
-      expect(auditLogger.logDataAccessEvent).toHaveBeenCalledWith(
+      expect(logDataAccessEventMock).toHaveBeenCalledWith(
         'admin',
         'CREATE_SECURITY_ALERT',
         'security/alerts',
         true,
-        'unknown',
+        '127.0.0.1',
         'unknown',
         expect.objectContaining({
           alertId: 'alert-123',
@@ -239,8 +252,12 @@ describe('Security Alerts API', () => {
         source: 'test',
       }
 
-      ;(securityMonitor.createAlert as jest.Mock).mockRejectedValue(new Error('Creation failed'))
-      ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)
+      // Configure mocks properly for error case
+      const createAlertMock = jest.fn().mockRejectedValue(new Error('Creation failed'))
+      const logDataAccessEventMock = jest.fn().mockResolvedValue(undefined)
+      
+      ;(securityMonitor.createAlert as jest.Mock).mockImplementation(createAlertMock)
+      ;(auditLogger.logDataAccessEvent as jest.Mock).mockImplementation(logDataAccessEventMock)
 
       const request = new NextRequest('http://localhost:3000/api/security/alerts', {
         method: 'POST',
@@ -255,12 +272,12 @@ describe('Security Alerts API', () => {
 
       expect(response.status).toBe(500)
       expect(data.error).toBe('Failed to create security alert')
-      expect(auditLogger.logDataAccessEvent).toHaveBeenCalledWith(
+      expect(logDataAccessEventMock).toHaveBeenCalledWith(
         'admin',
         'CREATE_SECURITY_ALERT',
         'security/alerts',
         false,
-        'unknown',
+        '127.0.0.1',
         'unknown',
         expect.objectContaining({
           error: 'Creation failed',
