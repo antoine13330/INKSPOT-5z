@@ -1,5 +1,9 @@
 name: INKSPOT CI/CD Pipeline
 
+# IMPORTANT: Enable code scanning in your repository settings:
+# Go to Settings > Security > Code security and analysis > Code scanning
+# Enable "GitHub Advanced Security" and "Code scanning"
+
 on:
   push:
     branches: [ main, dev, test/ci-cd-pipeline ]
@@ -145,12 +149,14 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+          category: 'trivy-filesystem'
 
       - name: Upload Trivy dependencies scan results
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
           sarif_file: 'trivy-deps-results.sarif'
+          category: 'trivy-dependencies'
 
   build-docker:
     name: Build Docker Images
@@ -220,6 +226,7 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-image-results.sarif'
+          category: 'trivy-docker-images'
 
   deploy-staging:
     name: Deploy to Staging
