@@ -1,0 +1,117 @@
+# =============================================================================
+# INKSPOT - Variables d'environnement
+# =============================================================================
+
+# =============================================================================
+# BASE & ENVIRONMENT
+# =============================================================================
+NODE_ENV="development"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# =============================================================================
+# DATABASE
+# =============================================================================
+DATABASE_URL="postgresql://postgres:Z4qtMeWAXz7Bi5Sp@localhost:5432/inkspot"
+
+# =============================================================================
+# REDIS
+# =============================================================================
+REDIS_URL="redis://:v4icOhDasY3eCVrQ@localhost:6379"
+
+# =============================================================================
+# NEXT AUTH
+# =============================================================================
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="#O5w?;{QC@%[-r71*TY'o$WkS`R8=AjD2qPEtZ<V}Ifa3KLeJv>(up^bgsB,/&cm"
+
+# =============================================================================
+# OAUTH PROVIDERS (Google)
+# =============================================================================
+# Allez sur: https://console.cloud.google.com/apis/credentials
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# =============================================================================
+# STRIPE
+# =============================================================================
+# Allez sur: https://dashboard.stripe.com/apikeys
+STRIPE_SECRET_KEY="sk_test_your-stripe-secret-key"
+STRIPE_WEBHOOK_SECRET="whsec_your-stripe-webhook-secret"
+STRIPE_PUBLISHABLE_KEY="pk_test_your-stripe-publishable-key"
+
+# =============================================================================
+# AWS S3 (optionnel - pour le stockage des fichiers)
+# =============================================================================
+# Allez sur: https://console.aws.amazon.com/iam/
+AWS_ACCESS_KEY_ID="your-aws-access-key"
+AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
+AWS_REGION="us-east-1"
+AWS_S3_BUCKET="your-s3-bucket-name"
+
+# =============================================================================
+# SUPABASE (optionnel - pour le CDN)
+# =============================================================================
+# Allez sur: https://supabase.com/dashboard
+SUPABASE_URL="your-supabase-project-url"
+SUPABASE_ANON_KEY="your-supabase-anon-key"
+
+# =============================================================================
+# EMAIL (SMTP)
+# =============================================================================
+# Pour le développement, utilisez MailHog ou Mailtrap
+EMAIL_SERVER_HOST="localhost"
+EMAIL_SERVER_PORT="1025"
+EMAIL_SERVER_USER=""
+EMAIL_SERVER_PASSWORD=""
+EMAIL_FROM="noreply@inkspot.com"
+
+# =============================================================================
+# PUSH NOTIFICATIONS (VAPID)
+# =============================================================================
+# Générées automatiquement ✅
+VAPID_PUBLIC_KEY="BLOXh8DtpFQO5MSBjXUgIQ8HY44FYdDlX69rhPTWo1f-wVWdAZ5fhw8sklTeqlpIv1xvkfeN8nG1zFuCZ4QIwQw"
+VAPID_PRIVATE_KEY="T4hKbEdqYt26D6FITLaS1LB0rPe7Lmfx_QN8KNdHXBQ"
+
+# =============================================================================
+# PERFORMANCE MONITORING (optionnel)
+# =============================================================================
+APM_ENABLED="false"
+APM_ENDPOINT="your-apm-endpoint"
+APM_API_KEY="your-apm-api-key"
+APM_SAMPLE_RATE="1.0"
+PERFORMANCE_MONITORING_URL="your-performance-monitoring-url"
+PERFORMANCE_MONITORING_TOKEN="your-performance-monitoring-token"
+
+# =============================================================================
+# EXTERNAL LOGGING (optionnel)
+# =============================================================================
+EXTERNAL_LOGGING_URL="your-external-logging-url"
+EXTERNAL_LOGGING_TOKEN="your-external-logging-token"
+
+# =============================================================================
+# WEBSOCKET
+# =============================================================================
+WS_PORT="3001"
+
+# =============================================================================
+# GITHUB (pour les scripts)
+# =============================================================================
+# Allez sur: https://github.com/settings/tokens
+GITHUB_TOKEN="your-github-token"
+
+# =============================================================================
+# NOTES IMPORTANTES
+# =============================================================================
+# ✅ CLÉS GÉNÉRÉES AUTOMATIQUEMENT:
+# - NEXTAUTH_SECRET: Clé secrète de 64 caractères
+# - DATABASE_URL: Avec mot de passe sécurisé PostgreSQL
+# - REDIS_URL: Avec mot de passe sécurisé Redis
+# - VAPID_PUBLIC_KEY & VAPID_PRIVATE_KEY: Pour les notifications push
+#
+# 🔑 CLÉS À CONFIGURER MANUELLEMENT:
+# - GOOGLE_CLIENT_ID & GOOGLE_CLIENT_SECRET: https://console.cloud.google.com/apis/credentials
+# - STRIPE_*: https://dashboard.stripe.com/apikeys
+# - AWS_*: https://console.aws.amazon.com/iam/ (optionnel)
+# - SUPABASE_*: https://supabase.com/dashboard (optionnel)
+# - GITHUB_TOKEN: https://github.com/settings/tokens
+# =============================================================================

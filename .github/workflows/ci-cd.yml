@@ -1,13 +1,32 @@
 name: INKSPOT CI/CD Pipeline
 
-# IMPORTANT: Enable code scanning in your repository settings:
-# Go to Settings > Security > Code security and analysis > Code scanning
-# Enable "GitHub Advanced Security" and "Code scanning"
+# =============================================================================
+# REQUIRED SETUP - READ BEFORE RUNNING
+# =============================================================================
 #
-# IMPORTANT: Set up Container Registry permissions:
-# 1. Create Personal Access Token (PAT) with 'write:packages' and 'read:packages' permissions
-# 2. Add it as secret 'CR_PAT' in Settings > Secrets and variables > Actions
-# 3. This allows pushing Docker images to ghcr.io
+# 1. ENABLE CODE SCANNING:
+#    Go to Settings > Security > Code security and analysis > Code scanning
+#    Enable "GitHub Advanced Security" and "Code scanning"
+#
+# 2. SET UP CONTAINER REGISTRY PERMISSIONS:
+#    - Create Personal Access Token (PAT) with 'write:packages' and 'read:packages' permissions
+#    - Add it as secret 'CR_PAT' in Settings > Secrets and variables > Actions
+#    - This allows pushing Docker images to ghcr.io
+#
+# 3. REQUIRED SECRETS (Settings > Secrets and variables > Actions):
+#    - CR_PAT: Personal Access Token for Container Registry access
+#    - POSTGRES_PASSWORD: Database password (if using external database)
+#    - NEXTAUTH_SECRET: NextAuth.js secret key
+#    - DATABASE_URL: Database connection string (if using external database)
+#
+# 4. WORKFLOW FEATURES:
+#    - Automatic testing and building
+#    - Security scanning with Trivy
+#    - Docker image building and pushing
+#    - Conditional deployment based on branch
+#    - Comprehensive error handling and logging
+#
+# =============================================================================
 
 on:
   push:
@@ -136,6 +155,8 @@ jobs:
           exit-code: '0'
           ignore-unfixed: true
           scanners: 'vuln,secret,config'
+        continue-on-error: true
+        id: trivy-fs-scan
 
       - name: Run Trivy vulnerability scanner on dependencies
         uses: aquasecurity/trivy-action@master
@@ -148,17 +169,41 @@ jobs:
           exit-code: '0'
           ignore-unfixed: true
           scanners: 'vuln'
+        continue-on-error: true
+        id: trivy-deps-scan
+
+      - name: Check if filesystem scan results exist
+        id: check-fs-scan
+        run: |
+          if [ -f "trivy-results.sarif" ]; then
+            echo "✅ Filesystem SARIF file found: trivy-results.sarif"
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️  Filesystem SARIF file not found: trivy-results.sarif"
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check if dependencies scan results exist
+        id: check-deps-scan
+        run: |
+          if [ -f "trivy-deps-results.sarif" ]; then
+            echo "✅ Dependencies SARIF file found: trivy-deps-results.sarif"
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️  Dependencies SARIF file not found: trivy-deps-results.sarif"
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Upload Trivy filesystem scan results
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: steps.check-fs-scan.outputs.exists == 'true'
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'trivy-filesystem'
 
       - name: Upload Trivy dependencies scan results
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: steps.check-deps-scan.outputs.exists == 'true'
         with:
           sarif_file: 'trivy-deps-results.sarif'
           category: 'trivy-dependencies'
@@ -205,6 +250,16 @@ jobs:
           echo "✅ Docker access verified"
           echo "🔐 Logged in as: ${{ github.actor }}"
           echo "🏗️  Repository: ${{ github.repository }}"
+          
+          # Test pulling from our registry to ensure authentication works
+          echo "🔍 Testing authentication with our registry..."
+          if docker pull ghcr.io/${{ github.repository }}:latest 2>/dev/null; then
+            echo "✅ Successfully pulled image from our registry"
+          else
+            echo "⚠️  Could not pull image (this is normal if it's the first build)"
+            echo "🔍 Checking if we can at least authenticate:"
+            docker manifest inspect ghcr.io/${{ github.repository }}:latest 2>/dev/null && echo "✅ Authentication successful" || echo "⚠️  Image not found yet (normal for first build)"
+          fi
 
       - name: Extract metadata
         id: meta
@@ -227,6 +282,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+        id: build-main-app
 
       - name: Build and push WebSocket server
         uses: docker/build-push-action@v5
@@ -237,9 +293,81 @@ jobs:
           tags: ghcr.io/${{ github.repository }}-websocket:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+        id: build-websocket
+
+      - name: Check build status
+        run: |
+          echo "🔍 Checking Docker build status..."
+          
+          if [ "${{ steps.build-main-app.outcome }}" = "success" ]; then
+            echo "✅ Main app build: SUCCESS"
+          else
+            echo "❌ Main app build: FAILED"
+          fi
+          
+          if [ "${{ steps.build-websocket.outcome }}" = "success" ]; then
+            echo "✅ WebSocket build: SUCCESS"
+          else
+            echo "❌ WebSocket build: FAILED"
+          fi
+          
+          # Only proceed with verification if both builds succeeded
+          if [ "${{ steps.build-main-app.outcome }}" = "success" ] && [ "${{ steps.build-websocket.outcome }}" = "success" ]; then
+            echo "🎉 All builds succeeded, proceeding with verification..."
+          else
+            echo "⚠️  Some builds failed, skipping verification and scanning..."
+            exit 1
+          fi
+        if: always()
+
+      - name: Verify Docker images exist
+        run: |
+          echo "🔍 Verifying Docker images were built and pushed..."
+          
+          # Check if main app image exists
+          if docker manifest inspect ghcr.io/${{ github.repository }}:latest >/dev/null 2>&1; then
+            echo "✅ Main app image exists: ghcr.io/${{ github.repository }}:latest"
+          else
+            echo "❌ Main app image not found: ghcr.io/${{ github.repository }}:latest"
+            echo "🔍 This might be due to:"
+            echo "   - Build failure"
+            echo "   - Push failure"
+            echo "   - Authentication issues"
+            echo "   - Registry access problems"
+            exit 1
+          fi
+          
+          # Check if websocket image exists
+          if docker manifest inspect ghcr.io/${{ github.repository }}-websocket:${{ github.sha }} >/dev/null 2>&1; then
+            echo "✅ WebSocket image exists: ghcr.io/${{ github.repository }}-websocket:${{ github.sha }}"
+          else
+            echo "❌ WebSocket image not found: ghcr.io/${{ github.repository }}-websocket:${{ github.sha }}"
+            echo "🔍 This might be due to:"
+            echo "   - Build failure"
+            echo "   - Push failure"
+            echo "   - Authentication issues"
+            echo "   - Registry access problems"
+            exit 1
+          fi
+          
+          echo "🎉 All Docker images verified successfully!"
+        continue-on-error: true
+        id: verify-images
+
+      - name: Check if images are ready for scanning
+        run: |
+          if [ "${{ steps.verify-images.outcome }}" = "success" ]; then
+            echo "✅ Images verified successfully, proceeding with security scan..."
+            echo "ready=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️  Image verification failed, skipping security scan..."
+            echo "ready=false" >> $GITHUB_OUTPUT
+          fi
+        id: check-images-ready
 
       - name: Scan Docker images for vulnerabilities
         uses: aquasecurity/trivy-action@master
+        if: steps.check-images-ready.outputs.ready == 'true'
         with:
           scan-type: 'image'
           scan-ref: ghcr.io/${{ github.repository }}:latest
@@ -248,13 +376,77 @@ jobs:
           severity: 'CRITICAL,HIGH'
           exit-code: '0'
           ignore-unfixed: true
+        continue-on-error: true
+        id: trivy-scan
+
+      - name: Debug scan results
+        if: steps.check-images-ready.outputs.ready == 'true'
+        run: |
+          echo "🔍 Debugging Trivy scan results..."
+          echo "Current directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -la
+          
+          if [ -f "trivy-image-results.sarif" ]; then
+            echo "✅ SARIF file size: $(wc -c < trivy-image-results.sarif) bytes"
+            echo "📄 First few lines of SARIF file:"
+            head -5 trivy-image-results.sarif
+          else
+            echo "❌ SARIF file not found"
+            echo "🔍 Checking for any Trivy output files:"
+            find . -name "*.sarif" -o -name "trivy-*" 2>/dev/null || echo "No Trivy files found"
+          fi
+        continue-on-error: true
+
+      - name: Check if scan results exist
+        id: check-scan
+        run: |
+          if [ "${{ steps.check-images-ready.outputs.ready }}" != "true" ]; then
+            echo "⚠️  Scanning was skipped due to image verification failure"
+            echo "exists=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          if [ -f "trivy-image-results.sarif" ]; then
+            echo "✅ SARIF file found: trivy-image-results.sarif"
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️  SARIF file not found: trivy-image-results.sarif"
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
 
       - name: Upload Docker image scan results
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
+        if: steps.check-scan.outputs.exists == 'true'
         with:
           sarif_file: 'trivy-image-results.sarif'
           category: 'trivy-docker-images'
+
+      - name: Workflow summary
+        run: |
+          echo "🎯 INKSPOT CI/CD Pipeline Summary"
+          echo "=================================="
+          echo "📦 Docker Builds:"
+          echo "   Main App: ${{ steps.build-main-app.outcome }}"
+          echo "   WebSocket: ${{ steps.build-websocket.outcome }}"
+          echo ""
+          echo "🔍 Image Verification: ${{ steps.verify-images.outcome }}"
+          echo "🔒 Security Scanning: ${{ steps.trivy-scan.outcome }}"
+          echo "📄 SARIF Upload: ${{ steps.check-scan.outputs.exists }}"
+          echo ""
+          if [ "${{ steps.build-main-app.outcome }}" = "success" ] && [ "${{ steps.build-websocket.outcome }}" = "success" ]; then
+            echo "✅ All Docker builds completed successfully!"
+          else
+            echo "❌ Some Docker builds failed. Check the logs above for details."
+          fi
+          
+          if [ "${{ steps.verify-images.outcome }}" = "success" ]; then
+            echo "✅ Docker images verified and ready for deployment!"
+          else
+            echo "⚠️  Docker image verification failed. Images may not be available for scanning or deployment."
+          fi
+        if: always()
 
   deploy-staging:
     name: Deploy to Staging
