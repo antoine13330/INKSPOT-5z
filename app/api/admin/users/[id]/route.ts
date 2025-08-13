@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 export const dynamic = "force-dynamic"
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id || session.user.role !== "ADMIN") {
@@ -13,7 +13,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     const body = await request.json()
     const { action } = body
-    const userId = params.id
+    const { id: userId } = await params
 
     let updateData: unknown = {}
 

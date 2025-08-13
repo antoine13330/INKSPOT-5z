@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic"
 // Get conversation details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession()
@@ -14,7 +14,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const conversationId = params.id
+    const { id: conversationId } = await params
 
     // Verify user is member of conversation
     const membership = await prisma.conversationMember.findFirst({
@@ -98,7 +98,7 @@ export async function GET(
 // Update conversation settings
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession()
@@ -106,7 +106,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const conversationId = params.id
+    const { id: conversationId } = await params
     const body = await request.json()
     const { title } = body
 
