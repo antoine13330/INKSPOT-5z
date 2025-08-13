@@ -8,6 +8,12 @@ on:
   schedule:
     - cron: '0 2 * * *' # Daily at 2 AM
 
+# Top-level permissions required for SARIF uploads and accessing workflow runs
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 jobs:
   # Dependency vulnerability scan
   dependency-scan:
