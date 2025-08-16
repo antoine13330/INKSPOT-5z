@@ -1,45 +1,67 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-.yarn/install-state.gz
-
-# npm cache
-.npm-cache/
-.npm/
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Dependencies
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env
-.env*.local
-.env.production
+# Next.js
+.next/
+out/
+build/
+dist/
 
-# vercel
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env*.local
+.env
+
+# Vercel
 .vercel
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
 
-# database
-/prisma/migrations/
+# Testing
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Cache directories
+.npm-cache/
+.cache/
+.parcel-cache/
+
+# Large files
+*.pack
+*.log
+*.webm
+*.mp4
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Docker
+.dockerignore
+
+# Monitoring
+monitoring/grafana/data/
+monitoring/prometheus/data/
