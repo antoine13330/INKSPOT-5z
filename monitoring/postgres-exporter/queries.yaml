@@ -1,0 +1,137 @@
+inkspot_metrics:
+  users_total:
+    query: "SELECT COUNT(*) as value FROM users WHERE deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total number of active users"
+  
+  pro_users_total:
+    query: "SELECT COUNT(*) as value FROM users WHERE role = 'PRO' AND deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total number of PRO users"
+  
+  client_users_total:
+    query: "SELECT COUNT(*) as value FROM users WHERE role = 'CLIENT' AND deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total number of client users"
+  
+  posts_total:
+    query: "SELECT COUNT(*) as value FROM posts WHERE deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total number of posts"
+  
+  posts_with_images:
+    query: "SELECT COUNT(*) as value FROM posts WHERE image_url IS NOT NULL AND image_url != '' AND deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Posts with images"
+  
+  posts_today:
+    query: "SELECT COUNT(*) as value FROM posts WHERE DATE(created_at) = CURRENT_DATE AND deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Posts created today"
+  
+  bookings_total:
+    query: "SELECT COUNT(*) as value FROM appointments WHERE deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total number of bookings"
+  
+  bookings_pending:
+    query: "SELECT COUNT(*) as value FROM appointments WHERE status = 'PENDING' AND deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Pending bookings"
+  
+  bookings_confirmed:
+    query: "SELECT COUNT(*) as value FROM appointments WHERE status = 'CONFIRMED' AND deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Confirmed bookings"
+  
+  conversations_total:
+    query: "SELECT COUNT(*) as value FROM conversations WHERE deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total conversations"
+  
+  conversations_active:
+    query: "SELECT COUNT(DISTINCT c.id) as value FROM conversations c INNER JOIN messages m ON c.id = m.conversation_id WHERE c.deleted_at IS NULL AND m.created_at > NOW() - INTERVAL '7 days'"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Active conversations (last 7 days)"
+  
+  messages_total:
+    query: "SELECT COUNT(*) as value FROM messages WHERE deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total messages"
+  
+  messages_today:
+    query: "SELECT COUNT(*) as value FROM messages WHERE DATE(created_at) = CURRENT_DATE AND deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Messages sent today"
+  
+  reviews_total:
+    query: "SELECT COUNT(*) as value FROM reviews WHERE deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Total reviews"
+  
+  avg_rating:
+    query: "SELECT COALESCE(AVG(rating), 0) as value FROM reviews WHERE deleted_at IS NULL"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Average rating"
+  
+  database_size_mb:
+    query: "SELECT pg_database_size('inkspot') / 1024 / 1024 as value"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Database size in MB"
+  
+  active_connections:
+    query: "SELECT COUNT(*) as value FROM pg_stat_activity WHERE datname = 'inkspot' AND state = 'active'"
+    master: true
+    metrics:
+      - value:
+          usage: "GAUGE"
+          description: "Active database connections"
+

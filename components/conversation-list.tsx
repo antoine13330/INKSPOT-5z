@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Calendar, Search, Filter } from "lucide-react"
+import { Calendar, Search, Filter, MessageCircle } from "lucide-react"
 
 interface Conversation {
   id: string

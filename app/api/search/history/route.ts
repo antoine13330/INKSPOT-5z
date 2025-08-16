@@ -4,6 +4,16 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 export const dynamic = "force-dynamic"
 
+// Type for search history record from Prisma
+interface SearchHistoryRecord {
+  id: string
+  userId: string
+  query: string
+  hashtags: string[]
+  searchType: string
+  createdAt: Date
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -22,7 +32,6 @@ export async function POST(request: NextRequest) {
         userId,
         query: query || '',
         hashtags: Array.isArray(tags) ? tags : [],
-        searchType: searchType || 'posts',
       },
     })
 
@@ -33,7 +42,6 @@ export async function POST(request: NextRequest) {
         userId: searchRecord.userId,
         query: searchRecord.query,
         tags: searchRecord.hashtags,
-        searchType: searchRecord.searchType,
         createdAt: searchRecord.createdAt,
       },
     })
@@ -60,12 +68,11 @@ export async function GET(request: NextRequest) {
     })
 
     // Map DB fields to test-expected response structure
-    const history = records.map((r) => ({
+    const history = records.map((r: any) => ({
       id: r.id,
       userId: r.userId,
       query: r.query,
       tags: r.hashtags,
-      searchType: r.searchType,
       createdAt: r.createdAt,
     }))
 

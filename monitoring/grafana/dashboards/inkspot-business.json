@@ -1,8 +1,236 @@
 {
   "id": null,
-  "title": "INKSPOT - Business Metrics",
-  "tags": ["inkspot", "business"],
+  "title": "INKSPOT Database Performance",
+  "tags": ["inkspot", "business", "analytics"],
   "style": "dark",
   "timezone": "browser",
-  "panels": []
+  "panels": [
+    {
+      "id": 1,
+      "title": "Total Users",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "pg_database_size_bytes{datname=\"inkspot\"} / 1024 / 1024",
+          "refId": "A",
+          "legendFormat": "Database Size (MB)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "basic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": 2,
+      "title": "PRO Users",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "pg_stat_database_numbackends{datname=\"inkspot\"}",
+          "refId": "A",
+          "legendFormat": "Active Connections"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "basic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      }
+    },
+    {
+      "id": 3,
+      "title": "Total Posts",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "pg_stat_database_xact_commit{datname=\"inkspot\"}",
+          "refId": "A",
+          "legendFormat": "Transactions Committed"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "basic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      }
+    },
+    {
+      "id": 4,
+      "title": "Posts with Images",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "pg_stat_database_xact_rollback{datname=\"inkspot\"}",
+          "refId": "A",
+          "legendFormat": "Transactions Rolled Back"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "basic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      }
+    },
+    {
+      "id": 5,
+      "title": "Total Bookings",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "pg_stat_database_blks_read{datname=\"inkspot\"}",
+          "refId": "A",
+          "legendFormat": "Blocks Read"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "basic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "id": 6,
+      "title": "Active Conversations",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "pg_stat_database_blks_hit{datname=\"inkspot\"}",
+          "refId": "A",
+          "legendFormat": "Blocks Hit (Cache)"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "displayMode": "basic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "steps": [
+              {
+                "color": "cyan",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 8
+      }
+    }
+  ],
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "refresh": "1m"
 }

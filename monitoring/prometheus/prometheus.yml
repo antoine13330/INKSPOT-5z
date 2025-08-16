@@ -3,12 +3,8 @@ global:
   evaluation_interval: 15s
 
 rule_files:
-  - "alert_rules.yml"
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets: []
+  # - "first_rules.yml"
+  # - "second_rules.yml"
 
 scrape_configs:
   # Prometheus itself
@@ -16,24 +12,32 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  # Node Exporter for system metrics
+  # INKSPOT Application
+  - job_name: 'inkspot-app'
+    static_configs:
+      - targets: ['app:3000']
+    metrics_path: '/api/metrics'
+    scrape_interval: 10s
+
+  # Node Exporter
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['node-exporter:9100']
 
-  # Postgres Exporter for database metrics
-  - job_name: 'postgres'
+  # PostgreSQL Exporter
+  - job_name: 'postgres-exporter'
     static_configs:
       - targets: ['postgres-exporter:9187']
 
-  # INKSPOT Application metrics
-  - job_name: 'inkspot-app'
-    metrics_path: '/api/metrics/public'
-    static_configs:
-      - targets: ['host.docker.internal:3000']  # Adjust based on your setup
-    scrape_interval: 30s
+  # Redis Exporter (if you add one)
+  # - job_name: 'redis-exporter'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
 
-  # Redis metrics (if Redis exporter is added)
-  - job_name: 'redis'
+  # Custom INKSPOT metrics
+  - job_name: 'inkspot-custom'
     static_configs:
-      - targets: ['redis:6379']
+      - targets: ['app:3000']
+    metrics_path: '/api/grafana'
+    scrape_interval: 5s
+    honor_labels: true

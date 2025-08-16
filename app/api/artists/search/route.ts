@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({
-      artists: artists.map(artist => ({
+      artists: artists.map((artist: any) => ({
         ...artist,
         displayName: artist.businessName || artist.username,
       })),

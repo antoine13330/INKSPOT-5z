@@ -1,5 +1,6 @@
 import { prisma } from './prisma'
 import { redisCache } from './redis-cache'
+import { Prisma } from '@prisma/client'
 
 export interface QueryOptimization {
   query: string
@@ -66,7 +67,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized user queries
-  async getUsersWithPagination(page = 1, limit = 20, filters?: unknown) {
+  async getUsersWithPagination(page = 1, limit = 20, filters?: Record<string, any>) {
     const cacheKey = `users:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -79,11 +80,11 @@ class DatabaseOptimizer {
         prisma.user.findMany({
           where,
           include: {
-            profile: true,
             _count: {
               select: {
                 posts: true,
-                bookings: true,
+                clientBookings: true,
+                proBookings: true,
               },
             },
           },
@@ -108,7 +109,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized post queries
-  async getPostsWithOptimization(filters?: unknown, page = 1, limit = 20) {
+  async getPostsWithOptimization(filters?: Record<string, any>, page = 1, limit = 20) {
     const cacheKey = `posts:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -124,17 +125,13 @@ class DatabaseOptimizer {
             author: {
               select: {
                 id: true,
-                name: true,
+                firstName: true,
+                lastName: true,
                 email: true,
-                profile: {
-                  select: {
-                    avatar: true,
-                    bio: true,
-                  },
-                },
+                avatar: true,
+                bio: true,
               },
             },
-            tags: true,
             _count: {
               select: {
                 likes: true,
@@ -163,7 +160,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized search queries
-  async searchWithFullText(query: string, filters?: unknown, page = 1, limit = 20) {
+  async searchWithFullText(query: string, filters?: Record<string, any>, page = 1, limit = 20) {
     const cacheKey = `search:${query}:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -174,18 +171,19 @@ class DatabaseOptimizer {
         prisma.user.findMany({
           where: {
             OR: [
-              { name: { contains: query, mode: 'insensitive' } },
+              { firstName: { contains: query, mode: 'insensitive' } },
+              { lastName: { contains: query, mode: 'insensitive' } },
               { email: { contains: query, mode: 'insensitive' } },
-              { profile: { bio: { contains: query, mode: 'insensitive' } } },
+              { bio: { contains: query, mode: 'insensitive' } },
             ],
-            ...filters,
+            ...(filters || {}),
           },
           include: {
-            profile: true,
             _count: {
               select: {
                 posts: true,
-                bookings: true,
+                clientBookings: true,
+                proBookings: true,
               },
             },
           },
@@ -196,21 +194,20 @@ class DatabaseOptimizer {
         prisma.post.findMany({
           where: {
             OR: [
-              { title: { contains: query, mode: 'insensitive' } },
               { content: { contains: query, mode: 'insensitive' } },
             ],
-            isPublic: true,
-            ...filters,
+            status: 'PUBLISHED',
+            ...(filters || {}),
           },
           include: {
             author: {
               select: {
                 id: true,
-                name: true,
-                profile: { select: { avatar: true } },
+                firstName: true,
+                lastName: true,
+                avatar: true,
               },
             },
-            tags: true,
           },
           take: limit,
         }),
@@ -228,7 +225,7 @@ class DatabaseOptimizer {
   }
 
   // Optimized booking queries
-  async getBookingsWithOptimization(userId?: string, filters?: unknown, page = 1, limit = 20) {
+  async getBookingsWithOptimization(userId?: string, filters?: Record<string, any>, page = 1, limit = 20) {
     const cacheKey = `bookings:${userId}:${page}:${limit}:${JSON.stringify(filters || {})}`
     
     return redisCache.cacheQuery(cacheKey, async () => {
@@ -245,24 +242,26 @@ class DatabaseOptimizer {
         prisma.booking.findMany({
           where,
           include: {
-            user: {
+            client: {
               select: {
                 id: true,
-                name: true,
+                firstName: true,
+                lastName: true,
                 email: true,
-                profile: { select: { avatar: true } },
+                avatar: true,
               },
             },
-            professional: {
+            pro: {
               select: {
                 id: true,
-                name: true,
+                firstName: true,
+                lastName: true,
                 email: true,
-                profile: { select: { avatar: true } },
+                avatar: true,
               },
             },
           },
-          orderBy: { date: 'desc' },
+          orderBy: { startTime: 'desc' },
           skip,
           take: limit,
         }),
@@ -283,12 +282,13 @@ class DatabaseOptimizer {
   }
 
   // Build optimized where clauses
-  private buildUserWhereClause(filters?: unknown) {
-    const where: unknown = {}
+  private buildUserWhereClause(filters?: Record<string, any>) {
+    const where: Record<string, any> = {}
     
     if (filters?.search) {
       where.OR = [
-        { name: { contains: filters.search, mode: 'insensitive' } },
+        { firstName: { contains: filters.search, mode: 'insensitive' } },
+        { lastName: { contains: filters.search, mode: 'insensitive' } },
         { email: { contains: filters.search, mode: 'insensitive' } },
       ]
     }
@@ -304,8 +304,8 @@ class DatabaseOptimizer {
     return where
   }
 
-  private buildPostWhereClause(filters?: unknown) {
-    const where: unknown = { isPublic: true }
+  private buildPostWhereClause(filters?: Record<string, any>) {
+    const where: Record<string, any> = { isPublic: true }
     
     if (filters?.authorId) {
       where.authorId = filters.authorId
@@ -337,8 +337,8 @@ class DatabaseOptimizer {
     return where
   }
 
-  private buildBookingWhereClause(filters?: unknown) {
-    const where: unknown = {}
+  private buildBookingWhereClause(filters?: Record<string, any>) {
+    const where: Record<string, any> = {}
     
     if (filters?.status) {
       where.status = filters.status
@@ -432,7 +432,7 @@ class DatabaseOptimizer {
   }
 
   // Batch operations for better performance
-  async batchCreateUsers(users: unknown[]) {
+  async batchCreateUsers(users: Prisma.UserCreateManyInput[]) {
     const startTime = Date.now()
     
     const result = await prisma.user.createMany({
@@ -446,7 +446,7 @@ class DatabaseOptimizer {
     return result
   }
 
-  async batchUpdatePosts(posts: { id: string; data: unknown }[]) {
+  async batchUpdatePosts(posts: { id: string; data: Prisma.PostUpdateInput }[]) {
     const startTime = Date.now()
     
     const results = await Promise.all(

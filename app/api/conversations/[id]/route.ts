@@ -1,36 +1,33 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+
 export const dynamic = "force-dynamic"
 
-// Get conversation details
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession()
+    // Check authentication
+    const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const { id: conversationId } = await params
 
-    // Verify user is member of conversation
-    const membership = await prisma.conversationMember.findFirst({
+    // Get conversation with members and messages
+    const conversation = await prisma.conversation.findFirst({
       where: {
-        conversationId,
-        userId: session.user.id,
+        id: conversationId,
+        members: {
+          some: {
+            userId: session.user.id
+          }
+        }
       },
-    })
-
-    if (!membership) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 })
-    }
-
-    // Get conversation details with members
-    const conversation = await prisma.conversation.findUnique({
-      where: { id: conversationId },
       include: {
         members: {
           include: {
@@ -38,60 +35,85 @@ export async function GET(
               select: {
                 id: true,
                 username: true,
-                name: true,
+                firstName: true,
+                lastName: true,
                 avatar: true,
-                isOnline: true,
-                lastSeen: true,
-              },
-            },
-          },
+                role: true,
+                businessName: true
+              }
+            }
+          }
         },
         messages: {
-          take: 1,
-          orderBy: { createdAt: "desc" },
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            messageType: true,
+          orderBy: {
+            createdAt: 'asc'
           },
-        },
-      },
+          include: {
+            sender: {
+              select: {
+                id: true,
+                username: true,
+                firstName: true,
+                lastName: true,
+                avatar: true
+              }
+            }
+          }
+        }
+      }
     })
 
     if (!conversation) {
-      return NextResponse.json({ error: "Conversation not found" }, { status: 404 })
+      return NextResponse.json(
+        { error: "Conversation not found or access denied" },
+        { status: 404 }
+      )
     }
 
-    // Format response
-    const formattedConversation = {
+    // Transform conversation to match expected format
+    const otherParticipants = conversation.members
+      .filter(member => member.userId !== session.user.id)
+      .map(member => ({
+        id: member.user.id,
+        name: member.user.businessName || `${member.user.firstName || ''} ${member.user.lastName || ''}`.trim() || member.user.username,
+        username: member.user.username,
+        avatar: member.user.avatar,
+        role: member.user.role
+      }))
+
+    const transformedConversation = {
       id: conversation.id,
       title: conversation.title,
-      isGroup: conversation.isGroup,
-      createdAt: conversation.createdAt.toISOString(),
-      updatedAt: conversation.updatedAt.toISOString(),
-      members: conversation.members.map((member) => ({
-        id: member.user.id,
-        username: member.user.username,
-        name: member.user.name,
-        avatar: member.user.avatar,
-        isOnline: member.user.isOnline,
-        lastSeen: member.user.lastSeen?.toISOString(),
-        joinedAt: member.joinedAt.toISOString(),
-        lastReadAt: member.lastReadAt?.toISOString(),
+      participants: otherParticipants,
+      messages: conversation.messages.map(msg => ({
+        id: msg.id,
+        content: msg.content,
+        type: msg.messageType,
+        isFromUser: msg.senderId === session.user.id,
+        conversationId: conversation.id,
+        senderId: msg.senderId,
+        readBy: [], // TODO: Implement read status
+        createdAt: msg.createdAt.toISOString(),
+        updatedAt: msg.updatedAt.toISOString()
       })),
-      lastMessage: conversation.messages[0] ? {
-        id: conversation.messages[0].id,
-        content: conversation.messages[0].content,
-        messageType: conversation.messages[0].messageType,
-        createdAt: conversation.messages[0].createdAt.toISOString(),
-      } : null,
+      unreadCount: 0, // TODO: Implement unread tracking
+      isActive: conversation.messages.length > 0,
+      type: conversation.isGroup ? 'GROUP' : 'DIRECT',
+      createdAt: conversation.createdAt.toISOString(),
+      updatedAt: conversation.updatedAt.toISOString()
     }
 
-    return NextResponse.json(formattedConversation)
+    return NextResponse.json({
+      success: true,
+      data: transformedConversation
+    })
+
   } catch (error) {
     console.error("Error fetching conversation:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to fetch conversation" },
+      { status: 500 }
+    )
   }
 }
 
@@ -148,7 +170,7 @@ export async function PATCH(
 // Delete conversation (leave conversation)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession()
@@ -156,7 +178,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const conversationId = params.id
+    const { params } = await context
+    const { id: conversationId } = await params
 
     // Remove user from conversation
     await prisma.conversationMember.deleteMany({

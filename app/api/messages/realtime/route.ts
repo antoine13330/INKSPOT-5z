@@ -43,7 +43,8 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             username: true,
-            name: true,
+            firstName: true,
+            lastName: true,
             avatar: true,
           },
         },
@@ -60,7 +61,8 @@ export async function GET(request: NextRequest) {
             id: true,
             title: true,
             status: true,
-            scheduledDate: true,
+            startTime: true,
+            endTime: true,
           },
         },
       },
@@ -143,7 +145,8 @@ export async function POST(request: NextRequest) {
           select: {
             id: true,
             username: true,
-            name: true,
+            firstName: true,
+            lastName: true,
             avatar: true,
           },
         },
@@ -203,7 +206,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Build search conditions
-    const searchConditions: unknown = {
+    const searchConditions: any = {
       conversationId,
       content: {
         contains: query,
@@ -223,7 +226,8 @@ export async function PUT(request: NextRequest) {
           select: {
             id: true,
             username: true,
-            name: true,
+            firstName: true,
+            lastName: true,
             avatar: true,
           },
         },
@@ -236,7 +240,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      messages: messages.map(message => ({
+      messages: messages.map((message: any) => ({
         id: message.id,
         content: message.content,
         messageType: message.messageType,

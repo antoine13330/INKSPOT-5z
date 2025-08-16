@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const textQuery = query.replace(hashtagRegex, "").trim();
 
     // Build search conditions
-    const searchConditions: unknown[] = [];
+    const searchConditions: any[] = [];
 
     // Search by hashtags from query
     if (hashtags.length > 0) {
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Determine sort order
-    let orderBy: unknown[] = [];
+    let orderBy: any[] = [];
     switch (sortBy) {
       case "popularity":
         orderBy = [
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
       await prisma.post.updateMany({
         where: {
           id: {
-            in: posts.map((p) => p.id),
+            in: posts.map((p: any) => p.id),
           },
         },
         data: {
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const formattedPosts = posts.map((post) => ({
+    const formattedPosts = posts.map((post: any) => ({
       id: post.id,
       content: post.content,
       images: post.images,

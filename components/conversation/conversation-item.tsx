@@ -1,12 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
 import { cn, formatRelativeTime, getInitials, truncateText } from '@/lib/utils'
-import { ConversationParticipant } from '@/types'
+import { ConversationMember } from '@/types'
 import { Avatar, Badge } from '@/components/ui/base-components'
 
 interface ConversationItemProps {
   id: string
-  participant: ConversationParticipant
+  participant: ConversationMember
   lastMessage?: {
     content: string
     createdAt: string
@@ -25,7 +25,9 @@ export function ConversationItem({
   isActive = false,
   className
 }: ConversationItemProps) {
-  const displayName = participant.name || participant.username
+  const displayName = participant.user?.firstName && participant.user?.lastName 
+    ? `${participant.user.firstName} ${participant.user.lastName}`
+    : participant.user?.username || 'Utilisateur'
   const initials = getInitials(displayName)
   const messagePreview = lastMessage 
     ? truncateText(
@@ -44,18 +46,17 @@ export function ConversationItem({
       )}
     >
       <Avatar
-        src={participant.avatar}
+        src={participant.user?.avatar}
         alt={displayName}
         fallback={initials}
-        size="lg"
-        className="conversation-avatar"
+        className="conversation-avatar w-12 h-12"
       />
       
       <div className="conversation-content">
         <div className="conversation-name">
           {displayName}
-          {participant.role === "PRO" && (
-            <Badge variant="secondary" size="sm" className="ml-2">
+          {participant.user?.role === "PRO" && (
+            <Badge variant="secondary" className="ml-2">
               PRO
             </Badge>
           )}

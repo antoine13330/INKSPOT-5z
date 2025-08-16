@@ -40,9 +40,9 @@ export async function calculateRecommendationScore(currentUserId: string): Promi
   })
 
   // Extract hashtags from search history
-  const searchedHashtags = searchHistory.flatMap((search) => search.hashtags)
+  const searchedHashtags = searchHistory.flatMap((search: any) => search.hashtags)
   const hashtagFrequency = searchedHashtags.reduce(
-    (acc, hashtag) => {
+    (acc: Record<string, number>, hashtag: string) => {
       acc[hashtag] = (acc[hashtag] || 0) + 1
       return acc
     },
@@ -71,15 +71,15 @@ export async function calculateRecommendationScore(currentUserId: string): Promi
     userScores[targetUserId].interactionCount++
 
     // Hashtag similarity bonus
-    const userHashtags = targetUser.posts.flatMap((post) => post.hashtags)
-    const commonHashtags = userHashtags.filter((hashtag) => hashtagFrequency[hashtag])
+    const userHashtags = targetUser.posts.flatMap((post: any) => post.hashtags)
+    const commonHashtags = userHashtags.filter((hashtag: string) => hashtagFrequency[hashtag])
 
     userScores[targetUserId].commonHashtags = [
       ...new Set([...userScores[targetUserId].commonHashtags, ...commonHashtags]),
     ]
 
     // Boost score based on common hashtags
-    const hashtagBonus = commonHashtags.reduce((sum, hashtag) => sum + (hashtagFrequency[hashtag] || 0), 0)
+    const hashtagBonus = commonHashtags.reduce((sum: number, hashtag: string) => sum + (hashtagFrequency[hashtag] || 0), 0)
     userScores[targetUserId].score += hashtagBonus * 0.5
 
     // Recency bonus (more recent interactions get higher weight)
@@ -113,7 +113,7 @@ export async function getRecommendedPosts(userId: string, limit = 20) {
     take: 20,
   })
 
-  const preferredHashtags = searchHistory.flatMap((search) => search.hashtags)
+  const preferredHashtags = searchHistory.flatMap((search: any) => search.hashtags)
 
   // Get posts from recommended users and posts with preferred hashtags
   const posts = await prisma.post.findMany({
@@ -170,7 +170,7 @@ export async function getRecommendedPosts(userId: string, limit = 20) {
     take: limit,
   })
 
-  return posts.map((post) => ({
+  return posts.map((post: any) => ({
     ...post,
     liked: userId ? post.likes.length > 0 : false,
     likesCount: post._count.likes,

@@ -28,7 +28,7 @@ export function createSecurityMiddleware(config: Partial<SecurityConfig> = {}) {
 
   return async function securityMiddleware(request: NextRequest) {
     const startTime = Date.now()
-    const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     const userAgent = request.headers.get('user-agent') || 'unknown'
     const path = request.nextUrl.pathname
 

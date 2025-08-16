@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    const formattedPosts = posts.map((post) => ({
+    const formattedPosts = posts.map((post: any) => ({
       id: post.id,
       content: post.content,
       images: post.images,

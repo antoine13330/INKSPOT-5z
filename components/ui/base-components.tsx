@@ -422,7 +422,7 @@ export function EmptyState({
   action,
   className 
 }: {
-  icon?: React.ComponentType<unknown>
+  icon?: React.ComponentType<{ className?: string }>
   title: string
   description?: string
   action?: React.ReactNode

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import { Home, Search, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp, LogOut } from "lucide-react"
+import { Home, MessageCircle, User, Plus, Bell, Users, Settings, Briefcase, ChevronUp, LogOut, Calendar } from "lucide-react"
 import { useState } from "react"
 import { NotificationsPanel } from "@/components/notifications-panel"
 
@@ -16,8 +16,8 @@ export function BottomNavigation() {
   // Navigation items for all users
   const baseNavItems = [
     { href: "/", icon: Home, label: "Home" },
-    { href: "/search", icon: Search, label: "Search" },
     { href: "/conversations", icon: MessageCircle, label: "Messages" },
+    { href: "/profile/events", icon: Calendar, label: "Événements" },
   ]
 
   // PRO-specific navigation items

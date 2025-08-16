@@ -58,8 +58,8 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    const totalEarnings = transactions.reduce((sum, t) => sum + t.amount, 0)
-    const totalPayouts = payouts.reduce((sum, t) => sum + Math.abs(t.amount), 0)
+    const totalEarnings = transactions.reduce((sum: number, t: any) => sum + t.amount, 0)
+    const totalPayouts = payouts.reduce((sum: number, t: any) => sum + Math.abs(t.amount), 0)
     const availableBalance = totalEarnings - totalPayouts
 
     // Validate payout amount
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         type: "PAYOUT",
         status: "pending",
         stripeTransferId: stripePayout.id,
-        description: `Payout to ${pro.name || pro.email}`,
+        description: `Payout to ${pro.firstName && pro.lastName ? `${pro.firstName} ${pro.lastName}` : pro.email}`,
         userId: proId,
       },
     })
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
         amount: payoutAmount,
         stripePayoutId: stripePayout.id,
         status: "pending",
-        estimatedArrival: stripePayout.arrival_date,
+        estimatedArrival: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 jours par défaut
       },
     })
   } catch (error) {
@@ -170,22 +170,22 @@ export async function GET(request: NextRequest) {
 
     // Calculate balance
     const earnings = transactions
-      .filter(t => ["BOOKING_PAYMENT", "DEPOSIT"].includes(t.type) && t.status === "completed")
-      .reduce((sum, t) => sum + t.amount, 0)
+      .filter((t: any) => ["BOOKING_PAYMENT", "DEPOSIT"].includes(t.type) && t.status === "completed")
+      .reduce((sum: number, t: any) => sum + t.amount, 0)
 
     const payouts = transactions
-      .filter(t => t.type === "PAYOUT" && t.status === "completed")
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+      .filter((t: any) => t.type === "PAYOUT" && t.status === "completed")
+      .reduce((sum: number, t: any) => sum + Math.abs(t.amount), 0)
 
     const pendingPayouts = transactions
-      .filter(t => t.type === "PAYOUT" && t.status === "pending")
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+      .filter((t: any) => t.type === "PAYOUT" && t.status === "pending")
+      .reduce((sum: number, t: any) => sum + Math.abs(t.amount), 0)
 
     const availableBalance = earnings - payouts - pendingPayouts
 
     // Get recent payouts
     const recentPayouts = transactions
-      .filter(t => t.type === "PAYOUT")
+      .filter((t: any) => t.type === "PAYOUT")
       .slice(0, 10)
 
     return NextResponse.json({

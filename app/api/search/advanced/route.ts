@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { Prisma } from "@prisma/client"
 export const dynamic = "force-dynamic"
 
 
@@ -89,13 +90,32 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Type for Prisma where conditions
+interface UserWhereConditions {
+  status: Prisma.UserWhereInput['status']
+  OR?: Array<{
+    username?: { contains: string; mode: Prisma.QueryMode }
+    firstName?: { contains: string; mode: Prisma.QueryMode }
+    lastName?: { contains: string; mode: Prisma.QueryMode }
+    businessName?: { contains: string; mode: Prisma.QueryMode }
+    bio?: { contains: string; mode: Prisma.QueryMode }
+  }>
+  role?: Prisma.UserWhereInput['role']
+  specialties?: { hasSome: string[] }
+  location?: { contains: string; mode: Prisma.QueryMode }
+  hourlyRate?: { gte?: number; lte?: number }
+  portfolio?: Prisma.StringNullableListFilter<"User">
+  verified?: boolean
+  lastActiveAt?: { gte: Date }
+}
+
 async function searchUsers(
   filters: AdvancedSearchFilters,
   skip: number,
   limit: number,
   currentUserId?: string
 ): Promise<unknown[]> {
-  const whereConditions: unknown = {
+  const whereConditions: UserWhereConditions = {
     status: 'ACTIVE',
   }
 
@@ -169,9 +189,7 @@ async function searchUsers(
   // Portfolio filter
   if (filters.hasPortfolio) {
     whereConditions.portfolio = {
-      not: {
-        equals: [],
-      },
+      isEmpty: false,
     }
   }
 
@@ -210,10 +228,10 @@ async function searchUsers(
           followers: true,
           following: true,
           posts: true,
-          reviewsReceived: true,
+          receivedReviews: true,
         },
       },
-      reviewsReceived: {
+      receivedReviews: {
         select: {
           rating: true,
         },
@@ -224,12 +242,12 @@ async function searchUsers(
     take: limit,
   })
 
-  return users.map(user => {
-    const avgRating = user.reviewsReceived.length > 0 
-      ? user.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / user.reviewsReceived.length
+  return users.map((user: any) => {
+    const avgRating = user.receivedReviews.length > 0 
+      ? user.receivedReviews.reduce((sum: number, review: any) => sum + review.rating, 0) / user.receivedReviews.length
       : 0
 
-    const totalEngagement = user.posts.reduce((sum, post) => sum + post.likesCount + post.commentsCount, 0)
+    const totalEngagement = user.posts.reduce((sum: number, post: any) => sum + post.likesCount + post.commentsCount, 0)
 
     return {
       id: user.id,
@@ -251,7 +269,7 @@ async function searchUsers(
         followersCount: user._count.followers,
         followingCount: user._count.following,
         postsCount: user._count.posts,
-        reviewsCount: user._count.reviewsReceived,
+        reviewsCount: user._count.receivedReviews,
         avgRating: Math.round(avgRating * 10) / 10,
         totalEngagement,
       },
@@ -260,13 +278,34 @@ async function searchUsers(
   })
 }
 
+// Type for post where conditions
+interface PostWhereConditions {
+  status: Prisma.PostWhereInput['status']
+  OR?: Array<{
+    content?: { contains: string; mode: Prisma.QueryMode }
+    author?: { username: { contains: string; mode: Prisma.QueryMode } }
+    likesCount?: { gte: number }
+    commentsCount?: { gte: number }
+  }>
+  hashtags?: { hasSome: string[] }
+  createdAt?: { gte?: Date; lte?: Date }
+  author?: { role?: Prisma.UserWhereInput['role']; verified?: boolean; location?: { contains: string; mode: Prisma.QueryMode } }
+}
+
+// Type for author filters
+interface AuthorFilters {
+  role?: Prisma.UserWhereInput['role']
+  verified?: boolean
+  location?: { contains: string; mode: Prisma.QueryMode }
+}
+
 async function searchPosts(
   filters: AdvancedSearchFilters,
   skip: number,
   limit: number,
   currentUserId?: string
 ): Promise<unknown[]> {
-  const whereConditions: unknown = {
+  const whereConditions: PostWhereConditions = {
     status: 'PUBLISHED',
   }
 
@@ -326,27 +365,27 @@ async function searchPosts(
   }
 
   // Author filters
-  const authorFilters: unknown = {}
-  if (filters.userType) {
-    authorFilters.role = filters.userType
-  }
-  if (filters.verified) {
-    authorFilters.verified = true
-  }
-  if (filters.location) {
-    authorFilters.location = {
-      contains: filters.location,
-      mode: "insensitive",
+  if (filters.userType || filters.verified || filters.location) {
+    const authorFilters: AuthorFilters = {}
+    
+    if (filters.userType) {
+      authorFilters.role = filters.userType
     }
-  }
-  if (filters.specialties && filters.specialties.length > 0) {
-    authorFilters.specialties = {
-      hasSome: filters.specialties,
+    
+    if (filters.verified) {
+      authorFilters.verified = true
     }
-  }
+    
+    if (filters.location) {
+      authorFilters.location = {
+        contains: filters.location,
+        mode: "insensitive",
+      }
+    }
 
-  if (Object.keys(authorFilters).length > 0) {
-    whereConditions.author = authorFilters
+    if (Object.keys(authorFilters).length > 0) {
+      whereConditions.author = authorFilters
+    }
   }
 
   // Build order by clause
@@ -387,7 +426,7 @@ async function searchPosts(
     take: limit,
   })
 
-  return posts.map(post => ({
+  return posts.map((post: any) => ({
     id: post.id,
     content: post.content,
     images: post.images,
@@ -401,7 +440,7 @@ async function searchPosts(
   }))
 }
 
-function buildUserOrderBy(sortBy?: string): unknown {
+function buildUserOrderBy(sortBy?: string): Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[] {
   switch (sortBy) {
     case 'rating':
       // This is complex with aggregations, so we'll sort by profile views for now
@@ -419,7 +458,7 @@ function buildUserOrderBy(sortBy?: string): unknown {
   }
 }
 
-function buildPostOrderBy(sortBy?: string): unknown {
+function buildPostOrderBy(sortBy?: string): Prisma.PostOrderByWithRelationInput | Prisma.PostOrderByWithRelationInput[] {
   switch (sortBy) {
     case 'recent':
       return [{ createdAt: 'desc' }]
@@ -450,4 +489,60 @@ async function logSearchAnalytics(userId: string, filters: AdvancedSearchFilters
   } catch (error) {
     console.error("Error logging search analytics:", error)
   }
+}
+
+// Type for user with include fields from Prisma query
+interface UserWithStats {
+  id: string
+  username: string
+  firstName?: string
+  lastName?: string
+  avatar?: string
+  bio?: string
+  location?: string
+  role: string
+  verified: boolean
+  businessName?: string
+  specialties: string[]
+  hourlyRate?: number
+  portfolio: string[]
+  profileViews?: number
+  lastActiveAt?: string
+  _count: {
+    followers: number
+    following: number
+    posts: number
+    reviewsReceived: number
+  }
+  reviewsReceived: Array<{ rating: number }>
+  posts: Array<{
+    id: string
+    likesCount: number
+    commentsCount: number
+    createdAt: string
+  }>
+}
+
+// Type for post with include fields from Prisma query
+interface PostWithStats {
+  id: string
+  content: string
+  images: string[]
+  hashtags: string[]
+  viewsCount: number
+  createdAt: Date
+  author: {
+    id: string
+    username: string
+    firstName?: string
+    lastName?: string
+    avatar?: string
+    role: string
+    verified: boolean
+  }
+  _count: {
+    likes: number
+    comments: number
+  }
+  likes: Array<{ userId: string }>
 }

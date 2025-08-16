@@ -419,29 +419,4 @@ class PerformanceBudgets {
 
 export const performanceBudgets = PerformanceBudgets.getInstance()
 
-// Performance budget monitoring hook
-export const usePerformanceBudgets = () => {
-  const [violations, setViolations] = useState<BudgetViolation[]>([])
-  const [alerts, setAlerts] = useState<PerformanceAlert[]>([])
-  const [summary, setSummary] = useState<unknown>(null)
-
-  useEffect(() => {
-    const updateBudgets = async () => {
-      const newViolations = await performanceBudgets.checkBudgets()
-      const newAlerts = performanceBudgets.getAlerts()
-      const newSummary = await performanceBudgets.getPerformanceSummary()
-      
-      setViolations(newViolations)
-      setAlerts(newAlerts)
-      setSummary(newSummary)
-    }
-
-    // Check budgets every 30 seconds
-    const interval = setInterval(updateBudgets, 30000)
-    updateBudgets() // Initial check
-
-    return () => clearInterval(interval)
-  }, [])
-
-  return { violations, alerts, summary, performanceBudgets }
-} 
+ 

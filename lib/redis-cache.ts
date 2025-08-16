@@ -36,7 +36,6 @@ class RedisCache {
 
     if (this.config.enabled) {
       this.redis = new Redis(process.env.REDIS_URL || '', {
-        retryDelayOnFailover: 100,
         enableReadyCheck: false,
         maxRetriesPerRequest: null,
       })
@@ -247,7 +246,7 @@ export const cacheUserProfile = async (userId: string) => {
   return redisCache.cacheQuery(key, () =>
     prisma.user.findUnique({
       where: { id: userId },
-      include: { profile: true, bookings: true },
+      include: { clientBookings: true, proBookings: true },
     })
   )
 }
@@ -258,7 +257,7 @@ export const cachePosts = async (filters?: any) => {
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
         where: filters,
-        include: { author: true, tags: true },
+        include: { author: true },
         orderBy: { createdAt: 'desc' },
       }),
       prisma.post.count({ where: filters }),
@@ -280,9 +279,9 @@ export const cacheSearchResults = async (query: string, filters?: any) => {
           ],
           ...(filters || {}),
         },
-        include: { profile: true },
+        include: { },
       }),
-      prisma.post.findMany({ where: { title: { contains: query, mode: 'insensitive' } } }),
+      prisma.post.findMany({ where: { content: { contains: query, mode: 'insensitive' } } }),
     ])
 
     return { users, posts, query }

@@ -161,8 +161,8 @@ export default function FinancialDashboard() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      completed: { variant: "success" as const, label: "Completed" },
-      pending: { variant: "warning" as const, label: "Pending" },
+      completed: { variant: "default" as const, label: "Completed" },
+      pending: { variant: "secondary" as const, label: "Pending" },
       failed: { variant: "destructive" as const, label: "Failed" },
     }
 
@@ -386,9 +386,9 @@ export default function FinancialDashboard() {
                           {formatCurrency(invoice.amount, invoice.currency)}
                         </p>
                         {invoice.paidAt ? (
-                          <Badge variant="success">Paid</Badge>
+                          <Badge variant="default">Paid</Badge>
                         ) : (
-                          <Badge variant="warning">Pending</Badge>
+                          <Badge variant="secondary">Pending</Badge>
                         )}
                       </div>
                     </div>

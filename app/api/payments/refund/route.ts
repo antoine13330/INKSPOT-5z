@@ -102,7 +102,6 @@ export async function POST(request: NextRequest) {
           where: { id: payment.booking.id },
           data: { 
             status: "CANCELLED",
-            cancelledAt: new Date(),
           },
         })
 
@@ -173,7 +172,6 @@ export async function POST(request: NextRequest) {
       refund: {
         id: refundRecord.id,
         amount: refundAmount,
-        stripeRefundId: stripeRefund.id,
         status: "completed",
       },
     })

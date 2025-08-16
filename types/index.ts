@@ -69,20 +69,20 @@ export interface UserStats {
 // ===== TYPES DE CONVERSATION =====
 
 export interface Conversation extends BaseEntity {
-  participants: ConversationParticipant[]
+  members: ConversationMember[]
   lastMessage?: Message
   unreadCount: number
   isActive: boolean
   type: ConversationType
 }
 
-export interface ConversationParticipant {
+export interface ConversationMember {
   id: string
-  name: string
-  username: string
-  avatar?: string
-  role: UserRole
-  isOnline?: boolean
+  conversationId: string
+  userId: string
+  joinedAt: string
+  lastReadAt?: string
+  user: User
 }
 
 export type ConversationType = 'DIRECT' | 'GROUP' | 'COLLABORATION'
@@ -187,34 +187,144 @@ export type NotificationType =
 
 // ===== TYPES DE RÉSERVATION =====
 
-export interface Booking extends BaseEntity {
-  clientId: string
+export interface Appointment extends BaseEntity {
+  id: string
+  conversationId: string
   proId: string
-  status: BookingStatus
+  clientId: string
+  postId?: string
+  status: AppointmentStatus
+  type: AppointmentType
+  title: string
+  description: string
   startDate: string
   endDate: string
-  description: string
-  amount: number
+  duration: number // en minutes
+  price: number
   currency: string
-  location?: string
+  location: string
   notes?: string
+  requirements?: string[]
+  cancellationPolicy?: string
+  depositRequired: boolean
+  depositAmount?: number
+  payments?: Payment[]
+  client?: {
+    id: string
+    username: string
+    firstName: string | null
+    lastName: string | null
+    avatar: string | null
+    email: string
+    phone: string | null
+  }
+  pro?: {
+    id: string
+    username: string
+    firstName: string | null
+    lastName: string | null
+    avatar: string | null
+    businessName: string | null
+    businessAddress: string | null
+    phone: string | null
+    email: string
+  }
 }
 
-export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED'
+export type AppointmentStatus = 'DRAFT' | 'PROPOSED' | 'ACCEPTED' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW'
+export type AppointmentType = 'TATTOO' | 'PIERCING' | 'CONSULTATION' | 'COVER_UP' | 'TOUCH_UP' | 'CUSTOM_DESIGN' | 'OTHER'
+
+export interface AppointmentProposal extends BaseEntity {
+  id: string
+  appointmentId: string
+  proId: string
+  clientId: string
+  postId?: string
+  title: string
+  description: string
+  proposedDates: string[]
+  duration: number
+  price: number
+  currency: string
+  location: string
+  requirements?: string[]
+  notes?: string
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'EXPIRED'
+  expiresAt: string
+}
 
 // ===== TYPES DE PAIEMENT =====
 
 export interface Payment extends BaseEntity {
-  bookingId: string
+  id: string
+  appointmentId: string
   amount: number
   currency: string
   status: PaymentStatus
   stripePaymentIntentId?: string
   stripeTransferId?: string
   description?: string
+  paymentMethod?: string
+  paidAt?: string
+  refundedAt?: string
+  refundAmount?: number
 }
 
-export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED'
+export type PaymentStatus = 'PENDING' | 'COMPLETED' | 'FAILED' | 'REFUNDED' | 'PARTIALLY_REFUNDED'
+
+// ===== TYPES DE FACTURATION =====
+
+export interface Invoice extends BaseEntity {
+  id: string
+  invoiceNumber: string
+  appointmentId: string
+  issuerId: string
+  receiverId: string
+  amount: number
+  currency: string
+  vatAmount?: number
+  vatRate?: number
+  description: string
+  dueDate: string
+  paidAt?: string
+  status: InvoiceStatus
+  items: InvoiceItem[]
+  paymentTerms?: string
+  notes?: string
+}
+
+export interface InvoiceItem {
+  id: string
+  description: string
+  quantity: number
+  unitPrice: number
+  totalPrice: number
+  vatRate?: number
+  vatAmount?: number
+}
+
+export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE' | 'CANCELLED'
+
+// ===== TYPES DE TRANSACTION STRIPE =====
+
+export interface StripePaymentIntent {
+  id: string
+  amount: number
+  currency: string
+  status: string
+  clientSecret: string
+  paymentMethodTypes: string[]
+  metadata: Record<string, string>
+}
+
+export interface StripeCheckoutSession {
+  id: string
+  url: string
+  amount: number
+  currency: string
+  status: string
+  metadata: Record<string, string>
+}
 
 // ===== TYPES DE COLLABORATION =====
 

@@ -199,14 +199,14 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-            <p className="text-gray-400">Platform management and moderation</p>
-          </div>
+           <div className="min-h-screen bg-background text-foreground">
+         <div className="max-w-7xl mx-auto p-6">
+           {/* Header */}
+           <div className="flex items-center justify-between mb-8">
+             <div>
+               <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+               <p className="text-muted-foreground">Platform management and moderation</p>
+             </div>
           <Badge className="bg-purple-600 text-white">
             <Shield className="w-4 h-4 mr-2" />
             Administrator
@@ -215,81 +215,81 @@ export default function AdminDashboard() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-card border-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">Total Users</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
               <Users className="h-4 w-4 text-blue-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.totalUsers}</div>
-              <p className="text-xs text-gray-400">
+              <div className="text-2xl font-bold text-foreground">{stats.totalUsers}</div>
+              <p className="text-xs text-muted-foreground">
                 {stats.totalPros} pros, {stats.totalClients} clients
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-card border-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">Platform Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Platform Revenue</CardTitle>
               <DollarSign className="h-4 w-4 text-green-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">€{stats.totalRevenue}</div>
-              <p className="text-xs text-gray-400">€{stats.monthlyRevenue} this month</p>
+              <div className="text-2xl font-bold text-foreground">€{stats.totalRevenue}</div>
+              <p className="text-xs text-muted-foreground">€{stats.monthlyRevenue} this month</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-card border-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">Total Bookings</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Bookings</CardTitle>
               <Calendar className="h-4 w-4 text-purple-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.totalBookings}</div>
-              <p className="text-xs text-gray-400">Platform activity</p>
+              <div className="text-2xl font-bold text-foreground">{stats.totalBookings}</div>
+              <p className="text-xs text-muted-foreground">Platform activity</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900 border-gray-800">
+          <Card className="bg-card border-border">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-400">Pending Reviews</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Pending Reviews</CardTitle>
               <AlertTriangle className="h-4 w-4 text-yellow-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.reportedContent}</div>
-              <p className="text-xs text-gray-400">Requires attention</p>
+              <div className="text-2xl font-bold text-foreground">{stats.reportedContent}</div>
+              <p className="text-xs text-muted-foreground">Requires attention</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Main Content */}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="bg-gray-900 border-gray-800">
-            <TabsTrigger value="users" className="data-[state=active]:bg-gray-800">
+          <TabsList className="bg-card border-border">
+            <TabsTrigger value="users" className="data-[state=active]:bg-muted">
               User Management
             </TabsTrigger>
-            <TabsTrigger value="reports" className="data-[state=active]:bg-gray-800">
+            <TabsTrigger value="reports" className="data-[state=active]:bg-muted">
               Reported Content
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
-            <Card className="bg-gray-900 border-gray-800">
+            <Card className="bg-card border-border">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-white">User Management</CardTitle>
-                    <CardDescription className="text-gray-400">
+                    <CardTitle className="text-foreground">User Management</CardTitle>
+                    <CardDescription className="text-muted-foreground">
                       Manage user accounts, roles, and permissions
                     </CardDescription>
                   </div>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                     <Input
                       placeholder="Search users..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="bg-gray-800 border-gray-700 text-white pl-10 w-64"
+                      className="bg-input border-border text-foreground pl-10 w-64"
                     />
                   </div>
                 </div>
@@ -297,23 +297,23 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {filteredUsers.map((user) => (
-                    <div key={user.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
-                      <div className="flex items-center space-x-4">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage src={user.avatar || "/placeholder.svg"} />
-                          <AvatarFallback>{user.username[0]}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <h4 className="font-medium text-white">{user.username}</h4>
-                            {user.verified && <CheckCircle className="w-4 h-4 text-blue-400" />}
-                          </div>
-                          <p className="text-sm text-gray-400">
-                            {user.email} • {user.businessName && `${user.businessName} • `}
-                            Joined {new Date(user.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
+                                         <div key={user.id} className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                       <div className="flex items-center space-x-4">
+                         <Avatar className="w-10 h-10">
+                           <AvatarImage src={user.avatar || "/placeholder.svg"} />
+                           <AvatarFallback>{user.username[0]}</AvatarFallback>
+                         </Avatar>
+                         <div>
+                           <div className="flex items-center space-x-2">
+                             <h4 className="font-medium text-foreground">{user.username}</h4>
+                             {user.verified && <CheckCircle className="w-4 h-4 text-blue-400" />}
+                           </div>
+                           <p className="text-sm text-muted-foreground">
+                             {user.email} • {user.businessName && `${user.businessName} • `}
+                             Joined {new Date(user.createdAt).toLocaleDateString()}
+                           </p>
+                         </div>
+                       </div>
                       <div className="flex items-center space-x-3">
                         <Badge className={`${getRoleColor(user.role)} text-white`}>{user.role}</Badge>
                         <Badge className={`${getStatusColor(user.status)} text-white`}>{user.status}</Badge>
@@ -347,9 +347,9 @@ export default function AdminDashboard() {
                               <Shield className="w-4 h-4" />
                             </Button>
                           )}
-                          <Button size="sm" variant="outline" className="border-gray-600 text-white bg-transparent">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </Button>
+                                                     <Button size="sm" variant="outline" className="border-border text-foreground bg-transparent">
+                             <MoreHorizontal className="w-4 h-4" />
+                           </Button>
                         </div>
                       </div>
                     </div>
@@ -360,63 +360,63 @@ export default function AdminDashboard() {
           </TabsContent>
 
           <TabsContent value="reports">
-            <Card className="bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">Reported Content</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Review and moderate reported posts, messages, and users
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {reportedContent.map((report) => (
-                    <div key={report.id} className="p-4 bg-gray-800 rounded-lg border border-gray-700">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <div className="flex items-center space-x-2 mb-1">
-                            <Badge className="bg-red-600 text-white">{report.type}</Badge>
-                            <span className="text-sm text-gray-400">Reported by {report.reporter.username}</span>
-                          </div>
-                          <p className="text-sm text-gray-400">
-                            Against {report.reported.username} • {new Date(report.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge
-                          className={`${report.status === "pending" ? "bg-yellow-500" : "bg-gray-500"} text-white`}
-                        >
-                          {report.status}
-                        </Badge>
-                      </div>
-                      <div className="mb-3">
-                        <p className="text-white text-sm mb-2">Reason: {report.reason}</p>
-                        <div className="bg-gray-700 p-3 rounded text-sm text-gray-300">{report.content}</div>
-                      </div>
-                      {report.status === "pending" && (
-                        <div className="flex space-x-2">
-                          <Button
-                            size="sm"
-                            className="bg-green-600 hover:bg-green-700"
-                            onClick={() => handleReportAction(report.id, "resolve")}
-                          >
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                            Resolve
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-gray-600 text-white bg-transparent"
-                            onClick={() => handleReportAction(report.id, "dismiss")}
-                          >
-                            <XCircle className="w-4 h-4 mr-2" />
-                            Dismiss
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                         <Card className="bg-card border-border">
+               <CardHeader>
+                 <CardTitle className="text-foreground">Reported Content</CardTitle>
+                 <CardDescription className="text-muted-foreground">
+                   Review and moderate reported posts, messages, and users
+                 </CardDescription>
+               </CardHeader>
+               <CardContent>
+                 <div className="space-y-4">
+                   {reportedContent.map((report) => (
+                     <div key={report.id} className="p-4 bg-muted rounded-lg border border-border">
+                       <div className="flex items-start justify-between mb-3">
+                         <div>
+                           <div className="flex items-center space-x-2 mb-1">
+                             <Badge className="bg-red-600 text-white">{report.type}</Badge>
+                             <span className="text-sm text-muted-foreground">Reported by {report.reporter.username}</span>
+                           </div>
+                           <p className="text-sm text-muted-foreground">
+                             Against {report.reported.username} • {new Date(report.createdAt).toLocaleDateString()}
+                           </p>
+                         </div>
+                         <Badge
+                           className={`${report.status === "pending" ? "bg-yellow-500" : "bg-muted"} text-white`}
+                         >
+                           {report.status}
+                         </Badge>
+                       </div>
+                       <div className="mb-3">
+                         <p className="text-foreground text-sm mb-2">Reason: {report.reason}</p>
+                         <div className="bg-card p-3 rounded text-sm text-muted-foreground">{report.content}</div>
+                       </div>
+                       {report.status === "pending" && (
+                         <div className="flex space-x-2">
+                           <Button
+                             size="sm"
+                             className="bg-green-600 hover:bg-green-700"
+                             onClick={() => handleReportAction(report.id, "resolve")}
+                           >
+                             <CheckCircle className="w-4 h-4 mr-2" />
+                             Resolve
+                           </Button>
+                           <Button
+                             size="sm"
+                             variant="outline"
+                             className="border-border text-foreground bg-transparent"
+                             onClick={() => handleReportAction(report.id, "dismiss")}
+                           >
+                             <XCircle className="w-4 h-4 mr-2" />
+                             Dismiss
+                           </Button>
+                         </div>
+                       )}
+                     </div>
+                   ))}
+                 </div>
+               </CardContent>
+             </Card>
           </TabsContent>
         </Tabs>
       </div>

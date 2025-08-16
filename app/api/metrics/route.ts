@@ -1,246 +1,168 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-export const dynamic = "force-dynamic"
-
-// Prometheus metrics format helper
-function formatMetric(name: string, value: number, labels: Record<string, string> = {}, help?: string): string {
-  const labelStr = Object.entries(labels).map(([k, v]) => `${k}="${v}"`).join(',')
-  const labelsFormatted = labelStr ? `{${labelStr}}` : ''
-  
-  let result = ''
-  if (help) {
-    result += `# HELP ${name} ${help}\n`
-    result += `# TYPE ${name} gauge\n`
-  }
-  result += `${name}${labelsFormatted} ${value}\n`
-  return result
-}
+import { redisCache } from "@/lib/redis-cache"
 
 export async function GET(request: NextRequest) {
   try {
-    const metrics: string[] = []
-
-    // === USER METRICS ===
-    const totalUsers = await prisma.user.count()
-    const activeUsers = await prisma.user.count({
-      where: {
-        status: 'ACTIVE'
-      }
-    })
-    const proUsers = await prisma.user.count({
-      where: {
-        role: 'PRO'
-      }
-    })
-    const verifiedUsers = await prisma.user.count({
-      where: {
-        verified: true
-      }
-    })
-
-    // New users in the last 24 hours
-    const newUsersToday = await prisma.user.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-
-    // Active users in the last 24 hours
-    const activeUsersToday = await prisma.user.count({
-      where: {
-        lastActiveAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_users_total', totalUsers, {}, 'Total number of users'))
-    metrics.push(formatMetric('inkspot_users_active', activeUsers, {}, 'Number of active users'))
-    metrics.push(formatMetric('inkspot_users_pro', proUsers, {}, 'Number of PRO users'))
-    metrics.push(formatMetric('inkspot_users_verified', verifiedUsers, {}, 'Number of verified users'))
-    metrics.push(formatMetric('inkspot_users_new_today', newUsersToday, {}, 'New users registered today'))
-    metrics.push(formatMetric('inkspot_users_active_today', activeUsersToday, {}, 'Users active today'))
-
-    // === POST METRICS ===
-    const totalPosts = await prisma.post.count()
-    const publishedPosts = await prisma.post.count({
-      where: {
-        status: 'PUBLISHED'
-      }
-    })
-    const postsToday = await prisma.post.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-
-    const totalLikes = await prisma.like.count()
-    const totalComments = await prisma.comment.count()
-    const likesToday = await prisma.like.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_posts_total', totalPosts, {}, 'Total number of posts'))
-    metrics.push(formatMetric('inkspot_posts_published', publishedPosts, {}, 'Number of published posts'))
-    metrics.push(formatMetric('inkspot_posts_today', postsToday, {}, 'Posts created today'))
-    metrics.push(formatMetric('inkspot_likes_total', totalLikes, {}, 'Total number of likes'))
-    metrics.push(formatMetric('inkspot_comments_total', totalComments, {}, 'Total number of comments'))
-    metrics.push(formatMetric('inkspot_likes_today', likesToday, {}, 'Likes given today'))
-
-    // === MESSAGING METRICS ===
-    const totalConversations = await prisma.conversation.count()
-    const totalMessages = await prisma.message.count()
-    const messagesToday = await prisma.message.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_conversations_total', totalConversations, {}, 'Total number of conversations'))
-    metrics.push(formatMetric('inkspot_messages_total', totalMessages, {}, 'Total number of messages'))
-    metrics.push(formatMetric('inkspot_messages_today', messagesToday, {}, 'Messages sent today'))
-
-    // === BOOKING METRICS ===
-    const totalBookings = await prisma.booking.count()
-    const pendingBookings = await prisma.booking.count({
-      where: {
-        status: 'PENDING'
-      }
-    })
-    const confirmedBookings = await prisma.booking.count({
-      where: {
-        status: 'CONFIRMED'
-      }
-    })
-    const completedBookings = await prisma.booking.count({
-      where: {
-        status: 'COMPLETED'
-      }
-    })
-
-    const bookingsToday = await prisma.booking.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_bookings_total', totalBookings, {}, 'Total number of bookings'))
-    metrics.push(formatMetric('inkspot_bookings_pending', pendingBookings, {}, 'Number of pending bookings'))
-    metrics.push(formatMetric('inkspot_bookings_confirmed', confirmedBookings, {}, 'Number of confirmed bookings'))
-    metrics.push(formatMetric('inkspot_bookings_completed', completedBookings, {}, 'Number of completed bookings'))
-    metrics.push(formatMetric('inkspot_bookings_today', bookingsToday, {}, 'Bookings created today'))
-
-    // === PAYMENT METRICS ===
-    const totalPayments = await prisma.payment.count()
-    const successfulPayments = await prisma.payment.count({
-      where: {
-        status: 'COMPLETED'
-      }
-    })
-    const pendingPayments = await prisma.payment.count({
-      where: {
-        status: 'PENDING'
-      }
-    })
-    const failedPayments = await prisma.payment.count({
-      where: {
-        status: 'FAILED'
-      }
-    })
-
-    // Revenue calculations
-    const totalRevenue = await prisma.payment.aggregate({
-      where: {
-        status: 'COMPLETED'
-      },
-      _sum: {
-        amount: true
-      }
-    })
-
-    const revenueToday = await prisma.payment.aggregate({
-      where: {
-        status: 'COMPLETED',
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      },
-      _sum: {
-        amount: true
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_payments_total', totalPayments, {}, 'Total number of payments'))
-    metrics.push(formatMetric('inkspot_payments_successful', successfulPayments, {}, 'Number of successful payments'))
-    metrics.push(formatMetric('inkspot_payments_pending', pendingPayments, {}, 'Number of pending payments'))
-    metrics.push(formatMetric('inkspot_payments_failed', failedPayments, {}, 'Number of failed payments'))
-    metrics.push(formatMetric('inkspot_revenue_total', totalRevenue._sum.amount || 0, {}, 'Total revenue in EUR'))
-    metrics.push(formatMetric('inkspot_revenue_today', revenueToday._sum.amount || 0, {}, 'Revenue today in EUR'))
-
-    // === NOTIFICATION METRICS ===
-    const totalNotifications = await prisma.notification.count()
-    const unreadNotifications = await prisma.notification.count({
-      where: {
-        read: false
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_notifications_total', totalNotifications, {}, 'Total number of notifications'))
-    metrics.push(formatMetric('inkspot_notifications_unread', unreadNotifications, {}, 'Number of unread notifications'))
-
-    // === ENGAGEMENT METRICS ===
-    const totalFollows = await prisma.follow.count()
-    const totalReviews = await prisma.review.count()
-    const averageRating = await prisma.review.aggregate({
-      _avg: {
-        rating: true
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_follows_total', totalFollows, {}, 'Total number of follows'))
-    metrics.push(formatMetric('inkspot_reviews_total', totalReviews, {}, 'Total number of reviews'))
-    metrics.push(formatMetric('inkspot_rating_average', averageRating._avg.rating || 0, {}, 'Average rating'))
-
-    // === SEARCH METRICS ===
-    const totalSearches = await prisma.searchHistory.count()
-    const searchesToday = await prisma.searchHistory.count({
-      where: {
-        createdAt: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
-        }
-      }
-    })
-
-    metrics.push(formatMetric('inkspot_searches_total', totalSearches, {}, 'Total number of searches'))
-    metrics.push(formatMetric('inkspot_searches_today', searchesToday, {}, 'Searches performed today'))
-
-    // === SYSTEM METRICS ===
-    const currentTime = Date.now()
-    metrics.push(formatMetric('inkspot_last_metrics_update', Math.floor(currentTime / 1000), {}, 'Last metrics update timestamp'))
-
-    // Return metrics in Prometheus format
-    return new NextResponse(metrics.join('\n'), {
+    const metrics = await collectMetrics()
+    return new NextResponse(metrics, {
       headers: {
-        'Content-Type': 'text/plain; charset=utf-8'
+        'Content-Type': 'text/plain; version=0.0.4; charset=utf-8'
       }
     })
-
   } catch (error) {
-    console.error('Error generating metrics:', error)
-    return NextResponse.json({ error: 'Failed to generate metrics' }, { status: 500 })
+    console.error('Error collecting metrics:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
+}
+
+async function collectMetrics(): Promise<string> {
+  const metrics: string[] = []
+  
+  try {
+    // System metrics
+    const startTime = Date.now()
+    const memoryUsage = process.memoryUsage()
+    
+    // Application metrics
+    const userCount = await prisma.user.count()
+    const postCount = await prisma.post.count()
+    const bookingCount = await prisma.booking.count()
+    const paymentCount = await prisma.payment.count()
+    
+    // Performance metrics
+    const responseTime = Date.now() - startTime
+    
+    // Build Prometheus format metrics
+    metrics.push(
+      '# HELP inkspot_user_total Total number of users',
+      '# TYPE inkspot_user_total counter',
+      `inkspot_user_total ${userCount}`,
+      '',
+      '# HELP inkspot_post_total Total number of posts',
+      '# TYPE inkspot_post_total counter',
+      `inkspot_post_total ${postCount}`,
+      '',
+      '# HELP inkspot_booking_total Total number of bookings',
+      '# TYPE inkspot_booking_total counter',
+      `inkspot_booking_total ${bookingCount}`,
+      '',
+      '# HELP inkspot_payment_total Total number of payments',
+      '# TYPE inkspot_payment_total counter',
+      `inkspot_payment_total ${paymentCount}`,
+      '',
+      '# HELP inkspot_response_time_seconds API response time in seconds',
+      '# TYPE inkspot_response_time_seconds histogram',
+      `inkspot_response_time_seconds ${responseTime / 1000}`,
+      '',
+      '# HELP inkspot_memory_heap_bytes Memory heap usage in bytes',
+      '# TYPE inkspot_memory_heap_bytes gauge',
+      `inkspot_memory_heap_bytes ${memoryUsage.heapUsed}`,
+      '',
+      '# HELP inkspot_memory_heap_total_bytes Total memory heap size in bytes',
+      '# TYPE inkspot_memory_heap_total_bytes gauge',
+      `inkspot_memory_heap_total_bytes ${memoryUsage.heapTotal}`,
+      '',
+      '# HELP inkspot_memory_external_bytes External memory usage in bytes',
+      '# TYPE inkspot_memory_external_bytes gauge',
+      `inkspot_memory_external_bytes ${memoryUsage.external}`,
+      '',
+      '# HELP inkspot_memory_rss_bytes Resident set size in bytes',
+      '# TYPE inkspot_memory_rss_bytes gauge',
+      `inkspot_memory_rss_bytes ${memoryUsage.rss}`,
+      '',
+      '# HELP inkspot_process_uptime_seconds Process uptime in seconds',
+      '# TYPE inkspot_process_uptime_seconds gauge',
+      `inkspot_process_uptime_seconds ${process.uptime()}`,
+      '',
+      '# HELP inkspot_nodejs_version_info Node.js version info',
+      '# TYPE inkspot_nodejs_version_info gauge',
+      `inkspot_nodejs_version_info{version="${process.version}"} 1`
+    )
+    
+    // Database connection metrics
+    try {
+      await prisma.$queryRaw`SELECT 1`
+      metrics.push(
+        '',
+        '# HELP inkspot_database_connected Database connection status',
+        '# TYPE inkspot_database_connected gauge',
+        'inkspot_database_connected 1'
+      )
+    } catch (error) {
+      metrics.push(
+        '',
+        '# HELP inkspot_database_connected Database connection status',
+        '# TYPE inkspot_database_connected gauge',
+        'inkspot_database_connected 0'
+      )
+    }
+    
+    // Redis connection metrics
+    try {
+      await redisCache.healthCheck()
+      metrics.push(
+        '',
+        '# HELP inkspot_redis_connected Redis connection status',
+        '# TYPE inkspot_redis_connected gauge',
+        'inkspot_redis_connected 1'
+      )
+    } catch (error) {
+      metrics.push(
+        '',
+        '# HELP inkspot_redis_connected Redis connection status',
+        '# TYPE inkspot_redis_connected gauge',
+        'inkspot_redis_connected 0'
+      )
+    }
+    
+    // Business metrics
+    try {
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      
+      const todayBookings = await prisma.booking.count({
+        where: {
+          createdAt: {
+            gte: today
+          }
+        }
+      })
+      
+      const todayRevenue = await prisma.payment.aggregate({
+        where: {
+          status: 'COMPLETED',
+          createdAt: {
+            gte: today
+          }
+        },
+        _sum: {
+          amount: true
+        }
+      })
+      
+      metrics.push(
+        '',
+        '# HELP inkspot_bookings_today Total bookings today',
+        '# TYPE inkspot_bookings_today counter',
+        `inkspot_bookings_today ${todayBookings}`,
+        '',
+        '# HELP inkspot_revenue_today Total revenue today in cents',
+        '# TYPE inkspot_revenue_today counter',
+        `inkspot_revenue_today ${todayRevenue._sum.amount || 0}`
+      )
+    } catch (error) {
+      console.error('Error collecting business metrics:', error)
+    }
+    
+  } catch (error) {
+    console.error('Error collecting metrics:', error)
+    metrics.push(
+      '# HELP inkspot_metrics_error Error collecting metrics',
+      '# TYPE inkspot_metrics_error gauge',
+      'inkspot_metrics_error 1'
+    )
+  }
+  
+  return metrics.join('\n')
 }

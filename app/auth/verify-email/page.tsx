@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, XCircle, ArrowLeft } from "lucide-react"
+import { CheckCircle, XCircle, ArrowLeft, Mail } from "lucide-react"
 import { toast } from "sonner"
 import Link from "next/link"
 
@@ -13,7 +13,7 @@ export default function VerifyEmailPage() {
   const [message, setMessage] = useState("")
   const router = useRouter()
   const searchParams = useSearchParams()
-  const token = searchParams.get("token")
+  const token = searchParams?.get("token")
 
   useEffect(() => {
     if (token) {
@@ -51,7 +51,7 @@ export default function VerifyEmailPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: searchParams.get("email") }),
+        body: JSON.stringify({ email: searchParams?.get("email") }),
       })
 
       const data = await response.json()

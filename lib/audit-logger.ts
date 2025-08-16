@@ -31,22 +31,23 @@ class AuditLogger {
 
   async logSecurityEvent(event: SecurityEvent): Promise<void> {
     try {
+      // TODO: Add AuditLog model to Prisma schema
       // Log to database
-      await prisma.auditLog.create({
-        data: {
-          userId: event.userId,
-          action: event.action,
-          resource: event.resource,
-          details: event.details,
-          ipAddress: event.ipAddress,
-          userAgent: event.userAgent,
-          timestamp: event.timestamp,
-          severity: event.severity,
-          type: event.type,
-          success: event.success,
-          errorMessage: event.errorMessage,
-        },
-      })
+      // await prisma.auditLog.create({
+      //   data: {
+      //     userId: event.userId,
+      //     action: event.action,
+      //     resource: event.resource,
+      //     details: event.details,
+      //     ipAddress: event.ipAddress,
+      //     userAgent: event.userAgent,
+      //     timestamp: event.timestamp,
+      //     severity: event.severity,
+      //     type: event.type,
+      //     success: event.success,
+      //     errorMessage: event.errorMessage,
+      //   },
+      // })
 
       // Log to console for development
       if (process.env.NODE_ENV === 'development') {
@@ -148,50 +149,61 @@ class AuditLogger {
     }
   }
 
-  async getAuditLogs(
-    filters: {
-      userId?: string
-      action?: string
-      resource?: string
-      severity?: string[]
-      type?: string[]
-      startDate?: Date
-      endDate?: Date
-    },
-    page = 1,
-    limit = 50
-  ) {
-    const where: unknown = {}
+  // TODO: Add AuditLog model to Prisma schema
+  // async getAuditLogs(
+  //   filters: {
+  //     userId?: string
+  //     action?: string
+  //     resource?: string
+  //     severity?: string[]
+  //     type?: string[]
+  //     startDate?: Date
+  //     endDate?: Date
+  //   },
+  //   page = 1,
+  //   limit = 50
+  // ) {
+  //   const where: {
+  //     userId?: string
+  //     action?: string
+  //     resource?: string
+  //     severity?: { in: string[] }
+  //     type?: { in: string[] }
+  //     timestamp?: {
+  //       gte?: Date
+  //       lte?: Date
+  //     }
+  //   } = {}
 
-    if (filters.userId) where.userId = filters.userId
-    if (filters.action) where.action = filters.action
-    if (filters.resource) where.resource = filters.resource
-    if (filters.severity?.length) where.severity = { in: filters.severity }
-    if (filters.type?.length) where.type = { in: filters.type }
-    if (filters.startDate || filters.endDate) {
-      where.timestamp = {}
-      if (filters.startDate) where.timestamp.gte = filters.startDate
-      if (filters.endDate) where.timestamp.lte = filters.endDate
-    }
+  //   if (filters.userId) where.userId = filters.userId
+  //   if (filters.action) where.action = filters.action
+  //   if (filters.resource) where.resource = filters.resource
+  //   if (filters.severity?.length) where.severity = { in: filters.severity }
+  //   if (filters.type?.length) where.type = { in: filters.type }
+  //   if (filters.startDate || filters.endDate) {
+  //     where.timestamp = {}
+  //     if (filters.startDate) where.timestamp.gte = filters.startDate
+  //     if (filters.endDate) where.timestamp.lte = filters.endDate
+  //   }
 
-    const [logs, total] = await Promise.all([
-      prisma.auditLog.findMany({
-        where,
-        orderBy: { timestamp: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
-      prisma.auditLog.count({ where }),
-    ])
+  //   const [logs, total] = await Promise.all([
+  //     prisma.auditLog.findMany({
+  //       where,
+  //       orderBy: { timestamp: 'desc' },
+  //       skip: (page - 1) * limit,
+  //       take: limit,
+  //     }),
+  //     prisma.auditLog.count({ where }),
+  //   ])
 
-    return {
-      logs,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    }
-  }
+  //   return {
+  //     logs,
+  //     total,
+  //     page,
+  //     limit,
+  //     totalPages: Math.ceil(total / limit),
+  //   }
+  // }
 }
 
 export const auditLogger = AuditLogger.getInstance() 

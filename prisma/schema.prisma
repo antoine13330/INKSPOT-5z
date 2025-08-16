@@ -22,11 +22,26 @@ enum UserStatus {
   PENDING
 }
 
-enum BookingStatus {
-  PENDING
+enum AppointmentStatus {
+  DRAFT
+  PROPOSED
+  ACCEPTED
   CONFIRMED
+  IN_PROGRESS
   COMPLETED
   CANCELLED
+  NO_SHOW
+  PAID
+}
+
+enum AppointmentType {
+  TATTOO
+  PIERCING
+  CONSULTATION
+  COVER_UP
+  TOUCH_UP
+  CUSTOM_DESIGN
+  OTHER
 }
 
 enum PaymentStatus {
@@ -34,6 +49,7 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   REFUNDED
+  PARTIALLY_REFUNDED
 }
 
 enum NotificationType {
@@ -46,6 +62,8 @@ enum NotificationType {
   COLLABORATION_ACCEPTED
   COLLABORATION_REJECTED
   MENTION
+  REVIEW
+  APPOINTMENT
 }
 
 enum PostStatus {
@@ -68,6 +86,20 @@ enum CollaborationStatus {
   REJECTED
 }
 
+enum ConversationStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
 model User {
   id            String     @id @default(cuid())
   email         String     @unique
@@ -84,6 +116,7 @@ model User {
   status        UserStatus @default(ACTIVE)
   verified      Boolean    @default(false)
   emailVerified DateTime?
+  timezone      String?    @default("UTC")
   
   // OAuth fields
   googleId      String?    @unique
@@ -119,8 +152,8 @@ model User {
   comments             Comment[]
   sentMessages         Message[] @relation("MessageSender")
   conversationMembers  ConversationMember[]
-  bookingsAsClient     Booking[] @relation("ClientBookings")
-  bookingsAsPro        Booking[] @relation("ProBookings")
+  appointmentsAsClient Appointment[] @relation("ClientAppointments")
+  appointmentsAsPro    Appointment[] @relation("ProAppointments")
   sentPayments         Payment[] @relation("PaymentSender")
   receivedPayments     Payment[] @relation("PaymentReceiver")
   sentInvoices         Invoice[] @relation("InvoiceIssuer")
@@ -138,6 +171,14 @@ model User {
   collaborations       Collaboration[] @relation("CollaborationPro")
   transactions         Transaction[]
   verificationTokens   VerificationToken[]
+  services             Service[]
+  availabilities       Availability[]
+  availabilitySchedules AvailabilitySchedule[]
+  clientBookings       Booking[] @relation("ClientBookings")
+  proBookings          Booking[] @relation("ProBookings")
+  userPreferences      UserPreferences?
+  smartReminders       SmartReminder[]
+  devicePreferences    DevicePreferences[]
   
   @@map("users")
 }
@@ -213,6 +254,7 @@ model Conversation {
   id        String   @id @default(cuid())
   title     String?
   isGroup   Boolean  @default(false)
+  status    ConversationStatus @default(DRAFT)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -251,61 +293,73 @@ model Message {
   conversationId String
   sender         User         @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
   senderId       String
-  payment        Payment?
-  booking        Booking?
+  payment        Payment?     @relation(fields: [paymentId], references: [id])
+  paymentId      String?      @unique
+  booking        Booking?     @relation(fields: [bookingId], references: [id])
+  bookingId      String?      @unique
   
   @@map("messages")
 }
 
-model Booking {
-  id          String        @id @default(cuid())
+model Appointment {
+  id          String           @id @default(cuid())
   title       String
   description String?
-  startTime   DateTime
-  endTime     DateTime
-  location    String?
+  startDate   DateTime
+  endDate     DateTime
+  duration    Int              // Duration in minutes
   price       Float
-  depositAmount Float       // 25% of price
-  status      BookingStatus @default(PENDING)
+  currency    String           @default("EUR")
+  status      AppointmentStatus @default(DRAFT)
+  type        AppointmentType
+  location    String?
   notes       String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  cancelledAt DateTime?
+  requirements String?
+  cancellationPolicy String?
+  depositRequired Boolean      @default(false)
+  depositAmount Float?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   
   // Relations
-  client    User    @relation("ClientBookings", fields: [clientId], references: [id], onDelete: Cascade)
+  client    User    @relation("ClientAppointments", fields: [clientId], references: [id], onDelete: Cascade)
   clientId  String
-  pro       User    @relation("ProBookings", fields: [proId], references: [id], onDelete: Cascade)
+  pro       User    @relation("ProAppointments", fields: [proId], references: [id], onDelete: Cascade)
   proId     String
-  message   Message? @relation(fields: [messageId], references: [id])
-  messageId String?  @unique
   payments  Payment[]
   invoice   Invoice?
   
-  @@map("bookings")
+  @@map("appointments")
 }
 
 model Payment {
-  id          String        @id @default(cuid())
-  amount      Float
-  currency    String        @default("EUR")
-  status      PaymentStatus @default(PENDING)
-  stripePaymentIntentId String? @unique
-  description String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id                    String        @id @default(cuid())
+  appointmentId         String?
+  bookingId             String?
+  amount                Float
+  currency              String        @default("EUR")
+  status                PaymentStatus @default(PENDING)
+  stripePaymentIntentId String?       @unique
+  stripeTransferId      String?       @unique
+  description           String?
+  paymentMethod         String?
+  paidAt                DateTime?
+  refundedAt            DateTime?
+  refundAmount          Float?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
   
   // Relations
-  sender      User     @relation("PaymentSender", fields: [senderId], references: [id], onDelete: Cascade)
-  senderId    String
-  receiver    User     @relation("PaymentReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  receiverId  String
-  message     Message? @relation(fields: [messageId], references: [id])
-  messageId   String?  @unique
-  booking     Booking? @relation(fields: [bookingId], references: [id])
-  bookingId   String?
-  invoice     Invoice?
-  transaction Transaction?
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  booking    Booking?     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  invoice    Invoice?     @relation(fields: [invoiceId], references: [id])
+  invoiceId  String?      @unique
+  messages   Message[]
+  transactions Transaction[]
+  sender     User        @relation("PaymentSender", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId   String
+  receiver   User        @relation("PaymentReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String
   
   @@map("payments")
 }
@@ -330,26 +384,32 @@ model Transaction {
 }
 
 model Invoice {
-  id            String   @id @default(cuid())
-  invoiceNumber String   @unique
+  id            String        @id @default(cuid())
+  invoiceNumber String        @unique
+  appointmentId String?       @unique
+  bookingId     String?       @unique
+  issuerId      String
+  receiverId    String
   amount        Float
-  currency      String   @default("EUR")
+  currency      String        @default("EUR")
   vatAmount     Float?
+  vatRate       Float?
   description   String
   dueDate       DateTime
   paidAt        DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  status        InvoiceStatus @default(DRAFT)
+  items         Json[]        // Array of InvoiceItem objects
+  paymentTerms  String?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   
   // Relations
-  issuer     User     @relation("InvoiceIssuer", fields: [issuerId], references: [id], onDelete: Cascade)
-  issuerId   String
-  receiver   User     @relation("InvoiceReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  receiverId String
-  booking    Booking? @relation(fields: [bookingId], references: [id])
-  bookingId  String?  @unique
-  payment    Payment? @relation(fields: [paymentId], references: [id])
-  paymentId  String?  @unique
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  booking    Booking?     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  payment    Payment?
+  issuer     User        @relation("InvoiceIssuer", fields: [issuerId], references: [id], onDelete: Cascade)
+  receiver   User        @relation("InvoiceReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
   
   @@map("invoices")
 }
@@ -361,6 +421,8 @@ model Notification {
   type      NotificationType
   read      Boolean          @default(false)
   data      Json?
+  priority  String           @default("normal") // low, normal, high
+  category  String?          // appointment, payment, system, etc.
   createdAt DateTime         @default(now())
   
   // Relations
@@ -439,6 +501,7 @@ model PushSubscription {
   
   // Relations
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  devicePreferences DevicePreferences?
   
   @@unique([userId, endpoint])
   @@map("push_subscriptions")
@@ -475,3 +538,177 @@ model Collaboration {
   @@unique([postId, proId])
   @@map("collaborations")
 }
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  duration    Int      // Duration in minutes
+  price       Float
+  type        AppointmentType
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  pro   User   @relation(fields: [proId], references: [id], onDelete: Cascade)
+  proId String
+  
+  @@map("services")
+}
+
+model Availability {
+  id          String   @id @default(cuid())
+  proId       String
+  date        DateTime
+  isAvailable Boolean  @default(true)
+  timeSlots   Json[]   // Array of time slot objects
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  pro User @relation(fields: [proId], references: [id], onDelete: Cascade)
+  
+  @@unique([proId, date])
+  @@map("availabilities")
+}
+
+model AvailabilitySchedule {
+  id          String   @id @default(cuid())
+  proId       String
+  date        DateTime
+  isAvailable Boolean  @default(true)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  pro       User                    @relation(fields: [proId], references: [id], onDelete: Cascade)
+  timeSlots AvailabilityTimeSlot[]
+  
+  @@unique([proId, date])
+  @@map("availability_schedules")
+}
+
+model AvailabilityTimeSlot {
+  id           String   @id @default(cuid())
+  scheduleId   String
+  startTime    String   // Format: "HH:MM"
+  endTime      String   // Format: "HH:MM"
+  isAvailable  Boolean  @default(true)
+  maxBookings  Int      @default(1)
+  price        Float?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  schedule AvailabilitySchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  
+  @@map("availability_time_slots")
+}
+
+model Booking {
+  id             String   @id @default(cuid())
+  title          String
+  description   String?
+  startTime      DateTime
+  endTime        DateTime
+  location       String?
+  price          Float
+  depositAmount  Float?
+  status         String   @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relations
+  clientId       String
+  client         User     @relation("ClientBookings", fields: [clientId], references: [id], onDelete: Cascade)
+  proId          String
+  pro            User     @relation("ProBookings", fields: [proId], references: [id], onDelete: Cascade)
+  payments       Payment[]
+  messages       Message[]
+  invoices       Invoice[]
+  
+  @@map("bookings")
+}
+
+model UserPreferences {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  notificationPreferences Json?   // Notification settings and preferences
+  reminderIntervals     Json?    // Custom reminder timing preferences
+  timezone              String?  @default("UTC")
+  language              String?  @default("en")
+  theme                 String?  @default("system")
+  privacySettings       Json?    // Privacy and visibility preferences
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_preferences")
+}
+
+model DevicePreferences {
+  id              String   @id @default(cuid())
+  subscriptionId  String   @unique
+  userId          String
+  deviceType      String?  // mobile, desktop, tablet
+  platform        String?  // ios, android, web, windows, mac
+  enabled         Boolean  @default(true)
+  notificationSettings Json? // Device-specific notification settings
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pushSubscription PushSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  @@map("device_preferences")
+}
+
+model SmartReminder {
+  id            String   @id @default(cuid())
+  userId        String
+  type          String   // booking, payment, follow_up, marketing, system
+  title         String
+  message       String
+  scheduledFor  DateTime
+  priority      String   @default("normal") // low, normal, high
+  category      String
+  data          Json?
+  repeatPattern String?  // once, daily, weekly, monthly
+  maxRetries    Int      @default(3)
+  retryCount    Int      @default(0)
+  conditions    Json?    // Delivery conditions
+  status        String   @default("PENDING") // PENDING, SENT, FAILED, CANCELLED
+  sentAt        DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("smart_reminders")
+}
+
+model ScheduledTask {
+  id            String   @id @default(cuid())
+  type          String   // NOTIFICATION_DELIVERY, EMAIL_SEND, etc.
+  scheduledFor  DateTime
+  data          Json?
+  status        String   @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED
+  attempts      Int      @default(0)
+  maxAttempts   Int      @default(3)
+  lastAttempt   DateTime?
+  result        Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("scheduled_tasks")
+}
+
+

@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 export interface CDNConfig {
   provider: 'supabase' | 'aws' | 'cloudflare'
@@ -18,7 +18,7 @@ export interface CDNStats {
 class CDNManager {
   private static instance: CDNManager
   private config: CDNConfig
-  private supabase: unknown
+  private supabase: SupabaseClient | null
   private stats: CDNStats
 
   private constructor() {
@@ -34,6 +34,8 @@ class CDNManager {
       bandwidth: 0,
       requests: 0,
     }
+
+    this.supabase = null
 
     if (this.config.enabled && this.config.provider === 'supabase') {
       this.supabase = createClient(
@@ -60,7 +62,7 @@ class CDNManager {
       public?: boolean
     }
   ): Promise<string> {
-    if (!this.config.enabled) {
+    if (!this.config.enabled || !this.supabase) {
       throw new Error('CDN is not enabled')
     }
 
@@ -95,7 +97,7 @@ class CDNManager {
       return `/api/assets/${path}`
     }
 
-    if (this.config.provider === 'supabase') {
+    if (this.config.provider === 'supabase' && this.supabase) {
       const { data } = this.supabase.storage
         .from(this.config.bucket)
         .getPublicUrl(path)
@@ -108,7 +110,7 @@ class CDNManager {
 
   // Delete file from CDN
   async deleteFile(path: string): Promise<void> {
-    if (!this.config.enabled) return
+    if (!this.config.enabled || !this.supabase) return
 
     try {
       const { error } = await this.supabase.storage
@@ -124,7 +126,7 @@ class CDNManager {
 
   // List files in CDN
   async listFiles(prefix?: string): Promise<string[]> {
-    if (!this.config.enabled) return []
+    if (!this.config.enabled || !this.supabase) return []
 
     try {
       const { data, error } = await this.supabase.storage
@@ -133,7 +135,7 @@ class CDNManager {
 
       if (error) throw error
 
-      return data.map((file: unknown) => file.name)
+      return data.map((file: any) => file.name)
     } catch (error) {
       console.error('CDN list error:', error)
       return []
@@ -163,6 +165,8 @@ class CDNManager {
 
   // Calculate total size of files
   private async calculateTotalSize(files: string[]): Promise<number> {
+    if (!this.supabase) return 0
+    
     let totalSize = 0
 
     for (const file of files) {
@@ -220,7 +224,7 @@ class CDNManager {
 
   // Health check
   async healthCheck(): Promise<boolean> {
-    if (!this.config.enabled) return true
+    if (!this.config.enabled || !this.supabase) return true
 
     try {
       await this.supabase.storage.from(this.config.bucket).list('', { limit: 1 })

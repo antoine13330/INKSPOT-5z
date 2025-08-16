@@ -2,7 +2,40 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { AIRecommendationEngine } from "@/lib/recommendations-ai"
+
 export const dynamic = "force-dynamic"
+
+// Type for user with include fields from Prisma query
+interface UserWithStats {
+  id: string
+  username: string
+  firstName: string | null
+  lastName: string | null
+  avatar: string | null
+  bio: string | null
+  location: string | null
+  role: string
+  verified: boolean
+  businessName: string | null
+  specialties: string[]
+  hourlyRate: number | null
+  portfolio: string[]
+  profileViews: number
+  lastActiveAt: Date
+  _count: {
+    followers: number
+    following: number
+    posts: number
+    receivedReviews: number
+  }
+  receivedReviews: Array<{ rating: number }>
+  posts: Array<{
+    id: string
+    likesCount: number
+    commentsCount: number
+    createdAt: Date
+  }>
+}
 
 
 export async function GET(request: NextRequest) {
@@ -48,10 +81,10 @@ export async function GET(request: NextRequest) {
             followers: true,
             following: true,
             posts: true,
-            reviewsReceived: true,
+            receivedReviews: true,
           },
         },
-        reviewsReceived: {
+        receivedReviews: {
           select: { rating: true },
         },
         posts: {
@@ -68,10 +101,10 @@ export async function GET(request: NextRequest) {
     })
 
     // Combine recommendation scores with user data
-    const enrichedUsers = users.map(user => {
+    const enrichedUsers = users.map((user: UserWithStats) => {
       const recommendation = paginatedRecommendations.find(rec => rec.userId === user.id)
-      const avgRating = user.reviewsReceived.length > 0 
-        ? user.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / user.reviewsReceived.length
+      const avgRating = user.receivedReviews.length > 0 
+        ? user.receivedReviews.reduce((sum, review) => sum + review.rating, 0) / user.receivedReviews.length
         : 0
 
       const totalEngagement = user.posts.reduce((sum, post) => sum + post.likesCount + post.commentsCount, 0)
@@ -96,7 +129,7 @@ export async function GET(request: NextRequest) {
           followersCount: user._count.followers,
           followingCount: user._count.following,
           postsCount: user._count.posts,
-          reviewsCount: user._count.reviewsReceived,
+          reviewsCount: user._count.receivedReviews,
           avgRating: Math.round(avgRating * 10) / 10,
           totalEngagement,
         },

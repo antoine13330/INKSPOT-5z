@@ -1,16 +1,16 @@
 "use client"
 
-<<<<<<< HEAD
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
-=======
->>>>>>> origin/cursor/nettoyer-les-composants-obsol-tes-a507
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { BottomNavigation } from "@/components/bottom-navigation"
-<<<<<<< HEAD
+import { ConversationManager } from "@/components/conversation/conversation-manager"
+import { AutoComplete } from "@/components/search/AutoComplete"
+import { AdvancedFilters } from "@/components/search/AdvancedFilters"
+import { MentionHighlighter } from "@/components/mention-highlighter"
 import { 
   Heart, 
   MessageCircle, 
@@ -22,13 +22,11 @@ import {
   Eye,
   DollarSign,
   CheckCircle,
-  Search
+  Search,
+  Filter,
+  X
 } from "lucide-react"
 import { toast } from "sonner"
-=======
-import { usePosts } from "@/lib/hooks/use-posts"
-import { useAuth } from "@/lib/hooks/use-auth"
->>>>>>> origin/cursor/nettoyer-les-composants-obsol-tes-a507
 import Image from "next/image"
 
 interface Post {
@@ -42,6 +40,8 @@ interface Post {
   commentsCount: number
   viewsCount: number
   publishedAt: string
+  createdAt?: string
+  liked?: boolean
   author: {
     id: string
     username: string
@@ -60,32 +60,156 @@ interface Post {
   }[]
 }
 
+interface User {
+  id: string
+  username: string
+  avatar?: string
+  bio?: string
+  location?: string
+  verified: boolean
+  role: string
+  businessName?: string
+  specialties: string[]
+  hourlyRate?: number
+  profileViews: number
+  postsCount: number
+  followersCount: number
+  createdAt: string
+}
+
+type SearchType = "posts" | "artists"
+type SortBy = "date" | "popularity" | "likes" | "name"
+
 export default function HomePage() {
-<<<<<<< HEAD
   const { data: session } = useSession()
   const [posts, setPosts] = useState<Post[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [favoritedPosts, setFavoritedPosts] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [searchType, setSearchType] = useState<SearchType>("posts")
+  const [sortBy, setSortBy] = useState<SortBy>("popularity")
+  const [showFilters, setShowFilters] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
+  const [searchLoading, setSearchLoading] = useState(false)
+  const [contactLoading, setContactLoading] = useState<{ artist: any; post: any } | null>(null)
+
+  // Popular tags for quick selection
+  const popularTags = [
+    "tattoo", "piercing", "art", "design", "illustration", 
+    "portrait", "realistic", "traditional", "japanese", "blackwork",
+    "color", "minimalist", "geometric", "watercolor", "neo-traditional"
+  ]
 
   useEffect(() => {
-    fetchPosts()
-  }, [])
+    // Debounce search to avoid micro jitters
+    const timeoutId = setTimeout(() => {
+      if (searchQuery.trim() || selectedTags.length > 0) {
+        performSearch()
+      } else {
+        // Reset to default posts without loading state
+        setIsSearching(false)
+        fetchPosts()
+      }
+    }, 300)
+
+    return () => clearTimeout(timeoutId)
+  }, [searchQuery, selectedTags, searchType, sortBy])
 
   const fetchPosts = async () => {
     try {
+      setLoading(true)
       const response = await fetch("/api/posts/recommended")
       const data = await response.json()
       if (response.ok) {
         setPosts(data.posts)
+        setUsers([])
+        setIsSearching(false)
       }
     } catch (error) {
-      // Log error for debugging (in production, send to monitoring service)
       if (process.env.NODE_ENV === 'development') {
         console.error("Error fetching posts:", error)
       }
     } finally {
       setLoading(false)
     }
+  }
+
+  const performSearch = async () => {
+    if (!searchQuery.trim() && selectedTags.length === 0) {
+      fetchPosts()
+      return
+    }
+
+    setIsSearching(true)
+    setSearchLoading(true)
+    
+    try {
+      if (searchType === "artists") {
+        const response = await fetch(
+          `/api/users/search?q=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(","))}&sortBy=${sortBy}`
+        )
+        if (response.ok) {
+          const data = await response.json()
+          setUsers(data.users)
+          setPosts([])
+        }
+      } else {
+        const response = await fetch(
+          `/api/posts/search?q=${encodeURIComponent(searchQuery)}&tags=${encodeURIComponent(selectedTags.join(","))}&sortBy=${sortBy}`
+        )
+        if (response.ok) {
+          const data = await response.json()
+          setPosts(data.posts)
+          setUsers([])
+        }
+      }
+
+      // Record search history
+      if (session?.user?.id && (searchQuery.trim() || selectedTags.length > 0)) {
+        await fetch("/api/search/history", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: searchQuery.trim() || selectedTags.join(" "),
+            hashtags: selectedTags,
+          }),
+        })
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Search error:", error)
+      }
+      toast.error("Failed to perform search")
+    } finally {
+      setSearchLoading(false)
+    }
+  }
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+  }
+
+  const handleTagToggle = (tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    )
+  }
+
+  const clearSearch = () => {
+    setSearchQuery("")
+    setSelectedTags([])
+    setSearchType("posts")
+    setSortBy("popularity")
+    setIsSearching(false)
+    setSearchLoading(false)
+    // Fetch default posts immediately without loading state
+    fetchPosts()
   }
 
   const handleLike = async (postId: string) => {
@@ -95,17 +219,22 @@ export default function HomePage() {
       })
       
       if (response.ok) {
-        setPosts(prev => 
-          prev.map(post => 
+        setPosts(prev => {
+          const currentPost = prev.find(p => p.id === postId)
+          return prev.map(post => 
             post.id === postId 
-              ? { ...post, likesCount: post.likesCount + 1 }
+              ? { 
+                  ...post, 
+                  liked: !post.liked,
+                  likesCount: post.liked ? post.likesCount - 1 : post.likesCount + 1 
+                }
               : post
           )
-        )
-        toast.success("Post liked!")
+        })
+        const currentPost = posts.find(p => p.id === postId)
+        toast.success(currentPost?.liked ? "Post unliked!" : "Post liked!")
       }
     } catch (error) {
-      // Log error for debugging (in production, send to monitoring service)
       if (process.env.NODE_ENV === 'development') {
         console.error("Error liking post:", error)
       }
@@ -127,39 +256,53 @@ export default function HomePage() {
     })
   }
 
-  if (loading) {
-=======
-  const { user, isAuthenticated, isPro } = useAuth()
-  const {
-    posts,
-    searchResults,
-    searchQuery,
-    isLoading,
-    isSearching,
-    searchPosts,
-    toggleLike,
-    recordView,
-    clearSearch,
-  } = usePosts()
+  const handleContactArtist = async (post: Post) => {
+    if (!session?.user?.id) {
+      toast.error("Please sign in to contact artists")
+      return
+    }
 
-  const handleSearchChange = (query: string) => {
-    if (!query.trim()) {
-      clearSearch()
-    } else {
-      searchPosts(query)
+    // Afficher l'écran de chargement factice
+    setContactLoading({
+      artist: post.author,
+      post: {
+        id: post.id,
+        content: post.content,
+        images: post.images
+      }
+    })
+
+    try {
+      const response = await fetch('/api/conversations/create-direct', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          participantId: post.author.id,
+          postId: post.id,
+          subject: `Demande de renseignements - ${post.content.substring(0, 50)}...`,
+          type: 'DIRECT'
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        toast.success("Conversation créée !")
+        // Rediriger vers la conversation
+        window.location.href = `/conversations/${data.conversation.id}`
+      } else {
+        toast.error("Failed to create conversation")
+        setContactLoading(null)
+      }
+    } catch (error) {
+      console.error("Error creating conversation:", error)
+      toast.error("Failed to create conversation")
+      setContactLoading(null)
     }
   }
 
-
-
-  const bookService = (proId: string) => {
-    window.location.href = `/booking/${proId}`
-  }
-
-  const displayPosts = isSearching ? searchResults : posts
-
-  if (isLoading) {
->>>>>>> origin/cursor/nettoyer-les-composants-obsol-tes-a507
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -168,7 +311,6 @@ export default function HomePage() {
   }
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-background pb-20">
       <div className="container mx-auto px-4 py-6 max-w-lg">
         {/* Header */}
@@ -184,410 +326,423 @@ export default function HomePage() {
                 Sign In
               </Button>
             </Link>
-=======
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-md mx-auto bg-black min-h-screen">
-        {/* Header with Search */}
-        <div className="sticky top-0 bg-black/80 backdrop-blur-sm border-b border-gray-800 p-4 z-10">
-          <div className="flex items-center justify-between mb-3">
-            <h1 className="text-xl font-bold">
-                              {isSearching ? "Search Results" : isAuthenticated ? "For You" : "Discover"}
-            </h1>
-            {isPro && (
-              <Link href="/pro/dashboard">
-                <Badge variant="secondary" className="bg-blue-600 text-white">
-                  Pro Dashboard
-                </Badge>
-              </Link>
-            )}
+          )}
+        </div>
+
+        {/* Search Bar */}
+        <div className="mb-6">
+          <AutoComplete
+            query={searchQuery}
+            onQueryChange={setSearchQuery}
+            onSearch={handleSearch}
+            placeholder="Search artists, posts, hashtags..."
+            className="w-full"
+          />
+          
+          {/* Search Type Toggle */}
+          <div className="flex gap-2 mt-3">
+            <Button
+              variant={searchType === "posts" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSearchType("posts")}
+              className="flex-1"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Posts
+            </Button>
+            <Button
+              variant={searchType === "artists" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSearchType("artists")}
+              className="flex-1"
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Artists
+            </Button>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search posts, hashtags..."
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="bg-gray-800 border-gray-700 text-white pl-10 rounded-full"
-            />
+          {/* Filter Toggle */}
+          <div className="flex gap-2 mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex-1"
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              Filters & Sort
+            </Button>
+            {(searchQuery.trim() || selectedTags.length > 0) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearSearch}
+                className="flex-1"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Clear
+              </Button>
+            )}
           </div>
         </div>
 
-        {/* Posts Feed */}
-        <div className="space-y-0 pb-20">
-          {displayPosts.map((post) => (
-            <Card
-              key={post.id}
-              className="bg-black border-gray-800 rounded-none border-x-0 border-t-0"
-              onMouseEnter={() => recordView(post.id)}
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Link href={`/profile/${post.author.username}`}>
-                      <Avatar className="w-10 h-10 cursor-pointer">
-                        <AvatarImage src={post.author.avatar || "/placeholder.svg"} />
-                        <AvatarFallback>{post.author.username[1]}</AvatarFallback>
-                      </Avatar>
-                    </Link>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <Link href={`/profile/${post.author.username}`}>
-                          <span className="font-semibold text-white hover:text-blue-400 cursor-pointer">
-                            {post.author.username}
-                          </span>
-                        </Link>
-                        {post.author.verified && (
-                          <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-xs">✓</span>
-                          </div>
-                        )}
-                        {post.author.role === "PRO" && (
-                          <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-500">
-                            PRO
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-2 text-xs text-gray-400">
-                        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-                        {post.author.role === "PRO" && post.author.specialties && (
-                          <>
-                            <span>•</span>
-                            <span>{post.author.specialties[0]}</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="icon" className="text-gray-400">
-                    <MoreHorizontal className="w-5 h-5" />
-                  </Button>
-                </div>
-              </CardHeader>
-
-              <CardContent className="pb-3">
-                <p className="text-white mb-3 text-sm leading-relaxed">{post.content}</p>
-
-                {/* Hashtags */}
-                {post.hashtags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {post.hashtags.map((hashtag, index) => (
-                      <button
-                        key={index}
-                        onClick={() => {
-                          setSearchQuery(hashtag)
-                          searchPosts(hashtag)
-                        }}
-                        className="text-blue-400 hover:text-blue-300 text-sm flex items-center"
-                      >
-                        <Hash className="w-3 h-3 mr-1" />
-                        {hashtag.replace("#", "")}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Images */}
-                {post.images.length > 0 && (
-                  <div className="grid grid-cols-1 gap-2 rounded-lg overflow-hidden">
-                    {post.images.map((image, index) => (
-                      <Image
-                        key={index}
-                        src={image || "/placeholder.svg"}
-                        alt={`Post image ${index + 1}`}
-                        width={400}
-                        height={400}
-                        className="w-full object-cover"
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {/* Pro Service Info */}
-                {post.author.role === "PRO" && (
-                  <div
-                    className="mt-3 p-3 rounded-lg border border-gray-700"
-                    style={{
-                      backgroundColor: post.author.profileTheme?.backgroundColor || "#1f2937",
-                      borderColor: post.author.profileTheme?.accentColor || "#374151",
-                    }}
+        {/* Filters Panel */}
+        {showFilters && (
+          <div className="card mb-6">
+            {/* Sort Options */}
+            <div className="mb-4">
+              <h3 className="text-sm font-medium mb-2">Sort by:</h3>
+              <div className="flex gap-2 flex-wrap">
+                <Button
+                  variant={sortBy === "popularity" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSortBy("popularity")}
+                >
+                  Trending
+                </Button>
+                <Button
+                  variant={sortBy === "date" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSortBy("date")}
+                >
+                  Date
+                </Button>
+                {searchType === "posts" && (
+                  <Button
+                    variant={sortBy === "likes" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSortBy("likes")}
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-white">
-                        {post.author.businessName || post.author.username}
-                      </span>
-                      {post.author.hourlyRate && (
-                        <span className="text-sm text-green-400 font-medium">{post.author.hourlyRate}€/h</span>
+                    Likes
+                  </Button>
+                )}
+                {searchType === "artists" && (
+                  <Button
+                    variant={sortBy === "name" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSortBy("name")}
+                  >
+                    Name
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Popular Tags */}
+            <div>
+              <h3 className="text-sm font-medium mb-2">Popular tags:</h3>
+              <div className="flex gap-2 flex-wrap">
+                {popularTags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant={selectedTags.includes(tag) ? "default" : "secondary"}
+                    className="cursor-pointer"
+                    onClick={() => handleTagToggle(tag)}
+                  >
+                    #{tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Search Results Header */}
+        {isSearching && (
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-lg font-semibold text-foreground">
+                {searchType === "artists" ? "Artists" : "Posts"} 
+                {searchQuery.trim() && ` for "${searchQuery}"`}
+                {selectedTags.length > 0 && ` with tags: ${selectedTags.map(t => `#${t}`).join(", ")}`}
+              </h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearSearch}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Clear
+              </Button>
+            </div>
+            
+            {/* Search Loading Indicator */}
+            {searchLoading && (
+              <div className="flex items-center justify-center py-6">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                  <span>Searching...</span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Content */}
+        {searchType === "artists" ? (
+          // Artists Results
+          <div className="space-y-4">
+                        {users.map((user) => (
+              <Link
+                key={user.id}
+                href={`/profile/${user.username}`}
+                className="card hover:bg-surface-elevated transition-colors cursor-pointer"
+              >
+                <div className="flex items-start space-x-3">
+                  <Avatar className="w-12 h-12">
+                    <AvatarImage src={user.avatar} />
+                    <AvatarFallback className="bg-muted text-muted-foreground">
+                      {user.username[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium text-foreground">@{user.username}</span>
+                      {user.verified && (
+                        <Badge variant="default">✓</Badge>
                       )}
                     </div>
-                    {post.author.specialties && (
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {post.author.specialties.slice(0, 3).map((specialty, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs bg-gray-800">
+                    {user.businessName && (
+                      <p className="text-sm text-secondary">{user.businessName}</p>
+                    )}
+                    {user.bio && (
+                      <p className="text-sm text-muted-foreground mt-1">{user.bio}</p>
+                    )}
+                    {user.specialties.length > 0 && (
+                      <div className="flex gap-1 mt-2 flex-wrap">
+                        {user.specialties.slice(0, 3).map((specialty) => (
+                          <Badge key={specialty} variant="secondary">
                             {specialty}
                           </Badge>
                         ))}
                       </div>
                     )}
-                  </div>
-                )}
-              </CardContent>
-
-              <CardFooter className="pt-0">
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center space-x-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={`text-gray-400 hover:text-red-500 p-0 ${post.liked ? "text-red-500" : ""}`}
-                      onClick={() => toggleLike(post.id)}
-                    >
-                      <Heart className={`w-5 h-5 mr-1 ${post.liked ? "fill-current" : ""}`} />
-                      <span className="text-sm">{post.likesCount}</span>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-blue-500 p-0">
-                      <MessageCircle className="w-5 h-5 mr-1" />
-                      <span className="text-sm">{post.commentsCount}</span>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-green-500 p-0">
-                      <Send className="w-5 h-5" />
-                    </Button>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-400">{post.viewsCount} views</span>
-                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-yellow-500 p-0">
-                      <Bookmark className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                {session?.user?.id && (
-                  <div className="mt-4 w-full space-y-2">
-                    <div className="flex space-x-2">
-                      <Link href={`/conversations/new?userId=${post.author.id}`} className="flex-1">
-                        <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-600">
-                          <MessageCircle className="w-4 h-4 mr-2" />
-                          Contact {post.author.username}
-                        </Button>
-                      </Link>
-                      {post.author.role === "PRO" && (
-                        <Button
-                          onClick={() => bookService(post.author.id)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                          <Calendar className="w-4 h-4 mr-2" />
-                          Book
-                        </Button>
-                      )}
+                    <div className="flex items-center space-x-4 mt-2 text-xs text-muted-foreground">
+                      <span>{user.postsCount} posts</span>
+                      <span>{user.followersCount} followers</span>
+                      <span>{user.profileViews} views</span>
                     </div>
                   </div>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
-
-          {displayPosts.length === 0 && !loading && (
-            <div className="text-center py-12">
-              <p className="text-gray-400">{isSearching ? "No posts found for your search." : "No posts available."}</p>
-            </div>
->>>>>>> origin/cursor/nettoyer-les-composants-obsol-tes-a507
-          )}
-        </div>
-
-        {/* Search Bar */}
-        <div className="relative mb-6">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </Link>
+            ))}
           </div>
-          <input
-            type="text"
-            placeholder="Search artists, posts, hashtags..."
-            className="modern-input w-full pl-10 pr-4 py-3"
-          />
-        </div>
-
-        {/* Posts Grid */}
-        <div className="posts-grid">
-          {posts.map((post) => (
-            <div key={post.id} className="post-card group">
-              {/* Post Header */}
-              <div className="p-4 border-b border-border">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Avatar className="modern-avatar w-10 h-10">
-                      <AvatarImage src={post.author.avatar} />
-                      <AvatarFallback className="bg-muted text-muted-foreground">
-                        {post.author.username[0]}
-                      </AvatarFallback>
-                    </Avatar>
+        ) : (
+          // Posts Grid
+          <div className="posts-grid">
+            {posts.map((post) => (
+              <div key={post.id} className="post-card group">
+                {/* Post Header */}
+                <div className="p-4 border-b border-border">
+                  <div className="flex items-center justify-between">
+                                      <div className="flex items-center space-x-3">
+                    <Link href={`/profile/${post.author.username}`}>
+                      <Avatar className="modern-avatar w-10 h-10 cursor-pointer hover:opacity-80 transition-opacity">
+                        <AvatarImage src={post.author.avatar} />
+                        <AvatarFallback className="bg-muted text-muted-foreground">
+                          {post.author.username[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Link>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-semibold text-foreground truncate">
-                          {post.author.businessName || post.author.username}
-                        </span>
-                        {post.isCollaboration && (
-                          <Badge variant="outline" className="modern-badge border-primary text-primary">
-                            <Users className="w-3 h-3 mr-1" />
-                            Collab
-                          </Badge>
-                        )}
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(post.publishedAt).toLocaleDateString()}
+                      <Link href={`/profile/${post.author.username}`} className="hover:opacity-80 transition-opacity">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-semibold text-foreground truncate">
+                            {post.author.businessName || post.author.username}
+                          </span>
+                          {post.isCollaboration && (
+                            <Badge variant="outline" className="modern-badge border-primary text-primary">
+                              <Users className="w-3 h-3 mr-1" />
+                              Collab
+                            </Badge>
+                          )}
+                        </div>
+                                              <span className="text-xs text-muted-foreground">
+                        {new Date(post.publishedAt || post.createdAt || Date.now()).toLocaleDateString()}
                       </span>
+                      </Link>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                    <MoreHorizontal className="w-5 h-5" />
-                  </Button>
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                      <MoreHorizontal className="w-5 h-5" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
 
-              {/* Post Content */}
-              <div className="p-4">
-                <p className="text-foreground mb-4">{post.content}</p>
-                
-                {/* Collaborations */}
-                {post.isCollaboration && post.collaborations && post.collaborations.length > 0 && (
-                  <div className="mb-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Users className="w-4 h-4 text-primary" />
-                      <span className="text-sm text-muted-foreground">Collaborators:</span>
+                {/* Post Content */}
+                <div className="p-4">
+                  <p className="text-foreground mb-4">
+                    <MentionHighlighter text={post.content} />
+                  </p>
+                  
+                  {/* Collaborations */}
+                  {post.isCollaboration && post.collaborations && post.collaborations.length > 0 && (
+                    <div className="mb-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Users className="w-4 h-4 text-primary" />
+                        <span className="text-sm text-muted-foreground">Collaborators:</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {post.collaborations
+                          .filter(collab => collab.status === "ACCEPTED")
+                          .map((collaboration) => (
+                            <Link
+                              key={collaboration.id}
+                              href={`/profile/${collaboration.pro.username}`}
+                              className="flex items-center gap-2 bg-muted rounded-full px-3 py-1 hover:bg-muted/80 transition-colors"
+                            >
+                              <Avatar className="w-5 h-5">
+                                <AvatarImage src={collaboration.pro.avatar} />
+                                <AvatarFallback className="bg-background text-xs">
+                                  {collaboration.pro.username[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="text-xs text-foreground">
+                                {collaboration.pro.businessName || collaboration.pro.username}
+                              </span>
+                              <CheckCircle className="w-3 h-3 text-green-500" />
+                            </Link>
+                          ))}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {post.collaborations
-                        .filter(collab => collab.status === "ACCEPTED")
-                        .map((collaboration) => (
-                          <div key={collaboration.id} className="flex items-center gap-2 bg-muted rounded-full px-3 py-1">
-                            <Avatar className="w-5 h-5">
-                              <AvatarImage src={collaboration.pro.avatar} />
-                              <AvatarFallback className="bg-background text-xs">
-                                {collaboration.pro.username[0]}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="text-xs text-foreground">
-                              {collaboration.pro.businessName || collaboration.pro.username}
-                            </span>
-                            <CheckCircle className="w-3 h-3 text-green-500" />
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Main Image */}
-                {post.images.length > 0 && (
-                  <div className="mb-4">
-                    <div className="aspect-square overflow-hidden rounded-lg">
-                      <Image 
-                        src={post.images[0]} 
-                        alt="Post image"
-                        width={400}
-                        height={400}
-                        className="w-full h-full object-cover"
-                      />
+                  {/* Main Image */}
+                  {post.images.length > 0 && (
+                    <div className="mb-4">
+                      <div className="aspect-square overflow-hidden rounded-lg">
+                        <Image 
+                          src={post.images[0]} 
+                          alt="Post image"
+                          width={400}
+                          height={400}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Hashtags */}
-                {post.hashtags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {post.hashtags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="modern-badge bg-muted text-muted-foreground">
-                        {tag}
+                  {/* Hashtags */}
+                  {post.hashtags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {post.hashtags.map((tag, index) => (
+                        <Badge key={index} variant="secondary" className="modern-badge bg-muted text-muted-foreground">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Price */}
+                  {post.price && (
+                    <div className="flex items-center gap-2 mb-4 p-3 bg-muted rounded-lg">
+                      <DollarSign className="w-4 h-4 text-green-500" />
+                      <span className="text-foreground font-semibold">€{post.price}</span>
+                      <Badge variant="outline" className="modern-badge border-green-500 text-green-500">
+                        For Sale
                       </Badge>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  )}
 
-                {/* Price */}
-                {post.price && (
-                  <div className="flex items-center gap-2 mb-4 p-3 bg-muted rounded-lg">
-                    <DollarSign className="w-4 h-4 text-green-500" />
-                    <span className="text-foreground font-semibold">€{post.price}</span>
-                    <Badge variant="outline" className="modern-badge border-green-500 text-green-500">
-                      For Sale
-                    </Badge>
-                  </div>
-                )}
-
-                {/* Engagement Stats */}
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center space-x-4">
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-4 h-4" />
-                      {post.likesCount}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MessageCircle className="w-4 h-4" />
-                      {post.commentsCount}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      {post.viewsCount}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleLike(post.id)}
-                      className="h-8 w-8 text-muted-foreground hover:text-red-500"
-                    >
-                      <Heart className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => toggleFavorite(post.id)}
-                      className={`h-8 w-8 ${favoritedPosts.has(post.id) ? 'text-yellow-500' : 'text-muted-foreground'} hover:text-yellow-500`}
-                    >
-                      <Star className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-primary"
-                    >
-                      <Share2 className="w-4 h-4" />
-                    </Button>
-                  </div>
+                  {/* Action Buttons */}
+                          <div className="flex items-center justify-between pt-3 border-t border-border">
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleLike(post.id)}
+              className={`h-8 w-8 ${post.liked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-500'}`}
+            >
+              <Heart className={`w-4 h-4 ${post.liked ? 'fill-current' : ''}`} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => toggleFavorite(post.id)}
+              className={`h-8 w-8 ${favoritedPosts.has(post.id) ? 'text-yellow-500 hover:text-yellow-600' : 'text-muted-foreground hover:text-yellow-500'}`}
+            >
+              <Star className={`w-4 h-4 ${favoritedPosts.has(post.id) ? 'fill-current' : ''}`} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-primary"
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Link href={`/posts/${post.id}`}>
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                <MessageCircle className="w-4 h-4 mr-2" />
+                View & Comment
+              </Button>
+            </Link>
+            {post.author.id !== session?.user?.id && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleContactArtist(post)}
+                className="text-primary hover:text-primary/80"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Contacter
+              </Button>
+            )}
+          </div>
+        </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Empty State */}
-        {posts.length === 0 && (
+        {posts.length === 0 && users.length === 0 && !loading && (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
               <Users className="w-8 h-8 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-medium text-foreground mb-2">No posts yet</h3>
+            <h3 className="text-lg font-medium text-foreground mb-2">
+              {isSearching ? "No results found" : "No posts yet"}
+            </h3>
             <p className="text-muted-foreground mb-6">
-              Be the first to share your artwork with the community!
+              {isSearching 
+                ? "Try different keywords or tags" 
+                : "Be the first to share your artwork with the community!"
+              }
             </p>
-            {session?.user?.role === "PRO" ? (
-              <Link href="/posts/create">
-                <Button className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Create Your First Post
-                </Button>
-              </Link>
-            ) : (
-              <Link href="/auth/login">
-                <Button className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
-                  Sign In to Create Posts
-                </Button>
-              </Link>
+            {!isSearching && (
+              session?.user?.role === "PRO" ? (
+                <Link href="/posts/create">
+                  <Button className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
+                    Create Your First Post
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/auth/login">
+                  <Button className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
+                    Sign In to Create Posts
+                  </Button>
+                </Link>
+              )
             )}
           </div>
         )}
       </div>
+
+      {/* Gestionnaire de conversation pour le contact */}
+      {contactLoading && (
+        <ConversationManager
+          artist={contactLoading.artist}
+          post={contactLoading.post}
+          onClose={() => setContactLoading(null)}
+        />
+      )}
+
       <BottomNavigation />
     </div>
   )
 }
+

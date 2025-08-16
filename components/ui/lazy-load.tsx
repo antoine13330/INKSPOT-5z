@@ -35,7 +35,7 @@ export const useLazyLoad = (
   rootMargin: string = '50px'
 ) => {
   const [isVisible, setIsVisible] = useState(false)
-  const ref = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(

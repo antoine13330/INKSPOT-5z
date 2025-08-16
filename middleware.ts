@@ -12,6 +12,7 @@ export async function middleware(request: NextRequest) {
     "/_next", // Fichiers statiques Next.js
     "/favicon.ico",
     "/manifest.json",
+    "/manifest.webmanifest",
     "/sw.js"
   ]
 
@@ -53,7 +54,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - assets with file extensions (e.g., .png, .jpg, .svg, .css, .js, .json, .webmanifest)
      */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|txt|css|js|json|webmanifest)).*)",
   ],
 } 

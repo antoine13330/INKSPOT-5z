@@ -46,6 +46,66 @@ const CITY_COORDINATES: Record<string, LocationCoords> = {
   'milan': { lat: 45.4642, lng: 9.1900 },
 }
 
+// Type for user with include fields from Prisma query
+interface UserWithStats {
+  id: string
+  username: string
+  firstName?: string
+  lastName?: string
+  avatar?: string
+  bio?: string
+  location?: string
+  role: string
+  verified: boolean
+  businessName?: string
+  specialties: string[]
+  hourlyRate?: number
+  portfolio: string[]
+  profileViews?: number
+  lastActiveAt?: string
+  _count: {
+    followers: number
+    following: number
+    posts: number
+    reviewsReceived: number
+  }
+  reviewsReceived: Array<{ rating: number }>
+  posts: Array<{
+    id: string
+    likesCount: number
+    commentsCount: number
+    createdAt: string
+  }>
+}
+
+// Type for post with include fields from Prisma query
+interface PostWithStats {
+  id: string
+  content: string
+  images: string[]
+  hashtags: string[]
+  viewsCount: number
+  createdAt: Date
+  author: {
+    id: string
+    username: string
+    firstName?: string
+    lastName?: string
+    avatar?: string
+    role: string
+    verified: boolean
+    businessName?: string
+    specialties: string[]
+    hourlyRate?: number
+    location?: string
+  }
+  _count: {
+    likes: number
+    comments: number
+  }
+  likes: Array<{ userId: string }>
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -137,10 +197,10 @@ async function searchUsersByLocation(
           followers: true,
           following: true,
           posts: true,
-          reviewsReceived: true,
+          receivedReviews: true,
         },
       },
-      reviewsReceived: {
+      receivedReviews: {
         select: {
           rating: true,
         },
@@ -160,18 +220,18 @@ async function searchUsersByLocation(
 
   // Filter by distance and calculate distances
   const usersWithDistance = allUsers
-    .map(user => {
+    .map((user: any) => {
       const userCoords = geocodeLocation(user.location!)
       if (!userCoords) return null
 
       const distance = calculateDistance(searchCoords, userCoords)
       
       if (distance <= params.radius) {
-        const avgRating = user.reviewsReceived.length > 0 
-          ? user.reviewsReceived.reduce((sum, review) => sum + review.rating, 0) / user.reviewsReceived.length
+        const avgRating = user.receivedReviews.length > 0 
+          ? user.receivedReviews.reduce((sum: number, review: any) => sum + review.rating, 0) / user.receivedReviews.length
           : 0
 
-        const totalEngagement = user.posts.reduce((sum, post) => sum + post.likesCount + post.commentsCount, 0)
+        const totalEngagement = user.posts.reduce((sum: number, post: any) => sum + post.likesCount + post.commentsCount, 0)
 
         return {
           id: user.id,
@@ -195,7 +255,7 @@ async function searchUsersByLocation(
             followersCount: user._count.followers,
             followingCount: user._count.following,
             postsCount: user._count.posts,
-            reviewsCount: user._count.reviewsReceived,
+            reviewsCount: user._count.receivedReviews,
             avgRating: Math.round(avgRating * 10) / 10,
             totalEngagement,
           },
@@ -265,7 +325,7 @@ async function searchPostsByLocation(
 
   // Filter by distance and calculate distances
   const postsWithDistance = allPosts
-    .map(post => {
+    .map((post: any) => {
       const authorCoords = geocodeLocation(post.author.location!)
       if (!authorCoords) return null
 

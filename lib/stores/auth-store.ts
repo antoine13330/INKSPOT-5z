@@ -63,9 +63,9 @@ export const useAuthStore = create<AuthState>()(
             verified: session.user.verified || false,
             businessName: session.user.businessName,
             specialties: session.user.specialties,
-            hourlyRate: session.user.hourlyRate,
-            profileTheme: session.user.profileTheme,
-            createdAt: session.user.createdAt || new Date().toISOString(),
+            hourlyRate: (session.user as any).hourlyRate,
+            profileTheme: (session.user as any).profileTheme,
+            createdAt: (session.user as any).createdAt || new Date().toISOString(),
           }
         } else {
           state.user = null

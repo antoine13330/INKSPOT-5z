@@ -1,179 +1,222 @@
-import Stripe from 'stripe';
+import Stripe from 'stripe'
 
-// Create Stripe client only if the secret key is available
-const createStripeClient = () => {
-  const secretKey = process.env.STRIPE_SECRET_KEY;
-  if (!secretKey) {
-    console.warn('STRIPE_SECRET_KEY not found - Stripe functionality will be disabled');
-    return null;
-  }
-  
-  return new Stripe(secretKey, {
-    apiVersion: '2025-07-30.basil',
-  });
-};
+// Configuration Stripe
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-07-30.basil',
+  typescript: true,
+})
 
-export const stripe = createStripeClient();
-
-export async function createStripeCustomer(userId: string, email: string, name?: string) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
-  }
-  
-  const customer = await stripe.customers.create({
-    email,
-    name,
-    metadata: {
-      userId,
-    },
-  });
-
-  return customer;
+// Types pour les paiements
+export interface PaymentIntentData {
+  amount: number
+  currency: string
+  appointmentId: string
+  clientId: string
+  proId: string
+  description: string
+  metadata?: Record<string, string>
 }
 
-export async function createStripeAccount(userId: string, email: string, country = 'FR') {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
-  }
-  
-  const account = await stripe.accounts.create({
-    type: 'express',
-    country,
-    email,
-    capabilities: {
-      card_payments: { requested: true },
-      transfers: { requested: true },
-    },
-    metadata: {
-      userId,
-    },
-  });
-
-  return account;
+export interface CreatePaymentIntentResponse {
+  clientSecret: string
+  paymentIntentId: string
 }
 
-export async function createPaymentIntent(amount: number, currency = 'eur', customerId?: string) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
-  }
-  
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: Math.round(amount * 100), // Convert to cents
-    currency,
-    customer: customerId,
-    automatic_payment_methods: {
-      enabled: true,
-    },
-  });
+// Créer une intention de paiement
+export async function createPaymentIntent(data: PaymentIntentData): Promise<CreatePaymentIntentResponse> {
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: data.amount * 100, // Stripe utilise les centimes
+      currency: data.currency.toLowerCase(),
+      metadata: {
+        appointmentId: data.appointmentId,
+        clientId: data.clientId,
+        proId: data.proId,
+        ...data.metadata,
+      },
+      description: data.description,
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    })
 
-  return paymentIntent;
+    return {
+      clientSecret: paymentIntent.client_secret!,
+      paymentIntentId: paymentIntent.id,
+    }
+  } catch (error) {
+    console.error('Error creating payment intent:', error)
+    throw new Error('Failed to create payment intent')
+  }
 }
 
-export async function createCheckoutSession(params: {
-  lineItems: Array<{ price: string; quantity: number }>;
-  mode: 'payment' | 'subscription';
-  successUrl: string;
-  cancelUrl: string;
-  customerId?: string;
-  metadata?: Record<string, string>;
-}) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
+// Confirmer un paiement
+export async function confirmPayment(paymentIntentId: string): Promise<boolean> {
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+    return paymentIntent.status === 'succeeded'
+  } catch (error) {
+    console.error('Error confirming payment:', error)
+    return false
   }
-  
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: params.lineItems,
-    mode: params.mode,
-    success_url: params.successUrl,
-    cancel_url: params.cancelUrl,
-    customer: params.customerId,
-    metadata: params.metadata,
-  });
-
-  return session;
 }
 
-export async function createProduct(name: string, description?: string) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
+// Rembourser un paiement
+export async function refundPayment(paymentIntentId: string, amount?: number): Promise<boolean> {
+  try {
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentIntentId,
+      amount: amount ? amount * 100 : undefined,
+    })
+    return refund.status === 'succeeded'
+  } catch (error) {
+    console.error('Error refunding payment:', error)
+    return false
   }
-  
-  const product = await stripe.products.create({
-    name,
-    description,
-  });
-
-  return product;
 }
 
-export async function createPrice(productId: string, amount: number, currency = 'eur', recurring?: { interval: 'day' | 'week' | 'month' | 'year' }) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
-  }
-  
-  const price = await stripe.prices.create({
-    product: productId,
-    unit_amount: Math.round(amount * 100),
-    currency,
-    recurring,
-  });
+// Créer un lien de paiement
+export async function createPaymentLink(data: {
+  amount: number
+  currency: string
+  appointmentId: string
+  description: string
+  successUrl: string
+  cancelUrl: string
+}): Promise<string> {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: data.currency.toLowerCase(),
+            product_data: {
+              name: data.description,
+            },
+            unit_amount: data.amount * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: data.successUrl,
+      cancel_url: data.cancelUrl,
+      metadata: {
+        appointmentId: data.appointmentId,
+      },
+    })
 
-  return price;
+    return session.url!
+  } catch (error) {
+    console.error('Error creating payment link:', error)
+    throw new Error('Failed to create payment link')
+  }
 }
 
-export async function createTransfer(amount: number, destination: string, currency = 'eur') {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
+// Créer un client Stripe
+export async function createStripeCustomer(
+  userId: string,
+  email: string,
+  name?: string
+): Promise<Stripe.Customer> {
+  try {
+    const customer = await stripe.customers.create({
+      email,
+      name,
+      metadata: {
+        userId,
+      },
+    })
+    return customer
+  } catch (error) {
+    console.error('Error creating Stripe customer:', error)
+    throw new Error('Failed to create Stripe customer')
   }
-  
-  const transfer = await stripe.transfers.create({
-    amount: Math.round(amount * 100),
-    currency,
-    destination,
-  });
-
-  return transfer;
 }
 
-export async function getAccountLink(accountId: string, refreshUrl: string, returnUrl: string) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
+// Créer un compte Stripe Connect
+export async function createStripeAccount(
+  userId: string,
+  email: string,
+  country: string = 'FR'
+): Promise<Stripe.Account> {
+  try {
+    const account = await stripe.accounts.create({
+      type: 'express',
+      country,
+      email,
+      capabilities: {
+        card_payments: { requested: true },
+        transfers: { requested: true },
+      },
+      metadata: {
+        userId,
+      },
+    })
+    return account
+  } catch (error) {
+    console.error('Error creating Stripe Connect account:', error)
+    throw new Error('Failed to create Stripe Connect account')
   }
-  
-  const accountLink = await stripe.accountLinks.create({
-    account: accountId,
-    refresh_url: refreshUrl,
-    return_url: returnUrl,
-    type: 'account_onboarding',
-  });
-
-  return accountLink;
 }
 
-export async function createPayout(amount: number, currency: string = 'eur', destination: string) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
+// Créer un lien de compte pour l'onboarding Stripe Connect
+export async function getAccountLink(
+  accountId: string,
+  refreshUrl: string,
+  returnUrl: string
+): Promise<Stripe.AccountLink> {
+  try {
+    const accountLink = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: refreshUrl,
+      return_url: returnUrl,
+      type: 'account_onboarding',
+    })
+    return accountLink
+  } catch (error) {
+    console.error('Error creating account link:', error)
+    throw new Error('Failed to create account link')
   }
-  
-  const payout = await stripe.payouts.create({
-    amount: Math.round(amount * 100),
-    currency,
-    destination,
-  });
-
-  return payout;
 }
 
-export async function refundPayment(paymentIntentId: string, amount?: number) {
-  if (!stripe) {
-    throw new Error('Stripe is not configured');
+// Créer un virement (payout) vers un compte Stripe Connect
+export async function createPayout(
+  amount: number,
+  stripeAccountId: string
+): Promise<Stripe.Transfer> {
+  try {
+    const transfer = await stripe.transfers.create({
+      amount: amount * 100, // Stripe utilise les centimes
+      currency: 'eur',
+      destination: stripeAccountId,
+      description: 'Payout from INKSPOT platform',
+    })
+    return transfer
+  } catch (error) {
+    console.error('Error creating payout:', error)
+    throw new Error('Failed to create payout')
   }
-  
-  const refund = await stripe.refunds.create({
-    payment_intent: paymentIntentId,
-    amount: amount ? Math.round(amount * 100) : undefined,
-  });
+}
 
-  return refund;
+// Créer un transfert entre comptes
+export async function createTransfer(
+  amount: number,
+  destinationAccountId: string,
+  sourceTransactionId?: string
+): Promise<Stripe.Transfer> {
+  try {
+    const transfer = await stripe.transfers.create({
+      amount: amount * 100, // Stripe utilise les centimes
+      currency: 'eur',
+      destination: destinationAccountId,
+      source_transaction: sourceTransactionId,
+      description: 'Transfer from INKSPOT platform',
+    })
+    return transfer
+  } catch (error) {
+    console.error('Error creating transfer:', error)
+    throw new Error('Failed to create transfer')
+  }
 }

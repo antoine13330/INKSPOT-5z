@@ -15,7 +15,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const { action } = body
     const { id: userId } = await params
 
-    let updateData: unknown = {}
+    let updateData: { status?: 'ACTIVE' | 'SUSPENDED'; verified?: boolean } = {}
 
     switch (action) {
       case "suspend":

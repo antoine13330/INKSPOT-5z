@@ -2,13 +2,26 @@ import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 export const dynamic = "force-dynamic"
 
+// Type for post with hashtags and engagement from Prisma query
+interface PostWithEngagement {
+  hashtags: string[]
+  likesCount: number
+  commentsCount: number
+  viewsCount: number
+}
+
+// Type for search history record from Prisma
+interface SearchHistoryRecord {
+  query: string
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const limit = Number.parseInt(searchParams.get("limit") || "10")
 
     // Get trending hashtags from recent posts
-    const recentPosts = await prisma.post.findMany({
+    const recentPosts: PostWithEngagement[] = await prisma.post.findMany({
       where: {
         status: 'PUBLISHED',
         createdAt: {
@@ -26,7 +39,7 @@ export async function GET(request: NextRequest) {
     // Count hashtag frequencies with engagement weight
     const hashtagStats: Record<string, { count: number; engagement: number }> = {}
     
-    recentPosts.forEach(post => {
+    recentPosts.forEach((post: PostWithEngagement) => {
       const engagement = post.likesCount + post.commentsCount + (post.viewsCount / 10)
       post.hashtags.forEach(hashtag => {
         if (!hashtagStats[hashtag]) {
@@ -49,7 +62,7 @@ export async function GET(request: NextRequest) {
       .slice(0, limit)
 
     // Get trending search queries from recent search history
-    const recentSearches = await prisma.searchHistory.findMany({
+    const recentSearches: SearchHistoryRecord[] = await prisma.searchHistory.findMany({
       where: {
         createdAt: {
           gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
@@ -62,7 +75,7 @@ export async function GET(request: NextRequest) {
 
     // Count query frequencies
     const queryCounts: Record<string, number> = {}
-    recentSearches.forEach(search => {
+    recentSearches.forEach((search: SearchHistoryRecord) => {
       const normalizedQuery = search.query.toLowerCase().trim()
       if (normalizedQuery.length > 2) {
         queryCounts[normalizedQuery] = (queryCounts[normalizedQuery] || 0) + 1

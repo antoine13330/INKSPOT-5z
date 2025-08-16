@@ -186,6 +186,10 @@ services:
       - "9187:9187"
     environment:
       DATA_SOURCE_NAME: "postgresql://postgres:postgres@postgres:5432/inkspot?sslmode=disable"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/postgres_exporter.yml"
+    volumes:
+      - postgres_exporter_config:/etc/postgres_exporter.yml
+    command: ["--extend.query-path=/etc/postgres_exporter.yml"]
     networks:
       - inkspot_network
     restart: unless-stopped
@@ -229,6 +233,12 @@ volumes:
   redis_data:
   grafana_data:
   prometheus_data:
+  postgres_exporter_config:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./monitoring/postgres-exporter/queries.yaml
 
 networks:
   inkspot_network:

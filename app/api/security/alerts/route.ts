@@ -3,6 +3,15 @@ import { securityMonitor } from '@/lib/security-monitor'
 import { auditLogger } from '@/lib/audit-logger'
 export const dynamic = "force-dynamic"
 
+// Type for security alert filters
+interface SecurityAlertFilters {
+  type?: "COMPLIANCE" | "THREAT" | "VULNERABILITY" | "ANOMALY"
+  severity?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
+  resolved?: boolean
+  startDate?: Date
+  endDate?: Date
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -12,9 +21,9 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
-    const filters: unknown = {}
-    if (type) filters.type = type
-    if (severity) filters.severity = severity
+    const filters: SecurityAlertFilters = {}
+    if (type) filters.type = type as "COMPLIANCE" | "THREAT" | "VULNERABILITY" | "ANOMALY"
+    if (severity) filters.severity = severity as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL"
     if (resolved !== null) filters.resolved = resolved === 'true'
     if (startDate) filters.startDate = new Date(startDate)
     if (endDate) filters.endDate = new Date(endDate)
@@ -28,7 +37,7 @@ export async function GET(request: NextRequest) {
       'GET_SECURITY_ALERTS',
       'security/alerts',
       true,
-      request.ip || 'unknown',
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
       request.headers.get('user-agent') || 'unknown',
       { filters, alertCount: alerts.length }
     )
@@ -46,7 +55,7 @@ export async function GET(request: NextRequest) {
       'GET_SECURITY_ALERTS',
       'security/alerts',
       false,
-      request.ip || 'unknown',
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
       request.headers.get('user-agent') || 'unknown',
       { error: error instanceof Error ? error.message : 'Unknown error' }
     )
@@ -86,7 +95,7 @@ export async function POST(request: NextRequest) {
       'CREATE_SECURITY_ALERT',
       'security/alerts',
       true,
-      request.ip || 'unknown',
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
       request.headers.get('user-agent') || 'unknown',
       { alertId, type, severity, title }
     )
@@ -103,7 +112,7 @@ export async function POST(request: NextRequest) {
       'CREATE_SECURITY_ALERT',
       'security/alerts',
       false,
-      request.ip || 'unknown',
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
       request.headers.get('user-agent') || 'unknown',
       { error: error instanceof Error ? error.message : 'Unknown error' }
     )

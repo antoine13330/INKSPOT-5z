@@ -114,9 +114,12 @@ class PerformanceMonitor {
     if ('PerformanceObserver' in window) {
       const inputObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          this.recordMetrics({
-            firstInputDelay: entry.processingStart - entry.startTime,
-          })
+          const eventEntry = entry as PerformanceEventTiming
+          if (eventEntry.processingStart) {
+            this.recordMetrics({
+              firstInputDelay: eventEntry.processingStart - eventEntry.startTime,
+            })
+          }
         }
       })
       
@@ -286,27 +289,7 @@ class PerformanceMonitor {
 
 export const performanceMonitor = PerformanceMonitor.getInstance()
 
-// Performance monitoring hooks
-export const usePerformanceMonitoring = () => {
-  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null)
 
-  useEffect(() => {
-    const updateMetrics = () => {
-      const latest = performanceMonitor.getLatestMetrics()
-      if (latest) {
-        setMetrics(latest)
-      }
-    }
-
-    // Update metrics every 5 seconds
-    const interval = setInterval(updateMetrics, 5000)
-    updateMetrics() // Initial update
-
-    return () => clearInterval(interval)
-  }, [])
-
-  return { metrics, performanceMonitor }
-}
 
 // Performance budget monitoring
 export interface PerformanceBudget {

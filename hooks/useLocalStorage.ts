@@ -13,7 +13,10 @@ export function useLocalStorageWithExpiry<T>(
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = getLocalStorageWithExpiry(key)
-      return item !== null ? item : initialValue
+      if (item !== null && item !== undefined) {
+        return item as T
+      }
+      return initialValue
     } catch (error) {
       // Log error for debugging (in production, send to monitoring service)
       if (process.env.NODE_ENV === 'development') {

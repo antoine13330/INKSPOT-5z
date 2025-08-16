@@ -6,16 +6,9 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install pnpm globally to ensure it's available
-RUN npm install -g pnpm
-
 # Copy package files
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
-RUN \
-  if [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY package.json ./
+RUN npm install --platform=linux --arch=x64
 
 # Build stage
 FROM base AS builder

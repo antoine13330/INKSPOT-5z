@@ -2,6 +2,11 @@ import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 export const dynamic = "force-dynamic"
 
+// Type for post with hashtags from Prisma query
+interface PostWithHashtags {
+  hashtags: string[]
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -13,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all posts and extract hashtags with their frequencies
-    const posts = await prisma.post.findMany({
+    const posts: PostWithHashtags[] = await prisma.post.findMany({
       where: {
         status: 'PUBLISHED',
         hashtags: {
@@ -29,7 +34,7 @@ export async function GET(request: NextRequest) {
     // Count hashtag frequencies and filter by query
     const hashtagCounts: Record<string, number> = {}
     
-    posts.forEach(post => {
+    posts.forEach((post: PostWithHashtags) => {
       post.hashtags.forEach(hashtag => {
         if (hashtag.toLowerCase().includes(query.toLowerCase())) {
           hashtagCounts[hashtag] = (hashtagCounts[hashtag] || 0) + 1

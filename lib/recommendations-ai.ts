@@ -340,7 +340,7 @@ export class AIRecommendationEngine {
       take: 200 // Limit candidates for performance
     })
 
-    return users.map(user => ({
+    return users.map((user: any) => ({
       id: user.id,
       username: user.username,
       role: user.role,
@@ -448,7 +448,7 @@ export async function getAIRecommendedPosts(
     orderBy: { createdAt: 'desc' }
   })
 
-  const interactedUserIds = [...new Set(userInteractions.map(i => i.targetUserId))]
+  const interactedUserIds = [...new Set(userInteractions.map((i: any) => i.targetUserId))]
 
   const posts = await prisma.post.findMany({
     where: {
@@ -503,7 +503,7 @@ export async function getAIRecommendedPosts(
     diversifyPostRecommendations(posts, userRecommendations, limit) :
     posts.slice(0, limit)
 
-  return rankedPosts.map(post => ({
+  return rankedPosts.map((post: any) => ({
     ...post,
     liked: userId ? post.likes.length > 0 : false,
     likesCount: post._count.likes,
@@ -523,7 +523,7 @@ function diversifyPostRecommendations(posts: unknown[], userRecommendations: Rec
   const userScoreMap = new Map(userRecommendations.map(rec => [rec.userId, rec.score]))
 
   // Sort posts by a combination of AI score and diversity factors
-  const scoredPosts = posts.map(post => ({
+  const scoredPosts = posts.map((post: any) => ({
     ...post,
     aiScore: userScoreMap.get(post.authorId) || 0,
     diversityScore: calculatePostDiversityScore(post, usedHashtags, usedAuthors)
@@ -552,7 +552,7 @@ function diversifyPostRecommendations(posts: unknown[], userRecommendations: Rec
   return diversified
 }
 
-function calculatePostDiversityScore(post: unknown, usedHashtags: Set<string>, usedAuthors: Set<string>): number {
+function calculatePostDiversityScore(post: any, usedHashtags: Set<string>, usedAuthors: Set<string>): number {
   let score = 0
   
   // Boost for new hashtags

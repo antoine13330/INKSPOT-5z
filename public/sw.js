@@ -1,98 +1,83 @@
 // Service Worker for PWA functionality and push notifications
 
-const CACHE_NAME = 'inkspot-v1'
-const STATIC_CACHE = 'inkspot-static-v1'
-const DYNAMIC_CACHE = 'inkspot-dynamic-v1'
+const CACHE_NAME = 'inkspot-v1.0.0'
+const STATIC_CACHE = 'static-v1'
+const DYNAMIC_CACHE = 'dynamic-v1'
+const API_CACHE = 'api-v1'
 
-// Files to cache for offline functionality
+// Files to cache immediately
 const STATIC_FILES = [
   '/',
-  '/offline',
   '/manifest.json',
-  '/favicon.ico',
-  '/images/logo.png',
-  '/images/placeholder.jpg',
-]
-
-// API endpoints to cache
-const API_CACHE_PATTERNS = [
-  '/api/users',
-  '/api/posts',
-  '/api/bookings',
-  '/api/conversations',
+  '/offline.html',
+  '/_next/static/css/app.css',
+  '/_next/static/js/app.js'
 ]
 
 // Install event - cache static files
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => {
-      return cache.addAll(STATIC_FILES)
-    })
+    caches.open(STATIC_CACHE)
+      .then(cache => {
+        console.log('Caching static files')
+        return cache.addAll(STATIC_FILES)
+      })
+      .then(() => self.skipWaiting())
   )
-  self.skipWaiting()
 })
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+        cacheNames.map(cacheName => {
+          if (cacheName !== STATIC_CACHE && 
+              cacheName !== DYNAMIC_CACHE && 
+              cacheName !== API_CACHE) {
+            console.log('Deleting old cache:', cacheName)
             return caches.delete(cacheName)
           }
         })
       )
-    })
+    }).then(() => self.clients.claim())
   )
-  self.clients.claim()
 })
 
-// Fetch event - serve from cache when offline
+// Fetch event - serve from cache or network
 self.addEventListener('fetch', (event) => {
   const { request } = event
   const url = new URL(request.url)
 
   // Skip non-GET requests
-  if (request.method !== 'GET') {
-    return
-  }
+  if (request.method !== 'GET') return
 
-  // Handle API requests
+  // Handle different types of requests
   if (url.pathname.startsWith('/api/')) {
+    // API requests - cache with network-first strategy
     event.respondWith(handleApiRequest(request))
-    return
-  }
-
-  // Handle static files
-  if (isStaticFile(url.pathname)) {
+  } else if (url.pathname.startsWith('/_next/static/')) {
+    // Static assets - cache-first strategy
     event.respondWith(handleStaticRequest(request))
-    return
+  } else if (url.pathname.startsWith('/')) {
+    // Page requests - network-first strategy
+    event.respondWith(handlePageRequest(request))
   }
-
-  // Handle navigation requests
-  if (request.mode === 'navigate') {
-    event.respondWith(handleNavigationRequest(request))
-    return
-  }
-
-  // Handle other requests
-  event.respondWith(handleOtherRequest(request))
 })
 
-// Handle API requests with cache-first strategy
+// Handle API requests with network-first strategy
 async function handleApiRequest(request) {
   try {
     // Try network first
-    const response = await fetch(request)
+    const networkResponse = await fetch(request)
     
     // Cache successful responses
-    if (response.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE)
-      cache.put(request, response.clone())
+    if (networkResponse.ok) {
+      const cache = await caches.open(API_CACHE)
+      cache.put(request, networkResponse.clone())
     }
     
-    return response
+    return networkResponse
   } catch (error) {
     // Fallback to cache
     const cachedResponse = await caches.match(request)
@@ -102,112 +87,74 @@ async function handleApiRequest(request) {
     
     // Return offline response for API requests
     return new Response(
-      JSON.stringify({ error: 'Offline mode - data not available' }),
-      {
+      JSON.stringify({ error: 'Offline - API unavailable' }),
+      { 
         status: 503,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' }
       }
     )
   }
 }
 
-// Handle static files with cache-first strategy
+// Handle static requests with cache-first strategy
 async function handleStaticRequest(request) {
   const cachedResponse = await caches.match(request)
   if (cachedResponse) {
     return cachedResponse
   }
-
+  
   try {
-    const response = await fetch(request)
-    if (response.ok) {
+    const networkResponse = await fetch(request)
+    if (networkResponse.ok) {
       const cache = await caches.open(STATIC_CACHE)
-      cache.put(request, response.clone())
+      cache.put(request, networkResponse.clone())
     }
-    return response
+    return networkResponse
   } catch (error) {
-    return new Response('Offline - file not available', { status: 503 })
+    return new Response('Offline - Static file unavailable', { status: 503 })
   }
 }
 
-// Handle navigation requests with network-first strategy
-async function handleNavigationRequest(request) {
+// Handle page requests with network-first strategy
+async function handlePageRequest(request) {
   try {
-    // Try network first
-    const response = await fetch(request)
+    const networkResponse = await fetch(request)
     
-    // Cache successful responses
-    if (response.ok) {
+    if (networkResponse.ok) {
       const cache = await caches.open(DYNAMIC_CACHE)
-      cache.put(request, response.clone())
+      cache.put(request, networkResponse.clone())
     }
     
-    return response
+    return networkResponse
   } catch (error) {
-    // Fallback to cache
     const cachedResponse = await caches.match(request)
     if (cachedResponse) {
       return cachedResponse
     }
     
     // Return offline page
-    return caches.match('/offline')
+    return caches.match('/offline.html')
   }
-}
-
-// Handle other requests with stale-while-revalidate strategy
-async function handleOtherRequest(request) {
-  const cachedResponse = await caches.match(request)
-  
-  try {
-    const response = await fetch(request)
-    
-    // Cache successful responses
-    if (response.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE)
-      cache.put(request, response.clone())
-    }
-    
-    return response
-  } catch (error) {
-    // Return cached response if available
-    if (cachedResponse) {
-      return cachedResponse
-    }
-    
-    // Return offline response
-    return new Response('Offline - resource not available', { status: 503 })
-  }
-}
-
-// Check if file is static
-function isStaticFile(pathname) {
-  return STATIC_FILES.includes(pathname) ||
-         pathname.startsWith('/images/') ||
-         pathname.startsWith('/css/') ||
-         pathname.startsWith('/js/') ||
-         pathname.startsWith('/fonts/')
 }
 
 // Background sync for offline actions
 self.addEventListener('sync', (event) => {
   if (event.tag === 'background-sync') {
-    event.waitUntil(performBackgroundSync())
+    event.waitUntil(doBackgroundSync())
   }
 })
 
-// Background sync implementation
-async function performBackgroundSync() {
+async function doBackgroundSync() {
   try {
-    // Get stored offline actions
-    const offlineActions = await getOfflineActions()
+    // Get pending actions from IndexedDB
+    const pendingActions = await getPendingActions()
     
-    for (const action of offlineActions) {
+    for (const action of pendingActions) {
       try {
-        await performOfflineAction(action)
-        await removeOfflineAction(action.id)
+        await processPendingAction(action)
+        await removePendingAction(action.id)
       } catch (error) {
-        console.error('Background sync failed for action:', action, error)
+        console.error('Failed to process pending action:', error)
       }
     }
   } catch (error) {
@@ -215,105 +162,40 @@ async function performBackgroundSync() {
   }
 }
 
-// Store offline action
-async function storeOfflineAction(action) {
-  const db = await openIndexedDB()
-  const transaction = db.transaction(['offlineActions'], 'readwrite')
-  const store = transaction.objectStore('offlineActions')
-  
-  action.id = Date.now().toString()
-  action.timestamp = new Date().toISOString()
-  
-  await store.add(action)
-}
-
-// Get stored offline actions
-async function getOfflineActions() {
-  const db = await openIndexedDB()
-  const transaction = db.transaction(['offlineActions'], 'readonly')
-  const store = transaction.objectStore('offlineActions')
-  
-  return await store.getAll()
-}
-
-// Remove offline action
-async function removeOfflineAction(id) {
-  const db = await openIndexedDB()
-  const transaction = db.transaction(['offlineActions'], 'readwrite')
-  const store = transaction.objectStore('offlineActions')
-  
-  await store.delete(id)
-}
-
-// Perform offline action
-async function performOfflineAction(action) {
-  const response = await fetch(action.url, {
-    method: action.method,
-    headers: action.headers,
-    body: action.body,
-  })
-  
-  if (!response.ok) {
-    throw new Error(`Action failed: ${response.status}`)
-  }
-  
-  return response
-}
-
-// Open IndexedDB
-async function openIndexedDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('InkSpotOffline', 1)
-    
-    request.onerror = () => reject(request.error)
-    request.onsuccess = () => resolve(request.result)
-    
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result
-      
-      // Create offline actions store
-      if (!db.objectStoreNames.contains('offlineActions')) {
-        const store = db.createObjectStore('offlineActions', { keyPath: 'id' })
-        store.createIndex('timestamp', 'timestamp', { unique: false })
-      }
-    }
-  })
-}
-
 // Push notification handling
 self.addEventListener('push', (event) => {
   const options = {
-    body: event.data ? event.data.text() : 'New notification from InkSpot',
-    icon: '/images/logo.png',
-    badge: '/images/badge.png',
+    body: event.data ? event.data.text() : 'New notification',
+    icon: '/placeholder-logo.png',
+    badge: '/placeholder-logo.png',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
-      primaryKey: 1,
+      primaryKey: 1
     },
     actions: [
       {
         action: 'explore',
         title: 'View',
-        icon: '/images/checkmark.png',
+        icon: '/placeholder-logo.png'
       },
       {
         action: 'close',
         title: 'Close',
-        icon: '/images/xmark.png',
-      },
-    ],
+        icon: '/placeholder-logo.png'
+      }
+    ]
   }
-
+  
   event.waitUntil(
-    self.registration.showNotification('InkSpot', options)
+    self.registration.showNotification('INKSPOT', options)
   )
 })
 
 // Notification click handling
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-
+  
   if (event.action === 'explore') {
     event.waitUntil(
       clients.openWindow('/')
@@ -321,13 +203,89 @@ self.addEventListener('notificationclick', (event) => {
   }
 })
 
+// Helper functions for background sync
+async function getPendingActions() {
+  // This would typically use IndexedDB
+  // For now, return empty array
+  return []
+}
+
+async function processPendingAction(action) {
+  // Process different types of pending actions
+  switch (action.type) {
+    case 'booking':
+      return await processBooking(action.data)
+    case 'payment':
+      return await processPayment(action.data)
+    case 'message':
+      return await processMessage(action.data)
+    default:
+      throw new Error(`Unknown action type: ${action.type}`)
+  }
+}
+
+async function processBooking(bookingData) {
+  // Process offline booking
+  const response = await fetch('/api/bookings', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(bookingData)
+  })
+  
+  if (!response.ok) {
+    throw new Error('Failed to process booking')
+  }
+  
+  return response.json()
+}
+
+async function processPayment(paymentData) {
+  // Process offline payment
+  const response = await fetch('/api/payments/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(paymentData)
+  })
+  
+  if (!response.ok) {
+    throw new Error('Failed to process payment')
+  }
+  
+  return response.json()
+}
+
+async function processMessage(messageData) {
+  // Process offline message
+  const response = await fetch('/api/conversations/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(messageData)
+  })
+  
+  if (!response.ok) {
+    throw new Error('Failed to process message')
+  }
+  
+  return response.json()
+}
+
+async function removePendingAction(actionId) {
+  // Remove processed action from IndexedDB
+  // For now, just log
+  console.log('Removed pending action:', actionId)
+}
+
 // Message handling for communication with main thread
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
   }
   
-  if (event.data && event.data.type === 'STORE_OFFLINE_ACTION') {
-    event.waitUntil(storeOfflineAction(event.data.action))
+  if (event.data && event.data.type === 'CACHE_URLS') {
+    event.waitUntil(
+      caches.open(STATIC_CACHE).then(cache => {
+        return cache.addAll(event.data.urls)
+      })
+    )
   }
 })

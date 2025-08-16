@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
       posts = posts.slice(startIndex, startIndex + limit)
     }
 
-    const formattedPosts = posts.map((post) => ({
+    const formattedPosts = posts.map((post: any) => ({
       id: post.id,
       content: post.content,
       images: post.images,

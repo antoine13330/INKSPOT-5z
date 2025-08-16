@@ -5,6 +5,18 @@ import { prisma } from "@/lib/prisma";
 import { uploadToS3, generateFileName } from "@/lib/s3";
 export const dynamic = "force-dynamic"
 
+// Type for user update data
+interface UserUpdateData {
+  username: string
+  firstName: string | null
+  lastName: string | null
+  bio: string | null
+  location: string | null
+  website: string | null
+  phone: string | null
+  avatar?: string
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -110,7 +122,7 @@ export async function PUT(
     }
 
     // Update user
-    const updateData: unknown = {
+    const updateData: UserUpdateData = {
       username: username.trim(),
       firstName: firstName?.trim() || null,
       lastName: lastName?.trim() || null,

@@ -37,7 +37,7 @@ interface TimeSlot {
   available: boolean
 }
 
-export default function BookingPage({ params }: { params: { proId: string } }) {
+export default function BookingPage({ params }: { params: Promise<{ proId: string }> }) {
   const { data: session } = useSession()
   const router = useRouter()
   const [pro, setPro] = useState<Pro | null>(null)
@@ -52,20 +52,31 @@ export default function BookingPage({ params }: { params: { proId: string } }) {
   })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [proId, setProId] = useState<string>("")
 
   useEffect(() => {
-    fetchProData()
-  }, [params.proId])
+    const getParams = async () => {
+      const { proId: id } = await params
+      setProId(id)
+    }
+    getParams()
+  }, [params])
 
   useEffect(() => {
-    if (selectedDate) {
+    if (proId) {
+      fetchProData()
+    }
+  }, [proId])
+
+  useEffect(() => {
+    if (selectedDate && proId) {
       fetchAvailableSlots()
     }
-  }, [selectedDate])
+  }, [selectedDate, proId])
 
   const fetchProData = async () => {
     try {
-      const response = await fetch(`/api/users/${params.proId}`)
+      const response = await fetch(`/api/users/${proId}`)
       const data = await response.json()
       setPro(data.user)
     } catch (error) {
@@ -82,7 +93,7 @@ export default function BookingPage({ params }: { params: { proId: string } }) {
     if (!selectedDate) return
 
     try {
-      const response = await fetch(`/api/bookings/availability/${params.proId}?date=${selectedDate.toISOString()}`)
+      const response = await fetch(`/api/bookings/availability/${proId}?date=${selectedDate.toISOString()}`)
       const data = await response.json()
       setAvailableSlots(data.slots || [])
     } catch (error) {
@@ -113,7 +124,7 @@ export default function BookingPage({ params }: { params: { proId: string } }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          proId: params.proId,
+          proId: proId,
           title: bookingData.title,
           description: bookingData.description,
           startTime: startTime.toISOString(),

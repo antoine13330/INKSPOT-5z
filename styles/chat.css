@@ -1,0 +1,93 @@
+/* Styles spécifiques pour l'interface de conversation */
+
+.conversation-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.conversation-header {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-card);
+}
+
+.conversation-messages {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.conversation-input {
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-card);
+}
+
+.message-list-container {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 1rem;
+}
+
+.message-list-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.message-list-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.message-list-container::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.message-list-container::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-foreground);
+}
+
+/* Correction pour les messages */
+.message-container {
+  margin-bottom: 1rem;
+  display: flex;
+}
+
+.message-container .message-bubble.user {
+  margin-left: auto;
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.message-container .message-bubble.other {
+  margin-right: auto;
+  background-color: var(--color-muted);
+  color: var(--color-foreground);
+  border-radius: 1rem 1rem 1rem 0.25rem;
+  padding: 0.75rem 1rem;
+}
+
+.message-bubble {
+  max-width: 70%;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .conversation-page {
+    height: 100vh;
+    height: 100dvh; /* Pour les navigateurs mobiles */
+  }
+  
+  .message-bubble {
+    max-width: 85%;
+  }
+}

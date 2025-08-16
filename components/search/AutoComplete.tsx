@@ -63,6 +63,7 @@ interface SearchHistoryData {
 interface TrendingData {
   tag?: string
   query?: string
+  count?: number
 }
 
 export function AutoComplete({
@@ -238,10 +239,11 @@ export function AutoComplete({
       // Add trending hashtags
       if (trendingData.trending) {
         trendingData.trending.forEach((item: TrendingData) => {
+          const text = item.tag || item.query || 'trending'
           newSuggestions.push({
-            id: `trending-${item.tag || item.query}`,
+            id: `trending-${text}`,
             type: 'trending',
-            text: item.tag || item.query,
+            text: text,
             description: 'Trending',
             count: item.count
           })

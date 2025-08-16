@@ -76,7 +76,7 @@ export function MessageList({
   return (
     <div
       className={cn(
-        "flex-1 overflow-y-auto p-4 space-y-4",
+        "message-list-container space-y-4",
         className
       )}
     >

@@ -63,11 +63,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Stripe payment intent for deposit
-    const paymentIntent = await createPaymentIntent(
-      depositAmount,
-      "eur",
-      client.stripeCustomerId || undefined
-    )
+    const paymentIntent = await createPaymentIntent({
+      amount: depositAmount,
+      currency: "eur",
+      appointmentId: "", // Will be updated after booking creation
+      clientId: session.user.id,
+      proId,
+      description: `Deposit for ${title}`,
+    })
 
     const booking = await prisma.booking.create({
       data: {
@@ -109,7 +112,7 @@ export async function POST(request: NextRequest) {
         amount: depositAmount,
         currency: "EUR",
         status: "PENDING",
-        stripePaymentIntentId: paymentIntent.id,
+        stripePaymentIntentId: paymentIntent.paymentIntentId,
         description: `Deposit for ${title}`,
         senderId: session.user.id,
         receiverId: proId,
@@ -134,11 +137,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: "Booking created successfully",
       booking,
-      paymentIntent: {
-        id: paymentIntent.id,
-        clientSecret: paymentIntent.client_secret,
-        amount: depositAmount,
-      },
+              paymentIntent: {
+          id: paymentIntent.paymentIntentId,
+          clientSecret: paymentIntent.clientSecret,
+          amount: depositAmount,
+        },
     })
   } catch (error) {
     console.error("Error creating booking:", error)
@@ -216,42 +219,43 @@ export async function PATCH(request: NextRequest) {
           where: { id: bookingId },
           data: {
             status: "CANCELLED",
-            cancelledAt: new Date(),
           },
           include: { client: true, pro: true },
         })
 
         // Handle deposit refund/transfer based on who cancelled
-        const depositPayment = booking.payments.find((p) => p.amount === booking.depositAmount)
-        if (depositPayment && depositPayment.status === "COMPLETED") {
-          if (isClient) {
-            // Client cancelled - deposit goes to pro
-            await prisma.transaction.create({
-              data: {
-                amount: booking.depositAmount,
-                currency: "EUR",
-                type: "DEPOSIT",
-                status: "completed",
-                description: `Deposit forfeited for cancelled booking: ${booking.title}`,
-                userId: booking.proId,
-                paymentId: depositPayment.id,
-              },
-            })
-          } else {
-            // Pro cancelled - refund deposit to client
-            await refundPayment(depositPayment.stripePaymentIntentId!)
+        if (booking.depositAmount && booking.depositAmount > 0) {
+          const depositPayment = booking.payments.find((p: any) => p.amount === booking.depositAmount)
+          if (depositPayment && depositPayment.status === "COMPLETED") {
+            if (isClient) {
+              // Client cancelled - deposit goes to pro
+              await prisma.transaction.create({
+                data: {
+                  amount: booking.depositAmount,
+                  currency: "EUR",
+                  type: "DEPOSIT",
+                  status: "completed",
+                  description: `Deposit forfeited for cancelled booking: ${booking.title}`,
+                  userId: booking.proId,
+                  paymentId: depositPayment.id,
+                },
+              })
+            } else {
+              // Pro cancelled - refund deposit to client
+              await refundPayment(depositPayment.stripePaymentIntentId!)
 
-            await prisma.transaction.create({
-              data: {
-                amount: booking.depositAmount,
-                currency: "EUR",
-                type: "REFUND",
-                status: "completed",
-                description: `Deposit refunded for cancelled booking: ${booking.title}`,
-                userId: booking.clientId,
-                paymentId: depositPayment.id,
-              },
-            })
+              await prisma.transaction.create({
+                data: {
+                  amount: booking.depositAmount,
+                  currency: "EUR",
+                  type: "REFUND",
+                  status: "completed",
+                  description: `Deposit refunded for cancelled booking: ${booking.title}`,
+                  userId: booking.clientId,
+                  paymentId: depositPayment.id,
+                },
+              })
+            }
           }
         }
         break
@@ -267,7 +271,7 @@ export async function PATCH(request: NextRequest) {
         })
 
         // Create invoice for remaining amount
-        const remainingAmount = booking.price - booking.depositAmount
+        const remainingAmount = booking.price - (booking.depositAmount || 0)
         if (remainingAmount > 0) {
           const invoiceNumber = `INV-${Date.now()}`
           await prisma.invoice.create({

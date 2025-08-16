@@ -54,7 +54,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Create payment intent
-    const paymentIntent = await createPaymentIntent(amount, currency, customerId);
+    const paymentIntent = await createPaymentIntent({
+      amount,
+      currency,
+      appointmentId: bookingId,
+      clientId: session.user.id,
+      proId: booking.proId,
+      description: `Payment for booking: ${booking.title}`,
+    });
 
     // Create payment record
     const payment = await prisma.payment.create({
@@ -62,7 +69,7 @@ export async function POST(request: NextRequest) {
         amount,
         currency: currency.toUpperCase(),
         status: "PENDING",
-        stripePaymentIntentId: paymentIntent.id,
+        stripePaymentIntentId: paymentIntent.paymentIntentId,
         bookingId,
         senderId: session.user.id,
         receiverId: booking.proId,
@@ -71,7 +78,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
+      clientSecret: paymentIntent.clientSecret,
       paymentId: payment.id,
     });
   } catch (error) {

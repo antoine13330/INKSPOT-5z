@@ -50,7 +50,7 @@ export function useApi<T = unknown, P = unknown>(
           isLoading: false,
           error: null
         })
-        onSuccess?.(response.data)
+        if (onSuccess) onSuccess(response.data)
       } else {
         const errorMessage = response.error || 'Une erreur s\'est produite'
         setState({
@@ -58,7 +58,7 @@ export function useApi<T = unknown, P = unknown>(
           isLoading: false,
           error: errorMessage
         })
-        onError?.(new Error(errorMessage))
+        if (onError) onError(new Error(errorMessage))
       }
     } catch (error) {
       const errorMessage = handleError(error, 'API call')
@@ -67,11 +67,11 @@ export function useApi<T = unknown, P = unknown>(
         isLoading: false,
         error: errorMessage
       })
-      onError?.(error)
+      if (onError) onError(error)
     }
-  }, [apiFunction, retryCount, retryDelay, onSuccess, onError])
+  }, [retryCount, retryDelay, onSuccess, onError])
 
-  const refetch = useCallback(() => execute(), [execute])
+  const refetch = useCallback(() => execute(), [])
 
   const reset = useCallback(() => {
     setState({
@@ -85,7 +85,7 @@ export function useApi<T = unknown, P = unknown>(
     if (immediate) {
       execute()
     }
-  }, [immediate, execute])
+  }, [immediate])
 
   return {
     ...state,
@@ -101,8 +101,16 @@ export function useApi<T = unknown, P = unknown>(
 export function useMutation<T = any, P = any>(
   mutationFunction: (params: P) => Promise<ApiResponse<T>>,
   options: UseApiOptions = {}
-): UseApiReturn<T> & { mutate: (params: P) => Promise<void> } {
-  const apiHook = useApi(mutationFunction, { ...options, immediate: false })
+): UseApiReturn<T, P> & { mutate: (params: P) => Promise<void> } {
+  // Create a wrapper function that makes the parameter optional for useApi
+  const wrappedFunction = (params?: P) => {
+    if (params === undefined) {
+      throw new Error('Parameters are required for mutation functions')
+    }
+    return mutationFunction(params)
+  }
+  
+  const apiHook = useApi<T, P>(wrappedFunction, { ...options, immediate: false })
 
   const mutate = useCallback(async (params: P) => {
     await apiHook.execute(params)

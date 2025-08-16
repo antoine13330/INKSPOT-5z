@@ -6,18 +6,11 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install pnpm globally to ensure it's available
-RUN npm install -g pnpm
-
 # Copy package files
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
+COPY package.json ./
 
-# Install only production dependencies first
-RUN \
-  if [ -f package-lock.json ]; then npm ci --only=production; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm i --frozen-lockfile --prod; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Install dependencies with platform override
+RUN npm install --platform=linux --arch=x64
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -25,15 +18,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Ensure pnpm is available in builder stage
+# Install pnpm for build
 RUN npm install -g pnpm
 
-# Install dev dependencies for build
-RUN \
-  if [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+# Install all dependencies for build with platform override
+RUN npm install --platform=linux --arch=x64
 
 # Set default environment variables for build to avoid Stripe errors
 ENV NODE_ENV=production

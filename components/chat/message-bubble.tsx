@@ -19,11 +19,13 @@ export function MessageBubble({
 
   return (
     <div className={cn(
-      'message',
-      isFromUser ? 'user' : 'other',
+      'message-container',
       className
     )}>
-      <div className="message-bubble">
+      <div className={cn(
+        'message-bubble',
+        isFromUser ? 'user' : 'other'
+      )}>
         {isImage && (
           <div className="mb-2">
             <img 

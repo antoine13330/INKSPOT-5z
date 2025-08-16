@@ -47,7 +47,7 @@ export async function generateInvoice(data: InvoiceData): Promise<string> {
   }
 }
 
-export async function generateInvoicePDF(invoice: unknown): Promise<Buffer> {
+export async function generateInvoicePDF(invoice: any): Promise<Buffer> {
   // This is a simplified PDF generation
   // In a real application, you'd use a library like PDFKit or Puppeteer
   
@@ -65,7 +65,7 @@ export async function generateInvoicePDF(invoice: unknown): Promise<Buffer> {
   return Buffer.from(htmlContent, 'utf-8')
 }
 
-export function generateInvoiceHTML(invoice: unknown): string {
+export function generateInvoiceHTML(invoice: any): string {
   const formatCurrency = (amount: number, currency = 'EUR') => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -313,12 +313,12 @@ export async function sendInvoiceEmail(invoiceId: string): Promise<void> {
 
     await sendEmail({
       to: invoice.receiver.email,
-      subject: `Invoice ${invoice.invoiceNumber} from ${invoice.issuer.name || 'INKSPOT'}`,
+      subject: `Invoice ${invoice.invoiceNumber} from ${invoice.issuer.firstName && invoice.issuer.lastName ? `${invoice.issuer.firstName} ${invoice.issuer.lastName}` : 'INKSPOT'}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>New Invoice from ${invoice.issuer.name || 'INKSPOT'}</h2>
+          <h2>New Invoice from ${invoice.issuer.firstName && invoice.issuer.lastName ? `${invoice.issuer.firstName} ${invoice.issuer.lastName}` : 'INKSPOT'}</h2>
           
-          <p>Hello ${invoice.receiver.name || 'there'},</p>
+                      <p>Hello ${invoice.receiver.firstName && invoice.receiver.lastName ? `${invoice.receiver.firstName} ${invoice.receiver.lastName}` : 'there'},</p>
           
           <p>You have received a new invoice:</p>
           
@@ -329,22 +329,13 @@ export async function sendInvoiceEmail(invoiceId: string): Promise<void> {
             <p><strong>Description:</strong> ${invoice.description}</p>
           </div>
           
-          <p>Please find the detailed invoice attached as a PDF.</p>
-          
-          <p>You can also view and pay this invoice online by logging into your INKSPOT account.</p>
+          <p>You can view and pay this invoice online by logging into your INKSPOT account.</p>
           
           <p>Thank you!</p>
           
           <p>Best regards,<br>The INKSPOT Team</p>
         </div>
       `,
-      attachments: [
-        {
-          filename: `invoice-${invoice.invoiceNumber}.pdf`,
-          content: pdfBuffer,
-          contentType: 'application/pdf',
-        },
-      ],
     })
 
     console.log(`Invoice ${invoice.invoiceNumber} sent to ${invoice.receiver.email}`)
@@ -356,13 +347,24 @@ export async function sendInvoiceEmail(invoiceId: string): Promise<void> {
 
 export async function markInvoiceAsPaid(invoiceId: string, paymentId?: string): Promise<void> {
   try {
+    // Update invoice status
     await prisma.invoice.update({
       where: { id: invoiceId },
       data: {
         paidAt: new Date(),
-        paymentId,
+        status: 'PAID',
       },
     })
+
+    // If paymentId is provided, create a Payment record and link it to the invoice
+    if (paymentId) {
+      await prisma.payment.update({
+        where: { id: paymentId },
+        data: {
+          invoiceId: invoiceId,
+        },
+      })
+    }
 
     // Get invoice details for notification
     const invoice = await prisma.invoice.findUnique({
