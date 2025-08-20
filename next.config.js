@@ -14,6 +14,7 @@ const nextConfig = {
   // Configuration pour Next.js 15
   experimental: {
     // appDir est maintenant par défaut dans Next.js 15
+    typedRoutes: true
   },
   
   // Pas de redirects avec export statique

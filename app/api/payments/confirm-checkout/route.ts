@@ -19,6 +19,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Retrieve checkout session from Stripe
+    if (!stripe) {
+      return NextResponse.json({ error: "Payment processing is not available" }, { status: 503 })
+    }
+    
     const checkout = await stripe.checkout.sessions.retrieve(String(sessionId))
     if (!checkout || checkout.status !== 'complete') {
       return NextResponse.json({ error: "Checkout session not completed" }, { status: 400 })
@@ -117,25 +121,7 @@ export async function POST(request: NextRequest) {
     try {
       if (conversationId) {
         // WebSocket functionality disabled for build compatibility
-        // const { getSocketIOServer } = require('@/lib/websocket')
-        // const io = getSocketIOServer()
-        const io = null
-        if (io && messageCreated) {
-          io.to(`conversation:${conversationId}`).emit('conversation-message', {
-            type: 'NEW_MESSAGE',
-            message: {
-              id: messageCreated.id,
-              content: messageCreated.content,
-              messageType: 'payment',
-              attachments: messageCreated.attachments,
-              conversationId: messageCreated.conversationId,
-              senderId: messageCreated.senderId,
-              createdAt: messageCreated.createdAt.toISOString(),
-            },
-            conversationId,
-            timestamp: new Date().toISOString()
-          })
-        }
+        // Real-time updates will be handled through notifications and polling
       }
     } catch {}
 

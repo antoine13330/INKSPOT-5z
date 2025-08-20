@@ -221,9 +221,9 @@ export function AppointmentsCalendar({
                 today: "bg-blue-50 text-blue-900 font-bold"
               }}
               components={{
-                Day: ({ date, ...props }) => (
+                Day: ({ day, ...props }) => (
                   <div {...props} className="h-full">
-                    {renderDay(date)}
+                    {renderDay(day.date)}
                   </div>
                 )
               }}

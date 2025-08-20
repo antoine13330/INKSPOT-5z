@@ -17,6 +17,11 @@ export async function POST(request: NextRequest) {
 
     let event
     try {
+      // Check if Stripe is configured
+      if (!stripe) {
+        return NextResponse.json({ error: "Stripe is not configured" }, { status: 503 })
+      }
+      
       event = stripe.webhooks.constructEvent(
         body,
         signature,
@@ -103,30 +108,10 @@ async function handlePaymentSuccess(paymentIntent: any) {
         // Émettre un événement WebSocket pour la mise à jour en temps réel
         try {
           // WebSocket functionality disabled for build compatibility
-          // const { getSocketIOServer } = require('@/lib/websocket')
-          const io = null // getSocketIOServer()
-          
-          if (io) {
-            // Notifier le client
-            io.to(`user:${appointment.clientId}`).emit('payment-confirmed', {
-              type: 'PAYMENT_CONFIRMED',
-              appointmentId,
-              status: 'PAID',
-              timestamp: new Date().toISOString()
-            })
-
-            // Notifier le pro
-            io.to(`user:${appointment.proId}`).emit('payment-confirmed', {
-              type: 'PAYMENT_CONFIRMED',
-              appointmentId,
-              status: 'PAID',
-              timestamp: new Date().toISOString()
-            })
-
-            console.log(`WebSocket payment confirmation sent for appointment ${appointmentId}`)
-          }
+          // Real-time updates will be handled through notifications and polling
+          console.log(`Payment confirmation processed for appointment ${appointmentId}`)
         } catch (e) {
-          console.warn('WebSocket emission failed for payment confirmation:', e)
+          console.warn('Payment confirmation processing failed:', e)
         }
       }
     }
@@ -243,38 +228,15 @@ async function handleCheckoutSuccess(session: any) {
       // Émettre un événement WebSocket pour la mise à jour en temps réel
       try {
         // WebSocket functionality disabled for build compatibility
-        // const { getSocketIOServer } = require('@/lib/websocket')
-        const io = null // getSocketIOServer()
-        
-        if (io) {
-          // Notifier le client
-          io.to(`user:${appointment.clientId}`).emit('appointment-status-updated', {
-            type: 'APPOINTMENT_STATUS_UPDATED',
-            appointmentId,
-            status: newStatus,
-            timestamp: new Date().toISOString()
-          })
-
-          // Notifier le pro
-          io.to(`user:${appointment.proId}`).emit('appointment-status-updated', {
-            type: 'APPOINTMENT_STATUS_UPDATED',
-            appointmentId,
-            status: newStatus,
-            timestamp: new Date().toISOString()
-          })
-
-          console.log(`WebSocket appointment status update sent: ${appointmentId} -> ${newStatus}`)
-        }
+        // Real-time updates will be handled through notifications and polling
+        console.log(`Appointment status updated: ${appointmentId} -> ${newStatus}`)
       } catch (e) {
-        console.warn('WebSocket emission failed for appointment status update:', e)
+        console.warn('Appointment status update processing failed:', e)
       }
     }
 
     // Persist a system message and emit real-time event to conversation room if available
     try {
-      // WebSocket functionality disabled for build compatibility
-      // const { getSocketIOServer } = require('@/lib/websocket')
-      const io = null // getSocketIOServer()
       if (conversationId) {
         // Create a system message in the conversation
         const sysMessage = await prisma.message.create({
@@ -294,25 +256,10 @@ async function handleCheckoutSuccess(session: any) {
           data: { updatedAt: new Date() }
         })
 
-        if (io) {
-        io.to(`conversation:${conversationId}`).emit('conversation-message', {
-          type: 'NEW_MESSAGE',
-          message: {
-            id: sysMessage.id,
-            content: sysMessage.content,
-            messageType: 'payment',
-            attachments: sysMessage.attachments,
-            conversationId: sysMessage.conversationId,
-            senderId: sysMessage.senderId,
-            createdAt: sysMessage.createdAt.toISOString(),
-          },
-          conversationId,
-          timestamp: new Date().toISOString()
-        })
-        }
+        console.log(`System message created for payment confirmation: ${conversationId}`)
       }
     } catch (e) {
-      console.warn('WebSocket emission skipped (server not ready):', e)
+      console.warn('System message creation failed:', e)
     }
   } catch (error) {
     console.error("Error handling checkout success:", error)

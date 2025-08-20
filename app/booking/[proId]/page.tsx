@@ -151,7 +151,7 @@ export default function BookingPage({ params }: { params: Promise<{ proId: strin
 
       if (response.ok) {
         const data = await response.json()
-        router.push(`/bookings/${data.booking.id}`)
+        router.replace(`/bookings/${data.booking.id}` as any)
       } else {
         alert("Booking failed. Please try again.")
       }

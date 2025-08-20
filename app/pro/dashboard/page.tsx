@@ -146,16 +146,16 @@ export default function ProDashboard() {
             <p className="text-gray-400">Welcome back, {session?.user?.username}</p>
           </div>
           <div className="flex space-x-3">
-            <Link href="/pro/bookings/new">
+            <Link href="/pro/dashboard/appointments">
               <Button className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="w-4 h-4 mr-2" />
-                New Booking
+                New Appointment
               </Button>
             </Link>
-            <Link href="/pro/invoices/new">
+            <Link href="/pro/dashboard/financial">
               <Button variant="outline" className="border-gray-600 text-white bg-transparent">
                 <FileText className="w-4 h-4 mr-2" />
-                Create Invoice
+                Financial Overview
               </Button>
             </Link>
           </div>
@@ -232,7 +232,7 @@ export default function ProDashboard() {
                       Your latest booking requests and appointments
                     </CardDescription>
                   </div>
-                  <Link href="/pro/bookings">
+                  <Link href="/pro/dashboard/appointments">
                     <Button variant="outline" size="sm" className="border-gray-600 text-white bg-transparent">
                       View All
                     </Button>
@@ -335,7 +335,7 @@ export default function ProDashboard() {
                     <CardTitle className="text-white">Recent Invoices</CardTitle>
                     <CardDescription className="text-gray-400">Your latest invoices and payments</CardDescription>
                   </div>
-                  <Link href="/pro/invoices">
+                  <Link href="/pro/dashboard/financial">
                     <Button variant="outline" size="sm" className="border-gray-600 text-white bg-transparent">
                       View All
                     </Button>

@@ -89,7 +89,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         where: { id: appointmentId },
         data: {
           status: nextStatus,
-          ...(selectedStartDate
+          ...(selectedStartDate && selectedEndDate
             ? {
                 startDate: selectedStartDate,
                 endDate: selectedEndDate,

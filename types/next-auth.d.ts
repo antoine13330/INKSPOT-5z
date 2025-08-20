@@ -6,6 +6,8 @@ declare module "next-auth" {
       id: string
       email: string
       username: string
+      firstName?: string
+      lastName?: string
       avatar?: string
       role: "CLIENT" | "PRO" | "ADMIN"
       verified: boolean
@@ -22,6 +24,8 @@ declare module "next-auth" {
     id: string
     email: string
     username: string
+    firstName?: string
+    lastName?: string
     avatar?: string
     role: "CLIENT" | "PRO" | "ADMIN"
     verified: boolean

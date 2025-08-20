@@ -49,19 +49,14 @@ export async function PUT(request: NextRequest) {
       },
       update: {
         enabled: enabled !== undefined ? enabled : undefined,
-        notificationTypes: notificationTypes || undefined,
-        quietHours: quietHours || undefined,
-        vibrate: vibrate !== undefined ? vibrate : undefined,
-        sound: sound !== undefined ? sound : undefined,
-        lastUpdated: new Date()
+        notificationSettings: notificationTypes ? { types: notificationTypes } : undefined,
+        updatedAt: new Date()
       },
       create: {
         subscriptionId: subscriptionId,
+        userId: session.user.id,
         enabled: enabled !== undefined ? enabled : true,
-        notificationTypes: notificationTypes || ['message', 'proposal', 'image', 'collaboration', 'booking'],
-        quietHours: quietHours || null,
-        vibrate: vibrate !== undefined ? vibrate : true,
-        sound: sound !== undefined ? sound : true
+        notificationSettings: { types: notificationTypes || ['message', 'proposal', 'image', 'collaboration', 'booking'] }
       }
     })
 
@@ -70,11 +65,8 @@ export async function PUT(request: NextRequest) {
       preferences: {
         id: preferences.id,
         enabled: preferences.enabled,
-        notificationTypes: preferences.notificationTypes,
-        quietHours: preferences.quietHours,
-        vibrate: preferences.vibrate,
-        sound: preferences.sound,
-        lastUpdated: preferences.lastUpdated
+        notificationTypes: (preferences.notificationSettings as { types?: string[] })?.types || [],
+        updatedAt: preferences.updatedAt
       }
     })
   } catch (error) {
@@ -103,14 +95,10 @@ export async function GET(request: NextRequest) {
     const preferences = subscriptions.map(sub => ({
       subscriptionId: sub.id,
       endpoint: sub.endpoint,
-      deviceInfo: sub.deviceInfo,
       preferences: sub.devicePreferences ? {
         enabled: sub.devicePreferences.enabled,
-        notificationTypes: sub.devicePreferences.notificationTypes,
-        quietHours: sub.devicePreferences.quietHours,
-        vibrate: sub.devicePreferences.vibrate,
-        sound: sub.devicePreferences.sound,
-        lastUpdated: sub.devicePreferences.lastUpdated
+        notificationTypes: (sub.devicePreferences.notificationSettings as { types?: string[] })?.types || [],
+        updatedAt: sub.devicePreferences.updatedAt
       } : null
     }))
 

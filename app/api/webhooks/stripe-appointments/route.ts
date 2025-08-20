@@ -13,6 +13,11 @@ export async function POST(request: NextRequest) {
   let event: any
 
   try {
+    // Check if Stripe is configured
+    if (!stripe) {
+      return NextResponse.json({ error: "Stripe is not configured" }, { status: 503 })
+    }
+    
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
   } catch (err) {
     console.error(`Webhook signature verification failed:`, err)
@@ -324,26 +329,10 @@ async function handleCheckoutSessionCompleted(session: any) {
     // Emit realtime update to the conversation room
     try {
       // WebSocket functionality disabled for build compatibility
-      // const { getSocketIOServer } = require('@/lib/websocket')
-      const io = null // getSocketIOServer()
-      if (io) {
-        io.to(`conversation:${conversationId}`).emit('conversation-message', {
-          type: 'NEW_MESSAGE',
-          message: {
-            id: `sys_${Date.now()}`,
-            content: messageContent,
-            messageType: 'payment',
-            attachments: [],
-            conversationId,
-            senderId: appointment.clientId,
-            createdAt: new Date().toISOString(),
-          },
-          conversationId,
-          timestamp: new Date().toISOString()
-        })
-      }
+      // Real-time updates will be handled through notifications and polling
+      console.log(`Payment confirmation message created for conversation: ${conversationId}`)
     } catch (e) {
-      console.warn('WebSocket emission skipped (server not ready):', e)
+      console.warn('Payment confirmation processing failed:', e)
     }
   }
 

@@ -93,6 +93,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       // Create refunds if there's any amount to refund
       const refunds = []
       if (refundAmount > 0 && appointment.payments.length > 0) {
+        // Check if Stripe is configured
+        if (!stripe) {
+          throw new Error('Stripe is not configured')
+        }
+        
         // Process refunds through Stripe
         for (const payment of appointment.payments) {
           const refundAmountForPayment = Math.min(payment.amount, refundAmount)

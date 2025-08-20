@@ -80,7 +80,7 @@ export default function EventDetailPage() {
   }
 
   const handleEdit = () => {
-    router.push(`/profile/events/${eventId}/edit`)
+    router.replace(`/profile/events/${eventId}/edit` as any)
   }
 
   const handleCancel = async () => {

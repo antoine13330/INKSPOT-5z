@@ -20,6 +20,9 @@ export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams?.get("callbackUrl") || "/"
+  
+  // Ensure callbackUrl is a valid route
+  const safeCallbackUrl = callbackUrl.startsWith('/') ? callbackUrl : '/'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,7 +39,7 @@ export default function LoginPage() {
         toast.error("Invalid credentials")
       } else {
         toast.success("Logged in successfully!")
-        router.push(callbackUrl)
+        router.replace(safeCallbackUrl as any)
       }
     } catch (error) {
       toast.error("An error occurred")
@@ -48,7 +51,7 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl })
+      await signIn("google", { callbackUrl: safeCallbackUrl })
     } catch (error) {
       toast.error("Google sign-in failed")
       setIsLoading(false)

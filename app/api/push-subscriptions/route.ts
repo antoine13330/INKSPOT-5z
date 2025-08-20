@@ -36,9 +36,7 @@ export async function POST(request: NextRequest) {
         where: { id: existingSubscription.id },
         data: {
           p256dh: keys.p256dh,
-          auth: keys.auth,
-          deviceInfo: deviceInfo || {},
-          lastUsed: new Date()
+          auth: keys.auth
         }
       })
     } else {
@@ -48,9 +46,7 @@ export async function POST(request: NextRequest) {
           userId: session.user.id,
           endpoint: endpoint,
           p256dh: keys.p256dh,
-          auth: keys.auth,
-          deviceInfo: deviceInfo || {},
-          lastUsed: new Date()
+          auth: keys.auth
         }
       })
     }
@@ -61,13 +57,13 @@ export async function POST(request: NextRequest) {
         subscriptionId: subscription.id
       },
       update: {
-        enabled: true,
-        lastUpdated: new Date()
+        enabled: true
       },
       create: {
         subscriptionId: subscription.id,
+        userId: session.user.id,
         enabled: true,
-        notificationTypes: ['message', 'proposal', 'image', 'collaboration', 'booking']
+        notificationSettings: { types: ['message', 'proposal', 'image', 'collaboration', 'booking'] }
       }
     })
 
@@ -105,9 +101,7 @@ export async function GET(request: NextRequest) {
       subscriptions: subscriptions.map(sub => ({
         id: sub.id,
         endpoint: sub.endpoint,
-        deviceInfo: sub.deviceInfo,
         createdAt: sub.createdAt,
-        lastUsed: sub.lastUsed,
         preferences: sub.devicePreferences
       }))
     })

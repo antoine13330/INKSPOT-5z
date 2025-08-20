@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     } else if (contentType.includes('multipart/form-data') || contentType.includes('application/x-www-form-urlencoded')) {
       const formData = await request.formData()
       const isOnlineValue = formData.get('isOnline')
-      isOnline = isOnlineValue === 'true' || isOnlineValue === true
+      isOnline = isOnlineValue === 'true'
     } else {
       // Fallback: essayer de lire comme JSON
       try {

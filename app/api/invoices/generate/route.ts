@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
       data: {
         title: "Facture générée",
         message: `Une facture de ${appointment.price}€ a été générée pour votre prestation "${appointment.title}"`,
-        type: "INVOICE",
+        type: "PAYMENT",
         userId: clientId,
         data: {
           invoiceId: invoice.id,

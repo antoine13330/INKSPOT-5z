@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       data: {
         type: type,
         url: '/',
-        priority: 'normal',
+        priority: 'normal' as const,
         testMessage: true
       }
     }

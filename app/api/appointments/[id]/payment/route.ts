@@ -99,6 +99,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Create or get Stripe customer
     let customerId = appointment.client.stripeCustomerId
     if (!customerId) {
+      // Check if Stripe is configured
+      if (!stripe) {
+        return NextResponse.json({ error: "Payment processing is not available" }, { status: 503 })
+      }
+      
       const customer = await stripe.customers.create({
         email: appointment.client.email!,
         name: appointment.client.username,
@@ -136,6 +141,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     // Create Stripe Checkout session
     console.log('Creating Stripe Checkout session for appointment:', appointmentId)
+    
+    // Check if Stripe is configured
+    if (!stripe) {
+      return NextResponse.json({ error: "Payment processing is not available" }, { status: 503 })
+    }
+    
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],

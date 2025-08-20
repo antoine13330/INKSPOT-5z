@@ -16,14 +16,14 @@ const VALID_TRANSITIONS = {
   RESCHEDULED: ['PROPOSED', 'CANCELLED'] // Back to proposal or cancelled
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id: appointmentId } = params
+    const { id: appointmentId } = await params
     const { status: newStatus, reason, metadata } = await request.json()
 
     if (!newStatus) {
@@ -236,14 +236,14 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 }
 
 // GET endpoint to retrieve status information and valid transitions
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id: appointmentId } = params
+    const { id: appointmentId } = await params
 
     // Find the appointment
     const appointment = await prisma.appointment.findUnique({
