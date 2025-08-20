@@ -41,16 +41,16 @@ export default function ProfileEditPage() {
   const router = useRouter()
   
   const [formData, setFormData] = useState<ProfileFormData>({
-    username: "",
-    firstName: "",
-    lastName: "",
-    bio: "",
-    location: "",
-    website: "",
-    phone: "",
+    username: session?.user?.username || "",
+    firstName: session?.user?.firstName || "",
+    lastName: session?.user?.lastName || "",
+    bio: session?.user?.bio || "",
+    location: session?.user?.location || "",
+    website: session?.user?.website || "",
+    phone: session?.user?.phone || "",
   })
   
-  const [avatarPreview, setAvatarPreview] = useState<string>("")
+  const [avatarPreview, setAvatarPreview] = useState<string>(session?.user?.avatar || "")
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingData, setIsLoadingData] = useState(true)
 
@@ -86,6 +86,25 @@ export default function ProfileEditPage() {
       setIsLoadingData(false)
     }
   }
+
+  // Mettre à jour le formData quand la session change
+  useEffect(() => {
+    if (session?.user) {
+      setFormData(prev => ({
+        ...prev,
+        username: session.user.username || prev.username,
+        firstName: session.user.firstName || prev.firstName,
+        lastName: session.user.lastName || prev.lastName,
+        bio: session.user.bio || prev.bio,
+        location: session.user.location || prev.location,
+        website: session.user.website || prev.website,
+        phone: session.user.phone || prev.phone,
+      }))
+      if (session.user.avatar) {
+        setAvatarPreview(session.user.avatar)
+      }
+    }
+  }, [session])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, files } = e.target as HTMLInputElement
