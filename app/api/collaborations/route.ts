@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { notifyOfflineUserForCollaboration } from "@/lib/offline-push-notifications";
 export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
@@ -88,6 +89,21 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    // Send push notification if pro is offline
+    try {
+      await notifyOfflineUserForCollaboration(
+        proId,
+        session.user.id,
+        {
+          collaborationId: collaboration.id,
+          postId
+        }
+      );
+    } catch (error) {
+      console.error("Error sending offline push notification:", error);
+      // Ne pas faire échouer la création de collaboration si la notification push échoue
+    }
 
     return NextResponse.json({ collaboration });
   } catch (error) {

@@ -14,10 +14,10 @@ const MockConversationsPage = () => {
   const [activeTab, setActiveTab] = React.useState("all")
 
   const conversations = [
-    { id: "1", name: "Despoteur Fou", lastMessage: "Hello there!", unread: 2 },
-    { id: "2", name: "The Homelander", lastMessage: "How are you?", unread: 0 },
-    { id: "3", name: "GorillouZ", lastMessage: "Nice work!", unread: 1 },
-    { id: "4", name: "DoomSlayer", lastMessage: "Rip and tear!", unread: 0 },
+    { id: "1", name: "Despoteur Fou", lastMessage: "Hello there!" },
+    { id: "2", name: "The Homelander", lastMessage: "How are you?" },
+    { id: "3", name: "GorillouZ", lastMessage: "Nice work!" },
+    { id: "4", name: "DoomSlayer", lastMessage: "Rip and tear!" },
   ]
 
   const filteredConversations = conversations.filter(conv =>
@@ -55,7 +55,7 @@ const MockConversationsPage = () => {
           <div key={conv.id} className="conversation">
             <h3>{conv.name}</h3>
             <p>{conv.lastMessage}</p>
-            {conv.unread > 0 && <span className="unread">{conv.unread}</span>}
+
           </div>
         ))}
       </div>
@@ -91,12 +91,7 @@ describe("ConversationsPage", () => {
     expect(archivesTab).toHaveClass("text-white", "border-b-2", "border-blue-500")
   })
 
-  it("shows unread message counts", () => {
-    render(<MockConversationsPage />)
 
-    expect(screen.getByText("2")).toBeInTheDocument()
-    expect(screen.getByText("1")).toBeInTheDocument()
-  })
 
   it("displays last messages", () => {
     render(<MockConversationsPage />)

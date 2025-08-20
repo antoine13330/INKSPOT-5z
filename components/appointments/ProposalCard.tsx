@@ -199,7 +199,7 @@ export function ProposalCard({ proposal, onAccept, onReject, onExpire }: Proposa
             <Button
               onClick={handleAccept}
               disabled={loading}
-              className="flex-1 bg-green-600 hover:bg-green-700"
+              className="flex-1 bg-blue-600 hover:bg-blue-700"
             >
               <CheckCircle className="w-4 h-4 mr-2" />
               Accepter

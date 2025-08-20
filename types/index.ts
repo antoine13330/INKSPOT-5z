@@ -69,11 +69,19 @@ export interface UserStats {
 // ===== TYPES DE CONVERSATION =====
 
 export interface Conversation extends BaseEntity {
-  members: ConversationMember[]
+  members?: ConversationMember[] // Keep for backward compatibility
+  participants?: ConversationParticipant[] // New field for API responses
   lastMessage?: Message
-  unreadCount: number
   isActive: boolean
   type: ConversationType
+}
+
+export interface ConversationParticipant {
+  id: string
+  name: string
+  username: string
+  avatar?: string
+  role: string
 }
 
 export interface ConversationMember {
@@ -475,7 +483,6 @@ export interface AppState {
   theme: 'light' | 'dark' | 'system'
   language: string
   notifications: Notification[]
-  unreadCount: number
 }
 
 export interface Action {

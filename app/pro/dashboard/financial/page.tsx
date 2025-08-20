@@ -15,8 +15,14 @@ import {
   ArrowDownRight,
   RefreshCw,
   FileText,
-  AlertCircle
+  AlertCircle,
+  Wallet,
+  PiggyBank,
+  Clock,
+  CheckCircle,
+  Download
 } from "lucide-react"
+import { InvoiceList } from "@/components/invoices/InvoiceList"
 
 interface Transaction {
   id: string
@@ -42,6 +48,11 @@ interface FinancialSummary {
   totalEarnings: number
   totalPayouts: number
   pendingPayouts: number
+  // Ajouter des détails sur les types de gains
+  depositEarnings: number
+  fullPaymentEarnings: number
+  monthlyEarnings: number
+  totalTransactions: number
 }
 
 interface Invoice {
@@ -152,26 +163,43 @@ export default function FinancialDashboard() {
       case 'REFUND':
         return <ArrowDownRight className="h-4 w-4 text-red-600" />
       case 'BOOKING_PAYMENT':
+        return <CheckCircle className="h-4 w-4 text-green-600" />
       case 'DEPOSIT':
-        return <ArrowDownRight className="h-4 w-4 text-green-600" />
+        return <PiggyBank className="h-4 w-4 text-orange-600" />
       default:
         return <CreditCard className="h-4 w-4 text-gray-600" />
     }
   }
 
+  const getTransactionTypeLabel = (type: string) => {
+    switch (type) {
+      case 'PAYOUT':
+        return 'Retrait'
+      case 'REFUND':
+        return 'Remboursement'
+      case 'BOOKING_PAYMENT':
+        return 'Paiement RDV'
+      case 'DEPOSIT':
+        return 'Acompte'
+      default:
+        return type
+    }
+  }
+
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      completed: { variant: "default" as const, label: "Completed" },
-      pending: { variant: "secondary" as const, label: "Pending" },
-      failed: { variant: "destructive" as const, label: "Failed" },
+      completed: { variant: "default" as const, label: "Terminé", color: "text-green-600" },
+      pending: { variant: "secondary" as const, label: "En cours", color: "text-yellow-600" },
+      failed: { variant: "destructive" as const, label: "Échoué", color: "text-red-600" },
     }
 
     const config = statusConfig[status as keyof typeof statusConfig] || {
       variant: "secondary" as const,
       label: status,
+      color: "text-gray-600"
     }
 
-    return <Badge variant={config.variant}>{config.label}</Badge>
+    return <Badge variant={config.variant} className={config.color}>{config.label}</Badge>
   }
 
   if (loading) {
@@ -188,73 +216,127 @@ export default function FinancialDashboard() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Financial Dashboard</h1>
-          <p className="text-muted-foreground">Manage your earnings and payouts</p>
+          <h1 className="text-2xl font-bold">💰 Dashboard Financier</h1>
+          <p className="text-muted-foreground">Gérez vos gains et retraits</p>
         </div>
         <Button onClick={loadFinancialData} variant="outline" size="sm">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh
+          <RefreshCw className="h-4 h-4 mr-2" />
+          Actualiser
         </Button>
       </div>
 
       {/* Financial Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
+        <Card className="border-green-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Available Balance</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Solde Disponible</CardTitle>
+            <Wallet className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
               {formatCurrency(balance?.available || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              Ready for payout
+              Prêt pour retrait
             </p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-blue-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Gains Totaux</CardTitle>
+            <TrendingUp className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-blue-600">
               {formatCurrency(balance?.totalEarnings || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              All time earnings
+              Tous gains confondus
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-orange-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Acomptes Reçus</CardTitle>
+            <PiggyBank className="h-4 w-4 text-orange-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">
+              {formatCurrency(balance?.depositEarnings || 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Cautions perçues
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-purple-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Paiements Complets</CardTitle>
+            <CheckCircle className="h-4 w-4 text-purple-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-purple-600">
+              {formatCurrency(balance?.fullPaymentEarnings || 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              RDV entièrement payés
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Détail des gains */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-blue-600" />
+              Gains du Mois
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">
+              {formatCurrency(balance?.monthlyEarnings || 0)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Ce mois-ci
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Payouts</CardTitle>
-            <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <ArrowUpRight className="h-4 w-4 text-green-600" />
+              Total Retiré
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-green-600">
               {formatCurrency(balance?.totalPayouts || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              Successfully paid out
+              Retraits effectués
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Payouts</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Clock className="h-4 w-4 text-yellow-600" />
+              Retraits en Cours
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
               {formatCurrency(balance?.pendingPayouts || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              Processing
+              En traitement
             </p>
           </CardContent>
         </Card>
@@ -264,29 +346,29 @@ export default function FinancialDashboard() {
       {balance && balance.available >= 10 && (
         <Card className="border-green-200 bg-green-50">
           <CardHeader>
-            <CardTitle className="text-green-800">Ready for Payout</CardTitle>
+            <CardTitle className="text-green-800">🎯 Prêt pour Retrait</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-700">
-                  You have {formatCurrency(balance.available)} available for payout
+                  Vous avez {formatCurrency(balance.available)} disponibles pour retrait
                 </p>
                 <p className="text-sm text-green-600">
-                  Payouts typically arrive in 1-2 business days
+                  Les retraits arrivent généralement en 1-2 jours ouvrés
                 </p>
               </div>
               <Button 
                 onClick={requestPayout} 
                 disabled={payoutLoading}
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-blue-600 hover:bg-blue-700"
               >
                 {payoutLoading ? (
                   <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
                   <ArrowUpRight className="h-4 w-4 mr-2" />
                 )}
-                Request Payout
+                Demander Retrait
               </Button>
             </div>
           </CardContent>
@@ -297,44 +379,49 @@ export default function FinancialDashboard() {
       <Tabs defaultValue="transactions" className="space-y-4">
         <TabsList>
           <TabsTrigger value="transactions">Transactions</TabsTrigger>
-          <TabsTrigger value="invoices">Invoices</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="invoices">Factures</TabsTrigger>
+          <TabsTrigger value="analytics">Analyses</TabsTrigger>
         </TabsList>
 
         <TabsContent value="transactions" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Transactions</CardTitle>
+              <CardTitle>📊 Transactions Récentes</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {transactions.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <CreditCard className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No transactions yet</p>
+                    <p>Aucune transaction pour le moment</p>
                   </div>
                 ) : (
                   transactions.map((transaction) => (
                     <div
                       key={transaction.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-center space-x-4">
                         {getTransactionIcon(transaction.type)}
                         <div>
-                          <p className="font-medium">{transaction.description}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">{transaction.description}</p>
+                            <Badge variant="outline" className="text-xs">
+                              {getTransactionTypeLabel(transaction.type)}
+                            </Badge>
+                          </div>
                           <p className="text-sm text-muted-foreground">
                             {formatDate(transaction.createdAt)}
                           </p>
                           {transaction.payment?.booking && (
                             <p className="text-xs text-blue-600">
-                              {transaction.payment.booking.title}
+                              📅 {transaction.payment.booking.title}
                             </p>
                           )}
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className={`font-medium ${
+                        <p className={`font-medium text-lg ${
                           transaction.amount > 0 ? 'text-green-600' : 'text-red-600'
                         }`}>
                           {transaction.amount > 0 ? '+' : ''}
@@ -351,76 +438,33 @@ export default function FinancialDashboard() {
         </TabsContent>
 
         <TabsContent value="invoices" className="space-y-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Issued Invoices</CardTitle>
-              <Button variant="outline" size="sm">
-                <FileText className="h-4 w-4 mr-2" />
-                Create Invoice
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {invoices.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>No invoices issued yet</p>
-                  </div>
-                ) : (
-                  invoices.map((invoice) => (
-                    <div
-                      key={invoice.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
-                      <div>
-                        <p className="font-medium">#{invoice.invoiceNumber}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {invoice.receiver.name || invoice.receiver.email}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Due: {formatDate(invoice.dueDate)}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">
-                          {formatCurrency(invoice.amount, invoice.currency)}
-                        </p>
-                        {invoice.paidAt ? (
-                          <Badge variant="default">Paid</Badge>
-                        ) : (
-                          <Badge variant="secondary">Pending</Badge>
-                        )}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <InvoiceList />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Monthly Earnings</CardTitle>
+                <CardTitle>📈 Évolution des Gains</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Analytics charts coming soon</p>
+                  <p>Graphiques d'analyse à venir</p>
+                  <p className="text-sm">Visualisation des gains mensuels et tendances</p>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Payment Methods</CardTitle>
+                <CardTitle>💳 Répartition des Paiements</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-center py-8 text-muted-foreground">
                   <CreditCard className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Payment breakdown coming soon</p>
+                  <p>Répartition acomptes vs paiements complets</p>
+                  <p className="text-sm">Statistiques détaillées à venir</p>
                 </div>
               </CardContent>
             </Card>
@@ -435,7 +479,7 @@ export default function FinancialDashboard() {
             <div className="flex items-center space-x-2 text-yellow-800">
               <AlertCircle className="h-4 w-4" />
               <p className="text-sm">
-                Minimum payout amount is €10. You have {formatCurrency(balance.available)} available.
+                Le montant minimum de retrait est de 10€. Vous avez {formatCurrency(balance.available)} disponibles.
               </p>
             </div>
           </CardContent>

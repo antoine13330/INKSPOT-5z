@@ -75,8 +75,11 @@ describe("Notifications", () => {
     it("throws error for invalid subscription", () => {
       const invalidSubscription = {
         endpoint: "https://example.com/push",
-        // Missing keys
-      }
+        keys: { p256dh: '', auth: '' },
+        expirationTime: null,
+        getKey: () => null,
+        toJSON: () => ({})
+      } as any
 
       expect(() => subscribeToPush(invalidSubscription)).toThrow()
     })

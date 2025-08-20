@@ -19,33 +19,29 @@ export function MessageBubble({
 
   return (
     <div className={cn(
-      'message-container',
+      'message-bubble',
+      isFromUser ? 'user' : 'other',
       className
     )}>
-      <div className={cn(
-        'message-bubble',
-        isFromUser ? 'user' : 'other'
-      )}>
-        {isImage && (
-          <div className="mb-2">
-            <img 
-              src={message.mediaUrl} 
-              alt="Image" 
-              className="rounded-lg max-w-full max-h-64 object-cover"
-            />
-          </div>
-        )}
-        
-        <div className="message-content">
-          {message.content}
+      {isImage && (
+        <div className="mb-2">
+          <img 
+            src={message.mediaUrl} 
+            alt="Image" 
+            className="rounded-lg max-w-full max-h-64 object-cover"
+          />
         </div>
-        
-        {showTimestamp && (
-          <div className="text-xs text-tertiary mt-1 opacity-70">
-            {formatTime(message.createdAt)}
-          </div>
-        )}
+      )}
+      
+      <div className="message-content">
+        {message.content}
       </div>
+      
+      {showTimestamp && (
+        <div className="text-xs text-tertiary mt-1 opacity-70">
+          {formatTime(message.createdAt)}
+        </div>
+      )}
     </div>
   )
 } 

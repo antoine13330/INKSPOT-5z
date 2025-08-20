@@ -33,6 +33,9 @@ interface UsersCache {
 }
 
 interface UsersState {
+  // Presence
+  onlineUsers: Set<string>
+  setOnline: (userId: string, isOnline: boolean) => void
   // Cache
   usersCache: Record<string, UsersCache> // keyed by cache type (all, pros, search results, etc.)
   userProfiles: Record<string, User> // individual user profiles
@@ -95,6 +98,7 @@ export const useUsersStore = create<UsersState>()(
       isLoading: false,
       isSearching: false,
       error: null,
+      onlineUsers: new Set<string>(),
 
       // Actions
       setUsers: (users, cacheKey, query) => set((state) => {
@@ -213,6 +217,20 @@ export const useUsersStore = create<UsersState>()(
         state.error = error
         state.isLoading = false
         state.isSearching = false
+      }),
+
+      // Presence updates
+      setOnline: (userId, isOnline) => set((state) => {
+        if (isOnline) {
+          state.onlineUsers.add(userId)
+        } else {
+          state.onlineUsers.delete(userId)
+        }
+        // Optionally update userProfiles lastSeen
+        const user = state.userProfiles[userId]
+        if (user && !isOnline) {
+          user.lastSeen = new Date().toISOString()
+        }
       }),
 
       // Cache utilities

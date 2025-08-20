@@ -58,7 +58,7 @@ export function ConversationNotifications({ artist, onClose }: ConversationNotif
           type: 'reply',
           label: 'Répondre',
           onClick: () => {
-            toast.success("Ouverture de la conversation...")
+            // Silent redirect to conversation
             setShowNotifications(false)
           }
         }
@@ -132,7 +132,7 @@ export function ConversationNotifications({ artist, onClose }: ConversationNotif
     }
   }
 
-  const unreadCount = notifications.filter(n => !n.read).length
+  const unreadCount = 0
 
   return (
     <div className="relative">
@@ -144,14 +144,7 @@ export function ConversationNotifications({ artist, onClose }: ConversationNotif
         className="relative"
       >
         <Bell className="w-5 h-5" />
-        {unreadCount > 0 && (
-                    <Badge
-            variant="destructive"
-            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-          >
-            {unreadCount > 9 ? '9+' : unreadCount}
-          </Badge>
-        )}
+
       </Button>
 
       {/* Panneau de notifications */}
@@ -161,16 +154,7 @@ export function ConversationNotifications({ artist, onClose }: ConversationNotif
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">Notifications</h3>
               <div className="flex items-center gap-2">
-                {unreadCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={markAllAsRead}
-                    className="text-xs"
-                  >
-                    Tout marquer comme lu
-                  </Button>
-                )}
+
                 <Button
                   variant="ghost"
                   size="icon"
@@ -252,7 +236,7 @@ export function ConversationNotifications({ artist, onClose }: ConversationNotif
           <div className="p-3 border-t border-border bg-muted/20">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>{notifications.length} notification(s)</span>
-              <span>{unreadCount} non lue(s)</span>
+
             </div>
           </div>
         </div>

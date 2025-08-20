@@ -92,3 +92,199 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Stripe Elements styling for better visibility - Dark theme */
+.StripeElement {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border: 1px solid #374151 !important;
+  border-radius: 6px !important;
+}
+
+.StripeElement label,
+.StripeElement-label {
+  color: #d1d5db !important;
+  font-weight: 500 !important;
+}
+
+.StripeElement input,
+.StripeElement-input {
+  color: #f9fafb !important;
+  background-color: #1f2937 !important;
+}
+
+/* Force styles on all Stripe iframe content */
+.__PrivateStripeElement iframe,
+.__PrivateStripeElement div {
+  background-color: #1f2937 !important;
+}
+
+/* Payment Element - More specific selectors */
+div[data-testid="payment-method-selector"] {
+  background-color: #1f2937 !important;
+}
+
+/* Tabs styling */
+div[role="tablist"] {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 6px !important;
+}
+
+div[role="tab"] {
+  background-color: #374151 !important;
+  color: #d1d5db !important;
+  border: 1px solid #4b5563 !important;
+}
+
+div[role="tab"][aria-selected="true"] {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+}
+
+/* Form container */
+div[data-testid="payment-method-form"] {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 6px !important;
+  padding: 16px !important;
+}
+
+/* All inputs within Stripe elements */
+input[data-elements-stable-field-name] {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 4px !important;
+}
+
+input[data-elements-stable-field-name]:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Labels */
+label[data-elements-stable-field-name] {
+  color: #d1d5db !important;
+  font-weight: 500 !important;
+}
+
+/* Select elements */
+select[data-elements-stable-field-name] {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 4px !important;
+}
+
+/* More general selectors for Stripe elements */
+.p-Input,
+.p-Input--focus,
+.p-Input--complete {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.p-Label {
+  color: #d1d5db !important;
+}
+
+.p-PaymentMethodSelector {
+  background-color: #1f2937 !important;
+}
+
+.p-Tab {
+  background-color: #374151 !important;
+  color: #d1d5db !important;
+  border: 1px solid #4b5563 !important;
+}
+
+.p-Tab--selected {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+}
+
+/* Catch-all for any missed elements */
+[class*="Input"],
+[class*="input"] {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+}
+
+[class*="Label"],
+[class*="label"] {
+  color: #d1d5db !important;
+}
+
+/* Even more specific targeting */
+* [data-testid*="card-number"],
+* [data-testid*="card-expiry"], 
+* [data-testid*="card-cvc"],
+* [data-testid*="postal-code"] {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+}
+
+/* Force dark background on parent containers */
+.p-PaymentMethodForm,
+.p-PaymentMethodForm > div,
+.p-PaymentMethodForm > div > div {
+  background-color: #1f2937 !important;
+}
+
+/* Text and error colors */
+.p-PaymentMethodForm .Text,
+.p-PaymentMethodForm .InputText,
+.p-PaymentMethodForm .ErrorMessage {
+  color: #f9fafb !important;
+}
+
+.p-PaymentMethodForm .ErrorMessage {
+  color: #ef4444 !important;
+}
+
+/* Ultra specific CSS to override Stripe defaults - Applied after loading */
+.StripeElement iframe {
+  background-color: #1f2937 !important;
+}
+
+/* Force all nested elements */
+* {
+  --stripe-bg: #1f2937;
+  --stripe-input-bg: #374151;
+  --stripe-text: #f9fafb;
+  --stripe-border: #4b5563;
+}
+
+/* Ensure the PaymentElement container has dark styling */
+.__PrivateStripeElement {
+  background-color: #1f2937 !important;
+}
+
+.__PrivateStripeElement * {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+/* Nuclear option - force everything */
+*[class*="stripe"],
+*[class*="Stripe"],
+*[class*="Payment"],
+*[class*="payment"] {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+*[class*="stripe"] input,
+*[class*="Stripe"] input,
+*[class*="Payment"] input,
+*[class*="payment"] input {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border: 1px solid #4b5563 !important;
+}

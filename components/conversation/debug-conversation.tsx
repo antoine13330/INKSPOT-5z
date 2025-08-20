@@ -55,7 +55,7 @@ export function DebugConversation() {
       })
 
       if (response.ok) {
-        toast.success("✅ Conversation créée avec succès !")
+        // Conversation created successfully
       } else {
         toast.error(`❌ Erreur ${response.status}: ${data.error || 'Erreur inconnue'}`)
       }

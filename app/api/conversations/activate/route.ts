@@ -14,10 +14,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { conversationId, message, postId } = body
+    const { conversationId, message, postId, attachments } = body as {
+      conversationId?: string
+      message?: string
+      postId?: string
+      attachments?: string[]
+    }
 
     // Validate required fields
-    if (!conversationId || !message) {
+    if (!conversationId || (!message && (!attachments || attachments.length === 0))) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -53,8 +58,9 @@ export async function POST(request: NextRequest) {
     // Créer le message
     const newMessage = await prisma.message.create({
       data: {
-        content: message,
-        messageType: "text",
+        content: message || "",
+        messageType: attachments && attachments.length > 0 ? "image" : "text",
+        attachments: attachments || [],
         conversationId: conversationId,
         senderId: session.user.id,
       },
@@ -86,6 +92,14 @@ export async function POST(request: NextRequest) {
 
         console.log("📢 Notification envoyée à:", otherParticipant.userId)
       }
+    }
+
+    // Si c'est le premier message, basculer le statut de la conversation en ACTIVE
+    if (isFirstMessage) {
+      await prisma.conversation.update({
+        where: { id: conversationId },
+        data: { status: "ACTIVE", updatedAt: new Date() }
+      })
     }
 
     return NextResponse.json({

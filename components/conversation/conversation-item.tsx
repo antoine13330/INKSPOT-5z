@@ -12,7 +12,6 @@ interface ConversationItemProps {
     createdAt: string
     isFromUser: boolean
   }
-  unreadCount: number
   isActive?: boolean
   className?: string
 }
@@ -21,7 +20,6 @@ export function ConversationItem({
   id,
   participant,
   lastMessage,
-  unreadCount,
   isActive = false,
   className
 }: ConversationItemProps) {
@@ -70,11 +68,6 @@ export function ConversationItem({
         {lastMessage && (
           <div className="conversation-time">
             {formatRelativeTime(lastMessage.createdAt)}
-          </div>
-        )}
-        {unreadCount > 0 && (
-          <div className="conversation-badge">
-            {unreadCount > 99 ? '99+' : unreadCount}
           </div>
         )}
       </div>

@@ -99,6 +99,34 @@ async function handlePaymentSuccess(paymentIntent: any) {
             data: { appointmentId, paymentIntentId: paymentIntent.id }
           }
         })
+
+        // Émettre un événement WebSocket pour la mise à jour en temps réel
+        try {
+          const { getSocketIOServer } = require('@/lib/websocket')
+          const io = getSocketIOServer()
+          
+          if (io) {
+            // Notifier le client
+            io.to(`user:${appointment.clientId}`).emit('payment-confirmed', {
+              type: 'PAYMENT_CONFIRMED',
+              appointmentId,
+              status: 'PAID',
+              timestamp: new Date().toISOString()
+            })
+
+            // Notifier le pro
+            io.to(`user:${appointment.proId}`).emit('payment-confirmed', {
+              type: 'PAYMENT_CONFIRMED',
+              appointmentId,
+              status: 'PAID',
+              timestamp: new Date().toISOString()
+            })
+
+            console.log(`WebSocket payment confirmation sent for appointment ${appointmentId}`)
+          }
+        } catch (e) {
+          console.warn('WebSocket emission failed for payment confirmation:', e)
+        }
       }
     }
   } catch (error) {
@@ -142,37 +170,146 @@ async function handlePaymentFailure(paymentIntent: any) {
 
 async function handleCheckoutSuccess(session: any) {
   try {
-    const { appointmentId } = session.metadata
+    const { appointmentId, paymentType, conversationId } = session.metadata || {}
 
-    if (appointmentId) {
-      // Get appointment data to get client and pro IDs
+    if (!appointmentId) return
+
+    // Find existing payment created at checkout creation time by session.id
+    const existingPayment = await prisma.payment.findFirst({
+      where: { stripePaymentIntentId: session.id }
+    })
+
+    const amountPaid = (session.amount_total || 0) / 100
+    const currency = String(session.currency || 'EUR').toUpperCase()
+
+    let paymentRecordId: string | null = null
+    if (existingPayment) {
+      const updated = await prisma.payment.update({
+        where: { id: existingPayment.id },
+        data: {
+          status: 'COMPLETED',
+          paidAt: new Date(),
+          stripePaymentIntentId: (session.payment_intent as string) || session.id
+        }
+      })
+      paymentRecordId = updated.id
+    } else {
       const appointment = await prisma.appointment.findUnique({
         where: { id: appointmentId },
         select: { clientId: true, proId: true }
       })
+      if (!appointment) return
+      const created = await prisma.payment.create({
+        data: {
+          appointmentId,
+          amount: amountPaid,
+          currency,
+          status: 'COMPLETED',
+          stripePaymentIntentId: (session.payment_intent as string) || session.id,
+          description: `Paiement via Stripe Checkout`,
+          paidAt: new Date(),
+          senderId: appointment.clientId,
+          receiverId: appointment.proId,
+        }
+      })
+      paymentRecordId = created.id
+    }
 
-      if (appointment) {
-        // Créer un paiement pour cette session
-        await prisma.payment.create({
-          data: {
+    // Compute new appointment status
+    const appointment = await prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      include: { payments: true, client: true, pro: true }
+    })
+    if (!appointment) return
+
+    const totalPaid = appointment.payments
+      .filter(p => p.status === 'COMPLETED')
+      .reduce((sum, p) => sum + p.amount, 0) + (existingPayment ? 0 : amountPaid)
+
+    let newStatus = appointment.status
+    if (paymentType === 'deposit') {
+      newStatus = totalPaid >= appointment.price ? 'PAID' : 'CONFIRMED'
+    } else {
+      newStatus = totalPaid >= appointment.price ? 'PAID' : 'CONFIRMED'
+    }
+
+    if (newStatus !== appointment.status) {
+      await prisma.appointment.update({
+        where: { id: appointmentId },
+        data: { status: newStatus }
+      })
+
+      // Émettre un événement WebSocket pour la mise à jour en temps réel
+      try {
+        const { getSocketIOServer } = require('@/lib/websocket')
+        const io = getSocketIOServer()
+        
+        if (io) {
+          // Notifier le client
+          io.to(`user:${appointment.clientId}`).emit('appointment-status-updated', {
+            type: 'APPOINTMENT_STATUS_UPDATED',
             appointmentId,
-            amount: session.amount_total / 100,
-            currency: session.currency.toUpperCase(),
-            status: 'COMPLETED',
-            stripePaymentIntentId: session.payment_intent,
-            description: `Paiement via checkout Stripe`,
-            paidAt: new Date(),
+            status: newStatus,
+            timestamp: new Date().toISOString()
+          })
+
+          // Notifier le pro
+          io.to(`user:${appointment.proId}`).emit('appointment-status-updated', {
+            type: 'APPOINTMENT_STATUS_UPDATED',
+            appointmentId,
+            status: newStatus,
+            timestamp: new Date().toISOString()
+          })
+
+          console.log(`WebSocket appointment status update sent: ${appointmentId} -> ${newStatus}`)
+        }
+      } catch (e) {
+        console.warn('WebSocket emission failed for appointment status update:', e)
+      }
+    }
+
+    // Persist a system message and emit real-time event to conversation room if available
+    try {
+      const { getSocketIOServer } = require('@/lib/websocket')
+      const io = getSocketIOServer()
+      if (conversationId) {
+        // Create a system message in the conversation
+        const sysMessage = await prisma.message.create({
+          data: {
+            content: newStatus === 'PAID'
+              ? `🎉 Paiement confirmé. Le rendez-vous est entièrement payé.`
+              : `💳 Acompte payé. Le rendez-vous est maintenant confirmé.`,
+            messageType: 'PAYMENT_CONFIRMATION',
+            attachments: [],
+            conversationId,
             senderId: appointment.clientId,
-            receiverId: appointment.proId,
           }
         })
 
-        // Mettre à jour le statut du rendez-vous
-        await prisma.appointment.update({
-          where: { id: appointmentId },
-          data: { status: 'PAID' }
+        await prisma.conversation.update({
+          where: { id: conversationId },
+          data: { updatedAt: new Date() }
         })
+
+        if (io) {
+        io.to(`conversation:${conversationId}`).emit('conversation-message', {
+          type: 'NEW_MESSAGE',
+          message: {
+            id: sysMessage.id,
+            content: sysMessage.content,
+            messageType: 'payment',
+            attachments: sysMessage.attachments,
+            conversationId: sysMessage.conversationId,
+            senderId: sysMessage.senderId,
+            createdAt: sysMessage.createdAt.toISOString(),
+          },
+          conversationId,
+          timestamp: new Date().toISOString()
+        })
+        }
       }
+    } catch (e) {
+      console.warn('WebSocket emission skipped (server not ready):', e)
     }
   } catch (error) {
     console.error("Error handling checkout success:", error)

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef, useCallback } from "react"
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -70,11 +71,12 @@ export function AutoComplete({
   query,
   onQueryChange,
   onSearch,
-  placeholder = "Search posts, users, hashtags...",
+  placeholder = "Search posts, PRO artists, hashtags...",
   className = "",
   showSuggestions = true
 }: AutoCompleteProps) {
   const { data: session } = useSession()
+  const router = useRouter()
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -135,7 +137,7 @@ export function AutoComplete({
     setIsLoading(true)
     try {
       const [usersResponse, hashtagsResponse] = await Promise.all([
-        fetch(`/api/users/search?q=${encodeURIComponent(searchQuery)}&limit=3`),
+        fetch(`/api/users/search?q=${encodeURIComponent(searchQuery)}&limit=3&role=PRO`),
         fetch(`/api/search/hashtags?q=${encodeURIComponent(searchQuery)}&limit=5`)
       ])
 
@@ -144,14 +146,14 @@ export function AutoComplete({
 
       const newSuggestions: SearchSuggestion[] = []
 
-      // Add user suggestions
+      // Add user suggestions (only PRO returned by API)
       if (usersData.users) {
         usersData.users.forEach((user: UserData) => {
           newSuggestions.push({
             id: `user-${user.id}`,
             type: 'user',
             text: user.username,
-            description: user.businessName || `${user.firstName} ${user.lastName}`.trim(),
+            description: user.businessName || `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
             avatar: user.avatar,
             verified: user.verified,
             location: user.location
@@ -270,6 +272,13 @@ export function AutoComplete({
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!showDropdown || suggestions.length === 0) {
       if (e.key === 'Enter') {
+        // Si correspondance exacte avec un utilisateur, rediriger directement
+        const exactUser = suggestions.find(s => s.type === 'user' && s.text.toLowerCase() === query.trim().toLowerCase())
+        if (exactUser) {
+          router.push(`/profile/${exactUser.text}`)
+          setShowDropdown(false)
+          return
+        }
         onSearch(query)
         setShowDropdown(false)
       }
@@ -292,6 +301,13 @@ export function AutoComplete({
         if (selectedIndex >= 0) {
           selectSuggestion(suggestions[selectedIndex])
         } else {
+          // Même logique que plus haut
+          const exactUser2 = suggestions.find(s => s.type === 'user' && s.text.toLowerCase() === query.trim().toLowerCase())
+          if (exactUser2) {
+            router.push(`/profile/${exactUser2.text}`)
+            setShowDropdown(false)
+            return
+          }
           onSearch(query)
           setShowDropdown(false)
         }
@@ -304,6 +320,12 @@ export function AutoComplete({
   }
 
   const selectSuggestion = (suggestion: SearchSuggestion) => {
+    if (suggestion.type === 'user') {
+      router.push(`/profile/${suggestion.text}`)
+      setShowDropdown(false)
+      setSelectedIndex(-1)
+      return
+    }
     onQueryChange(suggestion.text)
     onSearch(suggestion.text)
     setShowDropdown(false)

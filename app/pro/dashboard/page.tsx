@@ -214,6 +214,9 @@ export default function ProDashboard() {
             <TabsTrigger value="bookings" className="data-[state=active]:bg-gray-800">
               Recent Bookings
             </TabsTrigger>
+            <TabsTrigger value="appointments" className="data-[state=active]:bg-gray-800">
+              Rendez-vous
+            </TabsTrigger>
             <TabsTrigger value="invoices" className="data-[state=active]:bg-gray-800">
               Recent Invoices
             </TabsTrigger>
@@ -266,6 +269,59 @@ export default function ProDashboard() {
                       </div>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="appointments">
+            <Card className="bg-gray-900 border-gray-800">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-white">Gestion des Rendez-vous</CardTitle>
+                    <CardDescription className="text-gray-400">
+                      Gérez vos propositions de RDV et confirmez vos créneaux
+                    </CardDescription>
+                  </div>
+                  <Link href="/pro/dashboard/appointments">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Voir tous les RDV
+                    </Button>
+                  </Link>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <Calendar className="w-16 h-16 mx-auto mb-4 text-blue-400" />
+                  <h3 className="text-lg font-semibold text-white mb-2">Tableau de bord RDV</h3>
+                  <p className="text-gray-400 mb-4">
+                    Accédez à votre interface complète de gestion des rendez-vous pour :
+                  </p>
+                  <div className="text-left max-w-md mx-auto space-y-2 mb-6">
+                    <div className="flex items-center text-gray-300">
+                      <CheckCircle className="w-4 h-4 mr-2 text-green-400" />
+                      Confirmer les RDV après paiement d'acompte
+                    </div>
+                    <div className="flex items-center text-gray-300">
+                      <Clock className="w-4 h-4 mr-2 text-blue-400" />
+                      Suivre les statuts en temps réel
+                    </div>
+                    <div className="flex items-center text-gray-300">
+                      <DollarSign className="w-4 h-4 mr-2 text-green-400" />
+                      Voir les paiements et revenus
+                    </div>
+                    <div className="flex items-center text-gray-300">
+                      <Users className="w-4 h-4 mr-2 text-purple-400" />
+                      Gérer toutes vos propositions clients
+                    </div>
+                  </div>
+                  <Link href="/pro/dashboard/appointments">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      Accéder au dashboard RDV
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>

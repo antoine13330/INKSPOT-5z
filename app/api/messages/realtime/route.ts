@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
+import { notifyOfflineConversationMembers } from "@/lib/offline-push-notifications"
 export const dynamic = "force-dynamic"
 
 // Get messages for a conversation with real-time support
@@ -115,8 +116,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { content, conversationId, messageType = "text", attachments = [] } = body
 
-    if (!content || !conversationId) {
-      return NextResponse.json({ error: "Content and conversation ID required" }, { status: 400 })
+    if ((!content && (!attachments || attachments.length === 0)) || !conversationId) {
+      return NextResponse.json({ error: "Content or attachments and conversation ID required" }, { status: 400 })
     }
 
     // Verify user is member of conversation
@@ -134,7 +135,7 @@ export async function POST(request: NextRequest) {
     // Create message
     const message = await prisma.message.create({
       data: {
-        content,
+        content: content || "",
         messageType,
         attachments,
         conversationId,
@@ -158,6 +159,18 @@ export async function POST(request: NextRequest) {
       where: { id: conversationId },
       data: { updatedAt: new Date() },
     })
+
+    // Send push notifications to offline conversation members
+    try {
+      await notifyOfflineConversationMembers(
+        conversationId,
+        session.user.id,
+        content || "Nouveau message"
+      );
+    } catch (error) {
+      console.error("Error sending offline push notifications:", error);
+      // Ne pas faire échouer l'envoi du message si la notification push échoue
+    }
 
     return NextResponse.json({ 
       success: true, 

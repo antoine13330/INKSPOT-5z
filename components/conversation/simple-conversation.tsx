@@ -46,16 +46,9 @@ export function SimpleConversation({ artist, post, onClose }: SimpleConversation
   const [messages, setMessages] = useState<Message[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Message initial simulé
+  // Pas de message initial automatique
   useEffect(() => {
-    const initialMessage: Message = {
-      id: "1",
-      content: "Bonjour ! Je suis intéressé(e) par votre post. Pouvez-vous me donner plus de détails ?",
-      senderId: "user",
-      timestamp: new Date(),
-      isFromUser: true
-    }
-    setMessages([initialMessage])
+    setMessages([])
   }, [])
 
   useEffect(() => {

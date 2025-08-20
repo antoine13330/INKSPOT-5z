@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { ApiResponse, UseApiOptions } from '@/types'
 import { handleError, retry } from '@/lib/utils'
 
@@ -35,11 +35,17 @@ export function useApi<T = unknown, P = unknown>(
     error: null
   })
 
+  // Always call the latest apiFunction to avoid stale closures
+  const apiFunctionRef = useRef(apiFunction)
+  useEffect(() => {
+    apiFunctionRef.current = apiFunction
+  }, [apiFunction])
+
   const execute = useCallback(async (params?: P) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }))
 
     try {
-      const executeWithRetry = () => apiFunction(params)
+      const executeWithRetry = () => apiFunctionRef.current(params)
       const response = retryCount > 0 
         ? await retry(executeWithRetry, retryCount, retryDelay)
         : await executeWithRetry()

@@ -66,7 +66,7 @@ describe('Security Alerts API', () => {
     })
 
     it('should handle query parameters correctly', async () => {
-      const mockAlerts = []
+      const mockAlerts: any[] = []
       ;(securityMonitor.getAlerts as jest.Mock).mockResolvedValue(mockAlerts)
       ;(securityMonitor.getSecurityMetrics as jest.Mock).mockReturnValue({})
       ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)
@@ -85,7 +85,7 @@ describe('Security Alerts API', () => {
     })
 
     it('should log data access event', async () => {
-      const mockAlerts = []
+      const mockAlerts: any[] = []
       ;(securityMonitor.getAlerts as jest.Mock).mockResolvedValue(mockAlerts)
       ;(securityMonitor.getSecurityMetrics as jest.Mock).mockReturnValue({})
       ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)

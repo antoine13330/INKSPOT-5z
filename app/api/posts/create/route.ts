@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { uploadToS3, generateFileName } from "@/lib/s3";
+import { notifyInterestedUsersForNewPost } from "@/lib/image-notification-helpers";
 export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
@@ -85,6 +86,21 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    // Notifier les utilisateurs intéressés si des images sont partagées
+    if (imageUrls.length > 0) {
+      try {
+        await notifyInterestedUsersForNewPost(
+          post.id,
+          session.user.id,
+          imageUrls,
+          content.trim()
+        );
+      } catch (error) {
+        console.error("Error sending image notifications:", error);
+        // Ne pas faire échouer la création du post si les notifications échouent
+      }
+    }
 
     return NextResponse.json({ message: "Post created successfully", post });
   } catch (error) {

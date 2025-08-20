@@ -173,6 +173,26 @@ export async function GET(request: NextRequest) {
       .filter((t: any) => ["BOOKING_PAYMENT", "DEPOSIT"].includes(t.type) && t.status === "completed")
       .reduce((sum: number, t: any) => sum + t.amount, 0)
 
+    // Calculer les gains par type
+    const depositEarnings = transactions
+      .filter((t: any) => t.type === "DEPOSIT" && t.status === "completed")
+      .reduce((sum: number, t: any) => sum + t.amount, 0)
+
+    const fullPaymentEarnings = transactions
+      .filter((t: any) => t.type === "BOOKING_PAYMENT" && t.status === "completed")
+      .reduce((sum: number, t: any) => sum + t.amount, 0)
+
+    // Calculer les gains du mois en cours
+    const currentMonth = new Date()
+    const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
+    const monthlyEarnings = transactions
+      .filter((t: any) => 
+        ["BOOKING_PAYMENT", "DEPOSIT"].includes(t.type) && 
+        t.status === "completed" &&
+        new Date(t.createdAt) >= startOfMonth
+      )
+      .reduce((sum: number, t: any) => sum + t.amount, 0)
+
     const payouts = transactions
       .filter((t: any) => t.type === "PAYOUT" && t.status === "completed")
       .reduce((sum: number, t: any) => sum + Math.abs(t.amount), 0)
@@ -194,6 +214,11 @@ export async function GET(request: NextRequest) {
         totalEarnings: earnings,
         totalPayouts: payouts,
         pendingPayouts,
+        // Ajouter les détails sur les types de gains
+        depositEarnings,
+        fullPaymentEarnings,
+        monthlyEarnings,
+        totalTransactions: transactions.length
       },
       recentPayouts,
       canRequestPayout: availableBalance >= 10, // Minimum payout amount

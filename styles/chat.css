@@ -1,38 +1,57 @@
 /* Styles spécifiques pour l'interface de conversation */
 
+:root {
+	--bottom-nav-height: 72px; /* hauteur de la bottom nav */
+	--input-bar-height: 64px;  /* hauteur estimée de la barre d'envoi */
+}
+
 .conversation-page {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	height: 100dvh; /* Mobile friendly */
+	max-height: 100vh;
+	max-height: 100dvh;
+	overflow: hidden;
 }
 
 .conversation-header {
-  flex-shrink: 0;
-  border-bottom: 1px solid var(--color-border);
-  background-color: var(--color-card);
+	flex-shrink: 0;
+	border-bottom: 1px solid var(--color-border);
+	background-color: rgba(26, 26, 26, 0.7);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	position: sticky;
+	top: env(safe-area-inset-top, 0px);
+	z-index: 40;
+	min-height: 68px;
+	box-shadow: 0 2px 12px rgba(0,0,0,0.25);
 }
 
 .conversation-messages {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 .conversation-input {
-  flex-shrink: 0;
-  border-top: 1px solid var(--color-border);
-  background-color: var(--color-card);
+	flex-shrink: 0;
+	border-top: none;
+	background-color: transparent;
+	position: sticky;
+	bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
+	z-index: 30;
 }
 
 .message-list-container {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-  padding: 1rem;
+	flex: 1;
+	overflow-y: auto;
+	min-height: 0;
+	padding: 1rem;
+	/* Laisser de l'espace pour la barre d'envoi et la bottom nav */
+	padding-bottom: calc(1rem + var(--input-bar-height) + var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
 }
 
 .message-list-container::-webkit-scrollbar {
@@ -53,31 +72,26 @@
 }
 
 /* Correction pour les messages */
-.message-container {
-  margin-bottom: 1rem;
-  display: flex;
-}
-
-.message-container .message-bubble.user {
-  margin-left: auto;
-  background-color: var(--color-primary);
-  color: var(--color-primary-foreground);
-  border-radius: 1rem 1rem 0.25rem 1rem;
-  padding: 0.75rem 1rem;
-}
-
-.message-container .message-bubble.other {
-  margin-right: auto;
-  background-color: var(--color-muted);
-  color: var(--color-foreground);
-  border-radius: 1rem 1rem 1rem 0.25rem;
-  padding: 0.75rem 1rem;
-}
-
 .message-bubble {
   max-width: 70%;
   word-wrap: break-word;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+}
+
+.message-bubble.user {
+  margin-left: auto;
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-radius: 1rem 1rem 0.25rem 1rem;
+}
+
+.message-bubble.other {
+  margin-right: auto;
+  background-color: var(--color-muted);
+  color: var(--color-foreground);
+  border-radius: 1rem 1rem 1rem 0.25rem;
 }
 
 /* Responsive design */

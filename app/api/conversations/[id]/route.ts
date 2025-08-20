@@ -10,13 +10,17 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    console.log('🔍 API: Fetching conversation...')
+    
     // Check authentication
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
+      console.log('❌ API: Unauthorized - no session')
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const { id: conversationId } = await params
+    console.log('🔍 API: Looking for conversation:', conversationId)
 
     // Get conversation with members and messages
     const conversation = await prisma.conversation.findFirst({
@@ -64,27 +68,39 @@ export async function GET(
     })
 
     if (!conversation) {
+      console.log('❌ API: Conversation not found or access denied')
       return NextResponse.json(
         { error: "Conversation not found or access denied" },
         { status: 404 }
       )
     }
 
+    console.log('✅ API: Conversation found, transforming data...')
+
     // Transform conversation to match expected format
-    const otherParticipants = conversation.members
+    const otherMembers = conversation.members
       .filter(member => member.userId !== session.user.id)
       .map(member => ({
-        id: member.user.id,
-        name: member.user.businessName || `${member.user.firstName || ''} ${member.user.lastName || ''}`.trim() || member.user.username,
-        username: member.user.username,
-        avatar: member.user.avatar,
-        role: member.user.role
+        id: member.id,
+        conversationId: conversation.id,
+        userId: member.user.id,
+        joinedAt: member.joinedAt.toISOString(),
+        lastReadAt: member.lastReadAt?.toISOString(),
+        user: {
+          id: member.user.id,
+          username: member.user.username,
+          firstName: member.user.firstName,
+          lastName: member.user.lastName,
+          avatar: member.user.avatar,
+          role: member.user.role,
+          businessName: member.user.businessName
+        }
       }))
 
     const transformedConversation = {
       id: conversation.id,
       title: conversation.title,
-      participants: otherParticipants,
+      members: otherMembers, // Changed from participants to members
       messages: conversation.messages.map(msg => ({
         id: msg.id,
         content: msg.content,
@@ -96,8 +112,8 @@ export async function GET(
         createdAt: msg.createdAt.toISOString(),
         updatedAt: msg.updatedAt.toISOString()
       })),
-      unreadCount: 0, // TODO: Implement unread tracking
-      isActive: conversation.messages.length > 0,
+
+      isActive: conversation.status === 'ACTIVE' || conversation.messages.length > 0,
       type: conversation.isGroup ? 'GROUP' : 'DIRECT',
       createdAt: conversation.createdAt.toISOString(),
       updatedAt: conversation.updatedAt.toISOString()

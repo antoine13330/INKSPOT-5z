@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+// Removed next/image import - using standard img tag
 
 interface ImageCarouselProps {
   images: string[];
@@ -31,11 +31,10 @@ export function ImageCarousel({ images, alt = "Post images" }: ImageCarouselProp
     <div className="relative group">
       {/* Main Image */}
       <div className="relative aspect-square w-full overflow-hidden rounded-lg">
-        <Image
+        <img
           src={images[currentIndex] || "/placeholder.svg"}
           alt={`${alt} ${currentIndex + 1}`}
-          fill
-          className="object-cover"
+          className="object-cover w-full h-full"
         />
         
         {/* Navigation Arrows */}
