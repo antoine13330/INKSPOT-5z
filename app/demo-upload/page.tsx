@@ -27,7 +27,9 @@ export default function DemoUploadPage() {
           </CardHeader>
           <CardContent>
             <ProfileAvatarUpload
-              onAvatarChange={(url) => console.log('Avatar changé:', url)}
+              onAvatarChange={(url) => {
+                // Avatar changed (removed console.log for production)
+              }}
             />
           </CardContent>
         </Card>
@@ -43,8 +45,8 @@ export default function DemoUploadPage() {
           <CardContent>
             <LocalImageUpload
               onUpload={(url, fileName) => {
-                console.log('Image uploadée:', { url, fileName });
-                alert(`Image uploadée avec succès!\nURL: ${url}\nNom: ${fileName}`);
+                // Image uploaded (removed console.log for production)
+                alert(`Uploadé avec succès!\nURL: ${url}\nNom: ${fileName}`);
               }}
               type="post"
               userId="demo-user-123"

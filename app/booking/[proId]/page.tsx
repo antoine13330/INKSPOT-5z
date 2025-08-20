@@ -100,9 +100,7 @@ export default function BookingPage({ params }: { params: Promise<{ proId: strin
       setPro(data.user)
     } catch (error) {
       // Log error for debugging (in production, send to monitoring service)
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Error fetching pro data:", error)
-      }
+      // Error fetching pro data (removed console.error for production)
     } finally {
       setLoading(false)
     }
@@ -117,9 +115,7 @@ export default function BookingPage({ params }: { params: Promise<{ proId: strin
       setAvailableSlots(data.slots || [])
     } catch (error) {
       // Log error for debugging (in production, send to monitoring service)
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Error fetching availability:", error)
-      }
+      // Error fetching availability (removed console.error for production)
     }
   }
 
@@ -161,9 +157,7 @@ export default function BookingPage({ params }: { params: Promise<{ proId: strin
       }
     } catch (error) {
       // Log error for debugging (in production, send to monitoring service)
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Error creating booking:", error)
-      }
+      // Error creating booking (removed console.error for production)
       alert("Booking failed. Please try again.")
     } finally {
       setSubmitting(false)

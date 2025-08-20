@@ -100,8 +100,8 @@ export default function PostDetailPage() {
         router.push("/")
       }
     } catch (error) {
-      console.error("Error fetching post:", error)
-      toast.error("Failed to load post")
+      // Error fetching post (removed console.error for production)
+      toast.error("Failed to fetch post")
     } finally {
       setLoading(false)
     }
@@ -112,11 +112,10 @@ export default function PostDetailPage() {
       const response = await fetch(`/api/posts/${postId}/comments`)
       if (response.ok) {
         const data = await response.json()
-        console.log("Fetched comments:", data.comments) // Debug log
         setComments(data.comments)
       }
     } catch (error) {
-      console.error("Error fetching comments:", error)
+      // Error fetching comments (removed console.error for production)
     }
   }
 
@@ -132,7 +131,7 @@ export default function PostDetailPage() {
         setFavoritedPosts(new Set(favoritedIds))
       }
     } catch (error) {
-      console.error("Error checking favorite status:", error)
+      // Error checking favorite status (removed console.error for production)
     }
   }
 
@@ -158,7 +157,7 @@ export default function PostDetailPage() {
         toast.success(post.liked ? "Post unliked!" : "Post liked!")
       }
     } catch (error) {
-      console.error("Error liking post:", error)
+      // Error liking post (removed console.error for production)
       toast.error("Failed to like post")
     }
   }
@@ -210,7 +209,7 @@ export default function PostDetailPage() {
         }
       }
     } catch (error) {
-      console.error("Error adding comment:", error)
+      // Error adding comment (removed console.error for production)
       toast.error("Failed to add comment")
     } finally {
       setCommentLoading(false)

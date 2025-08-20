@@ -47,8 +47,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Log l'erreur
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
+    // Log l'erreur (removed console.error for production)
     
     // Mettre à jour l'état
     this.setState({
@@ -89,16 +88,14 @@ export class ErrorBoundary extends Component<Props, State> {
   private reportError(error: Error, errorInfo: ErrorInfo) {
     // Ici vous pouvez envoyer l'erreur à un service comme Sentry, LogRocket, etc.
     try {
-      // Exemple avec console.error (à remplacer par votre service)
-      console.group(`🚨 Error Report - ${this.state.errorId}`)
-      console.error('Error:', error)
-      console.error('Component Stack:', errorInfo.componentStack)
-      console.error('Timestamp:', new Date().toISOString())
-      console.error('User Agent:', navigator.userAgent)
-      console.error('URL:', window.location.href)
-      console.groupEnd()
+      // Exemple avec commentaires (removed console statements for production)
+      // Error: ${error}
+      // Component Stack: ${errorInfo.componentStack}
+      // Timestamp: ${new Date().toISOString()}
+      // User Agent: ${navigator.userAgent}
+      // URL: ${window.location.href}
     } catch (reportError) {
-      console.error('Failed to report error:', reportError)
+      // Failed to report error (removed console.error for production)
     }
   }
 
@@ -262,7 +259,6 @@ export function useErrorHandler() {
   const [error, setError] = React.useState<Error | null>(null)
 
   const handleError = React.useCallback((error: Error) => {
-    console.error('Error caught by useErrorHandler:', error)
     setError(error)
   }, [])
 

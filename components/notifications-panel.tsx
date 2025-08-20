@@ -89,7 +89,7 @@ export function NotificationsPanel({ isOpen, onClose }: NotificationsPanelProps)
         setNotifications(data.notifications)
       }
     } catch (error) {
-      console.error("Error fetching notifications:", error)
+      // Silently handle error - could be logged to a service in production
       toast.error("Failed to load notifications")
     } finally {
       setLoading(false)
@@ -171,7 +171,7 @@ export function NotificationsPanel({ isOpen, onClose }: NotificationsPanelProps)
         toast.success("Notifications marked as read")
       }
     } catch (error) {
-      console.error("Error marking notifications as read:", error)
+      // Error marking notifications as read (removed console.error for production)
       toast.error("Failed to mark notifications as read")
     }
   }
@@ -187,7 +187,7 @@ export function NotificationsPanel({ isOpen, onClose }: NotificationsPanelProps)
         toast.success("Notification deleted")
       }
     } catch (error) {
-      console.error("Error deleting notification:", error)
+      // Error deleting notification (removed console.error for production)
       toast.error("Failed to delete notification")
     }
   }
@@ -216,13 +216,13 @@ export function NotificationsPanel({ isOpen, onClose }: NotificationsPanelProps)
           toast.success("Redirecting to review...")
           break
         default:
-          console.log("Unknown action:", action)
+          // Unknown action (removed console.log for production)
       }
 
       // Mark as read after action
       await markAsRead([notification.id])
     } catch (error) {
-      console.error("Error handling quick action:", error)
+      // Error handling quick action (removed console.error for production)
       toast.error("Failed to process action")
     }
   }

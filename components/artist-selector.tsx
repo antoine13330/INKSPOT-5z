@@ -58,7 +58,8 @@ export function ArtistSelector({ onArtistSelect, onArtistClear }: ArtistSelector
         setArtists(data.artists);
       }
     } catch (error) {
-      console.error("Error searching artists:", error);
+      // Silently handle error - could be logged to a service in production
+      setArtists([]);
     } finally {
       setLoading(false);
     }

@@ -23,6 +23,7 @@ import {
   Download
 } from "lucide-react"
 import { InvoiceList } from "@/components/invoices/InvoiceList"
+import { toast } from "sonner"
 
 interface Transaction {
   id: string
@@ -102,7 +103,8 @@ export default function FinancialDashboard() {
         setInvoices(invoicesData.invoices)
       }
     } catch (error) {
-      console.error('Error loading financial data:', error)
+      // Error loading financial data (removed console.error for production)
+      toast.error("Failed to load financial data")
     } finally {
       setLoading(false)
     }
@@ -134,8 +136,8 @@ export default function FinancialDashboard() {
         alert(data.message || 'Failed to request payout')
       }
     } catch (error) {
-      console.error('Error requesting payout:', error)
-      alert('Failed to request payout')
+      // Error requesting payout (removed console.error for production)
+      toast.error("Failed to request payout")
     } finally {
       setPayoutLoading(false)
     }

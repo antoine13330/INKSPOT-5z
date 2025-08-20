@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface AdminStats {
   totalUsers: number
@@ -107,10 +108,8 @@ export default function AdminDashboard() {
       setUsers(usersData.users || [])
       setReportedContent(reportsData.reports || [])
     } catch (error) {
-      // Log error for debugging (in production, send to monitoring service)
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Error fetching admin data:", error)
-      }
+      // Error fetching admin data (removed console.error for production)
+      toast.error("Failed to fetch admin data")
     } finally {
       setLoading(false)
     }
@@ -130,10 +129,8 @@ export default function AdminDashboard() {
         fetchAdminData() // Refresh data
       }
     } catch (error) {
-      // Log error for debugging (in production, send to monitoring service)
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Error updating user:", error)
-      }
+      // Error updating user (removed console.error for production)
+      toast.error("Failed to update user")
     }
   }
 
@@ -151,10 +148,8 @@ export default function AdminDashboard() {
         fetchAdminData() // Refresh data
       }
     } catch (error) {
-      // Log error for debugging (in production, send to monitoring service)
-      if (process.env.NODE_ENV === 'development') {
-        console.error("Error updating report:", error)
-      }
+      // Error updating report (removed console.error for production)
+      toast.error("Failed to update report")
     }
   }
 
