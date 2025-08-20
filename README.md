@@ -1,114 +1,520 @@
-# Social Media Pro
+# 🎨 INKSPOT - Plateforme de Tatouage et Art
 
-A modern social media platform designed for professionals to showcase their work, connect with clients, and manage bookings with integrated payments.
+## 🚀 Démarrage Rapide
 
-## Features
+### Prérequis
+- **Node.js** 18+ 
+- **npm** ou **yarn**
+- **Git**
+- **PostgreSQL** (pour la base de données)
+- **AWS S3** (pour le stockage des fichiers)
 
-- 🔐 Authentication (Email/Password, Google OAuth, Apple OAuth, Magic Links)
-- 📱 Social media feed with posts, likes, comments
-- 💬 Real-time messaging system
-- 📅 Professional booking system
-- 💳 Integrated payments with Stripe
-- 🔔 Push notifications
-- 📁 File uploads to AWS S3
-- 🎨 Customizable professional profiles
-- 🔍 Smart content recommendations
-- 📊 Admin dashboard
-
-## Tech Stack
-
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: PostgreSQL
-- **Authentication**: NextAuth.js
-- **Payments**: Stripe
-- **File Storage**: AWS S3
-- **Email**: Nodemailer
-- **Push Notifications**: Web Push
-
-## Setup Instructions
-
-### 1. Clone and Install
-
+### Installation
 ```bash
-git clone <repository-url>
-cd social-media-pro
-pnpm install
-```
+# Cloner le projet
+git clone https://github.com/antoine13330/INKSPOT-5z.git
+cd INKSPOT-5z
 
-### 2. Environment Configuration
+# Installer les dépendances
+npm install
 
-Copy the example environment file and configure it:
-
-```bash
+# Copier le fichier d'environnement
 cp .env.example .env
+
+# Configurer les variables d'environnement
+# Voir section Configuration ci-dessous
+
+# Initialiser la base de données
+npm run db:setup
+
+# Lancer le serveur de développement
+npm run dev
 ```
 
-Then edit `.env` with your actual values:
+## ⚙️ Configuration
 
-- **Database**: Set up a PostgreSQL database and update `DATABASE_URL`
-- **NextAuth**: Generate a random secret for `NEXTAUTH_SECRET`
-- **OAuth**: Configure Google and Apple OAuth credentials
-- **Email**: Set up SMTP server credentials
-- **Stripe**: Add your Stripe API keys
-- **AWS S3**: Configure S3 bucket for file uploads
-- **VAPID**: Generate keys for push notifications
-
-### 3. Generate VAPID Keys
-
+### Variables d'environnement (.env)
 ```bash
-pnpm run generate-vapid
+# Base de données
+DATABASE_URL="postgresql://user:password@localhost:5432/inkspot"
+
+# NextAuth
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
+
+# AWS S3
+AWS_ACCESS_KEY_ID="your-access-key"
+AWS_SECRET_ACCESS_KEY="your-secret-key"
+AWS_REGION="us-east-1"
+AWS_S3_BUCKET="your-bucket-name"
+
+# Stripe
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+
+# Email (optionnel)
+EMAIL_SERVER_HOST="smtp.gmail.com"
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER="your-email@gmail.com"
+EMAIL_SERVER_PASSWORD="your-app-password"
 ```
 
-Copy the generated keys to your `.env` file.
+## 🛠️ Commandes Utiles
 
-### 4. Database Setup
-
+### Développement
 ```bash
-# Push the schema to your database
-pnpm run db:push
+# Lancer le serveur de développement
+npm run dev
 
-# Seed the database with sample data
-pnpm run db:seed
+# Lancer en mode production locale
+npm run build
+npm start
+
+# Lancer avec HTTPS (pour les webhooks)
+npm run dev:https
 ```
 
-### 5. Start Development Server
-
+### Base de données
 ```bash
-pnpm run dev
+# Générer le client Prisma
+npm run db:generate
+
+# Appliquer les migrations
+npm run db:migrate
+
+# Réinitialiser la base de données
+npm run db:reset
+
+# Seeder la base de données
+npm run db:seed
+
+# Ouvrir Prisma Studio
+npm run db:studio
 ```
 
-Visit `http://localhost:3000` to see the application.
+### Tests
+```bash
+# Lancer tous les tests
+npm test
 
-## Default Users
+# Lancer les tests en mode watch
+npm run test:watch
 
-After seeding, you can log in with:
+# Lancer les tests E2E
+npm run test:e2e
 
-- **Admin**: admin@example.com / admin123
-- **Professional**: pierce@example.com / pro123
+# Lancer les tests avec coverage
+npm run test:coverage
 
-## Environment Variables Reference
+# Lancer un test spécifique
+npm test -- --testNamePattern="search functionality"
+```
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@localhost:5432/db` |
-| `NEXTAUTH_SECRET` | NextAuth encryption secret | Random 32+ character string |
-| `NEXTAUTH_URL` | Application URL | `http://localhost:3000` |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID | From Google Console |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth secret | From Google Console |
-| `STRIPE_SECRET_KEY` | Stripe secret key | `sk_test_...` |
-| `AWS_S3_BUCKET_NAME` | S3 bucket for uploads | `my-app-uploads` |
+### Linting et Formatage
+```bash
+# Vérifier le code avec ESLint
+npm run lint
 
-## Scripts
+# Corriger automatiquement les erreurs ESLint
+npm run lint:fix
 
-- `pnpm run dev` - Start development server
-- `pnpm run build` - Build for production
-- `pnpm run start` - Start production server
-- `pnpm run db:push` - Push schema to database
-- `pnpm run db:studio` - Open Prisma Studio
-- `pnpm run db:seed` - Seed database with sample data
-- `pnpm run generate-vapid` - Generate VAPID keys
+# Formater le code avec Prettier
+npm run format
 
-## License
+# Vérifier le formatage
+npm run format:check
+```
 
-MIT# Test CI/CD Pipeline
+### Build et Déploiement
+```bash
+# Build de production
+npm run build
+
+# Analyser le bundle
+npm run analyze
+
+# Vérifier le build
+npm run build:check
+
+# Lancer le serveur de production
+npm start
+```
+
+### Docker
+```bash
+# Lancer avec Docker Compose (développement)
+docker-compose -f docker-compose-dev.yml up
+
+# Lancer avec Docker Compose (production)
+docker-compose -f docker-compose.prod.yml up
+
+# Reconstruire les images
+docker-compose build --no-cache
+
+# Arrêter les services
+docker-compose down
+```
+
+## 📁 Structure du Projet
+
+```
+INKSPOT-5z/
+├── app/                    # Pages et API Next.js 13+
+│   ├── api/               # Routes API
+│   ├── auth/              # Pages d'authentification
+│   ├── profile/           # Gestion des profils
+│   ├── pro/               # Dashboard professionnel
+│   └── ...
+├── components/             # Composants React réutilisables
+│   ├── ui/                # Composants UI de base
+│   ├── auth/              # Composants d'authentification
+│   ├── chat/              # Système de chat
+│   └── ...
+├── lib/                    # Utilitaires et configurations
+│   ├── auth.ts            # Configuration NextAuth
+│   ├── prisma.ts          # Client Prisma
+│   ├── s3.ts              # Gestion AWS S3
+│   └── ...
+├── prisma/                 # Schéma et migrations de base de données
+├── __tests__/              # Tests unitaires et d'intégration
+├── e2e/                    # Tests end-to-end
+└── public/                 # Fichiers statiques
+```
+
+## 🔧 Développement
+
+### Workflow Git
+```bash
+# Créer une nouvelle branche de fonctionnalité
+git checkout -b feature/nouvelle-fonctionnalite
+
+# Créer une branche de correction
+git checkout -b fix/correction-bug
+
+# Créer une branche de documentation
+git checkout -b docs/amelioration-docs
+
+# Commiter les changements
+git add .
+git commit -m "feat: ajouter nouvelle fonctionnalité"
+
+# Pousser la branche
+git push origin feature/nouvelle-fonctionnalite
+
+# Merger sur dev
+git checkout dev
+git merge feature/nouvelle-fonctionnalite
+git push origin dev
+```
+
+### Conventions de Commits
+```bash
+# Format: type(scope): description
+
+# Exemples :
+feat: ajouter système de notifications
+fix(auth): corriger problème de connexion
+docs: mettre à jour la documentation
+refactor(api): simplifier la logique des routes
+test: ajouter tests pour le composant Search
+chore: mettre à jour les dépendances
+```
+
+### Débogage
+```bash
+# Lancer avec logs détaillés
+DEBUG=* npm run dev
+
+# Lancer Prisma en mode debug
+DEBUG=prisma:* npm run dev
+
+# Vérifier les variables d'environnement
+npm run env:check
+
+# Tester la connexion à la base de données
+npm run db:test
+```
+
+## 🚀 Déploiement
+
+### Production
+```bash
+# Build de production
+npm run build
+
+# Vérifier le build
+npm run build:check
+
+# Lancer en production
+npm start
+
+# Avec PM2
+pm2 start npm --name "inkspot" -- start
+```
+
+### Environnements
+```bash
+# Développement
+NODE_ENV=development npm run dev
+
+# Staging
+NODE_ENV=staging npm run build && npm start
+
+# Production
+NODE_ENV=production npm run build && npm start
+```
+
+## 📊 Monitoring et Logs
+
+### Logs
+```bash
+# Voir les logs en temps réel
+npm run logs:watch
+
+# Voir les logs d'erreur
+npm run logs:error
+
+# Voir les logs de performance
+npm run logs:perf
+```
+
+### Métriques
+```bash
+# Lancer Prometheus
+npm run monitoring:prometheus
+
+# Lancer Grafana
+npm run monitoring:grafana
+
+# Voir les métriques
+npm run monitoring:metrics
+```
+
+## 🧪 Tests
+
+### Tests Unitaires
+```bash
+# Lancer tous les tests
+npm test
+
+# Lancer un fichier spécifique
+npm test -- components/Search.test.tsx
+
+# Lancer avec coverage
+npm run test:coverage
+
+# Lancer en mode watch
+npm run test:watch
+```
+
+### Tests E2E
+```bash
+# Lancer Playwright
+npm run test:e2e
+
+# Lancer en mode UI
+npm run test:e2e:ui
+
+# Lancer un test spécifique
+npm run test:e2e -- --grep "authentication flow"
+```
+
+### Tests de Performance
+```bash
+# Lighthouse
+npm run test:lighthouse
+
+# Bundle analyzer
+npm run test:bundle
+
+# Performance monitoring
+npm run test:perf
+```
+
+## 🔒 Sécurité
+
+### Vérifications de Sécurité
+```bash
+# Audit des dépendances
+npm audit
+
+# Correction automatique
+npm audit fix
+
+# Vérification des secrets
+npm run security:check
+
+# Scan de vulnérabilités
+npm run security:scan
+```
+
+### Authentification
+```bash
+# Tester l'authentification
+npm run auth:test
+
+# Vérifier les sessions
+npm run auth:sessions
+
+# Nettoyer les sessions expirées
+npm run auth:cleanup
+```
+
+## 📱 PWA et Offline
+
+### Service Worker
+```bash
+# Générer le service worker
+npm run pwa:generate
+
+# Tester le mode offline
+npm run pwa:test
+
+# Mettre à jour le manifest
+npm run pwa:manifest
+```
+
+### Push Notifications
+```bash
+# Tester les notifications
+npm run notifications:test
+
+# Vérifier les abonnements
+npm run notifications:subscriptions
+
+# Envoyer une notification de test
+npm run notifications:send-test
+```
+
+## 🌐 API et Webhooks
+
+### Tests d'API
+```bash
+# Tester toutes les routes API
+npm run api:test
+
+# Tester une route spécifique
+npm run api:test -- /api/users
+
+# Vérifier les webhooks
+npm run webhooks:test
+
+# Tester Stripe
+npm run stripe:test
+```
+
+### Documentation API
+```bash
+# Générer la documentation OpenAPI
+npm run api:docs:generate
+
+# Lancer Swagger UI
+npm run api:docs:serve
+
+# Exporter la documentation
+npm run api:docs:export
+```
+
+## 🚨 Dépannage
+
+### Problèmes Courants
+
+#### Base de données
+```bash
+# Connexion refusée
+npm run db:check-connection
+
+# Migrations en échec
+npm run db:reset
+npm run db:migrate
+
+# Problème de permissions
+npm run db:fix-permissions
+```
+
+#### Build
+```bash
+# Erreur de build
+npm run build:clean
+npm run build
+
+# Problème de dépendances
+rm -rf node_modules package-lock.json
+npm install
+```
+
+#### Performance
+```bash
+# Vérifier la taille du bundle
+npm run analyze
+
+# Optimiser les images
+npm run images:optimize
+
+# Vérifier les performances
+npm run perf:check
+```
+
+### Logs d'Erreur
+```bash
+# Voir les erreurs en temps réel
+npm run logs:errors:watch
+
+# Analyser les erreurs
+npm run logs:analyze
+
+# Nettoyer les logs
+npm run logs:cleanup
+```
+
+## 📚 Ressources
+
+### Documentation
+- [Next.js 13+](https://nextjs.org/docs)
+- [Prisma](https://www.prisma.io/docs)
+- [NextAuth.js](https://next-auth.js.org/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [Stripe](https://stripe.com/docs)
+
+### Outils de Développement
+- [VS Code Extensions](https://marketplace.visualstudio.com/)
+- [Postman](https://www.postman.com/) - Tests d'API
+- [Insomnia](https://insomnia.rest/) - Alternative à Postman
+- [DBeaver](https://dbeaver.io/) - Gestionnaire de base de données
+
+### Monitoring
+- [Sentry](https://sentry.io/) - Gestion des erreurs
+- [LogRocket](https://logrocket.com/) - Session replay
+- [Vercel Analytics](https://vercel.com/analytics) - Métriques
+
+## 🤝 Contribution
+
+### Comment Contribuer
+1. Fork le projet
+2. Créer une branche de fonctionnalité
+3. Commiter les changements
+4. Pousser vers la branche
+5. Créer une Pull Request
+
+### Standards de Code
+- Utiliser TypeScript strict
+- Suivre les conventions ESLint
+- Écrire des tests pour les nouvelles fonctionnalités
+- Documenter les changements importants
+
+## 📞 Support
+
+### Contact
+- **Développeur Principal** : Antoine
+- **Email** : [votre-email]
+- **GitHub** : [@antoine13330](https://github.com/antoine13330)
+
+### Issues
+- Créer une issue sur GitHub pour les bugs
+- Utiliser les templates fournis
+- Fournir des informations détaillées
+
+---
+
+**🎯 INKSPOT - Votre plateforme de tatouage et d'art de confiance !**

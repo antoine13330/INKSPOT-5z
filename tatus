@@ -1,0 +1,5 @@
+[33m3bcf651[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin/dev[m[33m)[m merge: integrate all fixes and improvements from test/ci-cd-pipeline
+[33m08ebee6[m[33m ([m[1;31morigin/test/ci-cd-pipeline[m[33m, [m[1;32mtest/ci-cd-pipeline[m[33m)[m docs: add profile form fix details to organization summary
+[33md8dac95[m fix: initialize profile edit form with session data to prevent empty inputs
+[33m2cab46f[m docs: update organization summary with regression fix details
+[33mb3e1f47[m fix: restore deleted search.test.tsx file to prevent test regression
