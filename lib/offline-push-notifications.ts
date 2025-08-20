@@ -1,6 +1,5 @@
 import { prisma } from "./prisma"
 import { sendNotificationToUser, NotificationPayload } from "./notifications"
-import { getSocketIOServer } from "./websocket"
 
 /**
  * Système de notifications push pour utilisateurs hors ligne
@@ -27,26 +26,11 @@ export interface OfflineNotificationContext {
 
 /**
  * Vérifie si un utilisateur est actuellement hors ligne
- * Se base sur le système WebSocket existant pour détecter les utilisateurs connectés
+ * Se base sur lastActiveAt pour détecter les utilisateurs inactifs
  */
 export async function isUserOffline(userId: string): Promise<boolean> {
   try {
-    const socketIOServer = getSocketIOServer()
-    
-    if (!socketIOServer) {
-      console.warn('SocketIO server not available, assuming user is offline')
-      return true
-    }
-
-    // Vérifier si l'utilisateur a des sockets connectées
-    const sockets = await socketIOServer.fetchSockets()
-    const userConnected = sockets.some((socket: any) => socket.data?.userId === userId)
-    
-    if (userConnected) {
-      return false
-    }
-
-    // Vérification additionnelle via lastActiveAt si disponible
+    // Vérification via lastActiveAt si disponible
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { lastActiveAt: true }
