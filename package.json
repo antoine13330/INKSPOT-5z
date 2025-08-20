@@ -47,7 +47,7 @@
     "api:docs:generate": "swagger-jsdoc -d swaggerDef.js -o swagger.json",
     "api:docs:serve": "swagger-ui-serve swagger.json",
     "api:docs:export": "swagger-jsdoc -d swaggerDef.js -o swagger.yaml",
-    "deploy:dev": "echo 'Deploying to dev environment'",
+    "deploy:dev": "node scripts/deploy-dev.js",
     "deploy:staging": "echo 'Deploying to staging environment'",
     "deploy:prod": "echo 'Deploying to production environment'",
     "env:check": "node scripts/check-env.js",
