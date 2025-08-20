@@ -7,10 +7,35 @@ const vapidSubject = process.env.EMAIL_FROM
   ? `mailto:${process.env.EMAIL_FROM}` 
   : "mailto:noreply@yourdomain.com"
 
+// Génération automatique des clés VAPID si elles ne sont pas définies
+let vapidPublicKey = process.env.VAPID_PUBLIC_KEY
+let vapidPrivateKey = process.env.VAPID_PRIVATE_KEY
+
+if (!vapidPublicKey || !vapidPrivateKey) {
+  // En mode développement ou CI/CD, générer des clés automatiquement
+  if (process.env.NODE_ENV === 'development' || process.env.CI === 'true') {
+    console.log('🔑 Génération automatique des clés VAPID pour le développement/CI...')
+    const generatedKeys = webpush.generateVAPIDKeys()
+    vapidPublicKey = generatedKeys.publicKey
+    vapidPrivateKey = generatedKeys.privateKey
+    
+    // Exposer la clé publique pour le client
+    if (typeof process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY === 'undefined') {
+      process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY = vapidPublicKey
+    }
+    
+    console.log('✅ Clés VAPID générées automatiquement')
+  } else {
+    console.warn('⚠️  Clés VAPID manquantes. Les notifications push ne fonctionneront pas.')
+    console.warn('📋 Ajoutez VAPID_PUBLIC_KEY et VAPID_PRIVATE_KEY à votre fichier .env')
+    console.warn('🔑 Générez-les avec: node scripts/generate-vapid-keys.js')
+  }
+}
+
 webpush.setVapidDetails(
   vapidSubject,
-  process.env.VAPID_PUBLIC_KEY || '', 
-  process.env.VAPID_PRIVATE_KEY || ''
+  vapidPublicKey || '', 
+  vapidPrivateKey || ''
 )
 
 export interface PushSubscription {

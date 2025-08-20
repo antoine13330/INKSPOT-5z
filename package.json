@@ -51,6 +51,8 @@
     "deploy:staging": "echo 'Deploying to staging environment'",
     "deploy:prod": "echo 'Deploying to production environment'",
     "env:check": "node scripts/check-env.js",
+    "vapid:generate": "node scripts/generate-vapid-keys.js",
+    "ci:setup": "node scripts/ci-setup.js",
     "db:test": "node scripts/test-db-connection.js",
     "db:fix-permissions": "node scripts/fix-db-permissions.js",
     "images:optimize": "node scripts/optimize-images.js",
