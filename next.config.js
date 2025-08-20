@@ -11,40 +11,19 @@ const nextConfig = {
     unoptimized: true
   },
   
-  // Désactiver le server-side rendering pour GitHub Pages
+  // Configuration pour Next.js 15
   experimental: {
-    appDir: true
+    // appDir est maintenant par défaut dans Next.js 15
   },
   
-  // Configuration des redirections
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/home',
-        permanent: true,
-      },
-    ]
-  },
+  // Pas de redirects avec export statique
+  // Pas de headers avec export statique
   
-  // Configuration des headers
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-        ],
-      },
-    ]
-  }
+  // Configuration du build
+  distDir: 'out',
+  
+  // Désactiver le téléchargement SWC pour GitHub Actions
+  swcMinify: false
 }
 
 module.exports = nextConfig

@@ -51,7 +51,7 @@ jobs:
         NODE_ENV: production
         
     - name: Build application for GitHub Pages
-      run: npm run build
+      run: npm run build:pages
       env:
         CI: true
         NODE_ENV: production

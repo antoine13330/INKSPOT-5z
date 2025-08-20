@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:pages": "next build && next export",
+    "build:pages": "next build",
     "start": "next start",
     "lint": "next lint --quiet --max-warnings 9999",
     "lint:fix": "next lint --fix --quiet --max-warnings 9999",

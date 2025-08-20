@@ -1,32 +1,10 @@
 {
-  "extends": ["next"],
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript"
+  ],
   "rules": {
-    "no-console": "off",
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-require-imports": "off",
-    "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-inferrable-types": "off",
-    "prefer-const": "off",
-    "no-undef": "off",
-    "no-case-declarations": "off",
-    "no-empty": "off",
-    "no-empty-function": "off",
-    "no-unreachable": "off",
-    "no-constant-condition": "off",
-    "no-useless-escape": "off",
-    "no-regex-spaces": "off",
-    "no-irregular-whitespace": "off",
-    "no-mixed-spaces-and-tabs": "off",
-    "no-trailing-spaces": "off",
-    "no-multiple-empty-lines": "off",
-    "no-empty-pattern": "off",
-    "no-unused-labels": "off",
-    "no-extra-semi": "off",
-    "no-extra-boolean-cast": "off",
-    "no-extra-parens": "off",
-    "no-extra-comma": "off",
-    "no-extra-label": "off"
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "warn"
   }
 }
