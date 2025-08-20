@@ -1,75 +1,55 @@
-# Multi-stage build for Next.js application
+# Dockerfile pour INKSPOT Next.js app
 FROM node:18-alpine AS base
 
-# Install dependencies only when needed
-FROM base AS deps
+# Installer les dépendances nécessaires
 RUN apk add --no-cache libc6-compat
+
+# Étape de dépendances
+FROM base AS deps
 WORKDIR /app
 
-# Copy package files
-COPY package.json ./
+# Copier les fichiers de dépendances
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production
 
-# Install dependencies with platform override
-RUN npm install --platform=linux --arch=x64
-
-# Rebuild the source code only when needed
+# Étape de build
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Install pnpm for build
-RUN npm install -g pnpm
+# Variables d'environnement pour le build
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
 
-# Install all dependencies for build with platform override
-RUN npm install --platform=linux --arch=x64
-
-# Set default environment variables for build to avoid Stripe errors
-ENV NODE_ENV=production
-ENV STRIPE_SECRET_KEY=sk_test_dummy_key_for_build
-ENV STRIPE_PUBLISHABLE_KEY=pk_test_dummy_key_for_build
-ENV AWS_ACCESS_KEY_ID=dummy_access_key
-ENV AWS_SECRET_ACCESS_KEY=dummy_secret_key
-ENV AWS_S3_BUCKET=dummy_bucket
-ENV NEXTAUTH_SECRET=dummy_secret_for_build
-ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
-
-# Generate Prisma client
-RUN npx prisma generate
-
-# Build the application
+# Build de l'application
 RUN npm run build
 
-# Production image, copy all the files and run next
+# Étape de production
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
+# Créer un utilisateur non-root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Copier les fichiers nécessaires
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copy Prisma files and node_modules for runtime
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules ./node_modules
-
+# Changer les permissions
+RUN chown -R nextjs:nodejs /app
 USER nextjs
 
+# Exposer le port
 EXPOSE 3000
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
 
-# Use a simple startup command that handles database migration
-CMD ["sh", "-c", "npx prisma db push --accept-data-loss || echo 'Migration failed, continuing...' && node server.js"] 
+# Commande de démarrage
+CMD ["node", "server.js"] 

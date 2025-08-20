@@ -1,245 +1,83 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
+  # Application Next.js
+  app:
+    build: .
+    container_name: inkspot-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://inkspot:inkspot123@postgres:5432/inkspot
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY}
+      - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY}
+    depends_on:
+      - postgres
+    networks:
+      - inkspot-network
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+
+  # Base de données PostgreSQL
   postgres:
     image: postgres:15-alpine
-    container_name: inkspot_postgres
+    container_name: inkspot-postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: inkspot
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      - POSTGRES_DB=inkspot
+      - POSTGRES_USER=inkspot
+      - POSTGRES_PASSWORD=inkspot123
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./prisma:/docker-entrypoint-initdb.d
     networks:
-      - inkspot_network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d inkspot"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - inkspot-network
 
-  # Redis for caching and sessions
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: inkspot-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - app
+    networks:
+      - inkspot-network
+
+  # Redis pour les sessions et cache
   redis:
     image: redis:7-alpine
-    container_name: inkspot_redis
+    container_name: inkspot-redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
-      - inkspot_network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Next.js Application
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: inkspot_app
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inkspot
-      - REDIS_URL=redis://redis:6379
-      - NEXTAUTH_URL=http://localhost:3000
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your-nextauth-secret-key-here}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_your-stripe-secret-key}
-      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-whsec_your-stripe-webhook-secret}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
-      - AWS_REGION=${AWS_REGION:-us-east-1}
-      - AWS_S3_BUCKET=${AWS_S3_BUCKET:-}
-      - SMTP_HOST=${SMTP_HOST:-localhost}
-      - SMTP_PORT=${SMTP_PORT:-1025}
-      - SMTP_USER=${SMTP_USER:-}
-      - SMTP_PASS=${SMTP_PASS:-}
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./public/uploads:/app/public/uploads
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # WebSocket Server (separate service)
-  websocket:
-    build:
-      context: .
-      dockerfile: Dockerfile.websocket
-    container_name: inkspot_websocket
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inkspot
-      - REDIS_URL=redis://redis:6379
-      - WS_PORT=3001
-    ports:
-      - "3001:3001"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-
-  # Mailhog for email testing
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: inkspot_mailhog
-    ports:
-      - "1025:1025"  # SMTP
-      - "8025:8025"  # Web UI
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-
-  # Grafana for monitoring (optional)
-  grafana:
-    image: grafana/grafana:latest
-    container_name: inkspot_grafana
-    ports:
-      - "3002:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin123
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
-      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-    profiles:
-      - monitoring
-
-  # Prometheus for metrics (optional)
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: inkspot_prometheus
-    ports:
-      - "9090:9090"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
-    volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-    profiles:
-      - monitoring
-
-  # Node Exporter for system metrics (optional)
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: inkspot_node_exporter
-    ports:
-      - "9100:9100"
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-    profiles:
-      - monitoring
-
-  # Postgres Exporter for database metrics (optional)
-  postgres-exporter:
-    image: prometheuscommunity/postgres-exporter:latest
-    container_name: inkspot_postgres_exporter
-    ports:
-      - "9187:9187"
-    environment:
-      DATA_SOURCE_NAME: "postgresql://postgres:postgres@postgres:5432/inkspot?sslmode=disable"
-      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/postgres_exporter.yml"
-    volumes:
-      - postgres_exporter_config:/etc/postgres_exporter.yml
-    command: ["--extend.query-path=/etc/postgres_exporter.yml"]
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-    profiles:
-      - monitoring
-
-  # LocalTunnel for webhook tunneling (simple and reliable)
-  localtunnel:
-    image: node:18-alpine
-    container_name: inkspot_localtunnel
-    command: sh -c "npm install -g localtunnel && lt --port 3000 --subdomain inkspot-webhook"
-    depends_on:
-      - app
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-    profiles:
-      - webhooks
-
-  # Prisma Studio (optional, for database management)
-  prisma-studio:
-    build:
-      context: .
-      dockerfile: Dockerfile.prisma-studio
-    container_name: inkspot_prisma_studio
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inkspot
-    ports:
-      - "5555:5555"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - inkspot_network
-    restart: unless-stopped
-    profiles:
-      - dev
+      - inkspot-network
 
 volumes:
   postgres_data:
   redis_data:
-  grafana_data:
-  prometheus_data:
-  postgres_exporter_config:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./monitoring/postgres-exporter/queries.yaml
 
 networks:
-  inkspot_network:
+  inkspot-network:
     driver: bridge
