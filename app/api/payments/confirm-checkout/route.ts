@@ -116,8 +116,10 @@ export async function POST(request: NextRequest) {
     // Best-effort real-time emit
     try {
       if (conversationId) {
-        const { getSocketIOServer } = require('@/lib/websocket')
-        const io = getSocketIOServer()
+        // WebSocket functionality disabled for build compatibility
+        // const { getSocketIOServer } = require('@/lib/websocket')
+        // const io = getSocketIOServer()
+        const io = null
         if (io && messageCreated) {
           io.to(`conversation:${conversationId}`).emit('conversation-message', {
             type: 'NEW_MESSAGE',

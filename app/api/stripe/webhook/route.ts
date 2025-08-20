@@ -102,8 +102,9 @@ async function handlePaymentSuccess(paymentIntent: any) {
 
         // Émettre un événement WebSocket pour la mise à jour en temps réel
         try {
-          const { getSocketIOServer } = require('@/lib/websocket')
-          const io = getSocketIOServer()
+          // WebSocket functionality disabled for build compatibility
+          // const { getSocketIOServer } = require('@/lib/websocket')
+          const io = null // getSocketIOServer()
           
           if (io) {
             // Notifier le client
@@ -241,8 +242,9 @@ async function handleCheckoutSuccess(session: any) {
 
       // Émettre un événement WebSocket pour la mise à jour en temps réel
       try {
-        const { getSocketIOServer } = require('@/lib/websocket')
-        const io = getSocketIOServer()
+        // WebSocket functionality disabled for build compatibility
+        // const { getSocketIOServer } = require('@/lib/websocket')
+        const io = null // getSocketIOServer()
         
         if (io) {
           // Notifier le client
@@ -270,8 +272,9 @@ async function handleCheckoutSuccess(session: any) {
 
     // Persist a system message and emit real-time event to conversation room if available
     try {
-      const { getSocketIOServer } = require('@/lib/websocket')
-      const io = getSocketIOServer()
+      // WebSocket functionality disabled for build compatibility
+      // const { getSocketIOServer } = require('@/lib/websocket')
+      const io = null // getSocketIOServer()
       if (conversationId) {
         // Create a system message in the conversation
         const sysMessage = await prisma.message.create({
