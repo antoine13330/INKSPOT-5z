@@ -20,10 +20,7 @@ const nextConfig = {
   // Pas de headers avec export statique
   
   // Configuration du build
-  distDir: 'out',
-  
-  // Désactiver le téléchargement SWC pour GitHub Actions
-  swcMinify: false
+  distDir: 'out'
 }
 
 module.exports = nextConfig
