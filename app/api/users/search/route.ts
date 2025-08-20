@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get("q") || ""
     const tags = searchParams.get("tags")?.split(",") || []
-    const role = searchParams.get("role") || "PRO"
+    const role = searchParams.get("role") || "all" // "all" par défaut pour rechercher tous les utilisateurs
     const sortBy = searchParams.get("sortBy") || "popularity"
     const page = Number.parseInt(searchParams.get("page") || "1")
     const limit = Number.parseInt(searchParams.get("limit") || "20")
@@ -20,7 +20,11 @@ export async function GET(request: NextRequest) {
     // Build where conditions
     const whereConditions: any = {
       status: 'ACTIVE',
-      role: role,
+    }
+
+    // Ajouter le filtre de rôle seulement si spécifié et différent de "all"
+    if (role && role !== "all") {
+      whereConditions.role = role
     }
 
     // Add query search conditions
@@ -116,6 +120,12 @@ export async function GET(request: NextRequest) {
           bio: true,
           profileViews: true,
           createdAt: true,
+          _count: {
+            select: {
+              posts: true,
+              followers: true,
+            },
+          },
         },
         orderBy: orderBy,
         skip: skip,

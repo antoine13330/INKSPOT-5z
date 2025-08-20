@@ -9,22 +9,13 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ColorPicker } from "@/components/ui/color-picker"
+
 import { ImageUpload } from "@/components/ui/image-upload"
-import { Upload, Save, Eye, Palette, ImageIcon, User, Briefcase, ArrowLeft, Plus, X } from "lucide-react"
+import { Upload, Save, Eye, ImageIcon, User, Briefcase, ArrowLeft, Plus, X } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 
-interface ProfileTheme {
-  primaryColor: string
-  secondaryColor: string
-  accentColor: string
-  backgroundColor: string
-  textColor: string
-  fontFamily: string
-}
 
 interface ProfileData {
   username: string
@@ -38,26 +29,9 @@ interface ProfileData {
   avatar: string
   coverImage: string
   portfolio: string[]
-  profileTheme: ProfileTheme
 }
 
-const defaultTheme: ProfileTheme = {
-  primaryColor: "#3b82f6",
-  secondaryColor: "#1f2937",
-  accentColor: "#10b981",
-  backgroundColor: "#111827",
-  textColor: "#ffffff",
-  fontFamily: "Inter",
-}
 
-const fontOptions = [
-  { value: "Inter", label: "Inter" },
-  { value: "Roboto", label: "Roboto" },
-  { value: "Poppins", label: "Poppins" },
-  { value: "Montserrat", label: "Montserrat" },
-  { value: "Playfair Display", label: "Playfair Display" },
-  { value: "Oswald", label: "Oswald" },
-]
 
 export default function CustomizeProfilePage() {
   const { data: session } = useSession()
@@ -74,7 +48,6 @@ export default function CustomizeProfilePage() {
     avatar: "",
     coverImage: "",
     portfolio: [],
-    profileTheme: defaultTheme,
   })
   const [newSpecialty, setNewSpecialty] = useState("")
   const [loading, setLoading] = useState(true)
@@ -91,7 +64,13 @@ export default function CustomizeProfilePage() {
 
   const fetchProfileData = async () => {
     try {
-      const response = await fetch("/api/profile")
+      if (!session?.user?.id) return
+      
+      const response = await fetch(`/api/users/${session.user.id}`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
       if (data.user) {
         setProfileData({
@@ -106,14 +85,15 @@ export default function CustomizeProfilePage() {
           avatar: data.user.avatar || "",
           coverImage: data.user.coverImage || "",
           portfolio: data.user.portfolio || [],
-          profileTheme: data.user.profileTheme || defaultTheme,
+
         })
       }
     } catch (error) {
-      // Log error for debugging (in production, send to monitoring service)
       if (process.env.NODE_ENV === 'development') {
         console.error("Error fetching profile:", error)
       }
+      // Show user-friendly error message
+      alert("Failed to load profile data. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -126,15 +106,7 @@ export default function CustomizeProfilePage() {
     }))
   }
 
-  const handleThemeChange = (field: keyof ProfileTheme, value: string) => {
-    setProfileData((prev) => ({
-      ...prev,
-      profileTheme: {
-        ...prev.profileTheme,
-        [field]: value,
-      },
-    }))
-  }
+
 
   const addSpecialty = () => {
     if (newSpecialty.trim() && !profileData.specialties.includes(newSpecialty.trim())) {
@@ -185,7 +157,11 @@ export default function CustomizeProfilePage() {
   const saveProfile = async () => {
     setSaving(true)
     try {
-      const response = await fetch("/api/profile", {
+      if (!session?.user?.id) {
+        throw new Error("No user session")
+      }
+
+      const response = await fetch(`/api/users/${session.user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -193,17 +169,23 @@ export default function CustomizeProfilePage() {
         body: JSON.stringify(profileData),
       })
 
-      if (response.ok) {
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      if (result.success) {
+        alert("Profile saved successfully!")
         router.push("/pro/dashboard")
       } else {
-        alert("Failed to save profile")
+        throw new Error(result.message || "Failed to save profile")
       }
     } catch (error) {
-      // Log error for debugging (in production, send to monitoring service)
       if (process.env.NODE_ENV === 'development') {
         console.error("Error saving profile:", error)
       }
-      alert("Failed to save profile")
+      alert(`Failed to save profile: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setSaving(false)
     }
@@ -234,6 +216,7 @@ export default function CustomizeProfilePage() {
             </div>
           </div>
           <div className="flex space-x-3">
+
             <Button
               variant="outline"
               onClick={() => setPreviewMode(!previewMode)}
@@ -252,7 +235,10 @@ export default function CustomizeProfilePage() {
         {previewMode ? (
           /* Preview Mode */
           <div className="space-y-6">
-            <ProfilePreview profileData={profileData} />
+            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+              <h2 className="text-2xl font-bold mb-4">Profile Preview</h2>
+              <p className="text-gray-400">Preview mode - your profile will look like this</p>
+            </div>
           </div>
         ) : (
           /* Edit Mode */
@@ -270,10 +256,7 @@ export default function CustomizeProfilePage() {
                 <ImageIcon className="w-4 h-4 mr-2" />
                 Media
               </TabsTrigger>
-              <TabsTrigger value="theme" className="data-[state=active]:bg-gray-800">
-                <Palette className="w-4 h-4 mr-2" />
-                Theme
-              </TabsTrigger>
+
             </TabsList>
 
             <TabsContent value="basic">
@@ -458,11 +441,10 @@ export default function CustomizeProfilePage() {
                     <div className="space-y-4">
                       {profileData.coverImage && (
                         <div className="relative w-full h-48 rounded-lg overflow-hidden">
-                          <Image
+                          <img
                             src={profileData.coverImage || "/placeholder.svg"}
                             alt="Cover image"
-                            fill
-                            className="object-cover"
+                            className="object-cover w-full h-full"
                           />
                         </div>
                       )}
@@ -492,11 +474,9 @@ export default function CustomizeProfilePage() {
                         {profileData.portfolio.map((image, index) => (
                           <div key={index} className="relative group">
                             <div className="aspect-square rounded-lg overflow-hidden">
-                              <Image
+                              <img
                                 src={image || "/placeholder.svg"}
                                 alt={`Portfolio ${index + 1}`}
-                                width={200}
-                                height={200}
                                 className="w-full h-full object-cover"
                               />
                             </div>
@@ -527,74 +507,7 @@ export default function CustomizeProfilePage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="theme">
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle className="text-white">Profile Theme</CardTitle>
-                  <CardDescription className="text-gray-400">Customize your profile appearance</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-white">Primary Color</Label>
-                        <ColorPicker
-                          color={profileData.profileTheme.primaryColor}
-                          onChange={(color) => handleThemeChange("primaryColor", color)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-white">Secondary Color</Label>
-                        <ColorPicker
-                          color={profileData.profileTheme.secondaryColor}
-                          onChange={(color) => handleThemeChange("secondaryColor", color)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-white">Accent Color</Label>
-                        <ColorPicker
-                          color={profileData.profileTheme.accentColor}
-                          onChange={(color) => handleThemeChange("accentColor", color)}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-white">Background Color</Label>
-                        <ColorPicker
-                          color={profileData.profileTheme.backgroundColor}
-                          onChange={(color) => handleThemeChange("backgroundColor", color)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-white">Text Color</Label>
-                        <ColorPicker
-                          color={profileData.profileTheme.textColor}
-                          onChange={(color) => handleThemeChange("textColor", color)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="fontFamily" className="text-white">
-                          Font Family
-                        </Label>
-                        <select
-                          id="fontFamily"
-                          value={profileData.profileTheme.fontFamily}
-                          onChange={(e) => handleThemeChange("fontFamily", e.target.value)}
-                          className="w-full p-2 bg-gray-800 border border-gray-700 text-white rounded-md"
-                        >
-                          {fontOptions.map((font) => (
-                            <option key={font.value} value={font.value}>
-                              {font.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
+
           </Tabs>
         )}
       </div>
@@ -602,82 +515,4 @@ export default function CustomizeProfilePage() {
   )
 }
 
-// Profile Preview Component
-function ProfilePreview({ profileData }: { profileData: ProfileData }) {
-  const theme = profileData.profileTheme
 
-  return (
-    <div
-      className="rounded-lg overflow-hidden"
-      style={{
-        backgroundColor: theme.backgroundColor,
-        color: theme.textColor,
-        fontFamily: theme.fontFamily,
-      }}
-    >
-      {/* Cover Image */}
-      {profileData.coverImage && (
-        <div className="relative w-full h-48">
-          <Image src={profileData.coverImage || "/placeholder.svg"} alt="Cover" fill className="object-cover" />
-        </div>
-      )}
-
-      {/* Profile Info */}
-      <div className="p-6">
-        <div className="flex items-start space-x-4 mb-6">
-          <Avatar className="w-20 h-20 border-4" style={{ borderColor: theme.primaryColor }}>
-            <AvatarImage src={profileData.avatar || "/placeholder.svg"} />
-            <AvatarFallback>{profileData.username[0]}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold" style={{ color: theme.textColor }}>
-              {profileData.businessName || profileData.username}
-            </h1>
-            <p className="text-lg opacity-80">@{profileData.username}</p>
-            {profileData.hourlyRate > 0 && (
-              <p className="text-lg font-semibold mt-2" style={{ color: theme.accentColor }}>
-                €{profileData.hourlyRate}/hour
-              </p>
-            )}
-          </div>
-        </div>
-
-        {profileData.bio && <p className="mb-4 opacity-90">{profileData.bio}</p>}
-
-        {profileData.location && <p className="mb-4 opacity-80">📍 {profileData.location}</p>}
-
-        {profileData.specialties.length > 0 && (
-          <div className="mb-6">
-            <h3 className="font-semibold mb-2">Specialties</h3>
-            <div className="flex flex-wrap gap-2">
-              {profileData.specialties.map((specialty, index) => (
-                <Badge key={index} className="text-white" style={{ backgroundColor: theme.primaryColor }}>
-                  {specialty}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {profileData.portfolio.length > 0 && (
-          <div>
-            <h3 className="font-semibold mb-4">Portfolio</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {profileData.portfolio.map((image, index) => (
-                <div key={index} className="aspect-square rounded-lg overflow-hidden">
-                  <Image
-                    src={image || "/placeholder.svg"}
-                    alt={`Portfolio ${index + 1}`}
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}

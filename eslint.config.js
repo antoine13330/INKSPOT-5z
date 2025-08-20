@@ -132,8 +132,7 @@ module.exports = [
         stripe: 'readonly',
         createTransfer: 'readonly',
         
-        // Variables globales Socket.IO
-        io: 'readonly',
+
         
         // Variables globales Validation
         validateInput: 'readonly',

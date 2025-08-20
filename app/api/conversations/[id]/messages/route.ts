@@ -5,30 +5,20 @@ import { prisma } from "@/lib/prisma"
 
 export const dynamic = "force-dynamic"
 
-export async function POST(
+// Récupérer les messages d'une conversation
+export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Check authentication
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const { id: conversationId } = await params
-    const body = await request.json()
-    const { content, type = "text" } = body
 
-    // Validate required fields
-    if (!content) {
-      return NextResponse.json(
-        { error: "Message content is required" },
-        { status: 400 }
-      )
-    }
-
-    // Verify user is member of conversation
+    // Vérifier que l'utilisateur est membre de la conversation
     const membership = await prisma.conversationMember.findFirst({
       where: {
         conversationId,
@@ -37,17 +27,74 @@ export async function POST(
     })
 
     if (!membership) {
-      return NextResponse.json(
-        { error: "Access denied to this conversation" },
-        { status: 403 }
-      )
+      return NextResponse.json({ error: "Access denied" }, { status: 403 })
     }
 
-    // Create message
+    // Récupérer les messages
+    const messages = await prisma.message.findMany({
+      where: {
+        conversationId,
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            username: true,
+            firstName: true,
+            lastName: true,
+            avatar: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc", // Ordre chronologique
+      },
+    })
+
+    return NextResponse.json(messages)
+  } catch (error) {
+    console.error("Erreur lors de la récupération des messages:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}
+
+// Envoyer un nouveau message
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const { id: conversationId } = await params
+    const body = await request.json()
+    const { content, messageType = "text", attachments = [] } = body
+
+    if (!content && (!attachments || attachments.length === 0)) {
+      return NextResponse.json({ error: "Content or attachments required" }, { status: 400 })
+    }
+
+    // Vérifier que l'utilisateur est membre de la conversation
+    const membership = await prisma.conversationMember.findFirst({
+      where: {
+        conversationId,
+        userId: session.user.id,
+      },
+    })
+
+    if (!membership) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 })
+    }
+
+    // Créer le message
     const message = await prisma.message.create({
       data: {
-        content,
-        messageType: type,
+        content: content || "",
+        messageType,
+        attachments,
         conversationId,
         senderId: session.user.id,
       },
@@ -58,42 +105,33 @@ export async function POST(
             username: true,
             firstName: true,
             lastName: true,
-            avatar: true
-          }
-        }
-      }
+            avatar: true,
+          },
+        },
+      },
     })
 
-    // Update conversation updatedAt
+    // Mettre à jour le timestamp de la conversation
     await prisma.conversation.update({
       where: { id: conversationId },
-      data: { updatedAt: new Date() }
+      data: { updatedAt: new Date() },
     })
-
-    // Transform message to match expected format
-    const transformedMessage = {
-      id: message.id,
-      content: message.content,
-      type: message.messageType,
-      isFromUser: message.senderId === session.user.id,
-      conversationId: message.conversationId,
-      senderId: message.senderId,
-      readBy: [],
-      createdAt: message.createdAt.toISOString(),
-      updatedAt: message.updatedAt.toISOString()
-    }
 
     return NextResponse.json({
       success: true,
-      data: transformedMessage,
-      messageId: message.id
+      message: {
+        id: message.id,
+        content: message.content,
+        messageType: message.messageType,
+        attachments: message.attachments,
+        conversationId: message.conversationId,
+        senderId: message.senderId,
+        createdAt: message.createdAt.toISOString(),
+        sender: message.sender,
+      },
     })
-
   } catch (error) {
-    console.error("Error sending message:", error)
-    return NextResponse.json(
-      { error: "Failed to send message" },
-      { status: 500 }
-    )
+    console.error("Erreur lors de l'envoi du message:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

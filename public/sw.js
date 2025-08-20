@@ -164,43 +164,230 @@ async function doBackgroundSync() {
 
 // Push notification handling
 self.addEventListener('push', (event) => {
-  const options = {
-    body: event.data ? event.data.text() : 'New notification',
-    icon: '/placeholder-logo.png',
-    badge: '/placeholder-logo.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'View',
-        icon: '/placeholder-logo.png'
-      },
-      {
-        action: 'close',
-        title: 'Close',
-        icon: '/placeholder-logo.png'
+  try {
+    let notificationData = {}
+    
+    if (event.data) {
+      try {
+        notificationData = event.data.json()
+      } catch (error) {
+        // Fallback to text if JSON parsing fails
+        notificationData = {
+          title: 'INKSPOT',
+          body: event.data.text() || 'New notification',
+          data: { type: 'general' }
+        }
       }
-    ]
+    }
+
+    const {
+      title = 'INKSPOT',
+      body = 'New notification',
+      icon = '/placeholder-logo.png',
+      badge = '/placeholder-logo.png',
+      image,
+      tag,
+      requireInteraction = false,
+      silent = false,
+      vibrate = [200, 100, 200],
+      actions = [],
+      data = {}
+    } = notificationData
+
+    // Créer les actions spécifiques selon le type de notification
+    let notificationActions = actions
+    if (!notificationActions || notificationActions.length === 0) {
+      notificationActions = getDefaultActionsForType(data.type)
+    }
+
+    const options = {
+      body,
+      icon,
+      badge,
+      image,
+      tag: tag || `inkspot-${data.type || 'general'}-${Date.now()}`,
+      requireInteraction,
+      silent,
+      vibrate,
+      data: {
+        ...data,
+        dateOfArrival: Date.now(),
+        clickUrl: data.url || '/'
+      },
+      actions: notificationActions
+    }
+    
+    event.waitUntil(
+      self.registration.showNotification(title, options)
+    )
+  } catch (error) {
+    console.error('Error handling push notification:', error)
+    
+    // Fallback notification
+    event.waitUntil(
+      self.registration.showNotification('INKSPOT', {
+        body: 'You have a new notification',
+        icon: '/placeholder-logo.png',
+        badge: '/placeholder-logo.png',
+        data: { clickUrl: '/' }
+      })
+    )
   }
-  
-  event.waitUntil(
-    self.registration.showNotification('INKSPOT', options)
-  )
 })
+
+// Fonction pour obtenir les actions par défaut selon le type
+function getDefaultActionsForType(type) {
+  switch (type) {
+    case 'message':
+      return [
+        {
+          action: 'reply',
+          title: 'Répondre',
+          icon: '/placeholder-logo.png'
+        },
+        {
+          action: 'view',
+          title: 'Voir',
+          icon: '/placeholder-logo.png'
+        }
+      ]
+    
+    case 'proposal':
+    case 'booking':
+      return [
+        {
+          action: 'accept',
+          title: 'Accepter',
+          icon: '/placeholder-logo.png'
+        },
+        {
+          action: 'view',
+          title: 'Voir détails',
+          icon: '/placeholder-logo.png'
+        }
+      ]
+    
+    case 'image':
+      return [
+        {
+          action: 'view',
+          title: 'Voir l\'image',
+          icon: '/placeholder-logo.png'
+        },
+        {
+          action: 'like',
+          title: 'J\'aime',
+          icon: '/placeholder-logo.png'
+        }
+      ]
+    
+    case 'collaboration':
+      return [
+        {
+          action: 'accept',
+          title: 'Accepter',
+          icon: '/placeholder-logo.png'
+        },
+        {
+          action: 'view',
+          title: 'Voir détails',
+          icon: '/placeholder-logo.png'
+        }
+      ]
+    
+    default:
+      return [
+        {
+          action: 'view',
+          title: 'Voir',
+          icon: '/placeholder-logo.png'
+        },
+        {
+          action: 'dismiss',
+          title: 'Ignorer',
+          icon: '/placeholder-logo.png'
+        }
+      ]
+  }
+}
 
 // Notification click handling
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
   
-  if (event.action === 'explore') {
-    event.waitUntil(
-      clients.openWindow('/')
-    )
+  const notificationData = event.notification.data || {}
+  const action = event.action
+  const type = notificationData.type || 'general'
+  
+  let targetUrl = notificationData.clickUrl || '/'
+  
+  // Gérer les différentes actions
+  if (action) {
+    switch (action) {
+      case 'reply':
+        // Ouvrir la conversation pour répondre
+        if (notificationData.conversationId) {
+          targetUrl = `/conversations/${notificationData.conversationId}`
+        }
+        break
+        
+      case 'view':
+        // Utiliser l'URL spécifique selon le type
+        if (notificationData.url) {
+          targetUrl = notificationData.url
+        }
+        break
+        
+      case 'accept':
+        // Rediriger vers la page d'acceptation selon le type
+        if (type === 'proposal' || type === 'booking') {
+          targetUrl = notificationData.url || `/bookings/${notificationData.proposalId}`
+        } else if (type === 'collaboration') {
+          targetUrl = notificationData.url || `/collaborations/${notificationData.collaborationId}`
+        }
+        break
+        
+      case 'like':
+        // Pour les images, aller au post et déclencher un like
+        if (notificationData.postId) {
+          targetUrl = `/posts/${notificationData.postId}`
+          // Ici on pourrait ajouter un paramètre pour auto-liker
+          targetUrl += '?autoLike=true'
+        }
+        break
+        
+      case 'dismiss':
+        // Ne rien faire, juste fermer
+        return
+        
+      default:
+        // Action par défaut : utiliser l'URL fournie
+        break
+    }
   }
+  
+  // Ouvrir la fenêtre ou focuser sur l'onglet existant
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then(clientList => {
+        // Vérifier si une fenêtre avec cette URL est déjà ouverte
+        for (const client of clientList) {
+          if (client.url === targetUrl && 'focus' in client) {
+            return client.focus()
+          }
+        }
+        
+        // Sinon, ouvrir une nouvelle fenêtre
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl)
+        }
+      })
+      .catch(error => {
+        console.error('Error handling notification click:', error)
+        // Fallback : essayer d'ouvrir la page d'accueil
+        return clients.openWindow('/')
+      })
+  )
 })
 
 // Helper functions for background sync

@@ -24,7 +24,7 @@ import {
   FileText
 } from "lucide-react";
 import { toast } from "sonner";
-import Image from "next/image";
+// Removed next/image import - using standard img tag
 
 interface FormData {
   content: string;
@@ -63,6 +63,7 @@ export default function CreatePostPage() {
   const [mentionQuery, setMentionQuery] = useState("");
   const [showMentionAutocomplete, setShowMentionAutocomplete] = useState(false);
   const [mentionStartIndex, setMentionStartIndex] = useState(-1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Check if user is PRO
   if (!session?.user || session.user.role !== "PRO") {
@@ -181,6 +182,12 @@ export default function CreatePostPage() {
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Prevent double submission
+    if (isSubmitting) {
+      toast.error("Please wait, your post is being created...");
+      return;
+    }
+    
     if (!formData.content.trim()) {
       toast.error("Content is required");
       return;
@@ -190,6 +197,9 @@ export default function CreatePostPage() {
       toast.error("At least one image is required");
       return;
     }
+    
+    // Set submitting state to prevent double clicks
+    setIsSubmitting(true);
 
     const postFormData = new FormData();
     postFormData.append("content", formData.content);
@@ -236,12 +246,17 @@ export default function CreatePostPage() {
         router.push("/");
       } else {
         toast.error(result.error || "Failed to create post");
+        setIsSubmitting(false); // Reset state on error
       }
     } catch (error) {
       console.error("Error creating post:", error);
       toast.error("Failed to create post");
+      setIsSubmitting(false); // Reset state on error
+    } finally {
+      // Always reset submitting state
+      setIsSubmitting(false);
     }
-  }, [formData, imagePreviews, session, router, isCollaboration, selectedCollaborators]);
+  }, [formData, imagePreviews, session, router, isCollaboration, selectedCollaborators, isSubmitting]);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -435,7 +450,7 @@ export default function CreatePostPage() {
                 <div className="grid grid-cols-2 gap-4">
                   {imagePreviews.map((preview, index) => (
                     <div key={index} className="relative group">
-                      <Image src={preview} alt={`Preview ${index}`} width={200} height={200} className="w-full h-auto object-cover rounded-lg" />
+                      <img src={preview} alt={`Preview ${index}`} className="w-full h-auto object-cover rounded-lg" />
                       <Button
                         type="button"
                         variant="destructive"
@@ -452,11 +467,21 @@ export default function CreatePostPage() {
             </CardContent>
           </Card>
 
-          <Button type="submit" className="w-full modern-button bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-lg">
-            {isCollaboration && selectedCollaborators.length > 0 
-              ? `Create Post & Invite ${selectedCollaborators.length} Collaborator${selectedCollaborators.length > 1 ? 's' : ''}`
-              : "Create Post"
-            }
+          <Button 
+            type="submit" 
+            disabled={isSubmitting}
+            className="w-full modern-button bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Creating Post...
+              </div>
+            ) : (
+              isCollaboration && selectedCollaborators.length > 0 
+                ? `Create Post & Invite ${selectedCollaborators.length} Collaborator${selectedCollaborators.length > 1 ? 's' : ''}`
+                : "Create Post"
+            )}
           </Button>
         </form>
       </div>

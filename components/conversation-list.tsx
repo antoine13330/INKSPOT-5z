@@ -24,7 +24,6 @@ interface Conversation {
     timestamp: string
     isFromUser: boolean
   }
-  unreadCount: number
   isActive: boolean
 }
 
@@ -164,11 +163,6 @@ export function ConversationList({
                   <div className="conversation-time">
                     {formatTime(conversation.lastMessage.timestamp)}
                   </div>
-                  {conversation.unreadCount > 0 && (
-                    <div className="conversation-badge">
-                      {conversation.unreadCount}
-                    </div>
-                  )}
                 </div>
               </Link>
             ))}

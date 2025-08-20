@@ -331,7 +331,7 @@ export default function AdminDashboard() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="border-green-600 text-green-400 bg-transparent hover:bg-green-600 hover:text-white"
+                              className="border-blue-600 text-blue-400 bg-transparent hover:bg-blue-600 hover:text-white"
                               onClick={() => handleUserAction(user.id, "activate")}
                             >
                               <CheckCircle className="w-4 h-4" />
@@ -395,7 +395,7 @@ export default function AdminDashboard() {
                          <div className="flex space-x-2">
                            <Button
                              size="sm"
-                             className="bg-green-600 hover:bg-green-700"
+                             className="bg-blue-600 hover:bg-blue-700"
                              onClick={() => handleReportAction(report.id, "resolve")}
                            >
                              <CheckCircle className="w-4 h-4 mr-2" />

@@ -147,8 +147,8 @@ export function PerformanceMonitor() {
       
       setMetrics(newMetrics)
       
-      // Send metrics to Grafana
-      await sendMetricsToGrafana(newMetrics)
+      // Send metrics to Grafana (temporarily disabled to avoid errors)
+      // await sendMetricsToGrafana(newMetrics)
     } catch (error) {
       console.error('Error collecting performance metrics:', error)
     }

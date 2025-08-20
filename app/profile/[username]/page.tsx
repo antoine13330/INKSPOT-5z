@@ -25,7 +25,7 @@ import {
   Palette
 } from "lucide-react"
 import { toast } from "sonner"
-import Image from "next/image"
+// Removed next/image import - not used
 
 interface UserProfile {
   id: string
@@ -106,9 +106,7 @@ export default function UserProfilePage() {
   useEffect(() => {
     if (username && params?.username) {
       fetchUserProfile()
-      fetchUserPosts()
-      fetchUserFavorites()
-      fetchUserLikedPosts()
+      fetchUserPosts() // posts du profil
       checkFollowStatus()
     }
   }, [username, params?.username])
@@ -316,66 +314,81 @@ export default function UserProfilePage() {
     )
   }
 
-  const isOwnProfile = session?.user?.username === username
+  const isOwnProfile = !!(session?.user?.id && profile?.id && session.user.id === profile.id)
 
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header with back button */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="flex items-center gap-3 p-4">
+      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+        <div className="mx-auto max-w-lg flex items-center gap-3 py-3 px-4">
           <Link href="/">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Button variant="ghost" size="icon" className="h-7 w-7">
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <div className="flex-1">
-            <h1 className="text-lg font-semibold text-foreground">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base font-semibold text-foreground truncate">
               {profile.businessName || `@${profile.username}`}
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground truncate">
               {profile.postsCount} posts • {profile.followersCount} followers
             </p>
           </div>
-          {!isOwnProfile && (
-            <div className="flex gap-2">
+          {isOwnProfile ? (
+            <div className="flex gap-1.5">
+              <Link href="/profile/edit">
+                <Button variant="default" size="sm" className="h-7 px-3 text-xs">
+                  <Edit className="w-3 h-3 mr-1.5" />
+                  Edit
+                </Button>
+              </Link>
+              {profile.role === "PRO" && (
+                <Link href="/pro/profile/customize">
+                  <Button variant="outline" size="sm" className="h-7 px-3 text-xs">
+                    <Settings className="w-3 h-3 mr-1.5" />
+                    Customize
+                  </Button>
+                </Link>
+              )}
+            </div>
+          ) : (
+            <div className="flex gap-1.5">
               <Button
                 variant={isFollowing ? "outline" : "default"}
                 size="sm"
-                onClick={handleFollow}
+                className="h-7 px-3 text-xs"
               >
                 {isFollowing ? "Unfollow" : "Follow"}
               </Button>
-              <Button variant="outline" size="sm">
-                <MessageCircle className="w-4 h-4 mr-2" />
+              <Button variant="outline" size="sm" className="h-7 px-3 text-xs" onClick={() => {
+                if (!session?.user?.id) { toast.error("Please sign in to message"); return }
+                window.location.href = `/conversations/new?to=${profile.id}`
+              }}>
+                <MessageCircle className="w-3 h-3 mr-1.5" />
                 Message
               </Button>
             </div>
-          )}
-          {isOwnProfile && (
-            <Link href="/profile/edit">
-              <Button variant="outline" size="sm">
-                <Edit className="w-4 h-4 mr-2" />
-                Edit
-              </Button>
-            </Link>
           )}
         </div>
       </div>
 
       {/* Cover Image */}
       {profile.coverImage && (
-        <div className="relative h-48 w-full">
-          <Image
-            src={profile.coverImage}
-            alt="Cover"
-            fill
-            className="object-cover"
-          />
+        <div className="relative w-full bg-background">
+          <div className="mx-auto max-w-lg">
+            <div className="relative h-40 w-full">
+              <img
+                src={profile.coverImage}
+                alt="Cover"
+                className="object-cover w-full h-full"
+              />
+            </div>
+          </div>
         </div>
       )}
 
       {/* Profile Info */}
-      <div className="px-4 -mt-16 relative z-10">
+      <div className="px-4 pt-4 mx-auto max-w-lg">
         <div className="flex items-end gap-4 mb-6">
           <Avatar className="w-24 h-24 border-4 border-background">
             <AvatarImage src={profile.avatar} />
@@ -480,7 +493,7 @@ export default function UserProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div className="px-4 mb-6">
+      <div className="px-4 mb-6 mx-auto max-w-lg">
         <div className="flex border-b border-border">
           <button
             onClick={() => setActiveTab("posts")}
@@ -518,7 +531,7 @@ export default function UserProfilePage() {
       </div>
 
       {/* Tab Content */}
-      <div className="px-4">
+      <div className="px-4 mx-auto max-w-lg">
         {activeTab === "posts" && (
           <div className="space-y-4">
             {posts.map((post) => (
@@ -529,11 +542,9 @@ export default function UserProfilePage() {
                   {post.images.length > 0 && (
                     <div className="mb-3">
                       <div className="aspect-square overflow-hidden rounded-lg">
-                        <Image 
+                        <img 
                           src={post.images[0]} 
                           alt="Post image"
-                          width={400}
-                          height={400}
                           className="w-full h-full object-cover"
                         />
                       </div>

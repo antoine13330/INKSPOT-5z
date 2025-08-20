@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import { useUserOnlineStatus } from "@/lib/providers/online-status-provider"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,7 +34,7 @@ interface ChatInterfaceProps {
     username: string
     avatar?: string
     role: string
-    isOnline?: boolean
+
   }
   messages?: Message[]
   onSendMessage?: (content: string) => void
@@ -46,6 +47,8 @@ export function ChatInterface({
   onSendMessage,
   onSendFile 
 }: ChatInterfaceProps) {
+  // Utiliser le nouveau système de statut en ligne
+  const { isOnline } = useUserOnlineStatus(participant.id)
   const { data: session } = useSession()
   const [newMessage, setNewMessage] = useState("")
   const [isTyping, setIsTyping] = useState(false)
@@ -111,7 +114,14 @@ export function ChatInterface({
           <div className="flex-1">
             <h2 className="conversation-name">{participant.name}</h2>
             <p className="text-sm text-secondary">
-              {participant.isOnline ? 'En ligne' : 'Hors ligne'}
+              {isOnline ? (
+                <span className="flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  En ligne
+                </span>
+              ) : (
+                'Hors ligne'
+              )}
             </p>
           </div>
         </div>

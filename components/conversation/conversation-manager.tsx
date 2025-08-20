@@ -62,7 +62,7 @@ export function ConversationManager({ artist, post, onClose }: ConversationManag
         
         if (data.success && data.redirectUrl) {
           // Rediriger vers la page de conversation
-          toast.success("Redirection vers la conversation...")
+          // Silent redirect to conversation
           router.push(data.redirectUrl)
         } else {
           throw new Error("Réponse invalide de l'API")

@@ -71,41 +71,8 @@ export function EnhancedConversation({
   const [selectedImages, setSelectedImages] = useState<File[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Messages simulés pour démonstration
-  const mockMessages: Message[] = [
-    {
-      id: "1",
-      content: "Bonjour ! Je suis intéressé(e) par votre post. Pouvez-vous me donner plus de détails ?",
-      senderId: "user",
-      timestamp: new Date(Date.now() - 300000), // 5 minutes ago
-      type: 'text',
-      isFromUser: true
-    },
-    {
-      id: "2",
-      content: "Bonjour ! Merci pour votre intérêt. Que souhaitez-vous savoir exactement ?",
-      senderId: artist.id,
-      timestamp: new Date(Date.now() - 180000), // 3 minutes ago
-      type: 'text',
-      isFromUser: false
-    },
-    {
-      id: "3",
-      content: "J'aimerais connaître votre tarif et votre disponibilité pour ce type de projet.",
-      senderId: "user",
-      timestamp: new Date(Date.now() - 120000), // 2 minutes ago
-      type: 'text',
-      isFromUser: true
-    },
-    {
-      id: "4",
-      content: "Parfait ! Mon tarif est de €80/heure. Je suis disponible la semaine prochaine. Voulez-vous qu'on planifie un rendez-vous ?",
-      senderId: artist.id,
-      timestamp: new Date(Date.now() - 60000), // 1 minute ago
-      type: 'text',
-      isFromUser: false
-    }
-  ]
+  // Désactiver les messages simulés par défaut
+  const mockMessages: Message[] = []
 
   useEffect(() => {
     // Créer la conversation via l'API

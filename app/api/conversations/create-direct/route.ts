@@ -63,29 +63,8 @@ export async function POST(request: NextRequest) {
       conversationId = conversation.id
     }
 
-    // Create initial message
-    const initialMessage = await prisma.message.create({
-      data: {
-        content: `Bonjour ! Je suis intéressé(e) par votre post. Pouvez-vous me donner plus de détails ?`,
-        messageType: "text",
-        conversationId: conversationId,
-        senderId: session.user.id,
-      },
-    })
-
-    // Create notification for the participant
-    await prisma.notification.create({
-      data: {
-        type: "MESSAGE",
-        title: "Nouvelle conversation",
-        message: "Quelqu'un souhaite discuter avec vous",
-        userId: participantId,
-        data: {
-          conversationId: conversationId,
-          postId: postId,
-        },
-      },
-    })
+    // Ne pas créer de message automatique. La conversation reste vide
+    // Optionnellement, on pourrait envoyer une notification silencieuse ici si désiré
 
     return NextResponse.json({
       message: "Conversation created successfully",
@@ -93,7 +72,6 @@ export async function POST(request: NextRequest) {
         id: conversationId,
         title: subject || "Nouvelle conversation",
       },
-      messageId: initialMessage.id,
     })
 
   } catch (error) {

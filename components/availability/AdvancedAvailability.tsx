@@ -492,7 +492,12 @@ export function AdvancedAvailability() {
                   selected={selectedDate}
                   onSelect={(date) => date && setSelectedDate(date)}
                   className="rounded-md border"
-                  disabled={(date) => date < new Date()}
+                  disabled={(date) => {
+                    // Empêcher la sélection de dates/heures antérieures à l'heure + 1 minute
+                    const oneHourFromNow = new Date()
+                    oneHourFromNow.setHours(oneHourFromNow.getHours() + 1, oneHourFromNow.getMinutes() + 1, 0, 0)
+                    return date < oneHourFromNow
+                  }}
                 />
               </CardContent>
             </Card>

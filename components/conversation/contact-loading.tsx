@@ -151,7 +151,7 @@ export function ContactLoading({ artist, post, onClose }: ContactLoadingProps) {
           <div className="flex justify-start">
             <div className="max-w-xs bg-muted rounded-lg p-3">
               <p className="text-sm">
-                Bonjour ! Je suis intéressé(e) par votre post. Pouvez-vous me donner plus de détails ?
+                ...
               </p>
               <span className="text-xs text-muted-foreground mt-2 block">
                 {new Date().toLocaleTimeString()}

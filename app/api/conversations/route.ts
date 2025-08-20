@@ -68,14 +68,23 @@ export async function GET(request: NextRequest) {
     // Transform conversations to match the expected format
     const transformedConversations = conversations.map((conversation: any) => {
       // Get other participants (excluding current user)
-      const otherParticipants = conversation.members
+      const otherMembers = conversation.members
         .filter((member: any) => member.userId !== session.user.id)
         .map((member: any) => ({
-          id: member.user.id,
-          name: member.user.businessName || `${member.user.firstName || ''} ${member.user.lastName || ''}`.trim() || member.user.username,
-          username: member.user.username,
-          avatar: member.user.avatar,
-          role: member.user.role
+          id: member.id,
+          conversationId: conversation.id,
+          userId: member.user.id,
+          joinedAt: member.joinedAt.toISOString(),
+          lastReadAt: member.lastReadAt?.toISOString(),
+          user: {
+            id: member.user.id,
+            username: member.user.username,
+            firstName: member.user.firstName,
+            lastName: member.user.lastName,
+            avatar: member.user.avatar,
+            role: member.user.role,
+            businessName: member.user.businessName
+          }
         }));
 
       // Get last message
@@ -91,14 +100,13 @@ export async function GET(request: NextRequest) {
         updatedAt: conversation.messages[0].updatedAt.toISOString()
       } : undefined;
 
-      // Calculate unread count (TODO: Implement proper unread tracking)
-      const unreadCount = 0;
+
 
       return {
         id: conversation.id,
-        participants: otherParticipants,
+        members: otherMembers, // Changed from participants to members
         lastMessage,
-        unreadCount,
+
         isActive: true,
         type: conversation.isGroup ? 'GROUP' : 'DIRECT',
         createdAt: conversation.createdAt.toISOString(),

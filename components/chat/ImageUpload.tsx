@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Image as ImageIcon, X, Upload, Loader2, CheckCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import Image from 'next/image'
+// Removed next/image import - using standard img tag
 
 interface ImageUploadProps {
   onImageUpload: (imageUrl: string) => void
@@ -227,11 +227,9 @@ export function ImageUpload({ onImageUpload, onCancel, className }: ImageUploadP
             {images.map((image) => (
               <div key={image.id} className="relative group">
                 <div className="aspect-square rounded-lg overflow-hidden border border-gray-200">
-                  <Image
+                  <img
                     src={image.preview}
                     alt="Preview"
-                    width={200}
-                    height={200}
                     className="w-full h-full object-cover"
                   />
                 </div>

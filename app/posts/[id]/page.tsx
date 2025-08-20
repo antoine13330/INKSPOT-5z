@@ -21,8 +21,9 @@ import {
   Calendar
 } from "lucide-react"
 import { toast } from "sonner"
-import Image from "next/image"
+// Removed next/image import - not used
 import { MentionHighlighter } from "@/components/mention-highlighter"
+import { ImageCarousel } from "@/components/image-carousel"
 
 interface Post {
   id: string
@@ -111,6 +112,7 @@ export default function PostDetailPage() {
       const response = await fetch(`/api/posts/${postId}/comments`)
       if (response.ok) {
         const data = await response.json()
+        console.log("Fetched comments:", data.comments) // Debug log
         setComments(data.comments)
       }
     } catch (error) {
@@ -238,30 +240,30 @@ export default function PostDetailPage() {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
+      {/* Header - Mobile Optimized */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         <div className="flex items-center gap-3 p-4">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => router.back()}>
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div className="flex-1">
-            <h1 className="text-lg font-semibold text-foreground">Post</h1>
-            <p className="text-sm text-muted-foreground">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg font-semibold text-foreground truncate">Post</h1>
+            <p className="text-sm text-muted-foreground truncate">
               by @{post.author.username}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Post Content */}
-      <div className="p-4">
+      {/* Post Content - Mobile Optimized */}
+      <div className="p-4 space-y-4">
         <div className="card">
           {/* Post Header */}
           <div className="p-4 border-b border-border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-start space-x-3 flex-1 min-w-0">
                 <Link href={`/profile/${post.author.username}`}>
-                  <Avatar className="modern-avatar w-10 h-10 cursor-pointer hover:opacity-80 transition-opacity">
+                  <Avatar className="w-12 h-12 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0">
                     <AvatarImage src={post.author.avatar} />
                     <AvatarFallback className="bg-muted text-muted-foreground">
                       {post.author.username[0]}
@@ -270,12 +272,12 @@ export default function PostDetailPage() {
                 </Link>
                 <div className="flex-1 min-w-0">
                   <Link href={`/profile/${post.author.username}`} className="hover:opacity-80 transition-opacity">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 mb-1">
                       <span className="font-semibold text-foreground truncate">
                         {post.author.businessName || post.author.username}
                       </span>
                       {post.isCollaboration && (
-                        <Badge variant="outline" className="modern-badge border-primary text-primary">
+                        <Badge variant="outline" className="border-primary text-primary text-xs">
                           <Users className="w-3 h-3 mr-1" />
                           Collab
                         </Badge>
@@ -287,160 +289,111 @@ export default function PostDetailPage() {
                   </Link>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                <MoreHorizontal className="w-5 h-5" />
+              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </div>
           </div>
 
           {/* Post Content */}
           <div className="p-4">
-            <p className="text-foreground mb-4">
+            <p className="text-foreground mb-4 text-base leading-relaxed">
               <MentionHighlighter text={post.content} />
             </p>
-            
-            {/* Collaborations */}
-            {post.isCollaboration && post.collaborations && post.collaborations.length > 0 && (
-              <div className="mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Users className="w-4 h-4 text-primary" />
-                  <span className="text-sm text-muted-foreground">Collaborators:</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {post.collaborations
-                    .filter(collab => collab.status === "ACCEPTED")
-                    .map((collaboration) => (
-                      <Link
-                        key={collaboration.id}
-                        href={`/profile/${collaboration.pro.username}`}
-                        className="flex items-center gap-2 bg-muted rounded-full px-3 py-1 hover:bg-muted/80 transition-colors"
-                      >
-                        <Avatar className="w-5 h-5">
-                          <AvatarImage src={collaboration.pro.avatar} />
-                          <AvatarFallback className="bg-background text-xs">
-                            {collaboration.pro.username[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-xs text-foreground">
-                          {collaboration.pro.businessName || collaboration.pro.username}
-                        </span>
-                      </Link>
-                    ))}
-                </div>
-              </div>
-            )}
 
-            {/* Main Image */}
-            {post.images.length > 0 && (
+            {/* Post Images */}
+            {post.images && post.images.length > 0 && (
               <div className="mb-4">
-                <div className="aspect-square overflow-hidden rounded-lg">
-                  <Image 
-                    src={post.images[0]} 
-                    alt="Post image"
-                    width={400}
-                    height={400}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+                <ImageCarousel images={post.images} alt="Post images" />
               </div>
             )}
 
             {/* Hashtags */}
-            {post.hashtags.length > 0 && (
+            {post.hashtags && post.hashtags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {post.hashtags.map((tag, index) => (
-                  <Badge key={index} variant="secondary" className="modern-badge bg-muted text-muted-foreground">
+                  <Badge key={index} variant="secondary" className="text-xs">
                     #{tag}
                   </Badge>
                 ))}
               </div>
             )}
 
-            {/* Price */}
-            {post.price && (
-              <div className="flex items-center gap-2 mb-4 p-3 bg-muted rounded-lg">
-                <span className="text-2xl">💰</span>
-                <span className="text-foreground font-semibold">€{post.price}</span>
-                <Badge variant="outline" className="modern-badge border-green-500 text-green-500">
-                  For Sale
-                </Badge>
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex items-center justify-between pt-3 border-t border-border">
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleLike}
-                  className={`h-8 w-8 ${post.liked ? 'text-red-500 hover:text-red-600' : 'text-muted-foreground hover:text-red-500'}`}
-                >
-                  <Heart className={`w-4 h-4 ${post.liked ? 'fill-current' : ''}`} />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => toggleFavorite(post.id)}
-                  className={`h-8 w-8 ${favoritedPosts.has(post.id) ? 'text-yellow-500 hover:text-yellow-600' : 'text-muted-foreground hover:text-yellow-500'}`}
-                >
-                  <Star className={`w-4 h-4 ${favoritedPosts.has(post.id) ? 'fill-current' : ''}`} />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:text-primary"
-                >
-                  <Share2 className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <MessageCircle className="w-4 h-4" />
-                  {post.commentsCount} comments
-                </span>
-                <span className="flex items-center gap-1">
-                  <Eye className="w-4 h-4" />
-                  {post.viewsCount} views
-                </span>
-              </div>
+            {/* Post Stats */}
+            <div className="flex items-center justify-between text-sm text-muted-foreground border-t border-border pt-4">
+              <span className="flex items-center gap-1">
+                <MessageCircle className="w-4 h-4" />
+                {post.commentsCount} comments
+              </span>
+              <span className="flex items-center gap-1">
+                <Eye className="w-4 h-4" />
+                {post.viewsCount} views
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Comments Section */}
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold text-foreground mb-4">
+        {/* Action Buttons - Mobile Optimized */}
+        <div className="flex items-center justify-between p-4 bg-card rounded-lg border border-border">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLike}
+              className={`flex items-center gap-2 ${post.liked ? 'text-red-500' : 'text-muted-foreground'}`}
+            >
+              <Heart className={`w-5 h-5 ${post.liked ? 'fill-current' : ''}`} />
+              <span className="text-sm">{post.likesCount}</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => toggleFavorite(post.id)}
+              className={`flex items-center gap-2 ${favoritedPosts.has(post.id) ? 'text-yellow-500' : 'text-muted-foreground'}`}
+            >
+              <Star className={`w-5 h-5 ${favoritedPosts.has(post.id) ? 'fill-current' : ''}`} />
+            </Button>
+          </div>
+          <Button variant="ghost" size="sm" className="text-muted-foreground">
+            <Share2 className="w-5 h-5" />
+          </Button>
+        </div>
+
+        {/* Comments Section - Mobile Optimized */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-foreground">
             Comments ({post.commentsCount})
           </h3>
 
           {/* Add Comment */}
           {session?.user?.id && (
-            <div className="card mb-4">
-              <form onSubmit={handleCommentSubmit} className="p-4">
+            <div className="bg-card rounded-lg border border-border p-4">
+              <form onSubmit={handleCommentSubmit} className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <Avatar className="w-8 h-8">
+                  <Avatar className="w-10 h-10 flex-shrink-0">
                     <AvatarImage src={session.user.avatar || undefined} />
                     <AvatarFallback className="bg-muted text-muted-foreground">
                       {session.user.username?.[0] || "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <Input
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder="Add a comment..."
-                      className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
                       disabled={commentLoading}
                     />
                   </div>
+                </div>
+                <div className="flex justify-end">
                   <Button 
                     type="submit" 
                     size="sm" 
                     disabled={!newComment.trim() || commentLoading}
-                    className="ml-2"
+                    className="px-4"
                   >
-                    {commentLoading ? "Posting..." : "Post"}
+                    {commentLoading ? "Posting..." : "Post Comment"}
                   </Button>
                 </div>
               </form>
@@ -448,23 +401,23 @@ export default function PostDetailPage() {
           )}
 
           {/* Comments List */}
-          <div className="space-y-4">
-            {comments.map((comment) => (
-              <div key={comment.id} className="card">
-                <div className="p-4">
+          <div className="space-y-3">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.id} className="bg-card rounded-lg border border-border p-4">
                   <div className="flex items-start gap-3">
                     <Link href={`/profile/${comment.author.username}`}>
-                      <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
+                      <Avatar className="w-10 h-10 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0">
                         <AvatarImage src={comment.author.avatar} />
                         <AvatarFallback className="bg-muted text-muted-foreground">
                           {comment.author.username[0]}
                         </AvatarFallback>
                       </Avatar>
                     </Link>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
                         <Link href={`/profile/${comment.author.username}`} className="hover:opacity-80 transition-opacity">
-                          <span className="font-semibold text-foreground">
+                          <span className="font-semibold text-foreground text-sm">
                             {comment.author.businessName || comment.author.username}
                           </span>
                         </Link>
@@ -472,19 +425,17 @@ export default function PostDetailPage() {
                           {new Date(comment.createdAt).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-foreground">
+                      <p className="text-foreground text-sm leading-relaxed">
                         <MentionHighlighter text={comment.content} />
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-
-            {comments.length === 0 && (
+              ))
+            ) : (
               <div className="text-center py-8">
-                <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
-                <p className="text-muted-foreground">No comments yet. Be the first to comment!</p>
+                <MessageCircle className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground text-sm">No comments yet. Be the first to comment!</p>
               </div>
             )}
           </div>

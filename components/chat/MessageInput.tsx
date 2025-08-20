@@ -3,15 +3,16 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { Button, Input } from '@/components/ui/base-components'
-import { Send, Paperclip, Mic, Image as ImageIcon } from 'lucide-react'
+import { Send, Image as ImageIcon, Smile } from 'lucide-react'
 import { ImageUpload } from './ImageUpload'
 
 interface MessageInputProps {
   onSendMessage: (messageData: { content: string; type: string; images?: string[] }) => void
-  onStartTyping?: () => void
-  onStopTyping?: () => void
+  onStartTyping?: (userName: string) => void
+  onStopTyping?: (userName: string) => void
   conversationId: string
   senderId: string
+  senderName?: string
   disabled?: boolean
   placeholder?: string
   className?: string
@@ -21,6 +22,9 @@ export function MessageInput({
   onSendMessage,
   onStartTyping,
   onStopTyping,
+  conversationId,
+  senderId,
+  senderName = 'Vous',
   disabled = false,
   placeholder = "Tapez votre message...",
   className
@@ -36,10 +40,10 @@ export function MessageInput({
   useEffect(() => {
     if (message.length > 0 && !isTyping) {
       setIsTyping(true)
-      onStartTyping?.()
+      onStartTyping?.(senderName)
     } else if (message.length === 0 && isTyping) {
       setIsTyping(false)
-      onStopTyping?.()
+      onStopTyping?.(senderName)
     }
 
     // Clear typing timeout
@@ -51,7 +55,7 @@ export function MessageInput({
     if (message.length > 0) {
       typingTimeoutRef.current = setTimeout(() => {
         setIsTyping(false)
-        onStopTyping?.()
+        onStopTyping?.(senderName)
       }, 2000)
     }
 
@@ -60,7 +64,7 @@ export function MessageInput({
         clearTimeout(typingTimeoutRef.current)
       }
     }
-  }, [message, isTyping, onStartTyping, onStopTyping])
+  }, [message, isTyping, onStartTyping, onStopTyping, senderName])
 
   const handleSendMessage = () => {
     if ((!message.trim() && uploadedImages.length === 0) || disabled) return
@@ -72,8 +76,9 @@ export function MessageInput({
     })
     setMessage("")
     setUploadedImages([])
+    setShowImageUpload(false) // Fermer le panneau d'images
     setIsTyping(false)
-    onStopTyping?.()
+    onStopTyping?.(senderName)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -109,42 +114,44 @@ export function MessageInput({
       "chat-input",
       className
     )}>
-      <Button 
-        variant="ghost" 
-        size="sm"
-        onClick={() => setShowImageUpload(!showImageUpload)}
-        disabled={disabled}
-      >
-        <ImageIcon className="w-5 h-5" />
-      </Button>
-      
-      <Input
-        type="text"
-        placeholder={placeholder}
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyPress={handleKeyPress}
-        disabled={disabled}
-        className="input-field"
-      />
-      
-      <Button 
-        variant="ghost" 
-        size="sm"
-        onClick={handleVoiceMessage}
-        disabled={disabled}
-      >
-        <Mic className="w-5 h-5" />
-      </Button>
-      
-      <Button 
-        onClick={handleSendMessage}
-        disabled={(!message.trim() && uploadedImages.length === 0) || disabled}
-        size="sm"
-        className="input-button"
-      >
-        <Send className="w-5 h-5" />
-      </Button>
+      <div className="chat-input-bar">
+        <div className="chat-input-top">
+          <Input
+            type="text"
+            placeholder={placeholder}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={disabled}
+            className="input-field flat focus-visible:ring-0 focus-visible:ring-offset-0 outline-none"
+          />
+        </div>
+        <div className="chat-input-bottom">
+          <div className="action-icons">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setShowImageUpload(!showImageUpload)}
+              disabled={disabled}
+              className="icon-btn"
+              title="Image"
+            >
+              <ImageIcon className="w-5 h-5" />
+            </Button>
+          </div>
+          <Button 
+            onClick={handleSendMessage}
+            disabled={(!message.trim() && uploadedImages.length === 0) || disabled}
+            size="sm"
+            className="send-button"
+            aria-label="Envoyer le message"
+            title="Envoyer"
+          >
+            <Send className="w-4 h-4 mr-2" />
+            Envoyer
+          </Button>
+        </div>
+      </div>
 
       {/* Hidden file input */}
       <input

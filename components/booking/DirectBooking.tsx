@@ -220,7 +220,11 @@ export function DirectBooking({
   }
 
   const isDateDisabled = (date: Date) => {
-    return date < new Date() || !isDateAvailable(date)
+    // Empêcher la sélection de dates/heures antérieures à l'heure + 1 minute
+    const oneHourFromNow = new Date()
+    oneHourFromNow.setHours(oneHourFromNow.getHours() + 1, oneHourFromNow.getMinutes() + 1, 0, 0)
+    
+    return date < oneHourFromNow || !isDateAvailable(date)
   }
 
   if (step === "confirmation") {

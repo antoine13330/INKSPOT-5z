@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { stripe, createPaymentIntent, refundPayment } from "@/lib/stripe"
 import { sendBookingConfirmationEmail } from "@/lib/email"
+import { notifyOfflineUserForProposal } from "@/lib/offline-push-notifications"
 export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
@@ -11,6 +12,11 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    // Only PRO users can create booking proposals
+    if (session.user.role !== "PRO") {
+      return NextResponse.json({ message: "Only professionals can create appointment proposals" }, { status: 403 })
     }
 
     const body = await request.json()
@@ -133,6 +139,21 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // Send push notification if pro is offline
+    try {
+      await notifyOfflineUserForProposal(
+        proId,
+        session.user.id,
+        {
+          bookingId: booking.id,
+          title: title
+        }
+      );
+    } catch (error) {
+      console.error("Error sending offline push notification:", error);
+      // Ne pas faire échouer la création du booking si la notification push échoue
+    }
 
     return NextResponse.json({
       message: "Booking created successfully",

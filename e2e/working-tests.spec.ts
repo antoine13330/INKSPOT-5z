@@ -18,6 +18,26 @@ test.describe('Working E2E Tests', () => {
     await expect(page.locator('body')).toContainText('Forgot password?')
   })
 
+  test('should open conversation draft UI for non-existing conversation id', async ({ page }) => {
+    // Login first (seeded admin user)
+    await page.goto('/auth/login')
+    await page.getByLabel('Email').fill('admin@example.com')
+    await page.getByLabel('Password').fill('admin123')
+    await page.getByRole('button', { name: 'Sign In' }).click()
+    // Ensure we are logged in (redirect to home or anywhere authenticated)
+    await page.waitForURL('**/*', { timeout: 10000 })
+
+    // Go directly to a conversation URL with a random id
+    const randomId = `cm_e2e_${Date.now()}`
+    await page.goto(`/conversations/${randomId}`)
+    // Either show loader then draft creation or draft badge; assert page renders something expected
+    await page.waitForLoadState('domcontentloaded')
+    // Check for any of the draft signals
+    const draftBadge = page.locator('text=DRAFT')
+    const creating = page.locator('text=Création de la conversation')
+    await expect(draftBadge.or(creating)).toBeVisible({ timeout: 15000 })
+  })
+
   test('should navigate to registration page successfully', async ({ page }) => {
     // Go to login page directly
     await page.goto('/auth/login')

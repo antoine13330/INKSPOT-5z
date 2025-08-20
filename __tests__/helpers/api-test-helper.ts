@@ -77,8 +77,8 @@ export const mockPrisma = (mockData: any) => {
   
   Object.entries(mockData).forEach(([model, methods]) => {
     if (prisma[model]) {
-      Object.entries(methods).forEach(([method, mockFn]) => {
-        prisma[model][method] = jest.fn().mockImplementation(mockFn);
+      Object.entries(methods as Record<string, any>).forEach(([method, mockFn]) => {
+        ;(prisma as any)[model][method] = jest.fn().mockImplementation(mockFn);
       });
     }
   });

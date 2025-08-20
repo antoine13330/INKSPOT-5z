@@ -14,18 +14,55 @@ interface MessageListProps {
   'data-messages-container'?: boolean
 }
 
-export function MessageList({
-  messages,
-  currentUserId,
-  readStatus = {},
-  onMessageRead,
-  className
-}: MessageListProps) {
+export function MessageList(props: MessageListProps) {
+  const {
+    messages,
+    currentUserId,
+    readStatus = {},
+    onMessageRead,
+    className,
+  } = props
+  const dataMessagesContainer = (props as any)['data-messages-container'] as boolean | undefined
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isUserScrolling = useRef(false)
+  const scrollTimeout = useRef<NodeJS.Timeout>()
 
-  // Auto-scroll to bottom when new messages arrive
+  // Detect when user is manually scrolling
+  const handleScroll = () => {
+    if (!containerRef.current) return
+    
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 50 // 50px tolerance
+    
+    // If user scrolled away from bottom, they're manually scrolling
+    isUserScrolling.current = !isAtBottom
+    
+    // Reset scroll detection after 3 seconds of no scrolling
+    if (scrollTimeout.current) {
+      clearTimeout(scrollTimeout.current)
+    }
+    scrollTimeout.current = setTimeout(() => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current
+        const isAtBottom = scrollHeight - scrollTop - clientHeight < 50
+        if (isAtBottom) {
+          isUserScrolling.current = false
+        }
+      }
+    }, 3000)
+  }
+
+  // Auto-scroll to bottom when new messages arrive (only if user isn't manually scrolling)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (!isUserScrolling.current && containerRef.current) {
+      // Only auto-scroll if user is not manually scrolling
+      setTimeout(() => {
+        if (containerRef.current && !isUserScrolling.current) {
+          containerRef.current.scrollTop = containerRef.current.scrollHeight
+        }
+      }, 100)
+    }
   }, [messages])
 
   // Mark messages as read when they come into view
@@ -49,7 +86,12 @@ export function MessageList({
     const messageElements = document.querySelectorAll('[data-message-id]')
     messageElements.forEach((el) => observer.observe(el))
 
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current)
+      }
+    }
   }, [messages, onMessageRead])
 
   if (messages.length === 0) {
@@ -75,16 +117,22 @@ export function MessageList({
 
   return (
     <div
+      ref={containerRef}
+      onScroll={handleScroll}
       className={cn(
         "message-list-container space-y-4",
         className
       )}
+      data-messages-container={dataMessagesContainer ? true : undefined}
     >
       {messages.map((message) => (
         <div
           key={message.id}
           data-message-id={message.id}
-          className="message-container"
+          className={cn(
+            "flex",
+            message.senderId === currentUserId ? "justify-end" : "justify-start"
+          )}
         >
           <MessageBubble
             message={message}
