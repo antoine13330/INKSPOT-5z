@@ -1,10 +1,21 @@
 import Stripe from 'stripe'
 
-// Configuration Stripe
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-07-30.basil',
-  typescript: true,
-})
+// Configuration Stripe - gère le cas où la clé n'est pas disponible pendant le build
+let stripe: Stripe | null = null
+
+if (process.env.STRIPE_SECRET_KEY) {
+  try {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2025-07-30.basil',
+      typescript: true,
+    })
+  } catch (error) {
+    console.warn('Failed to initialize Stripe:', error)
+    stripe = null
+  }
+}
+
+export { stripe }
 
 // Types pour les paiements
 export interface PaymentIntentData {
@@ -24,6 +35,10 @@ export interface CreatePaymentIntentResponse {
 
 // Créer une intention de paiement
 export async function createPaymentIntent(data: PaymentIntentData): Promise<CreatePaymentIntentResponse> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: data.amount * 100, // Stripe utilise les centimes
@@ -52,6 +67,10 @@ export async function createPaymentIntent(data: PaymentIntentData): Promise<Crea
 
 // Confirmer un paiement
 export async function confirmPayment(paymentIntentId: string): Promise<boolean> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
     return paymentIntent.status === 'succeeded'
@@ -63,6 +82,10 @@ export async function confirmPayment(paymentIntentId: string): Promise<boolean> 
 
 // Rembourser un paiement
 export async function refundPayment(paymentIntentId: string, amount?: number): Promise<boolean> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const refund = await stripe.refunds.create({
       payment_intent: paymentIntentId,
@@ -84,6 +107,10 @@ export async function createPaymentLink(data: {
   successUrl: string
   cancelUrl: string
 }): Promise<string> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -120,6 +147,10 @@ export async function createStripeCustomer(
   email: string,
   name?: string
 ): Promise<Stripe.Customer> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const customer = await stripe.customers.create({
       email,
@@ -141,6 +172,10 @@ export async function createStripeAccount(
   email: string,
   country: string = 'FR'
 ): Promise<Stripe.Account> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const account = await stripe.accounts.create({
       type: 'express',
