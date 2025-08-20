@@ -1,0 +1,102 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ dev, main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+        - dev
+        - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Job de build et déploiement
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Setup environment (VAPID auto-generation)
+      run: node scripts/ci-setup.js
+      env:
+        CI: true
+        
+    - name: Build application
+      run: npm run build
+      env:
+        CI: true
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: .next/
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+      
+    - name: Get deployment URL
+      run: |
+        echo "🌐 GitHub Pages Deployment Details:"
+        echo "=================================="
+        echo "🔗 Main URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "🔗 Branch: ${{ github.ref_name }}"
+        echo "🔗 Commit: ${{ github.sha }}"
+        echo "🔗 Environment: ${{ github.event.inputs.environment || 'auto' }}"
+        echo ""
+        echo "📱 Test URLs:"
+        echo "  - Health: ${{ steps.deployment.outputs.page_url }}/api/health"
+        echo "  - Auth: ${{ steps.deployment.outputs.page_url }}/api/auth"
+        echo "  - Posts: ${{ steps.deployment.outputs.page_url }}/api/posts"
+        echo "  - Bookings: ${{ steps.deployment.outputs.page_url }}/api/bookings"
+        echo ""
+        echo "🔑 Test Credentials:"
+        echo "  - Admin: admin@test.com / admin123"
+        echo "  - User: user@test.com / user123"
+        echo ""
+        echo "📊 GitHub Repository:"
+        echo "  - Repo: ${{ github.repository }}"
+        echo "  - Actions: https://github.com/${{ github.repository }}/actions"
+        echo "  - Settings: https://github.com/${{ github.repository }}/settings/pages"
+        
+    - name: Notify deployment success
+      run: |
+        echo "🎉 Successfully deployed to GitHub Pages!"
+        echo "🌐 Environment: ${{ github.event.inputs.environment || 'auto' }}"
+        echo "🔗 URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "📊 Status: Deployed and Running"
+        echo "⏰ Deployed at: $(date)"
+        echo ""
+        echo "🚀 Ready for testing and development!"
+        echo "📝 Your app is now live at: ${{ steps.deployment.outputs.page_url }}"

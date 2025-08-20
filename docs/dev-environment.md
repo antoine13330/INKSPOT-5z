@@ -1,72 +1,52 @@
 # 🌐 Environnement de Développement INKSPOT
 
-## 🔗 URLs d'accès
+## 🔗 URLs GitHub réelles
 
-### **Application principale**
-- **URL principale**: https://dev.inkspot.com
-- **URL API**: https://dev-api.inkspot.com
-- **URL Admin**: https://dev-admin.inkspot.com
-- **Monitoring**: https://dev-monitoring.inkspot.com
+### **Repository principal**
+- **Repository**: https://github.com/antoine13330/INKSPOT-5z
+- **Actions**: https://github.com/antoine13330/INKSPOT-5z/actions
+- **Issues**: https://github.com/antoine13330/INKSPOT-5z/issues
+- **Pull Requests**: https://github.com/antoine13330/INKSPOT-5z/pulls
+- **Settings**: https://github.com/antoine13330/INKSPOT-5z/settings
+- **Security**: https://github.com/antoine13330/INKSPOT-5z/security
 
-### **Endpoints de test**
-- **Health Check**: https://dev.inkspot.com/api/health
-- **Authentication**: https://dev.inkspot.com/api/auth
-- **Posts**: https://dev.inkspot.com/api/posts
-- **Bookings**: https://dev.inkspot.com/api/bookings
-- **Users**: https://dev.inkspot.com/api/users
-- **Search**: https://dev.inkspot.com/api/search
+### **Environnements de déploiement**
+- **Dev Branch**: https://github.com/antoine13330/INKSPOT-5z/tree/dev
+- **Main Branch**: https://github.com/antoine13330/INKSPOT-5z/tree/main
+- **Workflows**: https://github.com/antoine13330/INKSPOT-5z/actions/workflows
 
-## 🔑 Identifiants de test
+## 🔑 Informations de déploiement
 
-### **Comptes administrateur**
+### **Branches actives**
 ```
-Email: admin@dev.inkspot.com
-Mot de passe: admin123
-Rôle: Super Admin
-```
+Branch: dev
+- Déploiement automatique sur push
+- Tests et build automatisés
+- Workflow: .github/workflows/deploy-github-actions.yml
 
-### **Comptes utilisateurs**
-```
-Email: user@dev.inkspot.com
-Mot de passe: user123
-Rôle: Utilisateur standard
+Branch: main
+- Déploiement de production
+- Tests complets requis
+- Workflow: .github/workflows/ci-cd.yml
 ```
 
-```
-Email: artist@dev.inkspot.com
-Mot de passe: artist123
-Rôle: Artiste/Pro
-```
+### **Workflows disponibles**
+- **CI/CD Pipeline**: Déploiement complet avec tests
+- **Deploy via GitHub Actions**: Déploiement rapide avec URLs GitHub
+- **Deploy to GitHub Pages**: Déploiement statique (si configuré)
 
-```
-Email: test@dev.inkspot.com
-Mot de passe: test123
-Rôle: Utilisateur de test
-```
+## 🧪 Tests et monitoring
 
-## 🧪 Tests rapides
+### **Vérification du statut**
+- **Actions**: https://github.com/antoine13330/INKSPOT-5z/actions
+- **Build Status**: Visible dans l'onglet Actions
+- **Deployment Logs**: Logs détaillés dans chaque workflow
 
-### **Vérification de santé**
-```bash
-curl https://dev.inkspot.com/api/health
-```
-
-### **Test d'authentification**
-```bash
-curl -X POST https://dev.inkspot.com/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"user@dev.inkspot.com","password":"user123"}'
-```
-
-### **Test des posts**
-```bash
-curl https://dev.inkspot.com/api/posts
-```
-
-### **Test des réservations**
-```bash
-curl https://dev.inkspot.com/api/bookings
-```
+### **Tests automatisés**
+- **Tests unitaires**: Exécutés automatiquement
+- **Tests E2E**: Playwright (temporairement désactivé)
+- **Security scan**: npm audit + Snyk
+- **Code quality**: Linting et formatage
 
 ## 📱 Fonctionnalités disponibles
 
@@ -77,7 +57,7 @@ curl https://dev.inkspot.com/api/bookings
 - [x] Système de réservations
 - [x] Messagerie en temps réel
 - [x] Recherche avancée
-- [x] Notifications push
+- [x] Notifications push (VAPID auto-généré)
 - [x] Système de paiements
 - [x] Dashboard administrateur
 
@@ -90,10 +70,9 @@ curl https://dev.inkspot.com/api/bookings
 ## 🗄️ Base de données
 
 ### **Type**: PostgreSQL
-- **Host**: dev-db.inkspot.com
-- **Port**: 5432
-- **Database**: inkspot_dev
-- **Reset**: Quotidien à 2h00 UTC
+- **Configuration**: Via variables d'environnement
+- **Migration**: Prisma automatique
+- **Seed**: Données de test automatiques
 
 ### **Tables principales**
 - `users` - Utilisateurs et profils
@@ -105,65 +84,63 @@ curl https://dev.inkspot.com/api/bookings
 
 ## 📊 Monitoring et logs
 
-### **Grafana Dashboard**
-- **URL**: https://dev-monitoring.inkspot.com
-- **Utilisateur**: admin
-- **Mot de passe**: admin123
-
-### **Logs applicatifs**
-- **Niveau**: DEBUG
-- **Rétention**: 7 jours
-- **Format**: JSON structuré
+### **GitHub Actions**
+- **URL**: https://github.com/antoine13330/INKSPOT-5z/actions
+- **Logs**: Disponibles en temps réel
+- **Historique**: Conservation des logs de build
 
 ### **Métriques surveillées**
-- Temps de réponse des API
-- Taux d'erreur
-- Utilisation des ressources
-- Nombre d'utilisateurs actifs
-- Performance des requêtes DB
+- Statut des builds
+- Temps d'exécution des workflows
+- Taux de succès des déploiements
+- Performance des tests
 
 ## 🚀 Déploiement
 
 ### **Fréquence**
-- **Automatique**: À chaque push sur la branche `dev`
+- **Automatique**: À chaque push sur `dev` et `main`
 - **Manuel**: Via GitHub Actions (workflow_dispatch)
 
 ### **Processus**
-1. Build de l'application
-2. Génération automatique des clés VAPID
-3. Déploiement des artefacts
-4. Vérifications de santé
-5. Notification de succès
+1. **Push** sur la branche
+2. **Trigger** du workflow GitHub Actions
+3. **Build** de l'application
+4. **Génération automatique** des clés VAPID
+5. **Tests** automatisés
+6. **Déploiement** via GitHub Actions
+7. **Notification** de succès
 
 ### **Rollback**
-- **Automatique**: En cas d'échec des health checks
-- **Manuel**: Via l'interface d'administration
+- **Automatique**: En cas d'échec des tests
+- **Manuel**: Via GitHub (revert commit)
 
 ## 🔒 Sécurité
 
-### **Environnement isolé**
-- Base de données séparée
-- Variables d'environnement spécifiques
-- Pas d'accès aux données de production
+### **GitHub Security**
+- **Dependabot**: Mises à jour automatiques
+- **Code scanning**: Analyse de sécurité
+- **Secret scanning**: Détection des secrets exposés
 
 ### **Tests de sécurité**
-- Scan automatique des vulnérabilités
-- Audit des dépendances
-- Tests de pénétration automatisés
+- **npm audit**: Vérification des vulnérabilités
+- **Snyk**: Scan de sécurité avancé
+- **GitHub Actions**: Environnement sécurisé
 
 ## 📞 Support
 
 ### **En cas de problème**
-1. Vérifier les logs dans Grafana
-2. Consulter le statut des services
-3. Contacter l'équipe DevOps
-4. Ouvrir un ticket sur GitHub
+1. **Vérifier** les Actions GitHub
+2. **Consulter** les logs de workflow
+3. **Ouvrir** une issue sur GitHub
+4. **Contacter** l'équipe via GitHub
 
-### **Contacts**
-- **DevOps**: devops@inkspot.com
-- **Développement**: dev@inkspot.com
-- **Urgences**: +33 1 23 45 67 89
+### **Ressources utiles**
+- **Issues**: https://github.com/antoine13330/INKSPOT-5z/issues
+- **Discussions**: https://github.com/antoine13330/INKSPOT-5z/discussions
+- **Wiki**: https://github.com/antoine13330/INKSPOT-5z/wiki
 
 ---
 
-**🚀 L'environnement de développement est prêt pour les tests et le développement !**
+**🚀 Votre environnement de développement est maintenant déployé via GitHub Actions avec des URLs réelles !**
+
+**🔗 Vérifiez le statut**: https://github.com/antoine13330/INKSPOT-5z/actions

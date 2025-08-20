@@ -58,33 +58,46 @@ function simulateStep(description, delay) {
 }
 
 function displayEnvironmentInfo() {
+  // Récupérer les informations GitHub depuis les variables d'environnement
+  const repoName = process.env.GITHUB_REPOSITORY || 'antoine13330/INKSPOT-5z';
+  const branchName = process.env.GITHUB_REF_NAME || 'dev';
+  const commitSha = process.env.GITHUB_SHA || 'latest';
+  const actor = process.env.GITHUB_ACTOR || 'GitHub User';
+  
   console.log('\n🌐 Informations de l\'environnement de développement:');
   console.log('==================================================');
-  console.log('🔗 URL principale: https://dev.inkspot.com');
-  console.log('🔗 API: https://dev-api.inkspot.com');
-  console.log('🔗 Admin: https://dev-admin.inkspot.com');
-  console.log('📊 Monitoring: https://dev-monitoring.inkspot.com');
+  console.log('🔗 Repository GitHub: https://github.com/' + repoName);
+  console.log('🔗 Branch: ' + branchName);
+  console.log('🔗 Commit: ' + commitSha);
+  console.log('🔗 Actions: https://github.com/' + repoName + '/actions');
   console.log('');
-  console.log('🔑 Identifiants de test:');
-  console.log('  - Admin: admin@dev.inkspot.com / admin123');
-  console.log('  - Utilisateur: user@dev.inkspot.com / user123');
+  console.log('📱 GitHub URLs:');
+  console.log('  - Repository: https://github.com/' + repoName);
+  console.log('  - Actions: https://github.com/' + repoName + '/actions');
+  console.log('  - Issues: https://github.com/' + repoName + '/issues');
+  console.log('  - Pull Requests: https://github.com/' + repoName + '/pulls');
+  console.log('  - Settings: https://github.com/' + repoName + '/settings');
+  console.log('  - Security: https://github.com/' + repoName + '/security');
   console.log('');
-  console.log('📱 Endpoints de test:');
-  console.log('  - Health: https://dev.inkspot.com/api/health');
-  console.log('  - Auth: https://dev.inkspot.com/api/auth');
-  console.log('  - Posts: https://dev.inkspot.com/api/posts');
-  console.log('  - Bookings: https://dev.inkspot.com/api/bookings');
+  console.log('🔑 Informations de déploiement:');
+  console.log('  - Environment: Development');
+  console.log('  - Branch: ' + branchName);
+  console.log('  - Commit: ' + commitSha);
+  console.log('  - Deployed by: ' + actor);
   console.log('');
-  console.log('🧪 Tests rapides:');
-  console.log('  - Test de santé: curl https://dev.inkspot.com/api/health');
-  console.log('  - Test d\'API: curl https://dev.inkspot.com/api/posts');
+  console.log('🧪 Test Endpoints (via GitHub Actions):');
+  console.log('  - Health: https://github.com/' + repoName + '/actions');
+  console.log('  - Build Status: https://github.com/' + repoName + '/actions');
+  console.log('  - Deployment Logs: https://github.com/' + repoName + '/actions');
   console.log('');
   console.log('📝 Notes:');
-  console.log('  - L\'environnement est accessible 24/7');
-  console.log('  - Les données sont réinitialisées quotidiennement');
-  console.log('  - Les logs sont disponibles dans le monitoring');
+  console.log('  - Déploiement automatique via GitHub Actions');
+  console.log('  - Build et tests automatisés');
+  console.log('  - Monitoring via GitHub Actions');
+  console.log('  - Rollback disponible via GitHub');
   console.log('');
   console.log('🚀 Prêt pour les tests et le développement !');
+  console.log('🔗 Vérifiez le statut: https://github.com/' + repoName + '/actions');
 }
 
 // Lancer le déploiement
