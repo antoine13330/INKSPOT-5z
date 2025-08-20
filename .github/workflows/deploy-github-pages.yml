@@ -48,11 +48,13 @@ jobs:
       run: node scripts/ci-setup.js
       env:
         CI: true
+        NODE_ENV: production
         
-    - name: Build application
+    - name: Build application for GitHub Pages
       run: npm run build
       env:
         CI: true
+        NODE_ENV: production
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
@@ -60,7 +62,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: .next/
+        path: ./out
         
     - name: Deploy to GitHub Pages
       id: deployment
@@ -71,32 +73,37 @@ jobs:
         echo "🌐 GitHub Pages Deployment Details:"
         echo "=================================="
         echo "🔗 Main URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "🔗 App URL: ${{ steps.deployment.outputs.page_url }}/INKSPOT-5z"
         echo "🔗 Branch: ${{ github.ref_name }}"
         echo "🔗 Commit: ${{ github.sha }}"
         echo "🔗 Environment: ${{ github.event.inputs.environment || 'auto' }}"
         echo ""
         echo "📱 Test URLs:"
-        echo "  - Health: ${{ steps.deployment.outputs.page_url }}/api/health"
-        echo "  - Auth: ${{ steps.deployment.outputs.page_url }}/api/auth"
-        echo "  - Posts: ${{ steps.deployment.outputs.page_url }}/api/posts"
-        echo "  - Bookings: ${{ steps.deployment.outputs.page_url }}/api/bookings"
+        echo "  - Home: ${{ steps.deployment.outputs.page_url }}/INKSPOT-5z"
+        echo "  - Posts: ${{ steps.deployment.outputs.page_url }}/INKSPOT-5z/posts"
+        echo "  - Profile: ${{ steps.deployment.outputs.page_url }}/INKSPOT-5z/profile"
+        echo "  - Auth: ${{ steps.deployment.outputs.page_url }}/INKSPOT-5z/auth"
         echo ""
-        echo "🔑 Test Credentials:"
-        echo "  - Admin: admin@test.com / admin123"
-        echo "  - User: user@test.com / user123"
+        echo "🔑 Test Information:"
+        echo "  - Environment: GitHub Pages"
+        echo "  - Repository: ${{ github.repository }}"
+        echo "  - Branch: ${{ github.ref_name }}"
         echo ""
         echo "📊 GitHub Repository:"
         echo "  - Repo: ${{ github.repository }}"
         echo "  - Actions: https://github.com/${{ github.repository }}/actions"
         echo "  - Settings: https://github.com/${{ github.repository }}/settings/pages"
+        echo "  - Pages: ${{ steps.deployment.outputs.page_url }}"
         
     - name: Notify deployment success
       run: |
         echo "🎉 Successfully deployed to GitHub Pages!"
         echo "🌐 Environment: ${{ github.event.inputs.environment || 'auto' }}"
-        echo "🔗 URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "🔗 Main URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "🔗 App URL: ${{ steps.deployment.outputs.page_url }}/INKSPOT-5z"
         echo "📊 Status: Deployed and Running"
         echo "⏰ Deployed at: $(date)"
         echo ""
         echo "🚀 Ready for testing and development!"
-        echo "📝 Your app is now live at: ${{ steps.deployment.outputs.page_url }}"
+        echo "📝 Your app is now live at: ${{ steps.deployment.outputs.page_url }}/INKSPOT-5z"
+        echo "🌐 Access it directly from: ${{ steps.deployment.outputs.page_url }}"
