@@ -1,4 +1,25 @@
-# 🎨 INKSPOT - Plateforme de Tatouage et Art
+# INKSPOT - Plateforme de réservation d'artistes
+
+## 🚀 Déploiement GitHub
+
+### **Workflows disponibles :**
+- **CI/CD Pipeline** : Déploiement complet avec tests
+- **Deploy via GitHub Actions** : Déploiement rapide avec URLs GitHub réelles
+- **Deploy to GitHub Pages** : Déploiement statique
+
+### **URLs GitHub :**
+- **Repository** : https://github.com/antoine13330/INKSPOT-5z
+- **Actions** : https://github.com/antoine13330/INKSPOT-5z/actions
+- **Issues** : https://github.com/antoine13330/INKSPOT-5z/issues
+
+### **Déploiement automatique :**
+- Push sur `dev` → Déploiement automatique
+- Push sur `main` → Déploiement de production
+- Manuel → Via GitHub Actions (workflow_dispatch)
+
+---
+
+## 📋 Description du projet
 
 ## 🚀 Démarrage Rapide
 
