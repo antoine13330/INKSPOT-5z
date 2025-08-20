@@ -125,7 +125,7 @@ export function useConversationNotifications() {
     setUnreadCount(prev => prev + 1)
 
     // Afficher la notification toast seulement si on n'est pas dans la conversation
-    if (!isInConversationRef.current || isInConversationRef.current && !isInConversationsListRef.current) {
+    if (!isInConversationRef.current || (isInConversationRef.current && !isInConversationsListRef.current)) {
       showMessageToast(notification)
     }
   }

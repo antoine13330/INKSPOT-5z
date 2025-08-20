@@ -143,7 +143,9 @@ export function OnlineStatusProvider({ children }: OnlineStatusProviderProps) {
             const formData = new FormData()
             formData.append('isOnline', 'false')
             navigator.sendBeacon('/api/users/online', formData)
-          } catch (e) {}
+          } catch (e) {
+            // Ignorer les erreurs silencieusement
+          }
         }
       }
     }

@@ -56,7 +56,7 @@ export function useFormValidation(
       (rule.type === 'maxLength' && typeof value === 'string' && value.length > rule.value) ||
       (rule.type === 'pattern' && rule.value && !rule.value.test(value)) ||
       (rule.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) ||
-      (rule.type === 'phone' && !/^[\+]?[1-9][\d]{0,15}$/.test(value)) ||
+      (rule.type === 'phone' && !/^[+]?[1-9][\d]{0,15}$/.test(value)) ||
       (rule.type === 'url' && !/^https?:\/\/.+/.test(value)) ||
       (rule.type === 'numeric' && isNaN(Number(value))) ||
       (rule.type === 'date' && isNaN(Date.parse(value)))
@@ -85,7 +85,7 @@ export function useFormValidation(
         errors.push(rule.message)
       } else if (rule.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
         errors.push(rule.message)
-      } else if (rule.type === 'phone' && !/^[\+]?[1-9][\d]{0,15}$/.test(value)) {
+      } else if (rule.type === 'phone' && !/^[+]?[1-9][\d]{0,15}$/.test(value)) {
         errors.push(rule.message)
       } else if (rule.type === 'url' && !/^https?:\/\/.+/.test(value)) {
         errors.push(rule.message)
@@ -454,7 +454,7 @@ export function useRealTimeValidation(
                 isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
                 break
               case 'phone':
-                isValid = /^[\+]?[1-9][\d]{0,15}$/.test(value)
+                isValid = /^[+]?[1-9][\d]{0,15}$/.test(value)
                 break
               case 'url':
                 isValid = /^https?:\/\/.+/.test(value)
