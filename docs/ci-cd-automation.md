@@ -1,38 +1,38 @@
-# 🚀 CI/CD avec Génération Automatique VAPID
+# 🚂 CI/CD avec Railway
 
-Ce guide explique comment INKSPOT gère automatiquement les clés VAPID en CI/CD sans configuration manuelle.
+Ce guide explique comment INKSPOT gère automatiquement le déploiement avec Railway.
 
-## 🔄 **Génération Automatique des Clés VAPID**
+## 🔄 **Déploiement Automatique Railway**
 
 ### **Comment ça fonctionne :**
 
-1. **Détection automatique du mode CI/CD**
-   - Le script détecte `CI=true` ou `GITHUB_ACTIONS=true`
-   - Génère automatiquement les clés VAPID si elles sont manquantes
+1. **Détection automatique des changements**
+   - Railway surveille automatiquement votre repo GitHub
+   - Déploiement automatique sur push vers `dev` ou `main`
 
 2. **Configuration automatique de l'environnement**
-   - Les clés sont définies dans `process.env`
-   - Création d'un fichier `.env.ci` temporaire
-   - Variables par défaut pour les tests
+   - Les variables d'environnement sont gérées dans Railway
+   - Build automatique avec `npm run build`
+   - Démarrage automatique avec `npm start`
 
-3. **Build sans erreur VAPID**
-   - Le build peut se lancer immédiatement
-   - Aucune configuration manuelle requise
+3. **Déploiement sans erreur**
+   - Health checks automatiques sur `/api/health`
+   - Rollback automatique en cas de problème
+   - Monitoring intégré
 
 ## 🛠️ **Scripts Disponibles**
 
-### **`npm run ci:setup`**
+### **`npm run env:check`**
 ```bash
-# Configuration automatique pour CI/CD
-npm run ci:setup
+# Vérification des variables d'environnement
+npm run env:check
 ```
 
 **Ce que fait le script :**
-- ✅ Détecte le mode CI/CD
-- 🔑 Génère les clés VAPID automatiquement
-- 📁 Crée un fichier `.env.ci` temporaire
-- 🔧 Configure les variables par défaut
-- 📋 Vérifie la configuration finale
+- ✅ Vérifie la présence des variables requises
+- 🔑 Valide les clés API (Stripe, AWS, etc.)
+- 📁 Vérifie la configuration de la base de données
+- 🔧 Affiche un rapport de configuration
 
 ### **`npm run vapid:generate`**
 ```bash
@@ -40,151 +40,101 @@ npm run ci:setup
 npm run vapid:generate
 ```
 
-## 📋 **Workflow GitHub Actions**
+## 📋 **Workflow Railway**
 
-### **Étape 1: Setup automatique**
-```yaml
-- name: Setup environment (VAPID auto-generation)
-  run: node scripts/ci-setup.js
+### **Étape 1: Push sur GitHub**
+```bash
+# Déploiement automatique sur dev
+git push origin dev
+
+# Déploiement automatique sur production
+git push origin main
 ```
 
-### **Étape 2: Vérification**
-```yaml
-- name: Verify environment
-  run: npm run env:check
-```
+### **Étape 2: Build automatique**
+- Railway détecte les changements
+- Installation automatique des dépendances
+- Build avec `npm run build`
+- Tests de santé automatiques
 
-### **Étape 3: Build sans erreur**
-```yaml
-- name: Build application
-  run: npm run build
-  env:
-    NODE_ENV: production
-    CI: true
-```
+### **Étape 3: Déploiement**
+- Arrêt de l'ancienne version
+- Déploiement de la nouvelle version
+- Health check sur `/api/health`
+- Activation du trafic
 
-## 🔍 **Détection Automatique**
+## 🔍 **Configuration Automatique**
 
-### **Variables d'environnement détectées :**
-- `CI=true` - Mode CI/CD standard
-- `GITHUB_ACTIONS=true` - GitHub Actions
-- `NODE_ENV=production` - Mode production
+### **Variables d'environnement gérées par Railway :**
+- `DATABASE_URL` - Connexion PostgreSQL
+- `NEXTAUTH_SECRET` - Secret NextAuth
+- `STRIPE_SECRET_KEY` - Clé secrète Stripe
+- `AWS_ACCESS_KEY_ID` - Clé AWS S3
+- `VAPID_PUBLIC_KEY` - Clé publique VAPID
 
-### **Comportement selon le mode :**
+### **Comportement selon l'environnement :**
 
-| Mode | Comportement VAPID |
-|------|-------------------|
-| **CI/CD** | ✅ Génération automatique + variables par défaut |
-| **Production** | ⚠️ Vérification stricte des clés |
-| **Développement** | 🔧 Génération automatique si manquant |
+| Environnement | Branch | URL | Variables |
+|---------------|--------|-----|-----------|
+| **Development** | `dev` | `https://inkspot-dev.railway.app` | Dev + Test |
+| **Staging** | `staging` | `https://inkspot-staging.railway.app` | Staging |
+| **Production** | `main` | `https://inkspot.railway.app` | Production |
 
 ## 🔑 **Génération des Clés VAPID**
 
 ### **Processus automatique :**
 ```javascript
-// Détection du mode CI/CD
-const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
-
-if (isCI && !process.env.VAPID_PUBLIC_KEY) {
-  // Génération automatique
-  const vapidKeys = webpush.generateVAPIDKeys();
-  process.env.VAPID_PUBLIC_KEY = vapidKeys.publicKey;
-  process.env.VAPID_PRIVATE_KEY = vapidKeys.privateKey;
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY = vapidKeys.publicKey;
-}
+// Railway gère automatiquement les variables d'environnement
+// Les clés VAPID sont configurées dans le dashboard Railway
+const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
 ```
 
-### **Variables configurées :**
-- `VAPID_PUBLIC_KEY` - Clé publique pour le serveur
-- `VAPID_PRIVATE_KEY` - Clé privée secrète
-- `NEXT_PUBLIC_VAPID_PUBLIC_KEY` - Clé publique côté client
-
-## 📁 **Fichiers Créés en CI/CD**
-
-### **`.env.ci` (temporaire)**
-```bash
-# Configuration automatique CI/CD
-VAPID_PUBLIC_KEY=BPx...xyz
-VAPID_PRIVATE_KEY=...secret...
-NEXT_PUBLIC_VAPID_PUBLIC_KEY=BPx...xyz
-EMAIL_FROM=noreply@inkspot-ci.com
-NODE_ENV=production
-CI=true
-```
-
-## 🚀 **Avantages de l'Automatisation**
-
-### **✅ Pour les développeurs :**
-- Aucune configuration manuelle requise
-- Build immédiat en CI/CD
-- Clés VAPID toujours disponibles
-
-### **✅ Pour le CI/CD :**
-- Pipeline robuste et fiable
-- Pas d'erreur de build VAPID
-- Déploiement automatisé
-
-### **✅ Pour la production :**
-- Vérification stricte des clés
-- Sécurité maintenue
-- Configuration validée
-
-## 🔧 **Configuration Personnalisée**
-
-### **Variables d'environnement personnalisées :**
-```bash
-# Dans votre workflow CI/CD
-env:
-  CUSTOM_VAPID_EMAIL: "your-email@domain.com"
-  CUSTOM_VAPID_SUBJECT: "mailto:your-email@domain.com"
-```
-
-### **Script de configuration personnalisé :**
-```javascript
-// Dans scripts/ci-setup.js
-const customEmail = process.env.CUSTOM_VAPID_EMAIL || 'noreply@inkspot-ci.com';
-const customSubject = process.env.CUSTOM_VAPID_SUBJECT || `mailto:${customEmail}`;
-```
+### **Configuration dans Railway :**
+1. Aller dans le dashboard Railway
+2. Sélectionner votre projet
+3. Aller dans "Variables"
+4. Ajouter les variables VAPID :
+   - `VAPID_PUBLIC_KEY`
+   - `VAPID_PRIVATE_KEY`
+   - `NEXT_PUBLIC_VAPID_PUBLIC_KEY`
 
 ## 📊 **Monitoring et Logs**
 
-### **Logs de configuration :**
-```
-🔑 Génération des clés VAPID...
-✅ Clés VAPID générées et configurées
-📁 Fichier .env.ci créé pour le CI/CD
-🔍 Vérification de la configuration...
-  ✅ VAPID_PUBLIC_KEY: Configuré
-  ✅ VAPID_PRIVATE_KEY: Configuré
-🎉 Configuration CI/CD terminée avec succès !
-```
+### **Health Checks :**
+- **Endpoint** : `/api/health`
+- **Fréquence** : Toutes les 5 minutes
+- **Action** : Redémarrage automatique si échec
 
-### **Vérification finale :**
-```bash
-npm run env:check
-```
+### **Logs :**
+- Accès via Railway Dashboard
+- Rétention de 30 jours
+- Filtrage par niveau (info, warn, error)
 
-## 🆘 **Dépannage CI/CD**
+### **Métriques :**
+- CPU et mémoire en temps réel
+- Trafic réseau
+- Connexions base de données
 
-### **Problème: Clés VAPID toujours manquantes**
-**Solutions :**
-1. Vérifiez que `CI=true` est défini
-2. Exécutez `npm run ci:setup` avant le build
-3. Vérifiez les logs de configuration
+## 🚨 **Gestion des Erreurs**
 
-### **Problème: Build échoue malgré l'automatisation**
-**Vérifications :**
-1. Le script `ci:setup` s'est-il exécuté ?
-2. Les variables sont-elles définies dans `process.env` ?
-3. Le mode CI est-il détecté correctement ?
+### **Redémarrage automatique :**
+- Politique : `on_failure`
+- Tentatives max : 3
+- Délai : 30 secondes entre tentatives
 
-## 📚 **Ressources**
+### **Rollback :**
+- Via Railway Dashboard
+- Vitesse : Instantané
+- Données préservées
 
-- [Guide de configuration VAPID](docs/environment-setup.md)
-- [Dépannage VAPID](docs/vapid-troubleshooting.md)
-- [Workflow GitHub Actions](.github/workflows/ci-cd.yml)
-- [Script CI/CD](scripts/ci-setup.js)
+## 🔗 **Liens utiles**
+
+- **Railway Dashboard** : https://railway.app/dashboard
+- **Documentation Railway** : https://docs.railway.app
+- **Support Railway** : https://railway.app/support
+- **Status Railway** : https://status.railway.app
 
 ---
 
-**🎉 Avec cette automatisation, votre CI/CD fonctionnera sans aucune configuration manuelle des clés VAPID !**
+*Dernière mise à jour : Migration vers Railway - $(Get-Date -Format "dd/MM/yyyy")*
