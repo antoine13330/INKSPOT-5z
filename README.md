@@ -1,21 +1,26 @@
 # INKSPOT - Plateforme de réservation d'artistes
 
-## 🚀 Déploiement GitHub
-
-### **Workflows disponibles :**
-- **CI/CD Pipeline** : Déploiement complet avec tests
-- **Deploy via GitHub Actions** : Déploiement rapide avec URLs GitHub réelles
-- **Deploy to GitHub Pages** : Déploiement statique
-
-### **URLs GitHub :**
-- **Repository** : https://github.com/antoine13330/INKSPOT-5z
-- **Actions** : https://github.com/antoine13330/INKSPOT-5z/actions
-- **Issues** : https://github.com/antoine13330/INKSPOT-5z/issues
+## 🚀 Déploiement Railway
 
 ### **Déploiement automatique :**
-- Push sur `dev` → Déploiement automatique
-- Push sur `main` → Déploiement de production
-- Manuel → Via GitHub Actions (workflow_dispatch)
+- Push sur `dev` → Déploiement automatique sur Railway
+- Push sur `main` → Déploiement de production sur Railway
+- Déploiement manuel → Via Railway Dashboard
+
+### **Configuration Railway :**
+- **Builder** : Nixpacks (automatique)
+- **Build Command** : `npm run build`
+- **Start Command** : `npm start`
+- **Health Check** : `/api/health`
+
+### **Environnements :**
+- **Development** : Déploiement automatique depuis `dev`
+- **Staging** : Déploiement automatique depuis `staging` (optionnel)
+- **Production** : Déploiement automatique depuis `main`
+
+### **URLs Railway :**
+- **Dashboard** : https://railway.app/dashboard
+- **Project** : https://railway.app/project/[project-id]
 
 ---
 

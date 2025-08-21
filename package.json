@@ -33,9 +33,7 @@
     "logs:watch": "tail -f logs/app.log",
     "logs:error": "grep ERROR logs/app.log",
     "logs:perf": "grep PERFORMANCE logs/app.log",
-    "monitoring:prometheus": "docker-compose -f monitoring/docker-compose.yml up prometheus",
-    "monitoring:grafana": "docker-compose -f monitoring/docker-compose.yml up grafana",
-    "monitoring:metrics": "curl http://localhost:9090/metrics",
+
     "pwa:generate": "next-pwa",
     "pwa:test": "next-pwa test",
     "pwa:manifest": "next-pwa manifest",
@@ -48,9 +46,7 @@
     "api:docs:generate": "swagger-jsdoc -d swaggerDef.js -o swagger.json",
     "api:docs:serve": "swagger-ui-serve swagger.json",
     "api:docs:export": "swagger-jsdoc -d swaggerDef.js -o swagger.yaml",
-    "deploy:dev": "node scripts/deploy-dev.js",
-    "deploy:staging": "echo 'Deploying to staging environment'",
-    "deploy:prod": "echo 'Deploying to production environment'",
+
     "env:check": "node scripts/check-env.js",
     "vapid:generate": "node scripts/generate-vapid-keys.js",
     "ci:setup": "node scripts/ci-setup.js",
