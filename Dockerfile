@@ -10,7 +10,10 @@ WORKDIR /app
 
 # Copier les fichiers de dépendances
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production
+COPY prisma ./prisma/
+
+# Installer toutes les dépendances (incluant devDependencies pour Prisma)
+RUN npm ci
 
 # Étape de build
 FROM base AS builder
@@ -21,6 +24,9 @@ COPY . .
 # Variables d'environnement pour le build
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
+
+# Générer le client Prisma
+RUN npx prisma generate
 
 # Build de l'application
 RUN npm run build

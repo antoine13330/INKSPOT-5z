@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configuration pour GitHub Pages
-  basePath: process.env.NODE_ENV === 'production' ? '/INKSPOT-5z' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/INKSPOT-5z' : '',
-  
   // Configuration pour le développement et la production
   trailingSlash: true,
   images: {
@@ -16,11 +12,11 @@ const nextConfig = {
     // typedRoutes: true // Temporarily disabled to fix build error
   },
   
-  // Pas de redirects avec export statique
-  // Pas de headers avec export statique
+  // Configuration pour Docker builds avec Railway
+  output: 'standalone',
   
   // Configuration du build
-  distDir: 'out'
+  distDir: '.next'
 }
 
 module.exports = nextConfig
