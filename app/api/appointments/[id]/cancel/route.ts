@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { stripe } from "@/lib/stripe"
+import { PrismaClient, Prisma } from "@prisma/client"
 
 export const dynamic = "force-dynamic"
 
@@ -81,7 +82,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     // Start transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Update appointment status
       const updatedAppointment = await tx.appointment.update({
         where: { id: appointmentId },
