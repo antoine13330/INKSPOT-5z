@@ -12,7 +12,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
-# Installer toutes les dépendances (incluant devDependencies pour Prisma)
+# Installer toutes les dépendances (incluant devDependencies pour Prisma et ESLint)
 RUN npm ci
 
 # Étape de build
@@ -25,11 +25,29 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_ENV production
 
+# Configurer l'environnement avec des valeurs par défaut
+RUN echo "🔧 Setting up build environment..." && \
+    node scripts/setup-env-docker.js
+
 # Générer le client Prisma
-RUN npx prisma generate
+RUN echo "🔧 Generating Prisma client..." && \
+    npx prisma generate
+
+# Générer automatiquement les clés VAPID si elles n'existent pas
+RUN if [ ! -f .env ] || ! grep -q "VAPID_PUBLIC_KEY" .env; then \
+        echo "🔑 Generating VAPID keys automatically..."; \
+        node scripts/generate-vapid-keys-docker.js > vapid_keys.txt; \
+        cat vapid_keys.txt >> .env; \
+        echo "✅ VAPID keys generated and added to .env"; \
+        echo "📋 VAPID keys in .env:"; \
+        cat .env | grep VAPID; \
+    else \
+        echo "✅ VAPID keys already present in .env"; \
+    fi
 
 # Build de l'application
-RUN npm run build
+RUN echo "🚀 Building Next.js application..." && \
+    npm run build
 
 # Étape de production
 FROM base AS runner
