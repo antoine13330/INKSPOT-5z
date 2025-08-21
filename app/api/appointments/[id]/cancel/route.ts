@@ -58,7 +58,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     // Calculate refund amount
-    const totalPaid = appointment.payments.reduce((sum, p) => sum + p.amount, 0)
+    const totalPaid = appointment.payments.reduce((sum: number, p: any) => sum + p.amount, 0)
     let refundAmount = 0
     
     // Determine refund policy based on who cancels and when
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         }
       }
 
-      return { updatedAppointment, refunds, totalRefunded: refunds.reduce((sum, r) => sum + Math.abs(r.amount), 0) }
+      return { updatedAppointment, refunds, totalRefunded: refunds.reduce((sum: number, r: any) => sum + Math.abs(r.amount), 0) }
     })
 
     // Send notifications
