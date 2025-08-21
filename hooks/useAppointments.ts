@@ -199,6 +199,14 @@ export function useAppointments(options: UseAppointmentsOptions = {}): [Appointm
   }, [session?.user?.id, enabled, state.filters, state.sort, offset, buildQueryString, limit, handleError])
 
   // ========================================================================
+  // FONCTION REFRESH
+  // ========================================================================
+  
+  const refresh = useCallback(async () => {
+    await fetchAppointments(false)
+  }, [fetchAppointments])
+
+  // ========================================================================
   // ACTIONS SUR LES APPOINTMENTS
   // ========================================================================
   
@@ -319,10 +327,6 @@ export function useAppointments(options: UseAppointmentsOptions = {}): [Appointm
   const cancelAppointment = useCallback(async (id: string, reason?: string): Promise<any> => {
     return changeStatus(id, 'CANCELLED', reason)
   }, [changeStatus])
-
-  const refresh = useCallback(async () => {
-    await fetchAppointments(false)
-  }, [fetchAppointments])
 
   const loadMore = useCallback(async () => {
     if (state.loading || !state.hasMore) return

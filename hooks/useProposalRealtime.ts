@@ -88,23 +88,15 @@ export function useProposalRealtime({
 
   // Function to send proposal status update
   const emitProposalStatusUpdate = useCallback((data: Omit<ProposalStatusChange, 'timestamp'>) => {
-    if (socket && isConnected) {
-      socket.emit('proposal-status-update', {
-        ...data,
-        timestamp: new Date().toISOString()
-      })
-    }
-  }, [socket, isConnected])
+    // WebSocket désactivé - utiliser polling ou notifications push à la place
+    console.log('[ProposalRealtime] WebSocket désactivé - proposal status update:', data)
+  }, [])
 
   // Function to send new proposal
   const emitNewProposal = useCallback((data: Omit<ProposalCreated, 'timestamp'>) => {
-    if (socket && isConnected) {
-      socket.emit('new-proposal', {
-        ...data,
-        timestamp: new Date().toISOString()
-      })
-    }
-  }, [socket, isConnected])
+    // WebSocket désactivé - utiliser polling ou notifications push à la place
+    console.log('[ProposalRealtime] WebSocket désactivé - new proposal:', data)
+  }, [])
 
   // Clear updates
   const clearProposalUpdates = useCallback(() => {

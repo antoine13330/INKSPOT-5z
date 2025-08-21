@@ -73,7 +73,8 @@ export function useFormValidation(
             errors.push(rule.message)
           }
         } catch (error) {
-          errors.push(`Erreur de validation: ${error.message}`)
+          const errorMessage = error instanceof Error ? error.message : 'Unknown validation error'
+          errors.push(`Erreur de validation: ${errorMessage}`)
         }
       } else if (rule.type === 'required' && (value === undefined || value === null || value === '')) {
         errors.push(rule.message)
@@ -319,8 +320,8 @@ export function ValidationField({
   showWarnings = true,
   className 
 }: ValidationFieldProps) {
-  const hasError = validation?.errors.length > 0
-  const hasWarning = showWarnings && validation?.warnings.length > 0
+  const hasError = validation?.errors && validation.errors.length > 0
+  const hasWarning = showWarnings && validation?.warnings && validation.warnings.length > 0
   const isTouched = validation?.touched
 
   return (
@@ -332,7 +333,7 @@ export function ValidationField({
       {children}
       
       {/* Messages d'erreur */}
-      {isTouched && hasError && (
+      {isTouched && hasError && validation?.errors && validation.errors[0] && (
         <ValidationMessage 
           type="error" 
           message={validation.errors[0]} 
@@ -340,7 +341,7 @@ export function ValidationField({
       )}
       
       {/* Messages d'avertissement */}
-      {isTouched && hasWarning && (
+      {isTouched && hasWarning && validation?.warnings && validation.warnings[0] && (
         <ValidationMessage 
           type="warning" 
           message={validation.warnings[0]} 
@@ -476,7 +477,8 @@ export function useRealTimeValidation(
               errors.push(rule.message)
             }
           } catch (error) {
-            errors.push(`Erreur de validation: ${error.message}`)
+            const errorMessage = error instanceof Error ? error.message : 'Unknown validation error'
+            errors.push(`Erreur de validation: ${errorMessage}`)
           }
         }
 

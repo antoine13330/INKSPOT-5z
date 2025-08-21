@@ -21,7 +21,7 @@ import {
   FileText,
   Play,
   Pause,
-  Stop,
+  Square,
   Download,
   Upload,
   Trash2,

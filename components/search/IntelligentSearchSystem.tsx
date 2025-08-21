@@ -147,9 +147,16 @@ export function IntelligentSearchSystem({
   const searchTimeoutRef = useRef<NodeJS.Timeout>()
   
   // Form validation
-  const { validateField, errors, clearErrors } = useFormValidation({
-    searchQuery: { required: true, minLength: 2, maxLength: 100 }
-  })
+  const { validateField, getFieldError, hasErrors } = useFormValidation(
+    { searchQuery: '' },
+    {
+      rules: [
+        { type: 'required', message: 'La recherche est requise' },
+        { type: 'minLength', value: 2, message: 'La recherche doit contenir au moins 2 caractères' },
+        { type: 'maxLength', value: 100, message: 'La recherche ne peut pas dépasser 100 caractères' }
+      ]
+    }
+  )
 
   // Load search history and saved searches
   useEffect(() => {
@@ -245,7 +252,7 @@ export function IntelligentSearchSystem({
 
   // Debounced suggestion generation
   const debouncedGenerateSuggestions = useMemo(
-    () => debounce(generateSuggestions, 300),
+    () => debounce(generateSuggestions as (...args: unknown[]) => unknown, 300),
     [generateSuggestions]
   )
 
@@ -253,7 +260,6 @@ export function IntelligentSearchSystem({
   const handleSearchChange = (value: string) => {
     setSearchQuery(value)
     setError(null)
-    clearErrors()
     
     if (searchMode === 'instant' && value.length >= 2) {
       debouncedGenerateSuggestions(value)
@@ -281,7 +287,7 @@ export function IntelligentSearchSystem({
       setError(null)
       
       // Validate search query
-      const validation = validateField('searchQuery', query)
+      const validation = await validateField('searchQuery', query)
       if (!validation.isValid) {
         setError(validation.errors[0])
         return

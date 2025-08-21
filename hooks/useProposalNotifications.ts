@@ -37,8 +37,8 @@ export function useProposalNotifications({
 
   // WebSocket désactivé - utiliser polling ou notifications push à la place
   const socketConnected = false
-  const joinConversation = () => console.log('WebSocket désactivé')
-  const leaveConversation = () => console.log('WebSocket désactivé')
+  const joinConversation = (conversationId: string) => console.log('WebSocket désactivé pour la conversation:', conversationId)
+  const leaveConversation = (conversationId: string) => console.log('WebSocket désactivé pour la conversation:', conversationId)
 
   // Mettre à jour le statut de connexion
   useEffect(() => {

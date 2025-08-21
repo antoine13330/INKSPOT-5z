@@ -115,16 +115,19 @@ export function ConversationInterface({
   const { socket, isConnected } = useSocketIO()
   
   // Notifications
-  const { markAsRead, unreadCount } = useConversationNotifications(conversationId)
+  const { markConversationAsRead, unreadCount } = useConversationNotifications()
   
   // Form validation
-  const { validateField, errors, clearErrors } = useFormValidation({
-    message: {
-      required: true,
-      minLength: 1,
-      maxLength: 2000
+  const { validateField, getFieldError, hasErrors } = useFormValidation(
+    { message: '' },
+    {
+      rules: [
+        { type: 'required', message: 'Le message est requis' },
+        { type: 'minLength', value: 1, message: 'Le message doit contenir au moins 1 caractère' },
+        { type: 'maxLength', value: 2000, message: 'Le message ne peut pas dépasser 2000 caractères' }
+      ]
     }
-  })
+  )
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -194,10 +197,9 @@ export function ConversationInterface({
   const handleSendMessage = async () => {
     try {
       setError(null)
-      clearErrors()
       
       // Validate message
-      const messageValidation = validateField('message', newMessage)
+      const messageValidation = await validateField('message', newMessage)
       if (!messageValidation.isValid) {
         setError(messageValidation.errors[0])
         return
@@ -212,7 +214,7 @@ export function ConversationInterface({
       setAttachments([])
       
       // Mark conversation as read
-      markAsRead()
+              markConversationAsRead(conversationId)
       
       toast.success("Message envoyé")
     } catch (error) {
@@ -304,7 +306,7 @@ export function ConversationInterface({
   }
 
   if (error) {
-    return <NetworkError message={error} onRetry={() => setError(null)} />
+    return <NetworkError error={new Error(error)} onRetry={() => setError(null)} />
   }
 
   return (
@@ -600,10 +602,10 @@ export function ConversationInterface({
               />
               
               {/* Error message */}
-              {errors.message && (
+              {getFieldError('message') && (
                 <div className="text-sm text-destructive flex items-center space-x-1">
                   <AlertCircle className="w-4 h-4" />
-                  <span>{errors.message}</span>
+                  <span>{getFieldError('message')}</span>
                 </div>
               )}
             </div>

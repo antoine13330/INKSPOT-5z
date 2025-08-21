@@ -4,8 +4,7 @@ const nextConfig = {
   basePath: process.env.NODE_ENV === 'production' ? '/INKSPOT-5z' : '',
   assetPrefix: process.env.NODE_ENV === 'production' ? '/INKSPOT-5z' : '',
   
-  // Configuration pour l'export statique
-  output: 'export',
+  // Configuration pour le développement et la production
   trailingSlash: true,
   images: {
     unoptimized: true
@@ -14,7 +13,7 @@ const nextConfig = {
   // Configuration pour Next.js 15
   experimental: {
     // appDir est maintenant par défaut dans Next.js 15
-    typedRoutes: true
+    // typedRoutes: true // Temporarily disabled to fix build error
   },
   
   // Pas de redirects avec export statique

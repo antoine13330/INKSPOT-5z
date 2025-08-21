@@ -121,8 +121,7 @@ export async function notifyConversationMembersForImage(
         {
           postId: '', // Pas de post spécifique, c'est dans une conversation
           imageUrl,
-          content: content || 'Nouvelle image partagée',
-          conversationId
+          content: content || 'Nouvelle image partagée'
         }
       )
     )

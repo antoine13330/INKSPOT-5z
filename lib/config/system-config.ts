@@ -416,7 +416,10 @@ export function getEnvironmentConfig(): Partial<SystemConfigType> {
         },
         monitoring: {
           ...SystemConfig.monitoring,
-          enabled: false
+          metrics: {
+            ...SystemConfig.monitoring.metrics,
+            enabled: false
+          }
         }
       }
     

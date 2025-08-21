@@ -202,6 +202,10 @@ export async function getAccountLink(
   refreshUrl: string,
   returnUrl: string
 ): Promise<Stripe.AccountLink> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const accountLink = await stripe.accountLinks.create({
       account: accountId,
@@ -221,6 +225,10 @@ export async function createPayout(
   amount: number,
   stripeAccountId: string
 ): Promise<Stripe.Transfer> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const transfer = await stripe.transfers.create({
       amount: amount * 100, // Stripe utilise les centimes
@@ -241,6 +249,10 @@ export async function createTransfer(
   destinationAccountId: string,
   sourceTransactionId?: string
 ): Promise<Stripe.Transfer> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
   try {
     const transfer = await stripe.transfers.create({
       amount: amount * 100, // Stripe utilise les centimes

@@ -139,7 +139,7 @@ export class AppointmentService {
         data: {
           ...validatedData,
           status: 'PROPOSED',
-          requirements: validatedData.requirements || [],
+          requirements: Array.isArray(validatedData.requirements) ? validatedData.requirements.join(', ') : validatedData.requirements || '',
           depositAmount: validatedData.depositRequired 
             ? validatedData.depositAmount || Math.round(validatedData.price * 0.3)
             : undefined
@@ -190,7 +190,8 @@ export class AppointmentService {
 
       return this.enrichAppointmentWithComputedFields(appointment)
     } catch (error) {
-      throw new Error(`Erreur lors de la création de l'appointment: ${error.message}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      throw new Error(`Erreur lors de la création de l'appointment: ${errorMessage}`)
     }
   }
 
@@ -342,7 +343,7 @@ export class AppointmentService {
     limit = 50,
     offset = 0
   ): Promise<{ appointments: AppointmentWithDetails[], total: number }> {
-    const where = role === 'CLIENT' 
+    const where: any = role === 'CLIENT' 
       ? { clientId: userId }
       : { proId: userId }
 
@@ -429,9 +430,16 @@ export class AppointmentService {
       }
 
       // Mettre à jour l'appointment
+      const updateData = {
+        ...validatedData,
+        requirements: Array.isArray(validatedData.requirements) 
+          ? validatedData.requirements.join(', ') 
+          : validatedData.requirements
+      }
+      
       const updatedAppointment = await prisma.appointment.update({
         where: { id },
-        data: validatedData,
+        data: updateData,
         include: {
           client: {
             select: {
@@ -460,15 +468,16 @@ export class AppointmentService {
         }
       })
 
-      // Créer un historique des modifications
-      await this.createStatusHistory(updatedAppointment.id, userId, 'MODIFIED', {
+      // Créer un historique des modifications (utiliser le statut actuel)
+      await this.createStatusHistory(updatedAppointment.id, userId, updatedAppointment.status, {
         changes: validatedData,
         reason: 'Modification par l\'utilisateur'
       })
 
       return this.enrichAppointmentWithComputedFields(updatedAppointment)
     } catch (error) {
-      throw new Error(`Erreur lors de la mise à jour: ${error.message}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      throw new Error(`Erreur lors de la mise à jour: ${errorMessage}`)
     }
   }
 
@@ -534,7 +543,8 @@ export class AppointmentService {
 
       return this.enrichAppointmentWithComputedFields(updatedAppointment)
     } catch (error) {
-      throw new Error(`Erreur lors du changement de statut: ${error.message}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      throw new Error(`Erreur lors du changement de statut: ${errorMessage}`)
     }
   }
 
@@ -551,6 +561,11 @@ export class AppointmentService {
       
       if (!this.canReceivePayment(appointment, validatedData)) {
         throw new Error('Ce paiement ne peut pas être effectué')
+      }
+
+      // Vérifier que Stripe est configuré
+      if (!stripe) {
+        throw new Error('Stripe n\'est pas configuré')
       }
 
       // Créer l'intention de paiement Stripe
@@ -589,7 +604,8 @@ export class AppointmentService {
         }
       }
     } catch (error) {
-      throw new Error(`Erreur lors de la création du paiement: ${error.message}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      throw new Error(`Erreur lors de la création du paiement: ${errorMessage}`)
     }
   }
 

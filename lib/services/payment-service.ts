@@ -96,6 +96,11 @@ export class PaymentService {
       // Vérifications métier
       await this.validatePaymentIntent(validatedData)
       
+      // Vérifier que Stripe est configuré
+      if (!stripe) {
+        throw new Error('Stripe n\'est pas configuré')
+      }
+      
       // Créer l'intention de paiement Stripe
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.round(validatedData.amount * 100), // Stripe utilise les centimes
@@ -130,7 +135,8 @@ export class PaymentService {
 
       return { paymentIntent, payment }
     } catch (error) {
-      throw new Error(`Erreur lors de la création de l'intention de paiement: ${error.message}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      throw new Error(`Erreur lors de la création de l'intention de paiement: ${errorMessage}`)
     }
   }
 
@@ -237,6 +243,11 @@ export class PaymentService {
         throw new Error('Ce paiement ne peut pas être confirmé')
       }
 
+      // Vérifier que Stripe est configuré
+      if (!stripe) {
+        throw new Error('Stripe n\'est pas configuré')
+      }
+
       // Vérifier l'intention de paiement Stripe
       const paymentIntent = await stripe.paymentIntents.retrieve(validatedData.paymentIntentId)
       
@@ -277,7 +288,8 @@ export class PaymentService {
 
       return this.enrichPaymentWithComputedFields(updatedPayment)
     } catch (error) {
-      throw new Error(`Erreur lors de la confirmation du paiement: ${error.message}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      throw new Error(`Erreur lors de la confirmation du paiement: ${errorMessage}`)
     }
   }
 
@@ -319,6 +331,11 @@ export class PaymentService {
       
       if (refundAmount > payment.amount) {
         throw new Error('Le montant du remboursement ne peut pas dépasser le montant payé')
+      }
+
+      // Vérifier que Stripe est configuré
+      if (!stripe) {
+        throw new Error('Stripe n\'est pas configuré')
       }
 
       // Effectuer le remboursement via Stripe
@@ -367,7 +384,8 @@ export class PaymentService {
 
       return this.enrichPaymentWithComputedFields(updatedPayment)
     } catch (error) {
-      throw new Error(`Erreur lors du remboursement: ${error.message}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      throw new Error(`Erreur lors du remboursement: ${errorMessage}`)
     }
   }
 
@@ -410,7 +428,7 @@ export class PaymentService {
     limit = 50,
     offset = 0
   ): Promise<{ payments: PaymentWithDetails[], total: number }> {
-    const where = role === 'SENDER' 
+    const where: any = role === 'SENDER' 
       ? { senderId: userId }
       : { receiverId: userId }
 
@@ -491,8 +509,7 @@ export class PaymentService {
           status: 'completed',
           description: payment.description,
           userId: payment.receiverId,
-          paymentId: payment.id,
-          metadata: metadata || {}
+          paymentId: payment.id
         }
       })
     } catch (error) {

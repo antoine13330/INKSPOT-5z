@@ -21,7 +21,8 @@ export function PaymentDebug() {
       console.log('Payment debug result:', data)
     } catch (error) {
       console.error('Error:', error)
-      setResult({ error: error.message })
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      setResult({ error: errorMessage })
     } finally {
       setLoading(false)
     }
