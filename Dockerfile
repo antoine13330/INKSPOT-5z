@@ -75,9 +75,11 @@ RUN adduser --system --uid 1001 nextjs
 # Copier les fichiers nécessaires
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package-lock.json* ./
+COPY --from=builder /app/scripts ./scripts
 
-# Copier les dépendances de production
-COPY --from=builder /app/node_modules ./node_modules
+# Installer uniquement les dépendances de production
+RUN npm ci --only=production && npm cache clean --force
 
 # Copier le build Next.js
 COPY --from=builder /app/.next ./.next
@@ -85,8 +87,16 @@ COPY --from=builder /app/.next ./.next
 # Vérifier que les fichiers ont été copiés
 RUN echo "🔍 Verifying production files..." && \
     ls -la && \
-    if [ -f "package.json" ] && [ -d ".next" ]; then \
+    if [ -f "package.json" ] && [ -d ".next" ] && [ -d "node_modules" ]; then \
         echo "✅ Required files found"; \
+        echo "📋 Next.js version:"; \
+        node -e "console.log('Next.js:', require('./package.json').dependencies.next)"; \
+        echo "📋 Available commands:"; \
+        ls -la node_modules/.bin/ | grep next; \
+        echo "📋 Next.js binary:"; \
+        which next || echo "next not found in PATH"; \
+        echo "📋 Node modules next:"; \
+        ls -la node_modules/.bin/next* || echo "No next binary found"; \
     else \
         echo "❌ Required files not found!"; \
         exit 1; \
@@ -102,5 +112,5 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Commande de démarrage - utiliser npm start
-CMD ["npm", "start"] 
+# Commande de démarrage - utiliser le script robuste
+CMD ["node", "scripts/start-production.js"] 
