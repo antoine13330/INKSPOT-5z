@@ -33,6 +33,11 @@ RUN echo "🔧 Setting up build environment..." && \
 RUN echo "🔧 Generating Prisma client..." && \
     npx prisma generate
 
+# Vérifier que Prisma a été généré
+RUN echo "🔍 Verifying Prisma client..." && \
+    ls -la node_modules/.prisma/ && \
+    ls -la node_modules/@prisma/client/
+
 # Générer automatiquement les clés VAPID si elles n'existent pas
 RUN if [ ! -f .env ] || ! grep -q "VAPID_PUBLIC_KEY" .env; then \
         echo "🔑 Generating VAPID keys automatically..."; \
@@ -84,6 +89,10 @@ RUN npm ci --only=production && npm cache clean --force
 # Copier le build Next.js
 COPY --from=builder /app/.next ./.next
 
+# Copier le client Prisma généré
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+
 # Vérifier que les fichiers ont été copiés
 RUN echo "🔍 Verifying production files..." && \
     ls -la && \
@@ -91,6 +100,9 @@ RUN echo "🔍 Verifying production files..." && \
         echo "✅ Required files found"; \
         echo "📋 Next.js version:"; \
         node -e "console.log('Next.js:', require('./package.json').dependencies.next)"; \
+        echo "📋 Prisma client:"; \
+        ls -la node_modules/.prisma/ || echo "No .prisma directory"; \
+        ls -la node_modules/@prisma/ || echo "No @prisma directory"; \
         echo "📋 Available commands:"; \
         ls -la node_modules/.bin/ | grep next; \
         echo "📋 Next.js binary:"; \

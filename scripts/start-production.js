@@ -49,6 +49,28 @@ try {
     process.exit(1);
 }
 
+// Vérifier Prisma
+console.log('🔍 Verifying Prisma...');
+try {
+    const { PrismaClient } = require('@prisma/client');
+    console.log('✅ PrismaClient imported successfully');
+    
+    // Vérifier que les dossiers Prisma existent
+    const prismaDirs = ['node_modules/.prisma', 'node_modules/@prisma/client'];
+    prismaDirs.forEach(dir => {
+        if (!fs.existsSync(dir)) {
+            console.error(`❌ Prisma directory missing: ${dir}`);
+            process.exit(1);
+        }
+    });
+    
+    console.log('✅ Prisma directories found');
+} catch (error) {
+    console.error('❌ Prisma verification failed:', error.message);
+    console.error('💡 Prisma client not properly generated');
+    process.exit(1);
+}
+
 // Essayer de démarrer le serveur
 console.log('🚀 Attempting to start server...');
 
