@@ -49,6 +49,18 @@ RUN if [ ! -f .env ] || ! grep -q "VAPID_PUBLIC_KEY" .env; then \
 RUN echo "🚀 Building Next.js application..." && \
     npm run build
 
+# Vérifier que le build a réussi et que les fichiers standalone existent
+RUN echo "🔍 Verifying build output..." && \
+    ls -la .next/ && \
+    if [ -d ".next/standalone" ]; then \
+        echo "✅ Standalone output found"; \
+        ls -la .next/standalone/; \
+    else \
+        echo "⚠️  Standalone output not found, will use traditional mode"; \
+        echo "📋 Contents of .next directory:"; \
+        ls -la .next/; \
+    fi
+
 # Étape de production
 FROM base AS runner
 WORKDIR /app
@@ -62,8 +74,23 @@ RUN adduser --system --uid 1001 nextjs
 
 # Copier les fichiers nécessaires
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/package.json ./package.json
+
+# Copier les dépendances de production
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copier le build Next.js
+COPY --from=builder /app/.next ./.next
+
+# Vérifier que les fichiers ont été copiés
+RUN echo "🔍 Verifying production files..." && \
+    ls -la && \
+    if [ -f "package.json" ] && [ -d ".next" ]; then \
+        echo "✅ Required files found"; \
+    else \
+        echo "❌ Required files not found!"; \
+        exit 1; \
+    fi
 
 # Changer les permissions
 RUN chown -R nextjs:nodejs /app
@@ -75,5 +102,5 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-# Commande de démarrage
-CMD ["node", "server.js"] 
+# Commande de démarrage - utiliser npm start
+CMD ["npm", "start"] 
