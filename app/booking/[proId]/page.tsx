@@ -17,6 +17,8 @@ import { CalendarIcon, Clock, MapPin, Star, Euro } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
+// ACCESSIBILITY: Import accessible notifications
+import { useAccessibleNotifications } from "@/hooks/useAccessibleNotifications"
 
 interface Pro {
   id: string
@@ -40,6 +42,8 @@ interface TimeSlot {
 export default function BookingPage({ params }: { params: { proId: string } }) {
   const { data: session } = useSession()
   const router = useRouter()
+  // ACCESSIBILITY: Use accessible notifications instead of alert()
+  const { showErrorNotification, showSuccessNotification } = useAccessibleNotifications()
   const [pro, setPro] = useState<Pro | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date>()
   const [selectedTime, setSelectedTime] = useState<string>("")
@@ -119,13 +123,29 @@ export default function BookingPage({ params }: { params: { proId: string } }) {
 
       if (response.ok) {
         const data = await response.json()
-        router.push(`/bookings/${data.booking.id}`)
+        // ACCESSIBILITY: Use accessible success notification instead of alert
+        showSuccessNotification(
+          `Your booking request has been sent successfully! You will be redirected to view the booking details.`,
+          "Booking Request Sent"
+        )
+        // Small delay to let user read the notification
+        setTimeout(() => {
+          router.push(`/bookings/${data.booking.id}`)
+        }, 2000)
       } else {
-        alert("Booking failed. Please try again.")
+        // ACCESSIBILITY: Use accessible error notification instead of alert
+        showErrorNotification(
+          "Unable to create your booking request. Please check your information and try again.",
+          "Booking Failed"
+        )
       }
     } catch (error) {
       console.error("Error creating booking:", error)
-      alert("Booking failed. Please try again.")
+      // ACCESSIBILITY: Use accessible error notification instead of alert
+      showErrorNotification(
+        "A technical error occurred while creating your booking. Please try again in a few minutes.",
+        "Technical Error"
+      )
     } finally {
       setSubmitting(false)
     }

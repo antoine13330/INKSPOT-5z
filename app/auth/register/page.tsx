@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { User, Briefcase, X } from "lucide-react"
+// ACCESSIBILITY: Import accessible notifications
+import { useAccessibleNotifications } from "@/hooks/useAccessibleNotifications"
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1)
@@ -39,11 +41,17 @@ export default function RegisterPage() {
   })
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  // ACCESSIBILITY: Use accessible notifications instead of alert()
+  const { showErrorNotification, showSuccessNotification } = useAccessibleNotifications()
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match")
+      // ACCESSIBILITY: Use accessible error notification instead of alert
+      showErrorNotification(
+        "The passwords you entered do not match. Please check and enter the same password in both fields.",
+        "Password Mismatch"
+      )
       return
     }
 
@@ -64,14 +72,30 @@ export default function RegisterPage() {
       })
 
       if (response.ok) {
-        router.push("/auth/login?message=Registration successful")
+        // ACCESSIBILITY: Use accessible success notification
+        showSuccessNotification(
+          "Your account has been created successfully! Please check your email to verify your account, then you can sign in.",
+          "Registration Successful"
+        )
+        // Small delay to let user read the notification
+        setTimeout(() => {
+          router.push("/auth/login?message=Registration successful")
+        }, 3000)
       } else {
         const error = await response.json()
-        alert(error.message || "Registration failed")
+        // ACCESSIBILITY: Use accessible error notification instead of alert
+        showErrorNotification(
+          error.message || "Registration failed. Please check your information and try again.",
+          "Registration Failed"
+        )
       }
     } catch (error) {
       console.error("Registration error:", error)
-      alert("Registration failed")
+      // ACCESSIBILITY: Use accessible error notification instead of alert
+      showErrorNotification(
+        "A technical error occurred during registration. Please try again in a few minutes.",
+        "Technical Error"
+      )
     } finally {
       setIsLoading(false)
     }

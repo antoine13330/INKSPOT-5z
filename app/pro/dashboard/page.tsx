@@ -113,22 +113,45 @@ export default function ProDashboard() {
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
       case "pending":
-        return <Clock className="w-4 h-4" />
+        return <Clock className="w-4 h-4" aria-hidden="true" />
       case "confirmed":
-        return <CheckCircle className="w-4 h-4" />
+        return <CheckCircle className="w-4 h-4" aria-hidden="true" />
       case "completed":
-        return <CheckCircle className="w-4 h-4" />
+        return <CheckCircle className="w-4 h-4" aria-hidden="true" />
       case "cancelled":
-        return <XCircle className="w-4 h-4" />
+        return <XCircle className="w-4 h-4" aria-hidden="true" />
       default:
-        return <Clock className="w-4 h-4" />
+        return <Clock className="w-4 h-4" aria-hidden="true" />
+    }
+  }
+
+  // ACCESSIBILITY: Get status description for screen readers
+  const getStatusDescription = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return "Waiting for confirmation"
+      case "confirmed":
+        return "Confirmed and scheduled"
+      case "completed":
+        return "Successfully completed"
+      case "cancelled":
+        return "Cancelled"
+      default:
+        return "Status unknown"
     }
   }
 
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+        <div 
+          className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"
+          // ACCESSIBILITY: Loading indicator
+          role="status"
+          aria-label="Loading dashboard data, please wait..."
+        >
+          <span className="sr-only">Loading...</span>
+        </div>
       </div>
     )
   }
@@ -137,58 +160,97 @@ export default function ProDashboard() {
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <header className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold">Pro Dashboard</h1>
             <p className="text-gray-400">Welcome back, {session?.user?.username}</p>
           </div>
           <div className="flex space-x-3">
             <Link href="/pro/bookings/new">
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="w-4 h-4 mr-2" />
+              <Button 
+                className="bg-blue-600 hover:bg-blue-700"
+                // ACCESSIBILITY: Clear button purpose
+                aria-label="Create a new booking"
+              >
+                <Plus className="w-4 h-4 mr-2" aria-hidden="true" />
                 New Booking
               </Button>
             </Link>
             <Link href="/pro/invoices/new">
-              <Button variant="outline" className="border-gray-600 text-white bg-transparent">
-                <FileText className="w-4 h-4 mr-2" />
+              <Button 
+                variant="outline" 
+                className="border-gray-600 text-white bg-transparent"
+                // ACCESSIBILITY: Clear button purpose
+                aria-label="Create a new invoice"
+              >
+                <FileText className="w-4 h-4 mr-2" aria-hidden="true" />
                 Create Invoice
               </Button>
             </Link>
           </div>
-        </div>
+        </header>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <section 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          // ACCESSIBILITY: Stats section
+          role="region"
+          aria-label="Dashboard statistics"
+        >
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-400">Total Bookings</CardTitle>
-              <Calendar className="h-4 w-4 text-blue-400" />
+              <Calendar className="h-4 w-4 text-blue-400" aria-hidden="true" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.totalBookings}</div>
-              <p className="text-xs text-gray-400">{stats.pendingBookings} pending</p>
+              <div 
+                className="text-2xl font-bold text-white"
+                aria-label={`${stats.totalBookings} total bookings`}
+              >
+                {stats.totalBookings}
+              </div>
+              <p 
+                className="text-xs text-gray-400"
+                aria-label={`${stats.pendingBookings} bookings pending approval`}
+              >
+                {stats.pendingBookings} pending
+              </p>
             </CardContent>
           </Card>
 
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-400">Monthly Revenue</CardTitle>
-              <DollarSign className="h-4 w-4 text-green-400" />
+              <DollarSign className="h-4 w-4 text-green-400" aria-hidden="true" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">€{stats.monthlyRevenue}</div>
-              <p className="text-xs text-gray-400">€{stats.totalRevenue} total</p>
+              <div 
+                className="text-2xl font-bold text-white"
+                aria-label={`${stats.monthlyRevenue} euros monthly revenue`}
+              >
+                €{stats.monthlyRevenue}
+              </div>
+              <p 
+                className="text-xs text-gray-400"
+                aria-label={`${stats.totalRevenue} euros total revenue`}
+              >
+                €{stats.totalRevenue} total
+              </p>
             </CardContent>
           </Card>
 
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-400">Clients</CardTitle>
-              <Users className="h-4 w-4 text-purple-400" />
+              <Users className="h-4 w-4 text-purple-400" aria-hidden="true" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.totalClients}</div>
+              <div 
+                className="text-2xl font-bold text-white"
+                aria-label={`${stats.totalClients} active clients`}
+              >
+                {stats.totalClients}
+              </div>
               <p className="text-xs text-gray-400">Active clients</p>
             </CardContent>
           </Card>
@@ -196,27 +258,54 @@ export default function ProDashboard() {
           <Card className="bg-gray-900 border-gray-800">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-400">Completed</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-400" />
+              <CheckCircle className="h-4 w-4 text-green-400" aria-hidden="true" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">{stats.completedBookings}</div>
+              <div 
+                className="text-2xl font-bold text-white"
+                aria-label={`${stats.completedBookings} bookings completed this month`}
+              >
+                {stats.completedBookings}
+              </div>
               <p className="text-xs text-gray-400">This month</p>
             </CardContent>
           </Card>
-        </div>
+        </section>
 
         {/* Main Content */}
         <Tabs defaultValue="bookings" className="space-y-6">
-          <TabsList className="bg-gray-900 border-gray-800">
-            <TabsTrigger value="bookings" className="data-[state=active]:bg-gray-800">
+          <TabsList 
+            className="bg-gray-900 border-gray-800"
+            // ACCESSIBILITY: Proper tab list
+            role="tablist"
+            aria-label="Dashboard sections"
+          >
+            <TabsTrigger 
+              value="bookings" 
+              className="data-[state=active]:bg-gray-800"
+              // ACCESSIBILITY: Tab accessibility
+              role="tab"
+              aria-controls="bookings-panel"
+            >
               Recent Bookings
             </TabsTrigger>
-            <TabsTrigger value="invoices" className="data-[state=active]:bg-gray-800">
+            <TabsTrigger 
+              value="invoices" 
+              className="data-[state=active]:bg-gray-800"
+              // ACCESSIBILITY: Tab accessibility
+              role="tab"
+              aria-controls="invoices-panel"
+            >
               Recent Invoices
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="bookings">
+          <TabsContent 
+            value="bookings"
+            // ACCESSIBILITY: Tab panel
+            role="tabpanel"
+            id="bookings-panel"
+          >
             <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -227,7 +316,12 @@ export default function ProDashboard() {
                     </CardDescription>
                   </div>
                   <Link href="/pro/bookings">
-                    <Button variant="outline" size="sm" className="border-gray-600 text-white bg-transparent">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-gray-600 text-white bg-transparent"
+                      aria-label="View all bookings"
+                    >
                       View All
                     </Button>
                   </Link>
@@ -236,29 +330,56 @@ export default function ProDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {recentBookings.map((booking) => (
-                    <div key={booking.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
+                    <div 
+                      key={booking.id} 
+                      className="flex items-center justify-between p-4 bg-gray-800 rounded-lg"
+                      // ACCESSIBILITY: Booking item role
+                      role="article"
+                      aria-label={`Booking: ${booking.title} with ${booking.client.username} for ${booking.price} euros, status: ${getStatusDescription(booking.status)}`}
+                    >
                       <div className="flex items-center space-x-4">
-                        <Avatar className="w-10 h-10">
-                          <AvatarImage src={booking.client.avatar || "/placeholder.svg"} />
+                        <Avatar 
+                          className="w-10 h-10"
+                          role="img"
+                          aria-label={`${booking.client.username}'s profile picture`}
+                        >
+                          <AvatarImage 
+                            src={booking.client.avatar || "/placeholder.svg"} 
+                            alt={`Profile picture of ${booking.client.username}`}
+                          />
                           <AvatarFallback>{booking.client.username[0]}</AvatarFallback>
                         </Avatar>
                         <div>
                           <h4 className="font-medium text-white">{booking.title}</h4>
                           <p className="text-sm text-gray-400">
-                            with {booking.client.username} • {new Date(booking.startTime).toLocaleDateString()}
+                            with {booking.client.username} • <time dateTime={booking.startTime}>{new Date(booking.startTime).toLocaleDateString()}</time>
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-green-400 font-medium">€{booking.price}</span>
-                        <Badge className={`${getStatusColor(booking.status)} text-white`}>
+                        <span 
+                          className="text-green-400 font-medium"
+                          aria-label={`Price: ${booking.price} euros`}
+                        >
+                          €{booking.price}
+                        </span>
+                        <Badge 
+                          className={`${getStatusColor(booking.status)} text-white`}
+                          // ACCESSIBILITY: Status badge with description
+                          aria-label={`Booking status: ${getStatusDescription(booking.status)}`}
+                        >
                           <div className="flex items-center space-x-1">
                             {getStatusIcon(booking.status)}
                             <span className="capitalize">{booking.status}</span>
                           </div>
                         </Badge>
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white bg-transparent">
-                          <Eye className="w-4 h-4" />
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="border-gray-600 text-white bg-transparent"
+                          aria-label={`View details for booking ${booking.title}`}
+                        >
+                          <Eye className="w-4 h-4" aria-hidden="true" />
                         </Button>
                       </div>
                     </div>
@@ -268,7 +389,12 @@ export default function ProDashboard() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="invoices">
+          <TabsContent 
+            value="invoices"
+            // ACCESSIBILITY: Tab panel
+            role="tabpanel"
+            id="invoices-panel"
+          >
             <Card className="bg-gray-900 border-gray-800">
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -277,7 +403,12 @@ export default function ProDashboard() {
                     <CardDescription className="text-gray-400">Your latest invoices and payments</CardDescription>
                   </div>
                   <Link href="/pro/invoices">
-                    <Button variant="outline" size="sm" className="border-gray-600 text-white bg-transparent">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-gray-600 text-white bg-transparent"
+                      aria-label="View all invoices"
+                    >
                       View All
                     </Button>
                   </Link>
@@ -286,20 +417,40 @@ export default function ProDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {recentInvoices.map((invoice) => (
-                    <div key={invoice.id} className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
+                    <div 
+                      key={invoice.id} 
+                      className="flex items-center justify-between p-4 bg-gray-800 rounded-lg"
+                      // ACCESSIBILITY: Invoice item role
+                      role="article"
+                      aria-label={`Invoice ${invoice.invoiceNumber} for ${invoice.client.username}, amount: ${invoice.amount} euros, status: ${invoice.status}`}
+                    >
                       <div>
                         <h4 className="font-medium text-white">#{invoice.invoiceNumber}</h4>
                         <p className="text-sm text-gray-400">
-                          {invoice.client.username} • Due {new Date(invoice.dueDate).toLocaleDateString()}
+                          {invoice.client.username} • Due <time dateTime={invoice.dueDate}>{new Date(invoice.dueDate).toLocaleDateString()}</time>
                         </p>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-green-400 font-medium">€{invoice.amount}</span>
-                        <Badge className={`${invoice.status === "paid" ? "bg-green-500" : "bg-yellow-500"} text-white`}>
+                        <span 
+                          className="text-green-400 font-medium"
+                          aria-label={`Amount: ${invoice.amount} euros`}
+                        >
+                          €{invoice.amount}
+                        </span>
+                        <Badge 
+                          className={`${invoice.status === "paid" ? "bg-green-500" : "bg-yellow-500"} text-white`}
+                          // ACCESSIBILITY: Payment status for screen readers
+                          aria-label={`Payment status: ${invoice.status === "paid" ? "Paid" : "Pending payment"}`}
+                        >
                           {invoice.status}
                         </Badge>
-                        <Button size="sm" variant="outline" className="border-gray-600 text-white bg-transparent">
-                          <Download className="w-4 h-4" />
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="border-gray-600 text-white bg-transparent"
+                          aria-label={`Download invoice ${invoice.invoiceNumber}`}
+                        >
+                          <Download className="w-4 h-4" aria-hidden="true" />
                         </Button>
                       </div>
                     </div>
