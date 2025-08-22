@@ -1,4 +1,5 @@
 // Service Worker for PWA functionality and push notifications
+// ACCESSIBILITY: Enhanced for hearing-impaired users
 
 const CACHE_NAME = "social-media-pro-v1"
 const urlsToCache = [
@@ -36,9 +37,15 @@ self.addEventListener("push", (event) => {
     icon: "/icon-192x192.png",
     badge: "/icon-192x192.png",
     vibrate: [100, 50, 100],
+    // ACCESSIBILITY: Visual alternatives for vibration
+    silent: false, // Ensure screen readers can access
+    requireInteraction: true, // Keep notification visible longer for deaf users
     data: {
       dateOfArrival: Date.now(),
       primaryKey: 1,
+      // ACCESSIBILITY: Add visual indicator data
+      isImportant: false,
+      hasVisualIndicator: true,
     },
     actions: [
       {
@@ -52,6 +59,8 @@ self.addEventListener("push", (event) => {
         icon: "/icon-192x192.png",
       },
     ],
+    // ACCESSIBILITY: Add visual emphasis for important notifications
+    tag: "default", // Will be overridden if data contains specific tag
   }
 
   if (event.data) {
@@ -59,7 +68,23 @@ self.addEventListener("push", (event) => {
     options.body = data.body || options.body
     options.title = data.title || "Social Media Pro"
     options.icon = data.icon || options.icon
-    options.data = data.data || options.data
+    options.data = { ...options.data, ...data.data }
+    
+    // ACCESSIBILITY: Handle different notification priorities with visual cues
+    if (data.priority === "high") {
+      options.requireInteraction = true
+      options.tag = "high-priority"
+      options.data.isImportant = true
+    }
+    
+    // ACCESSIBILITY: Add visual indicator emoji for sound-related notifications
+    if (data.type === "message") {
+      options.title = "💬 " + (options.title || "New Message")
+    } else if (data.type === "booking") {
+      options.title = "📅 " + (options.title || "Booking Update")
+    } else if (data.type === "payment") {
+      options.title = "💳 " + (options.title || "Payment Update")
+    }
   }
 
   event.waitUntil(self.registration.showNotification(options.title || "Social Media Pro", options))

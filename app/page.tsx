@@ -200,14 +200,19 @@ export default function HomePage() {
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-md mx-auto bg-black min-h-screen">
         {/* Header with Search */}
-        <div className="sticky top-0 bg-black/80 backdrop-blur-sm border-b border-gray-800 p-4 z-10">
+        <header className="sticky top-0 bg-black/80 backdrop-blur-sm border-b border-gray-800 p-4 z-10">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-xl font-bold">
               {isSearching ? "Search Results" : session?.user?.id ? "For You" : "Discover"}
             </h1>
             {session?.user?.role === "PRO" && (
               <Link href="/pro/dashboard">
-                <Badge variant="secondary" className="bg-blue-600 text-white">
+                <Badge 
+                  variant="secondary" 
+                  className="bg-blue-600 text-white"
+                  // ACCESSIBILITY: Clear label for pro dashboard
+                  aria-label="Go to Pro Dashboard"
+                >
                   Pro Dashboard
                 </Badge>
               </Link>
@@ -216,7 +221,10 @@ export default function HomePage() {
 
           {/* Search Bar */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" 
+              aria-hidden="true" 
+            />
             <Input
               placeholder="Search posts, hashtags..."
               value={searchQuery}
@@ -225,68 +233,129 @@ export default function HomePage() {
                 searchPosts(e.target.value)
               }}
               className="bg-gray-800 border-gray-700 text-white pl-10 rounded-full"
+              // ACCESSIBILITY: Enhanced search input
+              aria-label="Search posts and hashtags"
+              role="searchbox"
+              aria-describedby="search-help"
             />
+            {/* ACCESSIBILITY: Hidden help text */}
+            <div id="search-help" className="sr-only">
+              Type to search for posts or hashtags. Results will appear automatically as you type.
+            </div>
           </div>
-        </div>
+        </header>
 
         {/* Posts Feed */}
-        <div className="space-y-0 pb-20">
+        <main 
+          className="space-y-0 pb-20"
+          // ACCESSIBILITY: Main content region
+          role="main"
+          aria-label="Social media feed"
+        >
           {displayPosts.map((post) => (
             <Card
               key={post.id}
               className="bg-black border-gray-800 rounded-none border-x-0 border-t-0"
               onMouseEnter={() => recordPostView(post)}
+              // ACCESSIBILITY: Post article role
+              role="article"
+              aria-label={`Post by ${post.author.username} from ${new Date(post.createdAt).toLocaleDateString()}`}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Link href={`/profile/${post.author.username}`}>
-                      <Avatar className="w-10 h-10 cursor-pointer">
-                        <AvatarImage src={post.author.avatar || "/placeholder.svg"} />
-                        <AvatarFallback>{post.author.username[1]}</AvatarFallback>
+                      <Avatar 
+                        className="w-10 h-10 cursor-pointer"
+                        // ACCESSIBILITY: Profile avatar accessibility
+                        role="img"
+                        aria-label={`${post.author.username}'s profile picture`}
+                      >
+                        <AvatarImage 
+                          src={post.author.avatar || "/placeholder.svg"} 
+                          alt={`Profile picture of ${post.author.username}`}
+                        />
+                        <AvatarFallback>{post.author.username[0]}</AvatarFallback>
                       </Avatar>
                     </Link>
                     <div>
                       <div className="flex items-center space-x-2">
                         <Link href={`/profile/${post.author.username}`}>
-                          <span className="font-semibold text-white hover:text-blue-400 cursor-pointer">
+                          <span 
+                            className="font-semibold text-white hover:text-blue-400 cursor-pointer"
+                            // ACCESSIBILITY: Clear link purpose
+                            aria-label={`View ${post.author.username}'s profile`}
+                          >
                             {post.author.username}
                           </span>
                         </Link>
                         {post.author.verified && (
-                          <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-xs">✓</span>
+                          <div 
+                            className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center"
+                            // ACCESSIBILITY: Verification badge
+                            role="img"
+                            aria-label={`${post.author.username} is verified`}
+                            title="Verified account"
+                          >
+                            <span className="text-white text-xs" aria-hidden="true">✓</span>
                           </div>
                         )}
                         {post.author.role === "PRO" && (
-                          <Badge variant="outline" className="text-xs border-yellow-500 text-yellow-500">
+                          <Badge 
+                            variant="outline" 
+                            className="text-xs border-yellow-500 text-yellow-500"
+                            // ACCESSIBILITY: Pro badge description
+                            aria-label={`${post.author.username} is a professional service provider`}
+                          >
                             PRO
                           </Badge>
                         )}
                       </div>
                       <div className="flex items-center space-x-2 text-xs text-gray-400">
-                        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                        <time 
+                          dateTime={post.createdAt}
+                          aria-label={`Posted on ${new Date(post.createdAt).toLocaleDateString()}`}
+                        >
+                          {new Date(post.createdAt).toLocaleDateString()}
+                        </time>
                         {post.author.role === "PRO" && post.author.specialties && (
                           <>
-                            <span>•</span>
+                            <span aria-hidden="true">•</span>
                             <span>{post.author.specialties[0]}</span>
                           </>
                         )}
                       </div>
                     </div>
                   </div>
-                  <Button variant="ghost" size="icon" className="text-gray-400">
-                    <MoreHorizontal className="w-5 h-5" />
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-gray-400"
+                    // ACCESSIBILITY: Clear button purpose
+                    aria-label={`More options for ${post.author.username}'s post`}
+                  >
+                    <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
                   </Button>
                 </div>
               </CardHeader>
 
               <CardContent className="pb-3">
-                <p className="text-white mb-3 text-sm leading-relaxed">{post.content}</p>
+                <p 
+                  className="text-white mb-3 text-sm leading-relaxed"
+                  // ACCESSIBILITY: Post content identification
+                  aria-label={`Post content: ${post.content}`}
+                >
+                  {post.content}
+                </p>
 
                 {/* Hashtags */}
                 {post.hashtags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div 
+                    className="flex flex-wrap gap-2 mb-3"
+                    // ACCESSIBILITY: Hashtags section
+                    role="list"
+                    aria-label="Post hashtags"
+                  >
                     {post.hashtags.map((hashtag, index) => (
                       <button
                         key={index}
@@ -295,8 +364,11 @@ export default function HomePage() {
                           searchPosts(hashtag)
                         }}
                         className="text-blue-400 hover:text-blue-300 text-sm flex items-center"
+                        // ACCESSIBILITY: Hashtag button accessibility
+                        role="listitem"
+                        aria-label={`Search for hashtag ${hashtag}`}
                       >
-                        <Hash className="w-3 h-3 mr-1" />
+                        <Hash className="w-3 h-3 mr-1" aria-hidden="true" />
                         {hashtag.replace("#", "")}
                       </button>
                     ))}
@@ -305,16 +377,30 @@ export default function HomePage() {
 
                 {/* Images */}
                 {post.images.length > 0 && (
-                  <div className="grid grid-cols-1 gap-2 rounded-lg overflow-hidden">
+                  <div 
+                    className="grid grid-cols-1 gap-2 rounded-lg overflow-hidden"
+                    // ACCESSIBILITY: Images container
+                    role="img"
+                    aria-label={`${post.images.length} image${post.images.length > 1 ? 's' : ''} shared by ${post.author.username}`}
+                  >
                     {post.images.map((image, index) => (
-                      <Image
-                        key={index}
-                        src={image || "/placeholder.svg"}
-                        alt={`Post image ${index + 1}`}
-                        width={400}
-                        height={400}
-                        className="w-full object-cover"
-                      />
+                      <div key={index} className="relative">
+                        <Image
+                          src={image || "/placeholder.svg"}
+                          alt={`Image ${index + 1} of ${post.images.length} shared by ${post.author.username} in their post. ${post.content ? 'Related to: ' + post.content.substring(0, 100) + (post.content.length > 100 ? '...' : '') : ''}`}
+                          width={400}
+                          height={400}
+                          className="w-full object-cover"
+                          // ACCESSIBILITY: Additional context for images
+                          title={`Image ${index + 1} by ${post.author.username}`}
+                        />
+                        {/* ACCESSIBILITY: Hidden description for multimedia content */}
+                        <div className="sr-only">
+                          Image {index + 1}: This image was shared by {post.author.username}. 
+                          If this image contains text, captions, or represents video/audio content, 
+                          please ask for a detailed description.
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -357,22 +443,48 @@ export default function HomePage() {
                       size="sm"
                       className={`text-gray-400 hover:text-red-500 p-0 ${post.liked ? "text-red-500" : ""}`}
                       onClick={() => toggleLike(post.id)}
+                      // ACCESSIBILITY: Like button with clear state indication
+                      aria-label={`${post.liked ? 'Unlike' : 'Like'} ${post.author.username}'s post. Currently ${post.likesCount} likes.`}
+                      aria-pressed={post.liked}
                     >
-                      <Heart className={`w-5 h-5 mr-1 ${post.liked ? "fill-current" : ""}`} />
-                      <span className="text-sm">{post.likesCount}</span>
+                      <Heart className={`w-5 h-5 mr-1 ${post.liked ? "fill-current" : ""}`} aria-hidden="true" />
+                      <span className="text-sm" aria-label={`${post.likesCount} likes`}>{post.likesCount}</span>
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-blue-500 p-0">
-                      <MessageCircle className="w-5 h-5 mr-1" />
-                      <span className="text-sm">{post.commentsCount}</span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-gray-400 hover:text-blue-500 p-0"
+                      // ACCESSIBILITY: Comment button
+                      aria-label={`View ${post.commentsCount} comments on ${post.author.username}'s post`}
+                    >
+                      <MessageCircle className="w-5 h-5 mr-1" aria-hidden="true" />
+                      <span className="text-sm" aria-label={`${post.commentsCount} comments`}>{post.commentsCount}</span>
                     </Button>
-                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-green-500 p-0">
-                      <Send className="w-5 h-5" />
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-gray-400 hover:text-green-500 p-0"
+                      // ACCESSIBILITY: Share button
+                      aria-label={`Share ${post.author.username}'s post`}
+                    >
+                      <Send className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-400">{post.viewsCount} views</span>
-                    <Button variant="ghost" size="sm" className="text-gray-400 hover:text-yellow-500 p-0">
-                      <Bookmark className="w-5 h-5" />
+                    <span 
+                      className="text-xs text-gray-400"
+                      aria-label={`${post.viewsCount} people have viewed this post`}
+                    >
+                      {post.viewsCount} views
+                    </span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-gray-400 hover:text-yellow-500 p-0"
+                      // ACCESSIBILITY: Bookmark button
+                      aria-label={`Bookmark ${post.author.username}'s post`}
+                    >
+                      <Bookmark className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>
                 </div>
@@ -381,9 +493,14 @@ export default function HomePage() {
                 {session?.user?.id && (
                   <div className="mt-4 w-full space-y-2">
                     <div className="flex space-x-2">
-                      <Link href={`/conversations/new?userId=${post.author.id}`} className="flex-1">
+                      <Link 
+                        href={`/conversations/new?userId=${post.author.id}`} 
+                        className="flex-1"
+                        // ACCESSIBILITY: Clear link purpose
+                        aria-label={`Start a conversation with ${post.author.username}`}
+                      >
                         <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white border border-gray-600">
-                          <MessageCircle className="w-4 h-4 mr-2" />
+                          <MessageCircle className="w-4 h-4 mr-2" aria-hidden="true" />
                           Contact {post.author.username}
                         </Button>
                       </Link>
@@ -391,8 +508,10 @@ export default function HomePage() {
                         <Button
                           onClick={() => bookService(post.author.id)}
                           className="bg-blue-600 hover:bg-blue-700 text-white"
+                          // ACCESSIBILITY: Clear booking action
+                          aria-label={`Book a service with professional ${post.author.username}`}
                         >
-                          <Calendar className="w-4 h-4 mr-2" />
+                          <Calendar className="w-4 h-4 mr-2" aria-hidden="true" />
                           Book
                         </Button>
                       )}
@@ -404,11 +523,18 @@ export default function HomePage() {
           ))}
 
           {displayPosts.length === 0 && !loading && (
-            <div className="text-center py-12">
-              <p className="text-gray-400">{isSearching ? "No posts found for your search." : "No posts available."}</p>
+            <div 
+              className="text-center py-12"
+              // ACCESSIBILITY: Empty state message
+              role="status"
+              aria-label={isSearching ? "No posts found for your search" : "No posts available"}
+            >
+              <p className="text-gray-400">
+                {isSearching ? "No posts found for your search." : "No posts available."}
+              </p>
             </div>
           )}
-        </div>
+        </main>
 
         <BottomNavigation />
       </div>

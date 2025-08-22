@@ -16,6 +16,8 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
+// ACCESSIBILITY: Import accessible notifications
+import { useAccessibleNotifications } from "@/hooks/useAccessibleNotifications"
 
 interface ProfileTheme {
   primaryColor: string
@@ -60,8 +62,10 @@ const fontOptions = [
 ]
 
 export default function CustomizeProfilePage() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const router = useRouter()
+  // ACCESSIBILITY: Use accessible notifications instead of alert()
+  const { showErrorNotification, showSuccessNotification } = useAccessibleNotifications()
   const [profileData, setProfileData] = useState<ProfileData>({
     username: "",
     businessName: "",
@@ -176,7 +180,7 @@ export default function CustomizeProfilePage() {
     handleInputChange("portfolio", newPortfolio)
   }
 
-  const saveProfile = async () => {
+  const handleSave = async () => {
     setSaving(true)
     try {
       const response = await fetch("/api/profile", {
@@ -188,13 +192,29 @@ export default function CustomizeProfilePage() {
       })
 
       if (response.ok) {
-        router.push("/pro/dashboard")
+        // ACCESSIBILITY: Use accessible success notification instead of alert
+        showSuccessNotification(
+          "Your profile has been saved successfully! Redirecting to dashboard...",
+          "Profile Saved"
+        )
+        // Small delay to let user read the notification
+        setTimeout(() => {
+          router.push("/pro/dashboard")
+        }, 2000)
       } else {
-        alert("Failed to save profile")
+        // ACCESSIBILITY: Use accessible error notification instead of alert
+        showErrorNotification(
+          "Unable to save your profile. Please check your information and try again.",
+          "Save Failed"
+        )
       }
     } catch (error) {
       console.error("Error saving profile:", error)
-      alert("Failed to save profile")
+      // ACCESSIBILITY: Use accessible error notification instead of alert
+      showErrorNotification(
+        "A technical error occurred while saving your profile. Please try again in a few minutes.",
+        "Technical Error"
+      )
     } finally {
       setSaving(false)
     }
@@ -233,7 +253,7 @@ export default function CustomizeProfilePage() {
               <Eye className="w-4 h-4 mr-2" />
               {previewMode ? "Edit" : "Preview"}
             </Button>
-            <Button onClick={saveProfile} disabled={saving} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleSave} disabled={saving} className="bg-blue-600 hover:bg-blue-700">
               <Save className="w-4 h-4 mr-2" />
               {saving ? "Saving..." : "Save Changes"}
             </Button>
@@ -422,16 +442,27 @@ export default function CustomizeProfilePage() {
                   <CardContent>
                     <div className="flex items-center space-x-6">
                       <Avatar className="w-20 h-20">
-                        <AvatarImage src={profileData.avatar || "/placeholder.svg"} />
+                        <AvatarImage 
+                          src={profileData.avatar || "/placeholder.svg"} 
+                          // ACCESSIBILITY: Better alt text for profile image
+                          alt={`Profile picture of ${profileData.username || 'user'}`}
+                        />
                         <AvatarFallback>{profileData.username[0]}</AvatarFallback>
                       </Avatar>
                       <ImageUpload
                         onUpload={(file) => handleImageUpload(file, "avatar")}
                         accept="image/*"
                         maxSize={5 * 1024 * 1024} // 5MB
+                        // ACCESSIBILITY: Enable alt text requirement for profile images
+                        requireAltText={true}
                       >
-                        <Button variant="outline" className="border-gray-600 text-white bg-transparent">
-                          <Upload className="w-4 h-4 mr-2" />
+                        <Button 
+                          variant="outline" 
+                          className="border-gray-600 text-white bg-transparent"
+                          // ACCESSIBILITY: Better button label
+                          aria-label="Change your profile picture"
+                        >
+                          <Upload className="w-4 h-4 mr-2" aria-hidden="true" />
                           Change Avatar
                         </Button>
                       </ImageUpload>
@@ -451,9 +482,11 @@ export default function CustomizeProfilePage() {
                         <div className="relative w-full h-48 rounded-lg overflow-hidden">
                           <Image
                             src={profileData.coverImage || "/placeholder.svg"}
-                            alt="Cover image"
+                            alt={`Cover image for ${profileData.businessName || profileData.username}'s profile. This image represents their professional brand.`}
                             fill
                             className="object-cover"
+                            // ACCESSIBILITY: Additional context
+                            title={`Cover image for ${profileData.businessName || profileData.username}`}
                           />
                         </div>
                       )}
@@ -461,9 +494,16 @@ export default function CustomizeProfilePage() {
                         onUpload={(file) => handleImageUpload(file, "cover")}
                         accept="image/*"
                         maxSize={10 * 1024 * 1024} // 10MB
+                        // ACCESSIBILITY: Enable alt text requirement
+                        requireAltText={true}
                       >
-                        <Button variant="outline" className="border-gray-600 text-white bg-transparent">
-                          <Upload className="w-4 h-4 mr-2" />
+                        <Button 
+                          variant="outline" 
+                          className="border-gray-600 text-white bg-transparent"
+                          // ACCESSIBILITY: Better button label
+                          aria-label={profileData.coverImage ? "Change cover image" : "Upload cover image"}
+                        >
+                          <Upload className="w-4 h-4 mr-2" aria-hidden="true" />
                           {profileData.coverImage ? "Change Cover" : "Upload Cover"}
                         </Button>
                       </ImageUpload>
@@ -475,7 +515,13 @@ export default function CustomizeProfilePage() {
                 <Card className="bg-gray-900 border-gray-800">
                   <CardHeader>
                     <CardTitle className="text-white">Portfolio</CardTitle>
-                    <CardDescription className="text-gray-400">Showcase your work</CardDescription>
+                    <CardDescription className="text-gray-400">
+                      Showcase your work
+                      {/* ACCESSIBILITY: Guidance for multimedia content */}
+                      <span className="block mt-1 text-xs">
+                        💡 For images with text or multimedia content, consider adding descriptions for accessibility
+                      </span>
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -485,19 +531,29 @@ export default function CustomizeProfilePage() {
                             <div className="aspect-square rounded-lg overflow-hidden">
                               <Image
                                 src={image || "/placeholder.svg"}
-                                alt={`Portfolio ${index + 1}`}
+                                alt={`Portfolio piece ${index + 1} by ${profileData.businessName || profileData.username}. Professional work example showcasing ${profileData.specialties?.[0] || 'artistic'} skills.`}
                                 width={200}
                                 height={200}
                                 className="w-full h-full object-cover"
+                                // ACCESSIBILITY: Additional context for portfolio images
+                                title={`Portfolio work ${index + 1} - Click for larger view`}
                               />
+                              {/* ACCESSIBILITY: Hidden description for complex portfolio images */}
+                              <div className="sr-only">
+                                Portfolio image {index + 1}: This is a professional work example. 
+                                If this image contains text, audio elements, or is a screenshot of video content, 
+                                please provide additional description for full accessibility.
+                              </div>
                             </div>
                             <Button
                               variant="destructive"
                               size="sm"
                               className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                               onClick={() => removePortfolioImage(index)}
+                              // ACCESSIBILITY: Clear removal action
+                              aria-label={`Remove portfolio image ${index + 1}`}
                             >
-                              <X className="w-4 h-4" />
+                              <X className="w-4 h-4" aria-hidden="true" />
                             </Button>
                           </div>
                         ))}

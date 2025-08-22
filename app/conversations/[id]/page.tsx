@@ -117,11 +117,17 @@ export default function ConversationPage({ params }: { params: { id: string } })
     <div className="min-h-screen bg-black text-white flex flex-col">
       <div className="max-w-md mx-auto bg-black min-h-screen flex flex-col w-full">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+        <header className="flex items-center justify-between p-4 border-b border-gray-800">
           <div className="flex items-center space-x-3">
             <Link href="/conversations">
-              <Button variant="ghost" size="icon" className="text-white">
-                <ArrowLeft className="w-5 h-5" />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-white"
+                // ACCESSIBILITY: Clear label for back button
+                aria-label="Return to conversations list"
+              >
+                <ArrowLeft className="w-5 h-5" aria-hidden="true" />
               </Button>
             </Link>
             <Avatar className="w-10 h-10">
@@ -134,24 +140,56 @@ export default function ConversationPage({ params }: { params: { id: string } })
                 <span className="text-xs text-gray-400">12 Dec 2024</span>
                 <span className="text-xs text-gray-400">•</span>
                 <span className="text-xs text-gray-400">12 Dec 2024</span>
+                {/* ACCESSIBILITY: Visual typing indicator for hearing-impaired users */}
+                <span className="text-xs text-blue-400 flex items-center">
+                  <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse mr-1" aria-hidden="true"></span>
+                  <span className="sr-only">@pierce is typing</span>
+                </span>
               </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="text-gray-400">
-              <Phone className="w-5 h-5" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="text-gray-400"
+              // ACCESSIBILITY: Clear label for phone call button
+              aria-label="Start voice call with @pierce"
+              title="Voice call"
+            >
+              <Phone className="w-5 h-5" aria-hidden="true" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-gray-400">
-              <Video className="w-5 h-5" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="text-gray-400"
+              // ACCESSIBILITY: Clear label for video call button
+              aria-label="Start video call with @pierce"
+              title="Video call"
+            >
+              <Video className="w-5 h-5" aria-hidden="true" />
             </Button>
-            <Button variant="ghost" size="icon" className="text-gray-400">
-              <MoreHorizontal className="w-5 h-5" />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="text-gray-400"
+              // ACCESSIBILITY: Clear label for options menu
+              aria-label="More conversation options"
+              title="More options"
+            >
+              <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
             </Button>
           </div>
-        </div>
+        </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <main 
+          className="flex-1 overflow-y-auto p-4 space-y-4"
+          // ACCESSIBILITY: Proper main content region
+          role="log"
+          aria-label="Conversation messages"
+          aria-live="polite"
+        >
           {messages.map((msg) => (
             <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div className={`max-w-[80%] ${msg.sender === "user" ? "order-2" : "order-1"}`}>
@@ -160,33 +198,66 @@ export default function ConversationPage({ params }: { params: { id: string } })
                     className={`px-4 py-2 rounded-2xl ${
                       msg.sender === "user" ? "bg-blue-600 text-white" : "bg-gray-800 text-white"
                     }`}
+                    // ACCESSIBILITY: Message role for screen readers
+                    role="article"
+                    aria-label={`Message from ${msg.sender === "user" ? "you" : "@pierce"} at ${msg.timestamp}`}
                   >
                     <p className="text-sm">{msg.content}</p>
                   </div>
                 )}
 
                 {msg.type === "image" && (
-                  <div className="rounded-2xl overflow-hidden">
+                  <div 
+                    className="rounded-2xl overflow-hidden"
+                    // ACCESSIBILITY: Container for shared image
+                    role="article"
+                    aria-label={`Image shared by ${msg.sender === "user" ? "you" : "@pierce"} at ${msg.timestamp}`}
+                  >
                     <Image
                       src={msg.content || "/placeholder.svg"}
-                      alt="Shared image"
+                      alt={`Image shared by ${msg.sender === "user" ? "you" : "@pierce"} in conversation. Shared at ${msg.timestamp}.`}
                       width={300}
                       height={200}
                       className="object-cover"
+                      // ACCESSIBILITY: Additional context for screen readers
+                      title={`Shared image from ${msg.timestamp}`}
                     />
+                    {/* ACCESSIBILITY: Hidden alternative text for complex images */}
+                    <div className="sr-only">
+                      Image content: This is a shared image in the conversation. 
+                      If this image contains text, audio, or video content, please ask for a description.
+                    </div>
                   </div>
                 )}
 
                 {msg.type === "payment" && (
-                  <Card className="bg-gray-800 border-gray-700">
+                  <Card 
+                    className="bg-gray-800 border-gray-700"
+                    // ACCESSIBILITY: Payment request role and description
+                    role="article"
+                    aria-label={`Payment request for ${msg.paymentAmount} dollars from ${msg.sender === "user" ? "you" : "@pierce"}`}
+                  >
                     <CardContent className="p-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-white mb-2">{msg.paymentAmount} $</div>
+                        <div className="text-2xl font-bold text-white mb-2" aria-label={`Amount: ${msg.paymentAmount} dollars`}>
+                          {msg.paymentAmount} $
+                        </div>
                         <div className="flex space-x-2">
-                          <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                          <Button 
+                            size="sm" 
+                            className="bg-green-600 hover:bg-green-700"
+                            // ACCESSIBILITY: Clear action labels
+                            aria-label={`Accept payment request for ${msg.paymentAmount} dollars`}
+                          >
                             Accept
                           </Button>
-                          <Button size="sm" variant="outline" className="border-gray-600 bg-transparent">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="border-gray-600 bg-transparent"
+                            // ACCESSIBILITY: Clear action labels
+                            aria-label={`Decline payment request for ${msg.paymentAmount} dollars`}
+                          >
                             Decline
                           </Button>
                         </div>
@@ -196,16 +267,18 @@ export default function ConversationPage({ params }: { params: { id: string } })
                 )}
 
                 <div className={`text-xs text-gray-400 mt-1 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
-                  {msg.timestamp}
+                  <time dateTime={msg.timestamp} aria-label={`Message sent at ${msg.timestamp}`}>
+                    {msg.timestamp}
+                  </time>
                 </div>
               </div>
             </div>
           ))}
           <div ref={messagesEndRef} />
-        </div>
+        </main>
 
         {/* Message Input */}
-        <div className="p-4 border-t border-gray-800">
+        <footer className="p-4 border-t border-gray-800">
           <div className="flex items-center space-x-2">
             <Input
               value={message}
@@ -213,12 +286,27 @@ export default function ConversationPage({ params }: { params: { id: string } })
               onKeyPress={handleKeyPress}
               placeholder="Write here..."
               className="flex-1 bg-gray-800 border-gray-700 text-white rounded-full"
+              // ACCESSIBILITY: Enhanced input accessibility
+              aria-label="Type your message"
+              aria-describedby="send-button-help"
             />
-            <Button onClick={sendMessage} size="icon" className="bg-blue-600 hover:bg-blue-700 rounded-full">
-              <Send className="w-4 h-4" />
+            <Button 
+              onClick={sendMessage} 
+              size="icon" 
+              className="bg-blue-600 hover:bg-blue-700 rounded-full"
+              // ACCESSIBILITY: Clear send button label
+              aria-label="Send message"
+              title="Send message (Enter)"
+              disabled={!message.trim()}
+            >
+              <Send className="w-4 h-4" aria-hidden="true" />
             </Button>
+            {/* ACCESSIBILITY: Hidden help text */}
+            <span id="send-button-help" className="sr-only">
+              Press Enter or click Send to send your message
+            </span>
           </div>
-        </div>
+        </footer>
       </div>
     </div>
   )
