@@ -74,7 +74,7 @@ async function main() {
       firstName: "Gourmet",
       lastName: "Artist",
       role: "PRO",
-      verified: false,
+      verified: true,
       status: "ACTIVE",
       businessName: "Gourmet Art Studio",
       bio: "Digital artist and graphic designer creating stunning visual experiences.",

@@ -141,6 +141,49 @@ export async function createPaymentLink(data: {
   }
 }
 
+// Créer une session de checkout Stripe
+export async function createCheckoutSession(data: {
+  paymentIntentId: string
+  amount: number
+  currency: string
+  description: string
+  successUrl: string
+  cancelUrl: string
+}): Promise<string> {
+  if (!stripe) {
+    throw new Error('Stripe not configured')
+  }
+  
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: data.currency.toLowerCase(),
+            product_data: {
+              name: data.description,
+            },
+            unit_amount: data.amount,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: data.successUrl,
+      cancel_url: data.cancelUrl,
+      metadata: {
+        paymentIntentId: data.paymentIntentId,
+      },
+    })
+
+    return session.url!
+  } catch (error) {
+    console.error('Error creating checkout session:', error)
+    throw new Error('Failed to create checkout session')
+  }
+}
+
 // Créer un client Stripe
 export async function createStripeCustomer(
   userId: string,

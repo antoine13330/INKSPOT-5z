@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, DollarSign, Users, FileText, Clock, CheckCircle, XCircle, Plus, Eye, Download } from "lucide-react"
+import { Calendar, DollarSign, Users, FileText, Clock, CheckCircle, XCircle, Plus, Eye, Download, RefreshCw } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -59,6 +59,7 @@ export default function ProDashboard() {
   const [recentBookings, setRecentBookings] = useState<Booking[]>([])
   const [recentInvoices, setRecentInvoices] = useState<Invoice[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
   useEffect(() => {
     if (status === "loading") return
@@ -69,9 +70,20 @@ export default function ProDashboard() {
     }
 
     fetchDashboardData()
+
+    // Rafraîchir les données toutes les 30 secondes
+    const interval = setInterval(() => {
+      fetchDashboardData()
+    }, 30000)
+
+    return () => clearInterval(interval)
   }, [session, status, router])
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (isManualRefresh = false) => {
+    if (isManualRefresh) {
+      setRefreshing(true)
+    }
+    
     try {
       const [statsRes, bookingsRes, invoicesRes] = await Promise.all([
         fetch("/api/pro/stats"),
@@ -95,7 +107,12 @@ export default function ProDashboard() {
       }
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
+  }
+
+  const handleManualRefresh = () => {
+    fetchDashboardData(true)
   }
 
   const getStatusColor = (status: string) => {
@@ -146,6 +163,15 @@ export default function ProDashboard() {
             <p className="text-gray-400">Welcome back, {session?.user?.username}</p>
           </div>
           <div className="flex space-x-3">
+            <Button 
+              onClick={handleManualRefresh}
+              disabled={refreshing}
+              variant="outline"
+              className="border-gray-600 hover:bg-gray-800"
+            >
+              <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Actualisation...' : 'Actualiser'}
+            </Button>
             <Link href="/pro/dashboard/appointments">
               <Button className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="w-4 h-4 mr-2" />

@@ -14,6 +14,7 @@ import { AppointmentProposal } from "@/components/appointments/AppointmentPropos
 import { AppointmentStatusBadge } from "@/components/appointments/AppointmentStatusBadge"
 import { AppointmentHistory } from "@/components/appointments/AppointmentHistory"
 import { OnlineStatusIndicatorWithIcon } from "@/components/ui/online-status-indicator"
+import { PaymentManager } from "@/components/payments/PaymentManager"
 import { ProposalRealtimeIndicator } from "@/components/conversation/ProposalRealtimeIndicator"
 import { PaymentDebug } from "@/components/debug/PaymentDebug"
 
@@ -98,12 +99,26 @@ export default function ConversationPage({ params }: ConversationPageProps) {
               !existingIds.has(m.id) && m.senderId !== session?.user?.id
             )
             
+            // Remplacer les messages temporaires par leurs versions réelles
+            const updatedMessages = prev.map(existingMsg => {
+              if (existingMsg.id.startsWith('tmp_') && existingMsg.senderId === session?.user?.id) {
+                // Chercher le message réel correspondant
+                const realMessage = newMessages.find((m: any) => 
+                  m.senderId === session?.user?.id && 
+                  m.content === existingMsg.content &&
+                  Math.abs(new Date(m.createdAt).getTime() - new Date(existingMsg.createdAt).getTime()) < 5000 // 5 secondes de tolérance
+                )
+                return realMessage || existingMsg
+              }
+              return existingMsg
+            })
+            
             if (actualNewMessages.length > 0) {
               console.log('📨 Nouveaux messages détectés:', actualNewMessages.length)
-              return [...prev, ...actualNewMessages]
+              return [...updatedMessages, ...actualNewMessages]
             }
             
-            return prev
+            return updatedMessages
           })
         }
       } catch (error) {
@@ -241,12 +256,37 @@ export default function ConversationPage({ params }: ConversationPageProps) {
     }
   }, { immediate: false })
 
+  // API pour récupérer les données de paiement de l'appointment
+  const {
+    data: appointmentPaymentData,
+    isLoading: appointmentPaymentLoading,
+    refetch: refetchAppointmentPayment
+  } = useApi(async () => {
+    if (!appointmentStatusData?.appointment?.id) return { success: false }
+    
+    try {
+      const response = await fetch(`/api/appointments/${appointmentStatusData.appointment.id}/payments`)
+      if (!response.ok) throw new Error('Failed to fetch appointment payments')
+      const data = await response.json()
+      return { success: true, data }
+    } catch (error) {
+      return { success: false, error: 'Failed to fetch appointment payments' }
+    }
+  }, { immediate: false })
+
   // Lancer l'API du statut appointment quand on a l'autre participant
   useEffect(() => {
     if (otherParticipant?.id) {
       refetchAppointmentStatus()
     }
   }, [otherParticipant?.id, refetchAppointmentStatus])
+
+  // Lancer l'API des paiements quand on a un appointment
+  useEffect(() => {
+    if (appointmentStatusData?.appointment?.id) {
+      refetchAppointmentPayment()
+    }
+  }, [appointmentStatusData?.appointment?.id, refetchAppointmentPayment])
 
   // Afficher le message de succès/échec du paiement et récupérer le statut côté serveur
   useEffect(() => {
@@ -430,8 +470,9 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       const images = messageData.images || []
       
       // Optimistic UI pour l'expéditeur
+      const tempId = `tmp_${Date.now()}`
       const newMessage: Message = {
-        id: `tmp_${Date.now()}`,
+        id: tempId,
         content: messageData.content,
         type: (images.length > 0 ? 'IMAGE' : messageData.type) as any,
         isFromUser: true,
@@ -504,23 +545,25 @@ export default function ConversationPage({ params }: ConversationPageProps) {
           refetchConversation()
         }
 
-        // Utiliser le message renvoyé par l'API si disponible (cas non-DRAFT)
+        // Remplacer le message temporaire par le message réel de l'API
         if (data.data && typeof data.data === 'object') {
-          setMessages(prev => [...prev, data.data as Message])
-        } else {
-          // Fallback: construire le message localement (cas ACTIVATE)
-          const newMessage: Message = {
-            id: data.messageId || Date.now().toString(),
-            content: messageData.content,
-            type: (images.length > 0 ? 'IMAGE' : messageData.type) as any,
-            isFromUser: true,
-            conversationId,
-            senderId: session?.user?.id || "current-user",
-            readBy: [],
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          }
-          setMessages(prev => [...prev, newMessage])
+          setMessages(prev => prev.map(msg => 
+            msg.id === tempId && msg.senderId === session?.user?.id 
+              ? data.data as Message 
+              : msg
+          ))
+        } else if (data.messageId) {
+          // Fallback: remplacer le message temporaire par le message avec l'ID réel
+          setMessages(prev => prev.map(msg => 
+            msg.id === tempId && msg.senderId === session?.user?.id
+              ? {
+                  ...msg,
+                  id: data.messageId,
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString()
+                }
+              : msg
+          ))
         }
       }
       toast.success("Message envoyé !")
@@ -715,6 +758,21 @@ export default function ConversationPage({ params }: ConversationPageProps) {
                                 className="max-h-96 overflow-y-auto"
                               />
                             </div>
+                            
+                            {/* Gestion des paiements */}
+                            {appointmentPaymentData?.appointment && !isCurrentUserPro && (
+                              <div>
+                                <h4 className="font-medium mb-3">Gestion des paiements</h4>
+                                <PaymentManager
+                                  appointment={appointmentPaymentData.appointment}
+                                  currentUserId={session?.user?.id || ''}
+                                  onPaymentUpdate={() => {
+                                    refetchAppointmentPayment()
+                                    refetchAppointmentStatus()
+                                  }}
+                                />
+                              </div>
+                            )}
                             
                             {/* Debug des paiements (temporaire) */}
                             <div>

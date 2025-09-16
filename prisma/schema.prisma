@@ -238,6 +238,7 @@ model Payment {
   amount                Float
   currency              String        @default("EUR")
   status                PaymentStatus @default(PENDING)
+  type                  PaymentType   @default(DEPOSIT)
   stripePaymentIntentId String?       @unique
   stripeTransferId      String?       @unique
   description           String?
@@ -624,6 +625,12 @@ enum PaymentStatus {
   FAILED
   REFUNDED
   PARTIALLY_REFUNDED
+}
+
+enum PaymentType {
+  DEPOSIT
+  FULL_PAYMENT
+  REMAINING_BALANCE
 }
 
 enum NotificationType {
