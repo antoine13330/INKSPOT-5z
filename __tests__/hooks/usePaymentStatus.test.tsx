@@ -11,7 +11,11 @@ jest.mock('next-auth/react', () => ({
 const mockWebSocket = {
   readyState: 1, // WebSocket.OPEN
   close: jest.fn(),
-  send: jest.fn()
+  send: jest.fn(),
+  onmessage: null as ((event: any) => void) | null,
+  onerror: null as ((event: any) => void) | null,
+  onopen: null as ((event: any) => void) | null,
+  onclose: null as ((event: any) => void) | null
 }
 
 global.WebSocket = jest.fn(() => mockWebSocket) as any

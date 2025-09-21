@@ -26,20 +26,13 @@ export async function GET(request: NextRequest) {
         receiverId: proId 
       },
       include: {
-        sender: {
+        issuer: {
           select: {
             id: true,
             username: true,
             firstName: true,
             lastName: true,
             email: true
-          }
-        },
-        payment: {
-          select: {
-            status: true,
-            amount: true,
-            paidAt: true
           }
         }
       },
@@ -56,13 +49,13 @@ export async function GET(request: NextRequest) {
       amount: invoice.amount,
       currency: invoice.currency,
       description: invoice.description,
-      status: invoice.payment?.status === "COMPLETED" ? "paid" : "pending",
+      status: invoice.status === "PAID" ? "paid" : "pending",
       dueDate: invoice.dueDate,
       client: {
-        name: `${invoice.sender.firstName || ''} ${invoice.sender.lastName || ''}`.trim() || invoice.sender.username,
-        email: invoice.sender.email
+        name: `${invoice.issuer.firstName || ''} ${invoice.issuer.lastName || ''}`.trim() || invoice.issuer.username,
+        email: invoice.issuer.email
       },
-      paidAt: invoice.payment?.paidAt,
+      paidAt: invoice.paidAt,
       createdAt: invoice.createdAt
     }));
 
@@ -75,3 +68,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+

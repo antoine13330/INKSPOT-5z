@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       id: booking.id,
       title: booking.title,
       status: booking.status,
-      date: booking.appointmentDate,
+      date: booking.startDate,
       client: {
         name: `${booking.client.firstName || ''} ${booking.client.lastName || ''}`.trim() || booking.client.username,
         avatar: booking.client.avatar
@@ -73,3 +73,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+

@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const pendingBookings = await prisma.appointment.count({
       where: { 
         proId,
-        status: "PENDING"
+        status: "PROPOSED"
       }
     });
 
@@ -95,3 +95,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+

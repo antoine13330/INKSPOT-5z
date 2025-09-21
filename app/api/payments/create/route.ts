@@ -90,6 +90,11 @@ export async function POST(request: NextRequest) {
 
     // Create or get Stripe customer
     const client = appointment?.client || booking?.client;
+    
+    if (!client) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+    
     let customerId = client.stripeCustomerId;
     if (!customerId) {
       const customer = await createStripeCustomer(
