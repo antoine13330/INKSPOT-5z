@@ -14,7 +14,7 @@ import DocLayout from '../layouts/DocLayout.astro';
         <tr><td><strong>Numéro de document</strong></td><td>MMJ-INKSPOT-2026-001</td></tr>
         <tr><td><strong>Titre</strong></td><td>INKSPOT – Manuel de Mise à Jour</td></tr>
         <tr><td><strong>Version</strong></td><td>1.0</td></tr>
-        <tr><td><strong>Date</strong></td><td>31 mars 2026</td></tr>
+        <tr><td><strong>Date</strong></td><td>28 février 2026</td></tr>
         <tr><td><strong>Référentiel (validation Master)</strong></td><td>YNOV 2024 – Critère C2.4.1 (Manuel de mise à jour)</td></tr>
         <tr><td><strong>Public cible</strong></td><td>Équipe dev, équipe ops, mainteneurs</td></tr>
         <tr><td><strong>Rédacteur / Responsable</strong></td><td>DESPRES Antoine</td></tr>
@@ -31,7 +31,7 @@ import DocLayout from '../layouts/DocLayout.astro';
         </tr>
       </thead>
       <tbody>
-        <tr><td>1.0</td><td>31 mars 2026</td><td>Version initiale — procédures de mise à jour des dépendances, de l'application, migrations Prisma, SemVer — livrable autonome C2.4.1</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.0</td><td>28 février 2026</td><td>Version initiale — procédures de mise à jour des dépendances, de l'application, migrations Prisma, SemVer — livrable autonome C2.4.1</td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
     <div class="callout callout-info">
@@ -198,7 +198,15 @@ import DocLayout from '../layouts/DocLayout.astro';
     <ul class="list-tight">
       <li>Tag de release : <code>git tag v[MAJOR].[MINOR].[PATCH]</code></li>
       <li>Pousser le tag : <code>git push origin v[MAJOR].[MINOR].[PATCH]</code></li>
-      <li>Format recommandé pour les commits : <code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>chore:</code>, <code>refactor:</code>, <code>test:</code></li>
+    </ul>
+    <h3>Convention de commits (Conventional Commits)</h3>
+    <p>Tous les messages de commit doivent suivre la spécification <a href="https://www.conventionalcommits.org/">Conventional Commits</a> en anglais :</p>
+    <p><code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code></p>
+    <ul class="list-tight">
+      <li><strong>Types</strong> : <code>feat</code> (nouvelle fonctionnalité), <code>fix</code> (correction de bug), <code>docs</code> (documentation), <code>test</code> (ajout/modification de tests), <code>chore</code> (maintenance), <code>refactor</code> (refactoring sans changement fonctionnel), <code>ci</code> (CI/CD), <code>perf</code> (performance)</li>
+      <li><strong>Scopes optionnels</strong> : <code>auth</code>, <code>stripe</code>, <code>booking</code>, <code>e2e</code>, <code>a11y</code>, <code>prisma</code>, <code>docs</code></li>
+      <li><strong>Langue</strong> : anglais uniquement pour les messages de commit</li>
+      <li><strong>Exemples</strong> : <code>feat(auth): add password reset flow</code>, <code>fix(stripe): handle webhook signature verification</code>, <code>test(e2e): add payment flow tests</code></li>
     </ul>
   </div>
 

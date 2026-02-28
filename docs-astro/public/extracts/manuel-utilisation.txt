@@ -31,7 +31,7 @@ Responsable Antoine
 Master) techniques, sécurité, accessibilité, évolutivité)
  Référentiel (validation  YNOV 2024 – Critères CO2.4 (tests & couverture), CO2.5 (exigences
  Contenu   Chapitres 1–6, annexes A–H, référence technique
- Date   31 mars 2026
+ Date   28 février 2026
  Version   1.1
  Titre   INKSPOT – Manuel d’Utilisation Technique
 Numéro de document   MUT-INKSPOT-2026-001

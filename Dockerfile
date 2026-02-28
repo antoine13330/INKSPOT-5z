@@ -1,5 +1,5 @@
 # Dockerfile pour INKSPOT Next.js app
-FROM node:18-alpine AS base
+FROM node:22-alpine AS base
 
 # Installer les dépendances nécessaires
 RUN apk add --no-cache libc6-compat

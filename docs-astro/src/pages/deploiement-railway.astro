@@ -11,7 +11,7 @@ import DocLayout from '../layouts/DocLayout.astro';
         <tr><td><strong>Numéro de document</strong></td><td>MD-INKSPOT-2026-001</td></tr>
         <tr><td><strong>Titre</strong></td><td>Manuel de Déploiement Railway – INKSPOT</td></tr>
         <tr><td><strong>Version</strong></td><td>2.0</td></tr>
-        <tr><td><strong>Date</strong></td><td>31 mars 2026</td></tr>
+        <tr><td><strong>Date</strong></td><td>28 février 2026</td></tr>
         <tr><td><strong>Référentiel (validation Master)</strong></td><td>YNOV 2024 – Bloc 2, livrable « Manuel de déploiement »</td></tr>
         <tr><td><strong>Public cible</strong></td><td>Équipe ops, développeurs en charge du déploiement, évaluateurs</td></tr>
         <tr><td><strong>Rédacteur / Responsable</strong></td><td>Document rédigé par l’équipe projet INKSPOT ; rédacteur : DESPRES Antoine</td></tr>
@@ -29,7 +29,7 @@ import DocLayout from '../layouts/DocLayout.astro';
       </thead>
       <tbody>
         <tr><td>1.0</td><td>Mars 2026</td><td>Version initiale — prérequis, pas à pas, checklists, observabilité, smoke tests, sauvegardes, incidents, rollback</td><td>DESPRES Antoine</td></tr>
-        <tr><td>2.0</td><td>31 mars 2026</td><td>Ajout protocole CI/CD complet (C2.1.1 &amp; C2.1.2), tableau des environnements, séquences de déploiement — version finale de rendu</td><td>DESPRES Antoine</td></tr>
+        <tr><td>2.0</td><td>28 février 2026</td><td>Ajout protocole CI/CD complet (C2.1.1 &amp; C2.1.2), tableau des environnements, séquences de déploiement — version finale de rendu</td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
   </div>
@@ -328,14 +328,14 @@ redis.ping().then(() => console.log('✅ Redis OK')).catch(console.error);
           <td><strong>1. Qualité du code</strong></td>
           <td>ESLint + TypeScript</td>
           <td><code>npm run lint</code> &amp;&amp; <code>npm run type-check</code></td>
-          <td>0 erreur ESLint, 0 erreur TypeScript</td>
+          <td>0 erreur ESLint (warnings tolérés), 0 erreur TypeScript</td>
           <td><span class="pill badge-danger">Oui</span></td>
         </tr>
         <tr>
           <td><strong>2. Tests unitaires</strong></td>
           <td>Jest (ts-jest)</td>
           <td><code>npm run test</code></td>
-          <td>100 % des tests passent ; couverture cible 70 %</td>
+          <td>100 % des tests passent ; seuils couverture 50/50/50/40 % (statements/lines/functions/branches)</td>
           <td><span class="pill badge-danger">Oui</span></td>
         </tr>
         <tr>

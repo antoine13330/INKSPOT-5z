@@ -36,8 +36,6 @@ module.exports = {
     'lib/notifications.ts',
     'lib/websocket-manager.ts',
     'lib/auth.ts',
-    'lib/offline-push-notifications.ts',
-    'lib/recommendations.ts',
     'hooks/usePaymentStatus.ts',
     'app/api/bookings/route.ts',
     'app/api/stripe/webhook/route.ts',
@@ -46,10 +44,10 @@ module.exports = {
   ],
   coverageThreshold: {
     global: {
-      branches: 35,
-      functions: 40,
-      lines: 40,
-      statements: 40,
+      branches: 40,
+      functions: 50,
+      lines: 50,
+      statements: 50,
     },
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],

@@ -27,8 +27,8 @@ Entrées récentes à tracer
  Sommaire
  Rédacteur   DESPRES Antoine
  Public cible   Équipe dev, évaluateurs, mainteneurs
- Période couverte   2025-07-15 → 2026-03-31 (début développement → rendu final)
- Date   31 mars 2026
+ Période couverte   2025-07-15 → 2026-02-28 (début développement → rendu final)
+ Date   28 février 2026
  Version   1.1
  Titre   Rapport d’évolution INKSPOT-5z – Historique complet
 Numéro de document   CL-INKSPOT-2026-001
@@ -40,7 +40,7 @@ Changelog
  INKSPOT – Documentation   Page 2 / 4
  Migration Railway (remplacement Docker/VPS)
  🚀   Infrastructure & Déploiement (35+ commits)
- Détail par thème (171 commits)
+ Détail par thème (181 commits)
 07-15  
  0.0.1   chore Initialisation du dépôt — Social media app   4a5d3b3
 2025-
@@ -74,7 +74,7 @@ clés
  Version   Date   Type   Description  
 Commits
  Versions majeures
-Source : git log — 171+ commits (2025-07-15 → 2026-03-31)
+Source : git log — 181+ commits (2025-07-15 → 2026-02-28)
 corrigées, les nouvelles fonctionnalités et les évolutions de chaque version.
 versions déployées en y intégrant la documentation des correctifs réalisés ». Il retrace les anomalies
  Référentiel :   Ce journal répond au critère C4.3.2 du référentiel YNOV 2024 — « Établir un journal des
@@ -112,7 +112,7 @@ CO2.5 : audits accessibilité non exécutés.
 CO2.4 : E2E bloqués (timeout webServer).
  CO2.4 : Jest (ts-jest) opérationnel ;   npm run test:coverage   génère le rapport lcov.
  Écarts de conformité (bloc 2)
-Afficher la liste complète des 171 commits
+Afficher la liste complète des 181 commits
 Scan sécurité SARIF (GitHub Code Scanning)
 Rapport lcov ( coverage/lcov-report/ )
 Tests lazy-load, sécurité, Redis cache

@@ -31,12 +31,12 @@ Version   Date   Modifications   Auteur
  Historique des versions
 Responsable Projet InkSpot
  Rédacteur /  Document rédigé par l’équipe projet INKSPOT ; responsable recette : QA Lead –
-final apposé le 24 février 2026 ; version finale rendue le 31 mars 2026
+final apposé le 24 février 2026 ; version finale rendue le 28 février 2026
  Statut  
 Complet v1.3 – campagne de recette exécutée du 20 au 24 février 2026 ; sign-off
  Périmètre   Plateforme INKSPOT – aspects fonctionnels et techniques (sections 1 à 8)
  Référentiel   YNOV 2024 – Critère CO2.7 (cahier de recette complet)
- Date   31 mars 2026
+ Date   28 février 2026
  Version   1.3
  Titre   Plan de Tests – Plateforme INKSPOT (Cahier de Recette)
 document  
@@ -464,7 +464,7 @@ Exécutant   QA Lead – Projet InkSpot
 5z-production.up.railway.app)
  Environnement  
 Local   http://localhost:3003   (E2E Playwright) ou Railway (ex. https://inkspot-
-Version testée   release-v1.0 — branche   dev , commit   a8f3c21
+Version testée   release-v1.0 — branche   dev , commit   a86055b
 : 23 février 2026 — Sign-off : 24 février 2026
  Date de la campagne Exécution : 21 février 2026 — Correction anomalies : 22 février 2026 — Re-tests
 Préparation / ouverture : 20 février 2026 — Checklist : 20 février 2026 —
@@ -622,7 +622,7 @@ détection   estimé
 Date Délai
 50 % functions, 41,9 % branches — 341 tests passants, seuils validés.
 Jest recadré sur les modules critiques (lib/, hooks/, app/api/). Résultat : 50,6 % statements, 51,1 % lines,
- REC-002 (Sévérité HAUTE)   — Couverture unitaire — correction appliquée le 31 mars 2026 : scope
+ REC-002 (Sévérité HAUTE)   — Couverture unitaire — correction appliquée le 28 février 2026 : scope
 Aucune anomalie bloquante ouverte pour la recette courante au moment de la rédaction.
 Anomalies détectées lors des campagnes de recette, avec sévérité, statut et plan de correction daté.
 recette ».
@@ -658,14 +658,14 @@ La recette peut être considérée comme   terminée et acceptée   lorsque :
 WCAG 2.1) non attestée. http://localhost:3003   ou anomalies critiques (niveau
 003 (accessibilité RGAA 4.1 /  npx axe-cli axe/Lighthouse disponible,
 REC- Moyen — conformité CO2.5 Court terme (1 jour) : exécuter Rapport d’audit
-résolue le 31 mars 2026. 31 mars 2026.
+résolue le 28 février 2026. 28 février 2026.
 verts. Anomalie partiellement validés. branches. Anomalie résolue le
 (50/50/40/50 %). 341 tests, tous Stripe. Seuils de couverture 50 % functions, 41,9 %
 002
 critiques. Seuils Jest validés auth, réservations et paiements statements, 51,1 % lines,
 REC-
 statements sur les modules unitaires avec imports réels sur critiques. Couverture : 50,6 %
-recadrée et améliorée : 50,6 % Résolu le 31 mars 2026 : tests validés sur les modules
+recadrée et améliorée : 50,6 % Résolu le 28 février 2026 : tests validés sur les modules
 Risque réduit — couverture Seuils Jest (50/50/40/50 %)
 détectée sur le module paiement.
 Risque de régression non

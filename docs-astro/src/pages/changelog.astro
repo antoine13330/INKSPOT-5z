@@ -12,8 +12,8 @@ import DocLayout from '../layouts/DocLayout.astro';
         <tr><td><strong>Numéro de document</strong></td><td>CL-INKSPOT-2026-001</td></tr>
         <tr><td><strong>Titre</strong></td><td>Rapport d’évolution INKSPOT-5z – Historique complet</td></tr>
         <tr><td><strong>Version</strong></td><td>1.1</td></tr>
-        <tr><td><strong>Date</strong></td><td>31 mars 2026</td></tr>
-        <tr><td><strong>Période couverte</strong></td><td>2025-07-15 → 2026-03-31 (début développement → rendu final)</td></tr>
+        <tr><td><strong>Date</strong></td><td>28 février 2026</td></tr>
+        <tr><td><strong>Période couverte</strong></td><td>2025-07-15 → 2026-02-28 (début développement → rendu final)</td></tr>
         <tr><td><strong>Public cible</strong></td><td>Équipe dev, évaluateurs, mainteneurs</td></tr>
         <tr><td><strong>Rédacteur</strong></td><td>DESPRES Antoine</td></tr>
       </tbody>
@@ -47,9 +47,11 @@ import DocLayout from '../layouts/DocLayout.astro';
 
   <div class="card" id="format-convention">
     <h2 class="section-title">Format recommandé & convention</h2>
+    <p>Convention de commits : <a href="https://www.conventionalcommits.org/">Conventional Commits</a> en anglais — <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code></p>
     <ul class="list-tight">
-      <li><strong>Date / Version</strong> : format recommandé (ex. 0.5.0-docs).</li>
-      <li><strong>Type</strong> : feat (nouvelle fonctionnalité), fix (correction), docs (documentation), chore (maintenance), refactor, test.</li>
+      <li><strong>Date / Version</strong> : format SemVer (ex. 1.0.0, 0.5.0-docs).</li>
+      <li><strong>Types</strong> : <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>test</code>, <code>chore</code>, <code>refactor</code>, <code>ci</code>, <code>perf</code>.</li>
+      <li><strong>Scopes</strong> : <code>auth</code>, <code>stripe</code>, <code>booking</code>, <code>e2e</code>, <code>a11y</code>, <code>prisma</code>, <code>docs</code>.</li>
       <li><strong>Détails</strong> : tests ajoutés, couverture, contrôles sécurité/a11y, sections doc modifiées.</li>
       <li><strong>Références</strong> : tickets / PR / liens vers rapports tests.</li>
     </ul>
@@ -68,7 +70,7 @@ import DocLayout from '../layouts/DocLayout.astro';
       </thead>
       <tbody>
         <tr>
-          <td>2026-03-31</td>
+          <td>2026-02-28</td>
           <td>1.0.0</td>
           <td>docs</td>
           <td>
@@ -89,7 +91,7 @@ import DocLayout from '../layouts/DocLayout.astro';
           </td>
         </tr>
         <tr>
-          <td>2026-01-25</td>
+          <td>2026-02-28</td>
           <td>0.5.0-docs</td>
           <td>docs</td>
           <td>
@@ -98,7 +100,7 @@ import DocLayout from '../layouts/DocLayout.astro';
           </td>
         </tr>
         <tr>
-          <td>2026-01-25</td>
+          <td>2026-02-28</td>
           <td>0.5.0</td>
           <td>fix</td>
           <td>
@@ -115,7 +117,7 @@ import DocLayout from '../layouts/DocLayout.astro';
     <div class="callout callout-info">
       <strong>Référentiel :</strong> Ce journal répond au critère C4.3.2 du référentiel YNOV 2024 — « Établir un journal des versions déployées en y intégrant la documentation des correctifs réalisés ». Il retrace les anomalies corrigées, les nouvelles fonctionnalités et les évolutions de chaque version.
     </div>
-    <p class="pill badge-neutral">Source : git log — 171+ commits (2025-07-15 → 2026-03-31)</p>
+    <p class="pill badge-neutral">Source : git log — 181 commits (2025-07-15 → 2026-02-28)</p>
 
     <h3>Versions majeures</h3>
     <table role="grid" aria-label="Journal des versions majeures INKSPOT">
@@ -131,10 +133,10 @@ import DocLayout from '../layouts/DocLayout.astro';
       <tbody>
         <tr>
           <td><strong>1.0.0</strong></td>
-          <td>2026-03-31</td>
+          <td>2026-02-28</td>
           <td><span class="pill">docs</span></td>
           <td>Version finale de rendu — conformité référentiel YNOV 2024 complète (OWASP, RGAA, C2.1.1, C2.3.2, C2.4.1, C4.3.2)</td>
-          <td>—</td>
+          <td><code>3d4a0d3</code></td>
         </tr>
         <tr>
           <td><strong>0.6.0</strong></td>
@@ -145,17 +147,17 @@ import DocLayout from '../layouts/DocLayout.astro';
         </tr>
         <tr>
           <td><strong>0.5.0-docs</strong></td>
-          <td>2026-01-25</td>
+          <td>2026-02-28</td>
           <td><span class="pill">docs</span></td>
           <td>Mise à jour bloc 2 : cahier de recette détaillé, sections sécurité/accessibilité, synthèse coverage lcov, pipeline CI/CD</td>
-          <td><code>a86055b</code></td>
+          <td><code>701b5a2</code></td>
         </tr>
         <tr>
           <td><strong>0.5.0</strong></td>
-          <td>2026-01-25</td>
+          <td>2026-02-28</td>
           <td><span class="pill">fix</span></td>
           <td>Build Astro stabilisé (downgrade + simplification layout), suppression de doublons de contenu</td>
-          <td><code>a86055b</code></td>
+          <td><code>2a55b68</code></td>
         </tr>
         <tr>
           <td><strong>0.4.0</strong></td>
@@ -195,7 +197,7 @@ import DocLayout from '../layouts/DocLayout.astro';
       </tbody>
     </table>
 
-    <h3>Détail par thème (171 commits)</h3>
+    <h3>Détail par thème (181 commits)</h3>
     <div class="two-col">
       <div>
         <p><strong>🚀 Infrastructure &amp; Déploiement (35+ commits)</strong></p>
@@ -235,7 +237,7 @@ import DocLayout from '../layouts/DocLayout.astro';
     </div>
 
     <details>
-      <summary>Afficher la liste complète des 171 commits</summary>
+      <summary>Afficher la liste complète des 181 commits</summary>
       <ul class="list-tight">
         <li><code>a86055b</code> — 2025-09-21 — fix: Corriger les erreurs TypeScript pour le build Railway</li>
         <li><code>68c6db1</code> — 2025-09-16 — 💾 for prez</li>
