@@ -1,4 +1,4 @@
-﻿---
+---
 import DocLayout from '../layouts/DocLayout.astro';
 ---
 
@@ -853,15 +853,20 @@ import DocLayout from '../layouts/DocLayout.astro';
       <li>Jest utilise ts-jest (plus d’erreur SWC) ; les tests unitaires et la couverture s’exécutent correctement.</li>
       <li><strong>Couverture mesurÃ©e (campagne corrective REC-002, 31 mars 2026)</strong> : statements 50,6 %, lines 51,1 %, functions 50 %, branches 41,9 % â€” pÃ©rimÃ¨tre : modules critiques (<code>lib/</code>, <code>hooks/</code>, <code>app/api/bookings</code>, <code>app/api/stripe/webhook</code>, <code>app/api/security/alerts</code>). 341 tests passants, 30 suites. <strong>Seuils Jest</strong> : branches 40 %, functions 50 %, lines 50 %, statements 50 % â€” tous validÃ©s.</li>
     </ul>
+    <div class="callout callout-info">
+      <strong>Note sur le périmètre de couverture :</strong> Les chiffres de couverture (50,6 % statements, 51,1 % lines, 50 % functions, 41,9 % branches) sont mesurés sur un <strong>périmètre restreint de 11 fichiers critiques</strong> défini dans <code>jest.config.js</code> (<code>collectCoverageFrom</code>) : <code>lib/auth.ts</code>, <code>lib/redis-cache.ts</code>, <code>lib/validation.ts</code>, <code>lib/performance-monitor.ts</code>, <code>lib/notifications.ts</code>, <code>lib/websocket-manager.ts</code>, <code>hooks/usePaymentStatus.ts</code>, <code>app/api/bookings/route.ts</code>, <code>app/api/stripe/webhook/route.ts</code>, <code>app/api/security/alerts/route.ts</code>, <code>app/profile/page.tsx</code>. La couverture globale du projet (15 000+ statements) est significativement inférieure. Ce choix méthodologique permet de concentrer les efforts de test sur les modules métier les plus critiques (authentification, paiements, réservations, cache, notifications).
+    </div>
   </div>
 
   <div class="card" id="a11y">
     <h2 class="section-title">Accessibilité (CO2.5)</h2>
-    <p class="pill badge-warning">Statut : Planifié — audit non encore exécuté (voir anomalie REC-003).</p>
+    <p class="pill badge-success">Statut : Audit exécuté — violations critiques corrigées (REC-003 résolu).</p>
     <ul class="list-tight">
-      <li><strong>Checklist à valider</strong> : attributs aria/labels présents, focus visible, navigation clavier fonctionnelle, contrastes AA (WCAG 2.1).</li>
-      <li><strong>Audit à exécuter</strong> : <code>npx axe-cli http://localhost:3003</code> ou Lighthouse CI (<code>npx lhci autorun</code>). Documenter les résultats dans le rapport de recette.</li>
-      <li><strong>Impact</strong> : en l'absence de résultats d'audit, la conformité CO2.5 ne peut pas être attestée. L'audit doit être réalisé et ses résultats consignés avant la validation finale.</li>
+      <li><strong>Outil</strong> : <code>@axe-core/playwright</code> (axe-core 4.11.1) — test E2E automatisé dans <code>e2e/accessibility-audit.spec.ts</code>.</li>
+      <li><strong>Pages auditées</strong> : Homepage (/), Login (/auth/login), Register (/auth/register), Reset Password (/auth/reset-password).</li>
+      <li><strong>Règles testées</strong> : WCAG 2.0 A, WCAG 2.0 AA, WCAG 2.1 A, WCAG 2.1 AA.</li>
+      <li><strong>Résultat</strong> : 1 violation critique identifiée (<code>button-name</code> — boutons de visibilité mot de passe sans <code>aria-label</code>) — <strong>corrigée</strong> sur les pages login, register, reset-password. Violations sérieuses documentées : <code>color-contrast</code> (1 instance par page), <code>link-in-text-block</code> (1 instance par page) — améliorations planifiées.</li>
+      <li><strong>Script</strong> : <code>npm run a11y:audit</code> (nécessite le serveur de dev actif sur le port 3000).</li>
     </ul>
   </div>
 
