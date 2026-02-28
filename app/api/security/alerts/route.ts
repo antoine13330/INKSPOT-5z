@@ -13,6 +13,12 @@ interface SecurityAlertFilters {
 }
 
 export async function GET(request: NextRequest) {
+  const clientIp =
+    request.headers.get('x-forwarded-for') ||
+    request.headers.get('x-real-ip') ||
+    '127.0.0.1'
+  const userAgent = request.headers.get('user-agent') || 'unknown'
+
   try {
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type')
@@ -37,8 +43,8 @@ export async function GET(request: NextRequest) {
       'GET_SECURITY_ALERTS',
       'security/alerts',
       true,
-      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
-      request.headers.get('user-agent') || 'unknown',
+      clientIp,
+      userAgent,
       { filters, alertCount: alerts.length }
     )
 
@@ -50,15 +56,9 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching security alerts:', error)
     
-    await auditLogger.logDataAccessEvent(
-      'admin',
-      'GET_SECURITY_ALERTS',
-      'security/alerts',
-      false,
-      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
-      request.headers.get('user-agent') || 'unknown',
-      { error: error instanceof Error ? error.message : 'Unknown error' }
-    )
+    await auditLogger.logDataAccessEvent('admin', 'GET_SECURITY_ALERTS', 'security/alerts', false, clientIp, userAgent, {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
 
     return NextResponse.json(
       { error: 'Failed to fetch security alerts' },
@@ -68,6 +68,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const clientIp =
+    request.headers.get('x-forwarded-for') ||
+    request.headers.get('x-real-ip') ||
+    '127.0.0.1'
+  const userAgent = request.headers.get('user-agent') || 'unknown'
+
   try {
     const body = await request.json()
     const { type, severity, title, description, source, metadata } = body
@@ -95,8 +101,8 @@ export async function POST(request: NextRequest) {
       'CREATE_SECURITY_ALERT',
       'security/alerts',
       true,
-      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
-      request.headers.get('user-agent') || 'unknown',
+      clientIp,
+      userAgent,
       { alertId, type, severity, title }
     )
 
@@ -107,15 +113,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating security alert:', error)
     
-    await auditLogger.logDataAccessEvent(
-      'admin',
-      'CREATE_SECURITY_ALERT',
-      'security/alerts',
-      false,
-      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
-      request.headers.get('user-agent') || 'unknown',
-      { error: error instanceof Error ? error.message : 'Unknown error' }
-    )
+    await auditLogger.logDataAccessEvent('admin', 'CREATE_SECURITY_ALERT', 'security/alerts', false, clientIp, userAgent, {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
 
     return NextResponse.json(
       { error: 'Failed to create security alert' },

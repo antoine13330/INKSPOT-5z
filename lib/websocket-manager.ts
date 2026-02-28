@@ -40,7 +40,10 @@ class WebSocketManager {
           return
         }
 
-        const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/websocket`
+        const isBrowser = typeof window !== 'undefined'
+        const wsUrl = isBrowser
+          ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/websocket`
+          : 'ws://localhost:3001/api/websocket'
         const ws = new WebSocket(wsUrl)
         
         // Stocker le gestionnaire de messages
@@ -134,7 +137,8 @@ class WebSocketManager {
   // Envoyer un message
   send(userId: string, message: any): boolean {
     const connection = this.connections.get(userId)
-    if (connection && connection.readyState === WebSocket.OPEN) {
+    const OPEN_STATE = (typeof WebSocket !== 'undefined' && (WebSocket as any).OPEN) || 1
+    if (connection && connection.readyState === OPEN_STATE) {
       connection.send(JSON.stringify(message))
       return true
     } else {
@@ -146,7 +150,8 @@ class WebSocketManager {
   // Vérifier si un utilisateur est connecté
   isConnected(userId: string): boolean {
     const connection = this.connections.get(userId)
-    return connection?.readyState === WebSocket.OPEN
+    const OPEN_STATE = (typeof WebSocket !== 'undefined' && (WebSocket as any).OPEN) || 1
+    return connection?.readyState === OPEN_STATE
   }
 
   // Obtenir le nombre de connexions actives

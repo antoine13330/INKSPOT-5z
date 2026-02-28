@@ -166,6 +166,12 @@ export async function sendNotificationToUser(userId: string, payload: Notificati
 }
 
 export function subscribeToPush(subscription: PushSubscription) {
+  // Validation minimale côté serveur/tests
+  if (!subscription?.endpoint || !subscription?.keys?.p256dh || !subscription?.keys?.auth) {
+    throw new Error('Invalid subscription')
+  }
+
+  // Côté client (navigateur), on souscrit réellement
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then((registration) => {
       registration.pushManager.subscribe({
