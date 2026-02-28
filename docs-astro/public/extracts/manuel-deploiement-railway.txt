@@ -1,0 +1,356 @@
+ INKSPOT – Documentation   Page 1 / 9
+Table des sections
+Liens et ressources
+ Checklists déploiement
+ 8. Troubleshooting
+7. Tests et vérification
+ 6. Configuration post-déploiement
+ 5. Déploiement de l’application
+4. Variables d’environnement
+ 3. Configuration des services
+ 2. Création du projet Railway
+ 1. Prérequis et préparation
+Résumé exécutif
+ Informations du document
+ Sommaire
+pratiques.
+TypeScript/Prisma/dépendances), checklists avant/pendant/après, liens de production et bonnes
+check, métriques, Redis, DB, Prometheus, Grafana), troubleshooting (build
+surveillance), configuration post-déploiement (Grafana, webhooks Stripe), tests et vérification (health
+l’ordre critique, variables d’environnement (template, Raw Editor), déploiement automatique (git push,
+Railway, configuration des services (PostgreSQL, Redis, Prometheus, Grafana, INKSPOT-5z) dans
+ Contenu couvert : prérequis et préparation (comptes, clés, configuration locale), création du projet
+ Résumé exécutif
+2026 environnements, séquences de déploiement — version finale de rendu Antoine
+2.0  
+31 mars Ajout protocole CI/CD complet (C2.1.1 & C2.1.2), tableau des DESPRES
+2026 smoke tests, sauvegardes, incidents, rollback Antoine
+ 1.0  
+Mars Version initiale — prérequis, pas à pas, checklists, observabilité, DESPRES
+Version   Date   Modifications   Auteur
+ Historique des versions
+Antoine
+ Rédacteur / Responsable  
+Document rédigé par l’équipe projet INKSPOT ; rédacteur : DESPRES
+ Public cible   Équipe ops, développeurs en charge du déploiement, évaluateurs
+Master)  
+YNOV 2024 – Bloc 2, livrable « Manuel de déploiement »
+ Référentiel (validation
+ Date   31 mars 2026
+ Version   2.0
+ Titre   Manuel de Déploiement Railway – INKSPOT
+Numéro de document   MD-INKSPOT-2026-001
+ Élément   Valeur
+ Informations du document
+Manuel de Déploiement Railway
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 2 / 9
+services de support soient opérationnels.
+ Ordre CRITIQUE des services   : ne jamais configurer l’application principale avant que tous les
+ 3. Configuration des services
+ ⚠   Important   : Attendez que le premier déploiement soit terminé avant de continuer.
+ Lier le projet local au projet Railway :   railway link
+ Dans votre terminal local :   railway login
+ Étape 2 : Configuration initiale
+ 7. Cliquer sur « Deploy Now »
+6. Nommer le projet :   inkspot-production
+5. Sélectionner le repository INKSPOT-5z
+4. Choisir « Deploy from GitHub repo »
+3. Cliquer sur « New Project »
+2. Se connecter avec votre compte GitHub
+ 1. Aller sur Railway.app
+ Étape 1 : Créer le projet
+ 2. Création du projet Railway
+Repository cloné localement
+ Git configuré avec vos identifiants
+Railway CLI installé :   npm install -g @railway/cli
+ Node.js 22 installé ( node --version   — voir   .nvmrc )
+ Configuration locale
+ VAPID   : Public Key, Private Key (pour notifications push)
+ Google OAuth   : Client ID, Client Secret
+ Stripe   : Secret Key, Publishable Key, Webhook Secret
+ AWS S3   : Access Key ID, Secret Access Key, Region, Bucket name
+ Clés et secrets à récupérer
+ Compte Google Cloud   : pour OAuth (Client ID + Secret)
+ Compte Stripe   : mode test ou production
+ Compte AWS   : pour S3 (clés d’accès, bucket)
+ Compte GitHub   : avec accès au repository INKSPOT-5z
+ Compte Railway   : créé et vérifié sur railway.app
+ Comptes et accès
+ Ce que vous devez avoir AVANT de commencer
+1. Prérequis et préparation
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 3 / 9
+ PROMETHEUS_STORAGE_TSDB_RETENTION_TIME=15d .
+ Étape 3.2 : Variables   —   PROMETHEUS_PORT=9090 ,   PROMETHEUS_STORAGE_TSDB_PATH=/prometheus ,
+production .
+ Étape 3.1 : Créer le service   — New Service → Template → Prometheus, nommer   prometheus-
+ Service 3 : Prometheus
+"
+redis.ping().then(() => console.log(' ✅   Redis OK')).catch(console.error);
+const redis = new Redis(process.env.REDIS_URL);
+const Redis = require('ioredis');
+ railway run node -e "
+ Étape 2.3 : Tester la connexion
+ Étape 2.2 : Récupérer les informations   — Connect, copier l’URL, noter le mot de passe.
+ 4. Attendre que le service soit créé
+3. Nommer :   redis-production
+2. Choisir « Database » → « Redis »
+ 1. Railway Dashboard → « New Service »
+ Étape 2.1 : Créer le service
+ Service 2 : Redis
+ Via Railway CLI :   railway run npx prisma db push . Succès si la commande s’exécute sans erreur.
+ Étape 1.3 : Tester la connexion
+4. Noter le mot de passe généré
+3. Copier l’URL de connexion complète
+2. Aller dans l’onglet « Connect »
+ 1. Cliquer sur le service PostgreSQL
+ Étape 1.2 : Récupérer les informations
+ 4. Attendre que le service soit créé (statut « Deployed »)
+3. Nommer :   postgres-production
+2. Choisir « Database » → « PostgreSQL »
+ 1. Dans Railway Dashboard → « New Service »
+ Étape 1.1 : Créer le service
+ Service 1 : PostgreSQL
+5. INKSPOT-5z (application principale)
+4. Grafana (dashboards)
+3. Prometheus (monitoring)
+2. Redis (cache)
+1. PostgreSQL (base de données)
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 4 / 9
+ REDIS_URL   Optionnel   Cache/sessions
+ VAPID_PUBLIC_KEY   Si push activé Notifications web push
+ AWS_S3_BUCKET   Oui   Stockage médias
+ STRIPE_WEBHOOK_SECRET   Oui   Validation webhooks Stripe
+ STRIPE_SECRET_KEY   Oui   Clé Stripe côté serveur
+ NEXTAUTH_SECRET   Oui   Signature sessions
+ NEXTAUTH_URL   Oui   URL publique de l’app
+ DATABASE_URL   Oui   Connexion PostgreSQL
+ Variable   Requis   Usage
+Vérifier :   railway variables list ,   railway status .
+ REDIS_URL=${{Redis.REDIS_URL}}   — ces variables sont automatiquement remplies par Railway.
+ Base de données et Redis   :   DATABASE_URL=${{Postgres.DATABASE_URL}} ,
+<votre-id-projet>   (visible dans le dashboard Railway).
+ Variables de base   :   NODE_ENV=production ,   RAILWAY_ENVIRONMENT=production ,   RAILWAY_PROJECT_ID=
+ Étape 3 : Remplacer les valeurs par vos vraies clés
+ Copier-coller   TOUT   le contenu de   docs/railway-variables-template.env   dans le Raw Editor.
+ Étape 2 : Coller toutes les variables
+3. Cliquer sur « Raw Editor »
+2. Aller dans l’onglet « Variables »
+ 1. Dans Railway Dashboard, cliquer sur le service INKSPOT-5z
+ Étape 1 : Aller dans l’application principale
+ ⚠   Ne faire cette étape qu’APRÈS avoir configuré tous les services de support.
+ 4. Variables d’environnement
+manuellement avant d’avoir configuré tous les services de support ci-dessus.
+ ⚠   Attention   : Ce service sera créé automatiquement lors du premier déploiement. Ne le configurez PAS
+ Service 5 : INKSPOT-5z (application principale)
+ GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource .
+passe-grafana   (remplacer par un mot de passe sécurisé),   GF_SERVER_HTTP_PORT=3000 ,
+ Étape 4.2 : Variables   —   GF_SECURITY_ADMIN_USER=admin ,   GF_SECURITY_ADMIN_PASSWORD=votre-mot-de-
+ Étape 4.1 : Créer le service   — New Service → Template → Grafana, nommer   grafana-production .
+ Service 4 : Grafana
+app, postgres, redis).
+Étape 3.3 : Configuration des cibles   — Créer   prometheus.yml   (scrape_configs : prometheus, inkspot-
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 5 / 9
+ 7. Tests et vérification
+ Succès si les webhooks reçoivent les événements et répondent correctement.
+service>.up.railway.app/api/webhooks/stripe-appointments
+ Webhook rendez-vous :   stripe listen --forward-to https://<votre-
+service>.up.railway.app/api/stripe/webhook
+ Webhook principal :   stripe listen --forward-to https://<votre-
+ Étape 2 : Vérification des webhooks Stripe
+disponibles.
+ 1.3 Importer les dashboards   — Dashboards → Import, importer les dashboards INKSPOT si
+source → Prometheus, URL   http://prometheus:9090 , Access: Proxy, Save & Test.
+ 1.2 Ajouter Prometheus comme source de données   — Configuration → Data Sources → Add data
+ GF_SECURITY_ADMIN_PASSWORD .
+<id>.up.railway.app , visible dans le dashboard Railway), login   admin , password =
+ 1.1 Se connecter à Grafana   — Aller sur l’URL de Grafana (ex.   https://grafana-production-
+ Étape 1 : Configuration Grafana
+ 6. Configuration post-déploiement
+ ⚠   ATTENTION   : Le premier déploiement peut prendre 5–10 minutes.
+4. Attendre que le statut soit « Deployed »
+3. Surveiller l’onglet « Deployments »
+2. Cliquer sur le service INKSPOT-5z
+ 1. Aller dans Railway Dashboard
+ Étape 3 : Surveillance du déploiement
+les health checks.
+ Railway va automatiquement : détecter les changements, lancer le build, déployer l’application, exécuter
+ git push origin main
+ 1. Faire un push sur la branche   main   :   git add . ,   git commit -m "Configuration Railway complète" ,
+ Étape 2 : Déploiement automatique
+ railway variables list   — vérifier que les variables sont configurées
+ railway status   — vérifier que tous les services sont actifs
+ Étape 1 : Vérification pré-déploiement
+5. Déploiement de l’application
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 6 / 9
+ ☐   Monitoring opérationnel
+ ☐   Métriques exposées et accessibles
+ ☐   Tests de connectivité réussis
+ Après le déploiement
+ ☐   Tous les endpoints fonctionnels
+ ☐   Application accessible via l’URL Railway
+ ☐   Health check réussi
+ ☐   Déploiement terminé avec succès
+ ☐   Build réussi sans erreurs
+ Pendant le déploiement
+ ☐   Application testée localement avec les variables de production
+ ☐   Grafana configuré et accessible
+ ☐   Prometheus configuré et accessible
+ ☐   Redis configuré et accessible
+ ☐   Base de données initialisée et accessible
+ ☐   Toutes les variables d’environnement configurées
+ ☐   Tous les services Railway créés (5 services)
+ Avant le déploiement
+ Checklists déploiement
+ 4. Vérifier les variables d’environnement :   npm run env:check
+ 3. Vérifier Prisma :   npx prisma validate ,   npx prisma generate
+ 2. Vérifier les dépendances :   npm ci --only=production
+1. Vérifier les erreurs TypeScript :   npm run type-check
+ Solutions   :
+ Symptômes   : Build échoue avec erreurs TypeScript, erreurs de dépendances ou erreurs Prisma.
+ Problème 1 : Build échoue
+ 8. Troubleshooting
+ {"database":"ok","version":"..."}
+ Test 7 : Grafana   —   curl https://<url-grafana>/api/health   →
+ Test 6 : Prometheus   —   curl https://<url-prometheus>/-/healthy   → « Prometheus is Healthy. »
+(process.env.REDIS_URL).ping().then(()=>console.log('OK'))"   → « Redis OK »
+ Test 5 : Redis   —   railway run node -e "require('ioredis')
+ Test 4 : Base de données   —   railway run npx prisma db push   (sans erreur)
+ Test 3 : Page d’accueil   —   curl https://<votre-service>.up.railway.app/   → page HTML
+ → métriques au format Prometheus
+ Test 2 : Métriques Prometheus   —   curl https://<votre-service>.up.railway.app/api/metrics
+ {"status":"ok"}
+Test 1 : Health Check   —   curl https://<votre-service>.up.railway.app/api/health   →
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 7 / 9
+ Tests réguliers   : exécution automatique de la suite Jest à chaque PR et push sur   dev .
+ Fusion des codes sources   : via Pull Request avec revue de code obligatoire avant merge sur   dev .
+branches de fonctionnalité   feature/* , branches de correction   fix/* .
+ Dépôt de gestion du code source   : GitHub ( antoine13330/INKSPOT-5z ) — branche principale   dev ,
+ Protocole d’intégration continue (C2.1.2)
+Playwright scénarios critiques réponse < 2s  
+ 8. Smoke tests   Oui
+curl /  GET /api/health   + HTTP 200, temps de
+deploy appliquées sans erreur  
+ 7. Migrations DB   Prisma   Oui
+npx prisma migrate  Toutes les migrations
+Railway   Healthy »  
+Railway CLI   Automatique (push git)   Oui
+ 6. Déploiement Service Railway en état «
+SARIF Code Scanning haute  
+ 5. Scan sécurité   Oui
+npm audit +  npm audit   + GitHub 0 vulnérabilité critique ou
+Docker   Docker produit  
+ 4. Build   npm run build   Oui
+Next.js + Build sans erreur ; artefact
+paiement passés  
+ 3. Tests E2E   Playwright   npm run test:e2e   Conditionnel
+Scénarios auth, réservation,
+couverture cible 70 %  
+ 2. Tests unitaires   Jest (ts-jest)   npm run test   Oui
+100 % des tests passent ;
+code TypeScript run type-check TypeScript  
+Oui
+1. Qualité du  ESLint +  npm run lint   &&   npm  0 erreur ESLint, 0 erreur
+ Étape   Outil   Commande   Critère de qualité   Bloquant
+ (CI). Tout push sur la branche   dev   déclenche automatiquement le pipeline suivant :
+ Le protocole de déploiement continu INKSPOT est basé sur   Railway   (hébergement) et   GitHub Actions
+ Protocole de déploiement continu
+du référentiel YNOV 2024.
+développement et de déploiement continu) et C2.1.2 (configuration du système d’intégration continue)
+ Référentiel :   Cette section répond aux critères C2.1.1 (mise en œuvre des environnements de
+ Pipeline CI/CD (C2.1.1 & C2.1.2)
+Healthcheck :   /api/health   ou   /api/health/simple
+Seed optionnelle :   npm run db:seed   si contexte de démo
+ Migrations : avant start :   prisma migrate deploy   (ou   npm run db:migrate )
+Commandes :   npm run build   puis   npm start
+ Dockerfile (Next.js) + Nginx reverse-proxy ; Railway builder DOCKERFILE
+ Build, migrations et commandes
+sauvegarder régulièrement la base de données ; tester les fonctionnalités critiques régulièrement.
+ N’oubliez pas   : Surveiller régulièrement les métriques et logs ; maintenir les services à jour ;
+ ☐   Performance dans les normes attendues
+☐   Logs sans erreurs critiques
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 8 / 9
+ Secrets & rollback
+Documenter l’incident et la résolution
+Rollback si incident critique
+Analyser logs + métriques ; isoler la cause
+ Identifier le scope (auth, paiement, upload, DB)
+ Gestion des incidents
+Limiter les uploads volumineux (taille/format)
+Optimiser cache Redis pour pages/queries fréquentes
+ Augmenter les ressources Railway en cas de charge
+ Scalabilité & performance
+Sauvegardes S3 (versioning si activé)
+Procédure de restauration documentée (test trimestriel)
+ Backups DB planifiés (quotidiens) + conservation 7/30 jours
+ Sauvegardes & restauration
+Healthcheck :   /api/health   OK
+Notifications : envoi/réception (si push activé)
+Upload : image → affichage
+Paiement Stripe (mode test) : checkout, vérif commission
+Réservation : création d’un créneau test, consultation
+ Auth : login/logout
+ Smoke tests post-déploiement
+Secrets : rotation, accès minimal, variables d’env Railway
+Métriques : Prometheus/Grafana, alertes sur erreurs 5xx
+ Logs applicatifs + Nginx ; centralisation si possible
+ Observabilité & sécurité
+ Production   dev   (merge) URL Railway production Utilisateurs finaux
+ Staging / Preview   dev   (PR)   Railway Preview URL   Recette, tests E2E, validation fonctionnelle
+Développement   feature/*   http://localhost:3003   Développement local, tests unitaires
+ Environnement   Branche   URL   Usage
+ Environnements de déploiement
+ Outils de gestion de sources   : Git + GitHub (branches, tags, releases).
+ Serveur d’application   : Next.js 15 (Node.js 22) sur Railway.
+ Compilateur   : TypeScript (tsc) + SWC (transpilation rapide pour les tests).
+régressions avant le déploiement en production.
+Réduction des risques de régression   : les tests unitaires (Jest) et E2E (Playwright) détectent les
+ INKSPOT   · Documentation   Déploiement Railway
+
+ INKSPOT – Documentation   Page 9 / 9
+déploiement du bloc 2 (référentiel YNOV 2024).
+ Manuel de Déploiement Railway – INKSPOT.   Ce document constitue le livrable officiel du manuel de
+ Référence document
+ Liens et ressources, Félicitations   Oui   #liens-ressources
+ Checklists avant/pendant/après   Oui   #checklists
+ 8. Troubleshooting   Oui   #troubleshooting
+ 7. Tests et vérification   Oui   #tests-verif
+ 6. Configuration post-déploiement (Grafana, webhooks Stripe)   Oui   #config-post
+ 5. Déploiement de l’application   Oui   #deploiement
+ 4. Variables d’environnement   Oui   #env-table
+INKSPOT-5z)   services
+Oui  
+ 3. Configuration des services (PostgreSQL, Redis, Prometheus, Grafana, #configuration-
+ 2. Création du projet Railway   Oui   #creation-projet
+ 1. Prérequis et préparation   Oui   #prerequis
+ Section   Présent   Emplacement
+ Index des sections de ce manuel :
+ Table des sections
+uploads, etc.) opérationnelles.
+système de monitoring complet (Prometheus et Grafana), et toutes les fonctionnalités (auth, paiements,
+déployée et fonctionnelle sur Railway, une base PostgreSQL gérée, un cache Redis opérationnel, un
+ Félicitations   : Si vous avez suivi ce guide étape par étape, vous devriez avoir une application INKSPOT
+ Grafana :   https://grafana-production-<id>.up.railway.app
+Prometheus :   https://prometheus-production-<id>.up.railway.app
+ Application :   https://<votre-service>.up.railway.app   (ou l’URL de votre service)
+Railway Dashboard :   https://railway.app/project/<votre-project-id>
+Railway) :
+ URLs de production   (à adapter à votre projet ; les URLs réelles sont visibles dans le dashboard
+ Liens et ressources
+Webhooks Stripe : vérifier signature/endpoint après chaque déploiement
+Rollback : réutiliser image précédente ou revert commit, redéployer
+Secrets gérés dans Railway ; rotation recommandée
+ INKSPOT   · Documentation   Déploiement Railway

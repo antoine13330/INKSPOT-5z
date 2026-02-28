@@ -37,6 +37,11 @@ next-env.d.ts
 test-results/
 playwright-report/
 playwright/.cache/
+coverage/
+
+# Cursor IDE
+.cursor/plans/
+.cursor/rules/
 
 # Cache directories
 .npm-cache/
@@ -65,3 +70,11 @@ Thumbs.db
 # Monitoring
 monitoring/grafana/data/
 monitoring/prometheus/data/
+
+# PDF documents at root (copies, not source)
+*.pdf
+
+# Generated doc artifacts
+docs-astro/dist/
+docs-astro/dist-pdf/
+scripts/pdf-extracts/

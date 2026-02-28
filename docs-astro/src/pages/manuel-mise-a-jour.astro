@@ -1,0 +1,292 @@
+---
+import DocLayout from '../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Manuel de Mise à Jour – INKSPOT">
+
+  <div class="card" id="infos-document">
+    <h2 class="section-title">Informations du document</h2>
+    <table role="grid" aria-label="Métadonnées du manuel de mise à jour">
+      <thead>
+        <tr><th scope="col">Élément</th><th scope="col">Valeur</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Numéro de document</strong></td><td>MMJ-INKSPOT-2026-001</td></tr>
+        <tr><td><strong>Titre</strong></td><td>INKSPOT – Manuel de Mise à Jour</td></tr>
+        <tr><td><strong>Version</strong></td><td>1.0</td></tr>
+        <tr><td><strong>Date</strong></td><td>31 mars 2026</td></tr>
+        <tr><td><strong>Référentiel (validation Master)</strong></td><td>YNOV 2024 – Critère C2.4.1 (Manuel de mise à jour)</td></tr>
+        <tr><td><strong>Public cible</strong></td><td>Équipe dev, équipe ops, mainteneurs</td></tr>
+        <tr><td><strong>Rédacteur / Responsable</strong></td><td>DESPRES Antoine</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Historique des versions</strong></p>
+    <table role="grid" aria-label="Historique des versions du manuel de mise à jour">
+      <thead>
+        <tr>
+          <th scope="col">Version</th>
+          <th scope="col">Date</th>
+          <th scope="col">Modifications</th>
+          <th scope="col">Auteur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1.0</td><td>31 mars 2026</td><td>Version initiale — procédures de mise à jour des dépendances, de l'application, migrations Prisma, SemVer — livrable autonome C2.4.1</td><td>DESPRES Antoine</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-info">
+      <strong>Référentiel :</strong> Ce document répond au critère C2.4.1 du référentiel YNOV 2024 — « Rédiger la documentation technique d'exploitation du logiciel détaillant son fonctionnement afin d'assurer une traçabilité pour le suivi des équipes et des futures évolutions du logiciel — Le manuel de mise à jour. »
+    </div>
+  </div>
+
+  <div class="card toc">
+    <strong>Sommaire</strong>
+    <ul class="list-tight">
+      <li><a href="#infos-document">Informations du document</a></li>
+      <li><a href="#prerequis">Prérequis</a></li>
+      <li><a href="#dependances">1. Mise à jour des dépendances</a></li>
+      <li><a href="#application">2. Mise à jour de l'application</a></li>
+      <li><a href="#migrations">3. Migrations de base de données</a></li>
+      <li><a href="#semver">4. Gestion des versions (SemVer)</a></li>
+      <li><a href="#checklist">5. Checklist de mise à jour</a></li>
+      <li><a href="#rollback">6. Procédure de rollback</a></li>
+      <li><a href="#references">Références croisées</a></li>
+    </ul>
+  </div>
+
+  <div class="card" id="prerequis">
+    <h2 class="section-title">Prérequis</h2>
+    <ul class="list-tight">
+      <li>Accès au repository GitHub : <code>antoine13330/INKSPOT-5z</code></li>
+      <li>Accès au dashboard Railway : <a href="https://railway.app">railway.app</a></li>
+      <li>Node.js 22 installé localement (<code>nvm use</code> selon <code>.nvmrc</code>)</li>
+      <li>Railway CLI installé : <code>npm install -g @railway/cli</code></li>
+      <li>Variables d'environnement configurées (voir <a href="/deploiement-railway">Manuel de Déploiement Railway</a>)</li>
+    </ul>
+    <p>Toujours effectuer les mises à jour d'abord en environnement de développement avant de déployer en production.</p>
+  </div>
+
+  <div class="card" id="dependances">
+    <h2 class="section-title">1. Mise à jour des dépendances</h2>
+    <div class="callout callout-warning">
+      <strong>Attention :</strong> Testez toujours les mises à jour dans un environnement de développement avant la production. Effectuez ces étapes dans un environnement de test (ex. branche Git dédiée) pour éviter les disruptions.
+    </div>
+    <table role="grid" aria-label="Procédure de mise à jour des dépendances">
+      <thead>
+        <tr>
+          <th scope="col">Étape</th>
+          <th scope="col">Commande</th>
+          <th scope="col">Fréquence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Audit de sécurité</td>
+          <td><code>npm audit</code></td>
+          <td>Hebdomadaire / après chaque PR</td>
+        </tr>
+        <tr>
+          <td>Correction automatique des vulnérabilités</td>
+          <td><code>npm audit fix</code></td>
+          <td>Dès qu'une vulnérabilité est détectée</td>
+        </tr>
+        <tr>
+          <td>Vérification des mises à jour disponibles</td>
+          <td><code>npm outdated</code></td>
+          <td>Mensuelle</td>
+        </tr>
+        <tr>
+          <td>Mise à jour d'une dépendance spécifique</td>
+          <td><code>npm update [package]</code></td>
+          <td>Selon besoin / correctif de sécurité</td>
+        </tr>
+        <tr>
+          <td>Mise à jour majeure (breaking changes)</td>
+          <td><code>npm install [package]@latest</code> + tests complets</td>
+          <td>Planifiée (sprint dédié)</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Bonnes pratiques</h3>
+    <ul class="list-tight">
+      <li>Ne pas mettre à jour plus d'une dépendance à la fois pour isoler les problèmes.</li>
+      <li>Consulter les changelogs sur <code>npmjs.com</code> avant les mises à jour majeures.</li>
+      <li>Si une dépendance est critique et vulnérable sans mise à jour compatible, envisager une alternative.</li>
+      <li>Après toute mise à jour, valider la stabilité : <code>npm test</code>, puis <code>npm run analyze</code>.</li>
+      <li>Script de scan sécurité disponible : <code>npm run security:scan</code> (audit modéré via GitHub Code Scanning SARIF).</li>
+    </ul>
+  </div>
+
+  <div class="card" id="application">
+    <h2 class="section-title">2. Mise à jour de l'application</h2>
+    <h3>Déploiement automatique (Railway CI/CD)</h3>
+    <p>Tout push sur la branche <code>dev</code> déclenche automatiquement le pipeline Railway :</p>
+    <ol>
+      <li>Lint &amp; type-check (<code>npm run lint &amp;&amp; npm run type-check</code>)</li>
+      <li>Tests unitaires (<code>npm test</code>)</li>
+      <li>Tests E2E Playwright (<code>npm run test:e2e</code> — conditionnel)</li>
+      <li>Build Next.js (<code>npm run build</code>)</li>
+      <li>Déploiement Railway automatique</li>
+      <li>Migrations Prisma au démarrage (<code>npx prisma migrate deploy</code>)</li>
+      <li>Smoke tests post-déploiement (<code>/api/health</code>)</li>
+    </ol>
+    <h3>Déploiement manuel</h3>
+    <ul class="list-tight">
+      <li>Via dashboard Railway → service INKSPOT-5z → « Deploy » → sélectionner le commit cible.</li>
+      <li>Via Railway CLI : <code>railway up</code> depuis le répertoire du projet.</li>
+    </ul>
+    <h3>Environnements de déploiement</h3>
+    <table role="grid" aria-label="Environnements disponibles">
+      <thead>
+        <tr>
+          <th scope="col">Environnement</th>
+          <th scope="col">Branche</th>
+          <th scope="col">URL</th>
+          <th scope="col">Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Développement</td><td><code>feature/*</code></td><td><code>http://localhost:3003</code></td><td>Tests locaux, développement</td></tr>
+        <tr><td>Staging / Preview</td><td><code>dev</code> (PR)</td><td>Railway Preview URL</td><td>Recette, tests E2E, validation fonctionnelle</td></tr>
+        <tr><td>Production</td><td><code>dev</code> (merge)</td><td>URL Railway production</td><td>Utilisateurs finaux</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" id="migrations">
+    <h2 class="section-title">3. Migrations de base de données</h2>
+    <div class="callout callout-warning">
+      <strong>Important :</strong> Toujours effectuer un backup de la base de données avant une migration en production (voir <a href="/deploiement-railway">Manuel de Déploiement Railway</a> — section Sauvegardes &amp; restauration).
+    </div>
+    <h3>Procédure de migration</h3>
+    <ul class="list-tight">
+      <li><strong>Créer une migration</strong> (dev) : <code>npx prisma migrate dev --name [nom-migration]</code></li>
+      <li><strong>Vérifier l'état</strong> : <code>npx prisma migrate status</code></li>
+      <li><strong>Appliquer en production</strong> : <code>npx prisma migrate deploy</code> (exécuté automatiquement au démarrage via Railway)</li>
+      <li><strong>Régénérer le client Prisma</strong> : <code>npm run db:generate</code></li>
+      <li><strong>Pousser le schéma sans migration</strong> (dev uniquement) : <code>npm run db:push</code></li>
+    </ul>
+    <h3>Procédure complète en production</h3>
+    <ol>
+      <li>Effectuer un backup DB (Railway ou pg_dump)</li>
+      <li>Créer la migration localement : <code>npx prisma migrate dev --name [description]</code></li>
+      <li>Tester en environnement de staging</li>
+      <li>Merger la PR sur <code>dev</code> — Railway déploie et exécute <code>prisma migrate deploy</code></li>
+      <li>Vérifier les logs Railway et le health check : <code>/api/health</code></li>
+    </ol>
+  </div>
+
+  <div class="card" id="semver">
+    <h2 class="section-title">4. Gestion des versions (SemVer)</h2>
+    <p>INKSPOT suit la convention de versioning sémantique (<a href="https://semver.org">semver.org</a>) :</p>
+    <table role="grid" aria-label="Convention de versioning sémantique">
+      <thead>
+        <tr>
+          <th scope="col">Type de changement</th>
+          <th scope="col">Incrément de version</th>
+          <th scope="col">Exemple</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Correctif de bug (patch)</td><td>PATCH (+0.0.1)</td><td>1.0.0 → 1.0.1</td></tr>
+        <tr><td>Nouvelle fonctionnalité rétrocompatible</td><td>MINOR (+0.1.0)</td><td>1.0.0 → 1.1.0</td></tr>
+        <tr><td>Changement incompatible (breaking)</td><td>MAJOR (+1.0.0)</td><td>1.0.0 → 2.0.0</td></tr>
+      </tbody>
+    </table>
+    <p>L'historique complet des versions est tracé dans le <a href="/changelog">Changelog</a> (critère C4.3.2 — Journal des versions déployées).</p>
+    <h3>Convention de tags Git</h3>
+    <ul class="list-tight">
+      <li>Tag de release : <code>git tag v[MAJOR].[MINOR].[PATCH]</code></li>
+      <li>Pousser le tag : <code>git push origin v[MAJOR].[MINOR].[PATCH]</code></li>
+      <li>Format recommandé pour les commits : <code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>chore:</code>, <code>refactor:</code>, <code>test:</code></li>
+    </ul>
+  </div>
+
+  <div class="card" id="checklist">
+    <h2 class="section-title">5. Checklist de mise à jour</h2>
+    <h3>Avant la mise à jour</h3>
+    <ul class="list-tight">
+      <li>☑ Backup de la base de données effectué</li>
+      <li>☑ Branche de travail créée (<code>feature/update-*</code> ou <code>fix/*</code>)</li>
+      <li>☑ Tests locaux passants (<code>npm test</code>)</li>
+      <li>☑ Variables d'environnement vérifiées (<code>npm run env:check</code>)</li>
+    </ul>
+    <h3>Pendant la mise à jour</h3>
+    <ul class="list-tight">
+      <li>☑ Dépendances mises à jour une par une</li>
+      <li>☑ Tests relancés après chaque mise à jour</li>
+      <li>☑ Migration Prisma créée si le schéma change</li>
+      <li>☑ Build local validé (<code>npm run build</code>)</li>
+    </ul>
+    <h3>Après le déploiement</h3>
+    <ul class="list-tight">
+      <li>☑ Health check : <code>GET /api/health</code> → <code>&#123;"status":"ok"&#125;</code></li>
+      <li>☑ Smoke tests exécutés (auth, réservation, paiement)</li>
+      <li>☑ Logs Railway sans erreur critique</li>
+      <li>☑ Changelog mis à jour (<code>git changelog</code> ou manuellement)</li>
+    </ul>
+  </div>
+
+  <div class="card" id="rollback">
+    <h2 class="section-title">6. Procédure de rollback</h2>
+    <h3>Rollback applicatif (Railway)</h3>
+    <ol>
+      <li>Aller dans le dashboard Railway → service INKSPOT-5z → onglet « Deployments »</li>
+      <li>Identifier le dernier déploiement stable</li>
+      <li>Cliquer sur « Redeploy » sur ce déploiement précédent</li>
+      <li>Surveiller le déploiement et vérifier <code>/api/health</code></li>
+    </ol>
+    <h3>Rollback via Git</h3>
+    <ol>
+      <li>Identifier le commit stable : <code>git log --oneline</code></li>
+      <li>Créer une branche de revert : <code>git revert [commit-sha]</code></li>
+      <li>Pousser sur <code>dev</code> pour déclencher le redéploiement automatique</li>
+    </ol>
+    <h3>Rollback de migration Prisma</h3>
+    <div class="callout callout-warning">
+      Prisma ne supporte pas le rollback automatique de migrations. En cas de problème : restaurer le backup DB effectué avant la migration, puis corriger la migration avant de la réappliquer.
+    </div>
+    <ul class="list-tight">
+      <li>Restaurer le backup PostgreSQL (voir Manuel de Déploiement — section Sauvegardes &amp; restauration)</li>
+      <li>Corriger le fichier de migration dans <code>prisma/migrations/</code></li>
+      <li>Relancer <code>npx prisma migrate deploy</code></li>
+    </ul>
+  </div>
+
+  <div class="card" id="references">
+    <h2 class="section-title">Références croisées</h2>
+    <ul class="list-tight">
+      <li><strong><a href="/mut">Manuel d'Utilisation Technique (MUT)</a></strong> — Stack, architecture, scripts, procédure de gestion des dépendances (section 3.c), système de supervision.</li>
+      <li><strong><a href="/deploiement-railway">Manuel de Déploiement Railway</a></strong> — Prérequis, variables d'environnement, pipeline CI/CD complet (C2.1.1 &amp; C2.1.2), sauvegardes, troubleshooting.</li>
+      <li><strong><a href="/cahier-recette">Cahier de Recette</a></strong> — Plan de tests, scénarios, couverture (CO2.7).</li>
+      <li><strong><a href="/changelog">Changelog</a></strong> — Journal des versions déployées (critère C4.3.2).</li>
+    </ul>
+    <p>Documentation technique du dépôt : <code>docs/</code> (CI/CD, environnement, déploiement Railway, dépannage VAPID, etc.).</p>
+  </div>
+
+  <div class="card" id="table-sections">
+    <h2 class="section-title">Table des sections</h2>
+    <table role="grid" aria-label="Index des sections de ce manuel">
+      <thead>
+        <tr>
+          <th scope="col">Section</th>
+          <th scope="col">Présent</th>
+          <th scope="col">Emplacement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Informations du document</td><td>Oui</td><td><a href="#infos-document">#infos-document</a></td></tr>
+        <tr><td>Prérequis</td><td>Oui</td><td><a href="#prerequis">#prerequis</a></td></tr>
+        <tr><td>1. Mise à jour des dépendances (tableau commande / fréquence)</td><td>Oui</td><td><a href="#dependances">#dependances</a></td></tr>
+        <tr><td>2. Mise à jour de l'application (Railway auto, manuel, environnements)</td><td>Oui</td><td><a href="#application">#application</a></td></tr>
+        <tr><td>3. Migrations de base de données (Prisma, backup, production)</td><td>Oui</td><td><a href="#migrations">#migrations</a></td></tr>
+        <tr><td>4. Gestion des versions (SemVer, tags Git)</td><td>Oui</td><td><a href="#semver">#semver</a></td></tr>
+        <tr><td>5. Checklist de mise à jour (avant / pendant / après)</td><td>Oui</td><td><a href="#checklist">#checklist</a></td></tr>
+        <tr><td>6. Procédure de rollback (Railway, Git, Prisma)</td><td>Oui</td><td><a href="#rollback">#rollback</a></td></tr>
+        <tr><td>Références croisées</td><td>Oui</td><td><a href="#references">#references</a></td></tr>
+      </tbody>
+    </table>
+    <p><strong>Manuel de Mise à Jour INKSPOT.</strong> Ce document constitue le livrable officiel du manuel de mise à jour (critère C2.4.1 du référentiel YNOV 2024).</p>
+  </div>
+
+</DocLayout>

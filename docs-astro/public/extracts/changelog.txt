@@ -1,0 +1,154 @@
+ INKSPOT – Documentation   Page 1 / 4
+03-31 référentiel YNOV 2024 : OWASP Top 10 (MUT), RGAA 4.1 (MUT), manuel de
+ 2026- 1.0.0   docs Version finale de rendu — mise à jour de tous les documents pour conformité
+ Date   Version Type   Détails
+ Entrées récentes
+ Références   : tickets / PR / liens vers rapports tests.
+ Détails   : tests ajoutés, couverture, contrôles sécurité/a11y, sections doc modifiées.
+refactor, test.
+ Type   : feat (nouvelle fonctionnalité), fix (correction), docs (documentation), chore (maintenance),
+ Date / Version   : format recommandé (ex. 0.5.0-docs).
+ Format recommandé & convention
+ Documentation   : MUT, Déploiement et Cahier de Recette disponibles en ligne
+ Accessibilité   : checklist aria/focus/contraste/clavier, lint a11y, audits
+ Sécurité   : signature/idempotence webhooks Stripe, validation zod, rate-limit, secrets Railway
+(SWC corrigé via ts-jest) ; rapport lcov :   coverage/lcov-report/index.html
+ Tests   : suites Jest (ts-jest) & Playwright listées ;   npm test   et   npm run test:coverage   opérationnels
+ Entrées récentes à tracer
+ Mises à jour ciblées bloc 2
+Table des sections
+ Prochaines étapes
+ Écarts de conformité (bloc 2)
+ Journal des versions (C4.3.2)
+Entrées récentes
+Format recommandé & convention
+Entrées récentes à tracer
+ Informations du document
+ Sommaire
+ Rédacteur   DESPRES Antoine
+ Public cible   Équipe dev, évaluateurs, mainteneurs
+ Période couverte   2025-07-15 → 2026-03-31 (début développement → rendu final)
+ Date   31 mars 2026
+ Version   1.1
+ Titre   Rapport d’évolution INKSPOT-5z – Historique complet
+Numéro de document   CL-INKSPOT-2026-001
+ Élément   Valeur
+ Informations du document
+Changelog
+ INKSPOT   · Documentation   Changelog
+
+ INKSPOT – Documentation   Page 2 / 4
+ Migration Railway (remplacement Docker/VPS)
+ 🚀   Infrastructure & Déploiement (35+ commits)
+ Détail par thème (171 commits)
+07-15  
+ 0.0.1   chore Initialisation du dépôt — Social media app   4a5d3b3
+2025-
+07-30   endpoints, suite de tests, composants UI avancés  1ca03ed
+ 0.1.0   feat  
+2025- Plateforme INKSPOT-5z complète : authentification, profils, API  bbc14e6 ,
+Grafana/Prometheus
+08-20    17d77e1
+ 0.2.0   feat (WebSocket), recommandations IA, monitoring
+2025-  ada91b3 ,
+Système de gestion des rendez-vous, messagerie temps réel
+08-21   redis) ; architecture containerisée  d8e17b0
+ 0.3.0   feat  
+2025- Configuration Docker fullstack complète (app, postgres, nginx,  5ec1db4 ,
+09-21   migration complète vers Railway  d6e6991
+ 0.4.0   fix  
+2025- Correction des erreurs TypeScript pour le build Railway ;  a86055b ,
+01-25   suppression de doublons de contenu  
+ 0.5.0   fix   a86055b
+2026- Build Astro stabilisé (downgrade + simplification layout),
+docs 01-25   sécurité/accessibilité, synthèse coverage lcov, pipeline CI/CD  
+docs   a86055b
+ 0.5.0-  2026- Mise à jour bloc 2 : cahier de recette détaillé, sections
+02-24   passés, sign-off QA Lead, anomalies documentées 24/02
+ 0.6.0   test  
+2026- Campagne de recette (20–24 février 2026) — 22/24 scénarios  sign-off
+03-31   complète (OWASP, RGAA, C2.1.1, C2.3.2, C2.4.1, C4.3.2)  
+1.0.0   docs   —
+2026- Version finale de rendu — conformité référentiel YNOV 2024
+clés
+ Version   Date   Type   Description  
+Commits
+ Versions majeures
+Source : git log — 171+ commits (2025-07-15 → 2026-03-31)
+corrigées, les nouvelles fonctionnalités et les évolutions de chaque version.
+versions déployées en y intégrant la documentation des correctifs réalisés ». Il retrace les anomalies
+ Référentiel :   Ce journal répond au critère C4.3.2 du référentiel YNOV 2024 — « Établir un journal des
+ Journal des versions (C4.3.2)
+01-25   doublons de contenu dans les pages de docs.
+0.5.0   fix  
+2026- Build Astro stabilisé (downgrade Astro + simplification layout), suppression de
+01-25 docs   synthèse coverage lcov, clarification des preuves et du pipeline CI/CD.
+docs Mise à jour bloc 2 : cahier de recette détaillé, ajout sections sécurité/accessibilité,
+2026- 0.5.0-
+REC-003 documentées avec plan de correction.
+02-24  
+0.6.0   test (91 %) ; sign-off QA Lead apposé le 24/02/2026 ; anomalies REC-001, REC-002,
+2026-
+Campagne de recette exécutée (20–24 février 2026) — 22/24 scénarios passés
+Cohérence des dates entre les 4 documents.
+protocole CI/CD C2.1.1 (Déploiement), journal des versions C4.3.2 (Changelog).
+ mise à jour C2.4.1 (MUT), plan de correction C2.3.2 daté (Cahier Recette),
+Date   Version Type   Détails
+ INKSPOT   · Documentation   Changelog
+
+ INKSPOT – Documentation   Page 3 / 4
+ Nouvelles fonctionnalités (Auth, Messaging, Payments)   Oui   #entrees-recentes ,   #historique-git
+ Corrections techniques (TypeScript, ESLint, Build)   Oui   #entrees-extraits ,   #historique-git
+ Infrastructure & Déploiement (Railway, Docker, CI/CD)   Oui   #historique-git
+ Vue d’ensemble (145+ commits)   Oui   #entrees-recentes ,   #historique-git
+ Section   Présent   Emplacement
+ Index des sections de ce changelog :
+ Table des sections
+Exécuter audits a11y (axe/Lighthouse) et ajouter preuves.
+Configurer le webServer Playwright et relancer E2E.
+ Maintenir la couverture et les seuils (Jest/ts-jest en place).
+ Prochaines étapes
+CO2.5 : audits accessibilité non exécutés.
+CO2.4 : E2E bloqués (timeout webServer).
+ CO2.4 : Jest (ts-jest) opérationnel ;   npm run test:coverage   génère le rapport lcov.
+ Écarts de conformité (bloc 2)
+Afficher la liste complète des 171 commits
+Scan sécurité SARIF (GitHub Code Scanning)
+Rapport lcov ( coverage/lcov-report/ )
+Tests lazy-load, sécurité, Redis cache
+ Suite Jest (ts-jest) + Playwright E2E
+ 🧪   Tests & Qualité (10+ commits)
+Recommandations IA + recherche géographique
+Gestion des rendez-vous (calendrier, modales)
+Paiements Stripe (commissions 3,5 % + 0,50 €)
+Messagerie temps réel (WebSocket)
+ Authentification complète (email, OAuth Google, 2FA)
+ ✨   Nouvelles fonctionnalités (25+ commits)
+Conflits de merge résolus (15+ merges)
+Clés VAPID (génération automatique CI/CD)
+SWC binaries multi-plateforme (CI/CD)
+ESLint v9 (migration eslint.config.js)
+ Erreurs TypeScript (types explicites, any → types)
+ 🔧   Corrections techniques (40+ commits)
+Configuration GitHub Pages + workflows
+Prisma client generation et vérification Docker
+Health check endpoints ( /api/health )
+Configuration Nginx reverse-proxy + rate limiting
+ INKSPOT   · Documentation   Changelog
+
+ INKSPOT – Documentation   Page 4 / 4
+changelog INKSPOT, complété par l’historique Git complet.
+ Rapport d’évolution INKSPOT-5z – Historique complet.   Ce document constitue le livrable officiel du
+ Référence document
+Prisma, etc.)  
+Oui   #historique-git
+ Détails par thème (Migration Railway, Health checks,
+conformite
+ Tests & Qualité (E2E, Security, Performance)   Oui  
+#entrees-recentes ,   #ecarts-
+ Refactoring   Oui   #historique-git
+extraits
+ Documentation   Oui  
+#entrees-recentes ,   #entrees-
+Section   Présent   Emplacement
+ INKSPOT   · Documentation   Changelog

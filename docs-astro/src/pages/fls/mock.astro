@@ -1,0 +1,846 @@
+---
+const viewTitle = "FLS - Mock details detection (redesign)";
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{viewTitle}</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #171a1d;
+        --panel: #1f2429;
+        --panel-2: #222a31;
+        --tile: #2a323a;
+        --text: #e6eef6;
+        --muted: #95a3b0;
+        --outline: #343d46;
+        --accent: #1e88e5;
+        --danger: #b51e1e;
+        --danger-2: #d03333;
+        --warn: #e77b1a;
+        --success: #2e7d32;
+        --focus: #f1c232;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow: hidden;
+      }
+      .page {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        height: 100vh;
+        width: 100vw;
+        gap: 8px;
+        padding: 8px;
+      }
+      .topbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 0.85fr);
+        align-items: center;
+        gap: 8px;
+        background: var(--panel);
+        border: 1px solid var(--outline);
+        border-radius: 12px;
+        padding: 6px 10px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        min-width: 0;
+      }
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #101317;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--outline);
+      }
+      .status {
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--outline);
+        color: #ffd6d6;
+        background: #3a0f0f;
+      }
+      .meta-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: nowrap;
+        justify-content: center;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .chip {
+        font-size: 11px;
+        color: var(--muted);
+        background: #15191d;
+        border: 1px solid var(--outline);
+        padding: 3px 6px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+        min-width: 0;
+      }
+      .btn {
+        background: #2b333b;
+        color: var(--text);
+        border: 1px solid var(--outline);
+        border-radius: 8px;
+        padding: 5px 8px;
+        font-size: 11px;
+      }
+      .btn--primary {
+        background: var(--accent);
+        border-color: #1976d2;
+      }
+      .content {
+        display: grid;
+        grid-template-columns: 1.45fr 1fr;
+        gap: 8px;
+        min-height: 0;
+      }
+      .left,
+      .right {
+        display: grid;
+        gap: 8px;
+        min-height: 0;
+      }
+      .left {
+        grid-template-rows: minmax(0, 1fr) auto;
+      }
+      .right {
+        grid-auto-rows: min-content;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--outline);
+        border-radius: 12px;
+        padding: 10px;
+        min-height: 0;
+      }
+      .card h3 {
+        margin: 0 0 8px 0;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .radar-stage {
+        position: relative;
+        overflow: hidden;
+        padding: 10px 10px 30px;
+        min-height: 0;
+        background: #1b2229;
+        display: grid;
+        place-items: center;
+      }
+      .sonar {
+        position: relative;
+        border-radius: 50%;
+        border: 1px solid var(--outline);
+        background:
+          radial-gradient(circle at center, rgba(30, 136, 229, 0.25) 0 3px, transparent 3px),
+          radial-gradient(circle at center, rgba(69, 140, 200, 0.2) 25%, transparent 25%),
+          radial-gradient(circle at center, rgba(69, 140, 200, 0.2) 50%, transparent 50%),
+          radial-gradient(circle at center, rgba(69, 140, 200, 0.2) 75%, transparent 75%),
+          conic-gradient(
+            from 210deg,
+            rgba(30, 136, 229, 0.08) 0deg,
+            rgba(30, 136, 229, 0.35) 90deg,
+            rgba(30, 136, 229, 0.08) 180deg,
+            transparent 240deg
+          );
+        background-size: auto, 100% 100%, 100% 100%, 100% 100%, auto;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        aspect-ratio: 1 / 1;
+        box-shadow: inset 0 0 40px rgba(10, 14, 18, 0.35);
+      }
+      .sonar-rings {
+        content: "";
+        position: absolute;
+        inset: 6%;
+        border-radius: 50%;
+        border: 1px dashed rgba(180, 200, 220, 0.3);
+      }
+      .sonar-label {
+        position: absolute;
+        bottom: 8px;
+        right: 10px;
+        font-size: 11px;
+        color: var(--muted);
+        background: rgba(20, 24, 28, 0.8);
+        padding: 4px 8px;
+        border-radius: 8px;
+        border: 1px solid var(--outline);
+      }
+      .sonar-target {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #f6c53b;
+        border: 2px solid #161a1d;
+        box-shadow: 0 0 0 6px rgba(246, 197, 59, 0.15);
+      }
+      .sonar-target--danger {
+        background: var(--danger-2);
+        box-shadow: 0 0 0 6px rgba(208, 51, 51, 0.2);
+      }
+      .sonar-target--ghost {
+        background: #8e99a8;
+        box-shadow: 0 0 0 6px rgba(142, 153, 168, 0.2);
+      }
+      .sonar-target.t1 {
+        top: 52%;
+        left: 46%;
+      }
+      .sonar-target.t2 {
+        top: 60%;
+        left: 58%;
+      }
+      .sonar-target.t3 {
+        top: 68%;
+        left: 40%;
+      }
+      .sonar-overlay {
+        position: absolute;
+        inset: 10%;
+        border-radius: 50%;
+        border: 1px dashed rgba(180, 200, 220, 0.3);
+      }
+      .summary {
+        display: grid;
+        gap: 6px;
+        grid-auto-rows: min-content;
+      }
+      .summary-row {
+        display: flex;
+        justify-content: flex-start;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .tag {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--outline);
+        background: #15191d;
+        color: var(--muted);
+        display: inline-flex;
+        align-items: center;
+        line-height: 1.2;
+        height: auto;
+      }
+      .tag--danger {
+        background: #3a0f0f;
+        color: #ffd6d6;
+        border-color: #7f1414;
+      }
+      .tag--warn {
+        background: #3d2406;
+        color: #ffdba5;
+        border-color: #a75e12;
+      }
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .kpi {
+        background: var(--tile);
+        border: 1px solid var(--outline);
+        border-radius: 10px;
+        padding: 8px 10px;
+        display: grid;
+        gap: 6px;
+        min-height: 60px;
+      }
+      .kpi .label {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .kpi .value {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .kpi .meta {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .kpi--critical {
+        background: linear-gradient(180deg, var(--danger-2), var(--danger));
+        border-color: #7f1414;
+      }
+      .kpi--critical .label,
+      .kpi--critical .meta {
+        color: #ffe7e7;
+      }
+      .kpi--focus {
+        grid-column: span 2;
+        min-height: 78px;
+        box-shadow: 0 0 0 2px rgba(241, 194, 50, 0.2);
+      }
+      .kpi--warn {
+        border-color: #a75e12;
+        box-shadow: 0 0 0 2px rgba(231, 123, 26, 0.2);
+      }
+      .kpi--uncertain {
+        opacity: 0.7;
+        border-style: dashed;
+      }
+      .group-title {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 6px 0 6px;
+      }
+      .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .mini {
+        background: #20262c;
+        border: 1px solid var(--outline);
+        border-radius: 8px;
+        padding: 6px 8px;
+        display: grid;
+        gap: 4px;
+        min-height: 50px;
+      }
+      .mini .label {
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .mini .value {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .mini--danger {
+        border-color: #7f1414;
+        background: #3a0f0f;
+        color: #ffd6d6;
+      }
+      .bottom {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 8px;
+        min-height: 0;
+      }
+      .timeline {
+        height: 100px;
+        border-radius: 10px;
+        border: 1px solid var(--outline);
+        background: linear-gradient(180deg, #1a1f24 0%, #1f262d 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      .timeline-bar {
+        position: absolute;
+        bottom: 18px;
+        height: 32px;
+        width: 12px;
+        background: var(--danger-2);
+        left: 40%;
+        border-radius: 6px;
+      }
+      .timeline-bar:nth-child(2) {
+        left: 55%;
+        height: 44px;
+        background: var(--warn);
+      }
+      .timeline-bar:nth-child(3) {
+        left: 70%;
+        height: 22px;
+        background: #6bb1f3;
+      }
+      .timeline-marker {
+        position: absolute;
+        bottom: 8px;
+        left: 10px;
+        right: 10px;
+        height: 2px;
+        background: #33404c;
+      }
+      .table {
+        display: grid;
+        gap: 6px;
+      }
+      .table-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 6px;
+        font-size: 12px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        background: #20262c;
+        border: 1px solid var(--outline);
+      }
+      .table-row.head {
+        background: #15191d;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .badge {
+        padding: 2px 6px;
+        border-radius: 999px;
+        font-size: 11px;
+        border: 1px solid var(--outline);
+        justify-self: start;
+      }
+      .badge--danger {
+        background: #3a0f0f;
+        color: #ffd6d6;
+        border-color: #7f1414;
+      }
+      .badge--ok {
+        background: #10301a;
+        color: #c7f7d2;
+        border-color: #1f6b31;
+      }
+      .carousel {
+        display: grid;
+        gap: 8px;
+        min-height: 0;
+      }
+      .carousel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+      }
+      .carousel-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .btn-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        border: 1px solid var(--outline);
+        background: #2b333b;
+        color: var(--text);
+        font-size: 12px;
+      }
+      .carousel-body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 120px;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "meta image"
+          "status image";
+        gap: 8px;
+        min-height: 0;
+      }
+      .image-frame {
+        position: relative;
+        grid-area: image;
+        border-radius: 10px;
+        border: 1px solid var(--outline);
+        background:
+          linear-gradient(135deg, rgba(30, 136, 229, 0.12), rgba(10, 14, 18, 0.4)),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.03) 0 6px,
+            transparent 6px 12px
+          );
+        width: 100px;
+        height: 100px;
+        min-height: 100px;
+        justify-self: end;
+        align-self: start;
+        overflow: hidden;
+      }
+      .image-frame::before {
+        content: "";
+        position: absolute;
+        inset: 12px;
+        border: 1px dashed rgba(180, 200, 220, 0.25);
+        border-radius: 8px;
+      }
+      .image-frame::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 22px;
+        top: -18px;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(30, 136, 229, 0.18),
+          transparent
+        );
+        animation: scan 3s linear infinite;
+      }
+      .image-label {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        font-size: 10px;
+        color: var(--muted);
+        background: rgba(20, 24, 28, 0.8);
+        padding: 4px 8px;
+        border-radius: 8px;
+        border: 1px solid var(--outline);
+      }
+      .image-meta {
+        grid-area: meta;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .image-status {
+        grid-area: status;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .image-status .badge {
+        font-size: 10px;
+        padding: 2px 6px;
+      }
+      .meta-item {
+        background: #1b2127;
+        border: 1px solid var(--outline);
+        border-radius: 8px;
+        padding: 6px 8px;
+        display: grid;
+        gap: 4px;
+      }
+      .meta-item .label {
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .meta-item .value {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .timeline-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .image-timeline {
+        display: grid;
+        gap: 8px;
+      }
+      .timeline-line {
+        height: 2px;
+        background: #2f3943;
+        border-radius: 999px;
+        position: relative;
+      }
+      .timeline-line::after {
+        content: "";
+        position: absolute;
+        left: 18%;
+        top: -4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 4px rgba(30, 136, 229, 0.25);
+      }
+      .thumb {
+        height: 44px;
+        border-radius: 8px;
+        border: 1px solid var(--outline);
+        background: #1b2127;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 4px;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .thumb.active {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgba(30, 136, 229, 0.35);
+        color: #cfe6ff;
+        animation: pulse 1.8s ease-in-out infinite;
+      }
+      @keyframes scan {
+        0% {
+          top: -30px;
+        }
+        100% {
+          top: 120%;
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.03);
+        }
+      }
+      .footer {
+        padding: 8px 10px;
+        max-height: 110px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">Seapix-FLS</div>
+          <span class="status">very high false alarm</span>
+        </div>
+        <div class="meta-row">
+          <span class="chip">Lat 47.17N</span>
+          <span class="chip">Lon 2.53W</span>
+          <span class="chip">Target ID 54</span>
+          <span class="chip">Obs 00:12</span>
+        </div>
+        <div class="actions">
+          <button class="btn">Replay</button>
+          <button class="btn btn--primary">Live</button>
+          <button class="btn">Quit</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="left">
+          <div class="card radar-stage">
+            <div class="sonar">
+              <div class="sonar-rings"></div>
+              <div class="sonar-overlay"></div>
+              <div class="sonar-target t1"></div>
+              <div class="sonar-target t2 sonar-target--danger"></div>
+              <div class="sonar-target t3 sonar-target--ghost"></div>
+            </div>
+            <div class="sonar-label">Vue sonar</div>
+          </div>
+
+          <div class="bottom">
+            <div class="card">
+              <h3>Timeline detection</h3>
+              <div class="timeline">
+                <div class="timeline-marker"></div>
+                <div class="timeline-bar"></div>
+                <div class="timeline-bar"></div>
+                <div class="timeline-bar"></div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Contacts</h3>
+              <div class="table">
+                <div class="table-row head">
+                  <div>ID</div>
+                  <div>Range</div>
+                  <div>Bearing</div>
+                  <div>Status</div>
+                </div>
+                <div class="table-row">
+                  <div>54</div>
+                  <div>1023 m</div>
+                  <div>006.8 deg</div>
+                  <div><span class="badge badge--danger">Danger</span></div>
+                </div>
+                <div class="table-row">
+                  <div>71</div>
+                  <div>1739 m</div>
+                  <div>291.3 deg</div>
+                  <div><span class="badge badge--ok">OK</span></div>
+                </div>
+                <div class="table-row">
+                  <div>12</div>
+                  <div>944 m</div>
+                  <div>110.1 deg</div>
+                  <div><span class="badge badge--ok">OK</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="right">
+          <div class="card">
+            <h3>Target snapshot</h3>
+            <div class="mini-grid">
+              <div class="mini">
+                <div class="label">Target ID</div>
+                <div class="value">54</div>
+              </div>
+              <div class="mini">
+                <div class="label">Depth</div>
+                <div class="value">20.4 m</div>
+              </div>
+              <div class="mini mini--danger">
+                <div class="label">Distance</div>
+                <div class="value">1023.4 m</div>
+              </div>
+              <div class="mini">
+                <div class="label">Rel Bearing</div>
+                <div class="value">006.8 deg</div>
+              </div>
+              <div class="mini">
+                <div class="label">Obs time</div>
+                <div class="value">00:12</div>
+              </div>
+              <div class="mini">
+                <div class="label">Age</div>
+                <div class="value">01:12</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card summary">
+            <h3>Detection details</h3>
+            <div class="summary-row">
+              <span class="tag">Mode: Auto</span>
+              <span class="tag">TS: -28.5 dB</span>
+              <span class="tag tag--danger">Classification: Dangerous</span>
+              <span class="tag tag--warn">Bearing critical</span>
+            </div>
+            <div class="summary-row">
+              <span class="tag">COG: 053.3</span>
+              <span class="tag">SOG: 0.4 kn</span>
+              <span class="tag">Vertical: 0.6 m/s</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="group-title">Critical</div>
+            <div class="kpi-grid">
+              <div class="kpi kpi--critical kpi--focus">
+                <div class="label">CPA / Distance</div>
+                <div class="value">CPA 00:03 - 1023.4 m</div>
+                <div class="meta">Priority: collision risk</div>
+              </div>
+              <div class="kpi kpi--warn">
+                <div class="label">Relative Bearing</div>
+                <div class="value">006.8 deg</div>
+                <div class="meta">Close approach</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Vertical Speed</div>
+                <div class="value">0.6 m/s</div>
+                <div class="meta">Stable</div>
+              </div>
+            </div>
+            <div class="group-title">Kinematics</div>
+            <div class="kpi-grid">
+              <div class="kpi">
+                <div class="label">COG</div>
+                <div class="value">053.3 deg</div>
+                <div class="meta">Course over ground</div>
+              </div>
+              <div class="kpi">
+                <div class="label">SOG</div>
+                <div class="value">0.4 kn</div>
+                <div class="meta">Speed over ground</div>
+              </div>
+              <div class="kpi kpi--uncertain">
+                <div class="label">Depth</div>
+                <div class="value">20.4 m</div>
+                <div class="meta">Low confidence</div>
+              </div>
+              <div class="kpi">
+                <div class="label">Altitude</div>
+                <div class="value">4.2 m</div>
+                <div class="meta">Estimated</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card carousel">
+            <div class="carousel-header">
+              <h3>Imagerie / Timeline</h3>
+              <div class="carousel-actions">
+                <button class="btn-icon" aria-label="Previous image">◀</button>
+                <button class="btn-icon" aria-label="Next image">▶</button>
+              </div>
+            </div>
+            <div class="carousel-body">
+              <div class="image-frame">
+                <div class="image-label">2025-05-13 • 20:05:13</div>
+              </div>
+              <div class="image-status">
+                <span>Image 2/6 • Série 54-A</span>
+                <span class="badge badge--danger">Focus current</span>
+              </div>
+              <div class="image-meta">
+                <div class="meta-item">
+                  <div class="label">Confidence</div>
+                  <div class="value">Medium</div>
+                </div>
+                <div class="meta-item">
+                  <div class="label">Precision</div>
+                  <div class="value">± 1.8 m</div>
+                </div>
+                <div class="meta-item">
+                  <div class="label">Depth</div>
+                  <div class="value">20.4 m</div>
+                </div>
+                <div class="meta-item">
+                  <div class="label">Uncertainty</div>
+                  <div class="value">Low drift</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card image-timeline">
+            <div class="carousel-header">
+              <h3>Timeline images</h3>
+              <div class="carousel-actions">
+                <button class="btn-icon" aria-label="Previous segment">◀</button>
+                <button class="btn-icon" aria-label="Next segment">▶</button>
+              </div>
+            </div>
+            <div class="timeline-line"></div>
+            <div class="timeline-strip">
+              <div class="thumb active">20:05:13</div>
+              <div class="thumb">20:05:08</div>
+              <div class="thumb">20:05:02</div>
+              <div class="thumb">20:04:56</div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="card footer">
+        <h3>Alerts</h3>
+        <div class="meta-row" style="justify-content: flex-start;">
+          <span class="tag tag--danger">CPA < 00:05</span>
+          <span class="tag tag--warn">Bearing within 10 deg</span>
+          <span class="tag">Depth low confidence</span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

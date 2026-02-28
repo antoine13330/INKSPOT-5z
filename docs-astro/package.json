@@ -1,0 +1,21 @@
+{
+  "name": "inkspot-docs-astro",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "pdf:all": "node scripts/export-pdf.js"
+  },
+  "dependencies": {
+    "astro": "^4.14.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.3",
+    "playwright-chromium": "^1.48.2",
+    "typescript": "^5.6.3"
+  }
+}

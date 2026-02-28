@@ -1,0 +1,525 @@
+---
+import DocLayout from '../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Manuel de Déploiement Railway">
+  <div class="card" id="infos-document">
+    <h2 class="section-title">Informations du document</h2>
+    <table role="grid" aria-label="Métadonnées du manuel">
+      <thead><tr><th scope="col">Élément</th><th scope="col">Valeur</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Numéro de document</strong></td><td>MD-INKSPOT-2026-001</td></tr>
+        <tr><td><strong>Titre</strong></td><td>Manuel de Déploiement Railway – INKSPOT</td></tr>
+        <tr><td><strong>Version</strong></td><td>2.0</td></tr>
+        <tr><td><strong>Date</strong></td><td>31 mars 2026</td></tr>
+        <tr><td><strong>Référentiel (validation Master)</strong></td><td>YNOV 2024 – Bloc 2, livrable « Manuel de déploiement »</td></tr>
+        <tr><td><strong>Public cible</strong></td><td>Équipe ops, développeurs en charge du déploiement, évaluateurs</td></tr>
+        <tr><td><strong>Rédacteur / Responsable</strong></td><td>Document rédigé par l’équipe projet INKSPOT ; rédacteur : DESPRES Antoine</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Historique des versions</strong></p>
+    <table role="grid" aria-label="Historique des versions du manuel de déploiement">
+      <thead>
+        <tr>
+          <th scope="col">Version</th>
+          <th scope="col">Date</th>
+          <th scope="col">Modifications</th>
+          <th scope="col">Auteur</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1.0</td><td>Mars 2026</td><td>Version initiale — prérequis, pas à pas, checklists, observabilité, smoke tests, sauvegardes, incidents, rollback</td><td>DESPRES Antoine</td></tr>
+        <tr><td>2.0</td><td>31 mars 2026</td><td>Ajout protocole CI/CD complet (C2.1.1 &amp; C2.1.2), tableau des environnements, séquences de déploiement — version finale de rendu</td><td>DESPRES Antoine</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" id="resume-executif">
+    <h2 class="section-title">Résumé exécutif</h2>
+    <p>Contenu couvert : prérequis et préparation (comptes, clés, configuration locale), création du projet Railway, configuration des services (PostgreSQL, Redis, Prometheus, Grafana, INKSPOT-5z) dans l’ordre critique, variables d’environnement (template, Raw Editor), déploiement automatique (git push, surveillance), configuration post-déploiement (Grafana, webhooks Stripe), tests et vérification (health check, métriques, Redis, DB, Prometheus, Grafana), troubleshooting (build TypeScript/Prisma/dépendances), checklists avant/pendant/après, liens de production et bonnes pratiques.</p>
+  </div>
+
+  <div class="card toc">
+    <strong>Sommaire</strong>
+    <ul class="list-tight">
+      <li><a href="#infos-document">Informations du document</a></li>
+      <li><a href="#resume-executif">Résumé exécutif</a></li>
+      <li><a href="#prerequis">1. Prérequis et préparation</a></li>
+      <li><a href="#creation-projet">2. Création du projet Railway</a></li>
+      <li><a href="#configuration-services">3. Configuration des services</a></li>
+      <li><a href="#env-table">4. Variables d’environnement</a></li>
+      <li><a href="#deploiement">5. Déploiement de l’application</a></li>
+      <li><a href="#config-post">6. Configuration post-déploiement</a></li>
+      <li><a href="#tests-verif">7. Tests et vérification</a></li>
+      <li><a href="#troubleshooting">8. Troubleshooting</a></li>
+      <li><a href="#checklists">Checklists déploiement</a></li>
+      <li><a href="#liens-ressources">Liens et ressources</a></li>
+      <li><a href="#verification-couverture-depl">Table des sections</a></li>
+    </ul>
+  </div>
+
+  <!-- 1. Prérequis et préparation -->
+  <div class="card" id="prerequis">
+    <h2 class="section-title">1. Prérequis et préparation</h2>
+    <p><strong>Ce que vous devez avoir AVANT de commencer</strong></p>
+    <h3>Comptes et accès</h3>
+    <ul class="list-tight">
+      <li><strong>Compte Railway</strong> : créé et vérifié sur railway.app</li>
+      <li><strong>Compte GitHub</strong> : avec accès au repository INKSPOT-5z</li>
+      <li><strong>Compte AWS</strong> : pour S3 (clés d’accès, bucket)</li>
+      <li><strong>Compte Stripe</strong> : mode test ou production</li>
+      <li><strong>Compte Google Cloud</strong> : pour OAuth (Client ID + Secret)</li>
+    </ul>
+    <h3>Clés et secrets à récupérer</h3>
+    <ul class="list-tight">
+      <li><strong>AWS S3</strong> : Access Key ID, Secret Access Key, Region, Bucket name</li>
+      <li><strong>Stripe</strong> : Secret Key, Publishable Key, Webhook Secret</li>
+      <li><strong>Google OAuth</strong> : Client ID, Client Secret</li>
+      <li><strong>VAPID</strong> : Public Key, Private Key (pour notifications push)</li>
+    </ul>
+    <h3>Configuration locale</h3>
+    <ul class="list-tight">
+      <li>Node.js 22 installé (<code>node --version</code> — voir <code>.nvmrc</code>)</li>
+      <li>Railway CLI installé : <code>npm install -g @railway/cli</code></li>
+      <li>Git configuré avec vos identifiants</li>
+      <li>Repository cloné localement</li>
+    </ul>
+  </div>
+
+  <!-- 2. Création du projet Railway -->
+  <div class="card" id="creation-projet">
+    <h2 class="section-title">2. Création du projet Railway</h2>
+    <h3>Étape 1 : Créer le projet</h3>
+    <ol class="list-tight">
+      <li>Aller sur Railway.app</li>
+      <li>Se connecter avec votre compte GitHub</li>
+      <li>Cliquer sur « New Project »</li>
+      <li>Choisir « Deploy from GitHub repo »</li>
+      <li>Sélectionner le repository INKSPOT-5z</li>
+      <li>Nommer le projet : <strong>inkspot-production</strong></li>
+      <li>Cliquer sur « Deploy Now »</li>
+    </ol>
+    <h3>Étape 2 : Configuration initiale</h3>
+    <ul class="list-tight">
+      <li>Dans votre terminal local : <code>railway login</code></li>
+      <li>Lier le projet local au projet Railway : <code>railway link</code></li>
+    </ul>
+    <p><strong>⚠ Important</strong> : Attendez que le premier déploiement soit terminé avant de continuer.</p>
+  </div>
+
+  <!-- 3. Configuration des services -->
+  <div class="card" id="configuration-services">
+    <h2 class="section-title">3. Configuration des services</h2>
+    <p><strong>Ordre CRITIQUE des services</strong> : ne jamais configurer l’application principale avant que tous les services de support soient opérationnels.</p>
+    <ol class="list-tight">
+      <li>PostgreSQL (base de données)</li>
+      <li>Redis (cache)</li>
+      <li>Prometheus (monitoring)</li>
+      <li>Grafana (dashboards)</li>
+      <li>INKSPOT-5z (application principale)</li>
+    </ol>
+
+    <h3>Service 1 : PostgreSQL</h3>
+    <p><strong>Étape 1.1 : Créer le service</strong></p>
+    <ol class="list-tight">
+      <li>Dans Railway Dashboard → « New Service »</li>
+      <li>Choisir « Database » → « PostgreSQL »</li>
+      <li>Nommer : <strong>postgres-production</strong></li>
+      <li>Attendre que le service soit créé (statut « Deployed »)</li>
+    </ol>
+    <p><strong>Étape 1.2 : Récupérer les informations</strong></p>
+    <ol class="list-tight">
+      <li>Cliquer sur le service PostgreSQL</li>
+      <li>Aller dans l’onglet « Connect »</li>
+      <li>Copier l’URL de connexion complète</li>
+      <li>Noter le mot de passe généré</li>
+    </ol>
+    <p><strong>Étape 1.3 : Tester la connexion</strong></p>
+    <p>Via Railway CLI : <code>railway run npx prisma db push</code>. Succès si la commande s’exécute sans erreur.</p>
+
+    <h3>Service 2 : Redis</h3>
+    <p><strong>Étape 2.1 : Créer le service</strong></p>
+    <ol class="list-tight">
+      <li>Railway Dashboard → « New Service »</li>
+      <li>Choisir « Database » → « Redis »</li>
+      <li>Nommer : <strong>redis-production</strong></li>
+      <li>Attendre que le service soit créé</li>
+    </ol>
+    <p><strong>Étape 2.2 : Récupérer les informations</strong> — Connect, copier l’URL, noter le mot de passe.</p>
+    <p><strong>Étape 2.3 : Tester la connexion</strong></p>
+    <pre class="preview-extract" style="max-height:8rem;font-size:0.85rem;">railway run node -e "
+const Redis = require('ioredis');
+const redis = new Redis(process.env.REDIS_URL);
+redis.ping().then(() => console.log('✅ Redis OK')).catch(console.error);
+"</pre>
+
+    <h3>Service 3 : Prometheus</h3>
+    <p><strong>Étape 3.1 : Créer le service</strong> — New Service → Template → Prometheus, nommer <strong>prometheus-production</strong>.</p>
+    <p><strong>Étape 3.2 : Variables</strong> — <code>PROMETHEUS_PORT=9090</code>, <code>PROMETHEUS_STORAGE_TSDB_PATH=/prometheus</code>, <code>PROMETHEUS_STORAGE_TSDB_RETENTION_TIME=15d</code>.</p>
+    <p><strong>Étape 3.3 : Configuration des cibles</strong> — Créer <code>prometheus.yml</code> (scrape_configs : prometheus, inkspot-app, postgres, redis).</p>
+
+    <h3>Service 4 : Grafana</h3>
+    <p><strong>Étape 4.1 : Créer le service</strong> — New Service → Template → Grafana, nommer <strong>grafana-production</strong>.</p>
+    <p><strong>Étape 4.2 : Variables</strong> — <code>GF_SECURITY_ADMIN_USER=admin</code>, <code>GF_SECURITY_ADMIN_PASSWORD=votre-mot-de-passe-grafana</code> (remplacer par un mot de passe sécurisé), <code>GF_SERVER_HTTP_PORT=3000</code>, <code>GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource</code>.</p>
+
+    <h3>Service 5 : INKSPOT-5z (application principale)</h3>
+    <p><strong>⚠ Attention</strong> : Ce service sera créé automatiquement lors du premier déploiement. Ne le configurez PAS manuellement avant d’avoir configuré tous les services de support ci-dessus.</p>
+  </div>
+
+  <!-- 4. Variables d'environnement -->
+  <div class="card" id="env-table">
+    <h2 class="section-title">4. Variables d’environnement</h2>
+    <p><strong>⚠ Ne faire cette étape qu’APRÈS avoir configuré tous les services de support.</strong></p>
+    <h3>Étape 1 : Aller dans l’application principale</h3>
+    <ol class="list-tight">
+      <li>Dans Railway Dashboard, cliquer sur le service INKSPOT-5z</li>
+      <li>Aller dans l’onglet « Variables »</li>
+      <li>Cliquer sur « Raw Editor »</li>
+    </ol>
+    <h3>Étape 2 : Coller toutes les variables</h3>
+    <p>Copier-coller <strong>TOUT</strong> le contenu de <code>docs/railway-variables-template.env</code> dans le Raw Editor.</p>
+    <h3>Étape 3 : Remplacer les valeurs par vos vraies clés</h3>
+    <p><strong>Variables de base</strong> : <code>NODE_ENV=production</code>, <code>RAILWAY_ENVIRONMENT=production</code>, <code>RAILWAY_PROJECT_ID=&lt;votre-id-projet&gt;</code> (visible dans le dashboard Railway).</p>
+    <p><strong>Base de données et Redis</strong> : <code>DATABASE_URL=&#36;&#123;&#123;Postgres.DATABASE_URL&#125;&#125;</code>, <code>REDIS_URL=&#36;&#123;&#123;Redis.REDIS_URL&#125;&#125;</code> — ces variables sont automatiquement remplies par Railway.</p>
+    <p>Vérifier : <code>railway variables list</code>, <code>railway status</code>.</p>
+
+    <table role="grid" aria-label="Variables d’environnement principales">
+      <thead><tr><th scope="col">Variable</th><th scope="col">Requis</th><th scope="col">Usage</th></tr></thead>
+      <tbody>
+        <tr><td><code>DATABASE_URL</code></td><td>Oui</td><td>Connexion PostgreSQL</td></tr>
+        <tr><td><code>NEXTAUTH_URL</code></td><td>Oui</td><td>URL publique de l’app</td></tr>
+        <tr><td><code>NEXTAUTH_SECRET</code></td><td>Oui</td><td>Signature sessions</td></tr>
+        <tr><td><code>STRIPE_SECRET_KEY</code></td><td>Oui</td><td>Clé Stripe côté serveur</td></tr>
+        <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td>Oui</td><td>Validation webhooks Stripe</td></tr>
+        <tr><td><code>AWS_S3_BUCKET</code></td><td>Oui</td><td>Stockage médias</td></tr>
+        <tr><td><code>VAPID_PUBLIC_KEY</code></td><td>Si push activé</td><td>Notifications web push</td></tr>
+        <tr><td><code>REDIS_URL</code></td><td>Optionnel</td><td>Cache/sessions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. Déploiement -->
+  <div class="card" id="deploiement">
+    <h2 class="section-title">5. Déploiement de l’application</h2>
+    <h3>Étape 1 : Vérification pré-déploiement</h3>
+    <ul class="list-tight">
+      <li><code>railway status</code> — vérifier que tous les services sont actifs</li>
+      <li><code>railway variables list</code> — vérifier que les variables sont configurées</li>
+    </ul>
+    <h3>Étape 2 : Déploiement automatique</h3>
+    <ol class="list-tight">
+      <li>Faire un push sur la branche <code>main</code> : <code>git add .</code>, <code>git commit -m "Configuration Railway complète"</code>, <code>git push origin main</code></li>
+    </ol>
+    <p>Railway va automatiquement : détecter les changements, lancer le build, déployer l’application, exécuter les health checks.</p>
+    <h3>Étape 3 : Surveillance du déploiement</h3>
+    <ol class="list-tight">
+      <li>Aller dans Railway Dashboard</li>
+      <li>Cliquer sur le service INKSPOT-5z</li>
+      <li>Surveiller l’onglet « Deployments »</li>
+      <li>Attendre que le statut soit « Deployed »</li>
+    </ol>
+    <p><strong>⚠ ATTENTION</strong> : Le premier déploiement peut prendre 5–10 minutes.</p>
+  </div>
+
+  <!-- 6. Configuration post-déploiement -->
+  <div class="card" id="config-post">
+    <h2 class="section-title">6. Configuration post-déploiement</h2>
+    <h3>Étape 1 : Configuration Grafana</h3>
+    <p><strong>1.1 Se connecter à Grafana</strong> — Aller sur l’URL de Grafana (ex. <code>https://grafana-production-&lt;id&gt;.up.railway.app</code>, visible dans le dashboard Railway), login <code>admin</code>, password = <code>GF_SECURITY_ADMIN_PASSWORD</code>.</p>
+    <p><strong>1.2 Ajouter Prometheus comme source de données</strong> — Configuration → Data Sources → Add data source → Prometheus, URL <code>http://prometheus:9090</code>, Access: Proxy, Save &amp; Test.</p>
+    <p><strong>1.3 Importer les dashboards</strong> — Dashboards → Import, importer les dashboards INKSPOT si disponibles.</p>
+    <h3>Étape 2 : Vérification des webhooks Stripe</h3>
+    <p>Webhook principal : <code>stripe listen --forward-to https://&lt;votre-service&gt;.up.railway.app/api/stripe/webhook</code></p>
+    <p>Webhook rendez-vous : <code>stripe listen --forward-to https://&lt;votre-service&gt;.up.railway.app/api/webhooks/stripe-appointments</code></p>
+    <p>Succès si les webhooks reçoivent les événements et répondent correctement.</p>
+  </div>
+
+  <!-- 7. Tests et vérification -->
+  <div class="card" id="tests-verif">
+    <h2 class="section-title">7. Tests et vérification</h2>
+    <ul class="list-tight">
+      <li><strong>Test 1 : Health Check</strong> — <code>curl https://&lt;votre-service&gt;.up.railway.app/api/health</code> → <code>&#123;"status":"ok"&#125;</code></li>
+      <li><strong>Test 2 : Métriques Prometheus</strong> — <code>curl https://&lt;votre-service&gt;.up.railway.app/api/metrics</code> → métriques au format Prometheus</li>
+      <li><strong>Test 3 : Page d’accueil</strong> — <code>curl https://&lt;votre-service&gt;.up.railway.app/</code> → page HTML</li>
+      <li><strong>Test 4 : Base de données</strong> — <code>railway run npx prisma db push</code> (sans erreur)</li>
+      <li><strong>Test 5 : Redis</strong> — <code>railway run node -e "require('ioredis')(process.env.REDIS_URL).ping().then(()=>console.log('OK'))"</code> → « Redis OK »</li>
+      <li><strong>Test 6 : Prometheus</strong> — <code>curl https://&lt;url-prometheus&gt;/-/healthy</code> → « Prometheus is Healthy. »</li>
+      <li><strong>Test 7 : Grafana</strong> — <code>curl https://&lt;url-grafana&gt;/api/health</code> → <code>&#123;"database":"ok","version":"..."&#125;</code></li>
+    </ul>
+  </div>
+
+  <!-- 8. Troubleshooting -->
+  <div class="card" id="troubleshooting">
+    <h2 class="section-title">8. Troubleshooting</h2>
+    <h3>Problème 1 : Build échoue</h3>
+    <p><strong>Symptômes</strong> : Build échoue avec erreurs TypeScript, erreurs de dépendances ou erreurs Prisma.</p>
+    <p><strong>Solutions</strong> :</p>
+    <ol class="list-tight">
+      <li>Vérifier les erreurs TypeScript : <code>npm run type-check</code></li>
+      <li>Vérifier les dépendances : <code>npm ci --only=production</code></li>
+      <li>Vérifier Prisma : <code>npx prisma validate</code>, <code>npx prisma generate</code></li>
+      <li>Vérifier les variables d’environnement : <code>npm run env:check</code></li>
+    </ol>
+  </div>
+
+  <!-- Checklists -->
+  <div class="card" id="checklists">
+    <h2 class="section-title">Checklists déploiement</h2>
+    <p><strong>Avant le déploiement</strong></p>
+    <ul class="list-tight">
+      <li>☐ Tous les services Railway créés (5 services)</li>
+      <li>☐ Toutes les variables d’environnement configurées</li>
+      <li>☐ Base de données initialisée et accessible</li>
+      <li>☐ Redis configuré et accessible</li>
+      <li>☐ Prometheus configuré et accessible</li>
+      <li>☐ Grafana configuré et accessible</li>
+      <li>☐ Application testée localement avec les variables de production</li>
+    </ul>
+    <p><strong>Pendant le déploiement</strong></p>
+    <ul class="list-tight">
+      <li>☐ Build réussi sans erreurs</li>
+      <li>☐ Déploiement terminé avec succès</li>
+      <li>☐ Health check réussi</li>
+      <li>☐ Application accessible via l’URL Railway</li>
+      <li>☐ Tous les endpoints fonctionnels</li>
+    </ul>
+    <p><strong>Après le déploiement</strong></p>
+    <ul class="list-tight">
+      <li>☐ Tests de connectivité réussis</li>
+      <li>☐ Métriques exposées et accessibles</li>
+      <li>☐ Monitoring opérationnel</li>
+      <li>☐ Logs sans erreurs critiques</li>
+      <li>☐ Performance dans les normes attendues</li>
+    </ul>
+    <p><strong>N’oubliez pas</strong> : Surveiller régulièrement les métriques et logs ; maintenir les services à jour ; sauvegarder régulièrement la base de données ; tester les fonctionnalités critiques régulièrement.</p>
+  </div>
+
+  <!-- Build, migrations, CI/CD, etc. (résumé technique) -->
+  <div class="card" id="build">
+    <h2 class="section-title">Build, migrations et commandes</h2>
+    <ul class="list-tight">
+      <li>Dockerfile (Next.js) + Nginx reverse-proxy ; Railway builder DOCKERFILE</li>
+      <li>Commandes : <code>npm run build</code> puis <code>npm start</code></li>
+      <li>Migrations : avant start : <code>prisma migrate deploy</code> (ou <code>npm run db:migrate</code>)</li>
+      <li>Seed optionnelle : <code>npm run db:seed</code> si contexte de démo</li>
+      <li>Healthcheck : <code>/api/health</code> ou <code>/api/health/simple</code></li>
+    </ul>
+  </div>
+
+  <div class="card" id="ci-cd">
+    <h2 class="section-title">Pipeline CI/CD (C2.1.1 &amp; C2.1.2)</h2>
+    <div class="callout callout-info">
+      <strong>Référentiel :</strong> Cette section répond aux critères C2.1.1 (mise en œuvre des environnements de développement et de déploiement continu) et C2.1.2 (configuration du système d’intégration continue) du référentiel YNOV 2024.
+    </div>
+    <h3>Protocole de déploiement continu</h3>
+    <p>Le protocole de déploiement continu INKSPOT est basé sur <strong>Railway</strong> (hébergement) et <strong>GitHub Actions</strong> (CI). Tout push sur la branche <code>dev</code> déclenche automatiquement le pipeline suivant :</p>
+    <table role="grid" aria-label="Séquences du pipeline CI/CD">
+      <thead>
+        <tr>
+          <th scope="col">Étape</th>
+          <th scope="col">Outil</th>
+          <th scope="col">Commande</th>
+          <th scope="col">Critère de qualité</th>
+          <th scope="col">Bloquant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Qualité du code</strong></td>
+          <td>ESLint + TypeScript</td>
+          <td><code>npm run lint</code> &amp;&amp; <code>npm run type-check</code></td>
+          <td>0 erreur ESLint, 0 erreur TypeScript</td>
+          <td><span class="pill badge-danger">Oui</span></td>
+        </tr>
+        <tr>
+          <td><strong>2. Tests unitaires</strong></td>
+          <td>Jest (ts-jest)</td>
+          <td><code>npm run test</code></td>
+          <td>100 % des tests passent ; couverture cible 70 %</td>
+          <td><span class="pill badge-danger">Oui</span></td>
+        </tr>
+        <tr>
+          <td><strong>3. Tests E2E</strong></td>
+          <td>Playwright</td>
+          <td><code>npm run test:e2e</code></td>
+          <td>Scénarios auth, réservation, paiement passés</td>
+          <td><span class="pill badge-neutral">Conditionnel</span></td>
+        </tr>
+        <tr>
+          <td><strong>4. Build</strong></td>
+          <td>Next.js + Docker</td>
+          <td><code>npm run build</code></td>
+          <td>Build sans erreur ; artefact Docker produit</td>
+          <td><span class="pill badge-danger">Oui</span></td>
+        </tr>
+        <tr>
+          <td><strong>5. Scan sécurité</strong></td>
+          <td>npm audit + SARIF</td>
+          <td><code>npm audit</code> + GitHub Code Scanning</td>
+          <td>0 vulnérabilité critique ou haute</td>
+          <td><span class="pill badge-danger">Oui</span></td>
+        </tr>
+        <tr>
+          <td><strong>6. Déploiement Railway</strong></td>
+          <td>Railway CLI</td>
+          <td>Automatique (push git)</td>
+          <td>Service Railway en état « Healthy »</td>
+          <td><span class="pill badge-danger">Oui</span></td>
+        </tr>
+        <tr>
+          <td><strong>7. Migrations DB</strong></td>
+          <td>Prisma</td>
+          <td><code>npx prisma migrate deploy</code></td>
+          <td>Toutes les migrations appliquées sans erreur</td>
+          <td><span class="pill badge-danger">Oui</span></td>
+        </tr>
+        <tr>
+          <td><strong>8. Smoke tests</strong></td>
+          <td>curl / Playwright</td>
+          <td><code>GET /api/health</code> + scénarios critiques</td>
+          <td>HTTP 200, temps de réponse &lt; 2s</td>
+          <td><span class="pill badge-danger">Oui</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Protocole d’intégration continue (C2.1.2)</h3>
+    <ul class="list-tight">
+      <li><strong>Dépôt de gestion du code source</strong> : GitHub (<code>antoine13330/INKSPOT-5z</code>) — branche principale <code>dev</code>, branches de fonctionnalité <code>feature/*</code>, branches de correction <code>fix/*</code>.</li>
+      <li><strong>Fusion des codes sources</strong> : via Pull Request avec revue de code obligatoire avant merge sur <code>dev</code>.</li>
+      <li><strong>Tests réguliers</strong> : exécution automatique de la suite Jest à chaque PR et push sur <code>dev</code>.</li>
+      <li><strong>Réduction des risques de régression</strong> : les tests unitaires (Jest) et E2E (Playwright) détectent les régressions avant le déploiement en production.</li>
+      <li><strong>Compilateur</strong> : TypeScript (tsc) + SWC (transpilation rapide pour les tests).</li>
+      <li><strong>Serveur d’application</strong> : Next.js 15 (Node.js 22) sur Railway.</li>
+      <li><strong>Outils de gestion de sources</strong> : Git + GitHub (branches, tags, releases).</li>
+    </ul>
+    <h3>Environnements de déploiement</h3>
+    <table role="grid" aria-label="Environnements de déploiement INKSPOT">
+      <thead>
+        <tr>
+          <th scope="col">Environnement</th>
+          <th scope="col">Branche</th>
+          <th scope="col">URL</th>
+          <th scope="col">Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Développement</strong></td>
+          <td><code>feature/*</code></td>
+          <td><code>http://localhost:3003</code></td>
+          <td>Développement local, tests unitaires</td>
+        </tr>
+        <tr>
+          <td><strong>Staging / Preview</strong></td>
+          <td><code>dev</code> (PR)</td>
+          <td>Railway Preview URL</td>
+          <td>Recette, tests E2E, validation fonctionnelle</td>
+        </tr>
+        <tr>
+          <td><strong>Production</strong></td>
+          <td><code>dev</code> (merge)</td>
+          <td>URL Railway production</td>
+          <td>Utilisateurs finaux</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <div class="card" id="observabilite">
+    <h2 class="section-title">Observabilité &amp; sécurité</h2>
+    <ul class="list-tight">
+      <li>Logs applicatifs + Nginx ; centralisation si possible</li>
+      <li>Métriques : Prometheus/Grafana, alertes sur erreurs 5xx</li>
+      <li>Secrets : rotation, accès minimal, variables d’env Railway</li>
+    </ul>
+  </div>
+
+  <div class="card" id="smoke">
+    <h2 class="section-title">Smoke tests post-déploiement</h2>
+    <ul class="list-tight">
+      <li>Auth : login/logout</li>
+      <li>Réservation : création d’un créneau test, consultation</li>
+      <li>Paiement Stripe (mode test) : checkout, vérif commission</li>
+      <li>Upload : image → affichage</li>
+      <li>Notifications : envoi/réception (si push activé)</li>
+      <li>Healthcheck : <code>/api/health</code> OK</li>
+    </ul>
+  </div>
+
+  <div class="card" id="backups">
+    <h2 class="section-title">Sauvegardes &amp; restauration</h2>
+    <ul class="list-tight">
+      <li>Backups DB planifiés (quotidiens) + conservation 7/30 jours</li>
+      <li>Procédure de restauration documentée (test trimestriel)</li>
+      <li>Sauvegardes S3 (versioning si activé)</li>
+    </ul>
+  </div>
+
+  <div class="card" id="scalabilite">
+    <h2 class="section-title">Scalabilité &amp; performance</h2>
+    <ul class="list-tight">
+      <li>Augmenter les ressources Railway en cas de charge</li>
+      <li>Optimiser cache Redis pour pages/queries fréquentes</li>
+      <li>Limiter les uploads volumineux (taille/format)</li>
+    </ul>
+  </div>
+
+  <div class="card" id="incidents">
+    <h2 class="section-title">Gestion des incidents</h2>
+    <ul class="list-tight">
+      <li>Identifier le scope (auth, paiement, upload, DB)</li>
+      <li>Analyser logs + métriques ; isoler la cause</li>
+      <li>Rollback si incident critique</li>
+      <li>Documenter l’incident et la résolution</li>
+    </ul>
+  </div>
+
+  <div class="card" id="secrets">
+    <h2 class="section-title">Secrets &amp; rollback</h2>
+    <ul class="list-tight">
+      <li>Secrets gérés dans Railway ; rotation recommandée</li>
+      <li>Rollback : réutiliser image précédente ou revert commit, redéployer</li>
+      <li>Webhooks Stripe : vérifier signature/endpoint après chaque déploiement</li>
+    </ul>
+  </div>
+
+  <!-- Liens et ressources -->
+  <div class="card" id="liens-ressources">
+    <h2 class="section-title">Liens et ressources</h2>
+    <p><strong>URLs de production</strong> (à adapter à votre projet ; les URLs réelles sont visibles dans le dashboard Railway) :</p>
+    <ul class="list-tight">
+      <li>Railway Dashboard : <code>https://railway.app/project/&lt;votre-project-id&gt;</code></li>
+      <li>Application : <code>https://&lt;votre-service&gt;.up.railway.app</code> (ou l’URL de votre service)</li>
+      <li>Prometheus : <code>https://prometheus-production-&lt;id&gt;.up.railway.app</code></li>
+      <li>Grafana : <code>https://grafana-production-&lt;id&gt;.up.railway.app</code></li>
+    </ul>
+    <p><strong>Félicitations</strong> : Si vous avez suivi ce guide étape par étape, vous devriez avoir une application INKSPOT déployée et fonctionnelle sur Railway, une base PostgreSQL gérée, un cache Redis opérationnel, un système de monitoring complet (Prometheus et Grafana), et toutes les fonctionnalités (auth, paiements, uploads, etc.) opérationnelles.</p>
+  </div>
+
+  <div class="card" id="verification-couverture-depl">
+    <h2 class="section-title">Table des sections</h2>
+    <p>Index des sections de ce manuel :</p>
+    <table role="grid" aria-label="Sections du manuel">
+      <thead><tr><th scope="col">Section</th><th scope="col">Présent</th><th scope="col">Emplacement</th></tr></thead>
+      <tbody>
+        <tr><td>1. Prérequis et préparation</td><td>Oui</td><td><a href="#prerequis">#prerequis</a></td></tr>
+        <tr><td>2. Création du projet Railway</td><td>Oui</td><td><a href="#creation-projet">#creation-projet</a></td></tr>
+        <tr><td>3. Configuration des services (PostgreSQL, Redis, Prometheus, Grafana, INKSPOT-5z)</td><td>Oui</td><td><a href="#configuration-services">#configuration-services</a></td></tr>
+        <tr><td>4. Variables d’environnement</td><td>Oui</td><td><a href="#env-table">#env-table</a></td></tr>
+        <tr><td>5. Déploiement de l’application</td><td>Oui</td><td><a href="#deploiement">#deploiement</a></td></tr>
+        <tr><td>6. Configuration post-déploiement (Grafana, webhooks Stripe)</td><td>Oui</td><td><a href="#config-post">#config-post</a></td></tr>
+        <tr><td>7. Tests et vérification</td><td>Oui</td><td><a href="#tests-verif">#tests-verif</a></td></tr>
+        <tr><td>8. Troubleshooting</td><td>Oui</td><td><a href="#troubleshooting">#troubleshooting</a></td></tr>
+        <tr><td>Checklists avant/pendant/après</td><td>Oui</td><td><a href="#checklists">#checklists</a></td></tr>
+        <tr><td>Liens et ressources, Félicitations</td><td>Oui</td><td><a href="#liens-ressources">#liens-ressources</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" id="reference-deploiement">
+    <h2 class="section-title">Référence document</h2>
+    <p><strong>Manuel de Déploiement Railway – INKSPOT.</strong> Ce document constitue le livrable officiel du manuel de déploiement du bloc 2 (référentiel YNOV 2024).</p>
+  </div>
+</DocLayout>

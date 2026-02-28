@@ -1,0 +1,726 @@
+ INKSPOT – Documentation   Page 1 / 17
+ Contenu couvert :
+ Résumé exécutif
+Le livrable « Cahier de recette » (critère CO2.7) est traité dans le document dédié :   Cahier de Recette .
+maintenabilité   (Prisma, Redis, modules).
+techniques
+ (checklist ARIA, focus, clavier, contrastes),   Évolutivité &
+ CO2.5 accessibilité, exigences
+Stripe, validation zod, rate-limit, secrets, auth),   Accessibilité (CO2.5)
+ Évolutivité, sécurité,
+ Exigences techniques & fonctionnelles (CO2.5) ,   Sécurité   (webhooks
+des régressions Notifications). Méthodologie de test (section 5.b).
+CO2.4 couverture, prévention coverage, modules critiques (Auth, Réservations, Paiement,
+ Harnais de tests,  Tests & couverture (CO2.4)   — Jest, Playwright, suites unitaires/E2E,
+ Critère   Attendu   Section(s) de ce manuel
+d’utilisation technique » :
+ Ce manuel couvre les critères du bloc 2 (référentiel YNOV 2024) attendus pour le livrable « Manuel
+ Conformité référentiel (validation Master)
+2026 — version finale de rendu Antoine
+1.1  
+31 mars Ajout OWASP Top 10, RGAA 4.1, manuel de mise à jour (C2.4.1) DESPRES
+accessibilité, annexes A–H Antoine
+ 1.0   Mars 2026 Version initiale — stack, architecture, flux, API, tests, sécurité,
+DESPRES
+Version   Date   Modifications   Auteur
+ Historique des versions
+Responsable Antoine
+ Rédacteur /  Document rédigé par l’équipe projet INKSPOT ; rédacteur : DESPRES
+ Technologies   Next.js, TypeScript, Railway, PostgreSQL, Prisma
+ Plateforme   Web Full Stack & Mobile First
+Master) techniques, sécurité, accessibilité, évolutivité)
+ Référentiel (validation  YNOV 2024 – Critères CO2.4 (tests & couverture), CO2.5 (exigences
+ Contenu   Chapitres 1–6, annexes A–H, référence technique
+ Date   31 mars 2026
+ Version   1.1
+ Titre   INKSPOT – Manuel d’Utilisation Technique
+Numéro de document   MUT-INKSPOT-2026-001
+ Élément   Valeur
+ Informations du document
+Manuel d’Utilisation Technique
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 2 / 17
+ DATABASE_URL   Connexion PostgreSQL
+ Variable   Usage
+détail (Requis / Usage), voir le   Manuel de Déploiement Railway .
+ Les variables suivantes sont nécessaires au fonctionnement de l’application. Pour la liste complète et le
+ Variables d’environnement
+ npm run lint   et   npm run test   passent (ou à corriger)
+ npm run dev   lance l’app sans erreur
+Base de données migrée et seedée ( npm run db:setup )
+ .env.local   renseigné (voir   Variables d’environnement )
+ Node 22 ( nvm use   ou selon   .nvmrc )
+ Checklist première mise en route
+ Vérification rapide :   npm run lint ,   npm run test   (tests unitaires),   npm run test:e2e   (E2E).
+6.   Lancer l’application   :   npm run dev   — l’app est disponible sur   http://localhost:3000
+5.   Base de données   :   npm run db:setup   (ou   npx prisma migrate deploy   +   npm run db:seed )
+valeurs (voir section   Variables d’environnement   et   Manuel Déploiement Railway )
+ 4.   Variables d’environnement   : copier   railway.env.example   vers   .env.local   et renseigner les
+3.   Installer les dépendances   :   npm install
+ 2.   Version Node   :   nvm use   (ou installer Node 22 selon   .nvmrc )
+1.   Cloner le dépôt   :   git clone https://github.com/antoine13330/INKSPOT-5z   puis   cd INKSPOT-5z
+ Pour lancer le projet en local (développement) :
+ Démarrage rapide
+ Connaissances   : bases Next.js/TypeScript, Prisma, REST API
+optionnellement Redis, S3-compatible (assets)
+ Comptes / services   : GitHub (dépôt projet), Railway (hébergement), Stripe (paiements),
+ Outils   : Git, éditeur de code, terminal
+ Environnement   : Node.js 22 (fichier   .nvmrc ), npm 10+
+ Prérequis pour l’application INKSPOT :
+ Prérequis
+dépannage.
+couverture (CO2.4), sécurité, accessibilité (CO2.5), évolutivité, monitoring, exploitation,
+permissions, parcours fonctionnels, exigences, données & intégrité, configuration, tests &
+ Référence technique rapide   : architecture & modules, flux de données, API principales, rôles &
+supervision détaillée, paiements & commissions, fonctionnalités & workflows.
+ Annexes A à H   : architecture stack, flux auth, monitoring, gestion des dépendances, CI/CD,
+3,5 % + 0,50 €, paiements Stripe), conclusion.
+méthodologie de test, méthodologie GitHub), modèle économique et fonctionnalités (commissions
+système de supervision (métriques, statuts, indicateurs), maintenance et évolution (CI/CD,
+technique, philosophie), stack technique, dépendances (scripts, principales, procédure de gestion),
+Document (chapitres 1–6)   : Introduction (présentation INKSPOT, vision, pour qui, approche
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 3 / 17
+ Rôles & permissions
+ API principales
+Flux de données
+ Architecture & modules
+ Référence technique rapide
+ 6. Modèle économique et fonctionnalités
+5. Maintenance et évolution
+ 4. Système de supervision
+ 3. Dépendances
+ 2. Stack technique
+1. Introduction
+ Structure du projet
+Variables d’environnement
+ Démarrage rapide
+ Prérequis
+Résumé exécutif
+ Conformité référentiel (validation Master)
+ Informations du document
+Document
+ Sommaire
+ scripts/   — Scripts utilitaires (déploiement, vérification)
+ docs/   — Documentation technique (CI/CD, déploiement, env)
+ __tests__/   — Tests unitaires et d’intégration Jest
+ e2e/   — Tests end-to-end Playwright
+ middleware/   — Middleware Next.js (sécurité, monitoring)
+ hooks/   — Hooks React personnalisés
+ prisma/   — Schéma Prisma ( schema.prisma ), seed, migrations
+ lib/   — Utilitaires, services, configuration (Stripe, validation, websocket)
+ components/   — Composants React réutilisables (UI, layout, métier)
+ app/   — Pages et routes Next.js (App Router) ;   app/api/**   pour les API
+ Organisation des répertoires principaux :
+ Structure du projet
+Validation :   npm run env:check   (si disponible) ou vérifier la présence des clés dans   .env.local .
+ REDIS_URL   Cache / sessions (optionnel en dev)
+ VAPID_PUBLIC_KEY ,   VAPID_PRIVATE_KEY   Notifications push (optionnel)
+ AWS_REGION  
+Stockage S3 (médias)
+ AWS_ACCESS_KEY_ID ,   AWS_SECRET_ACCESS_KEY ,   AWS_S3_BUCKET ,
+ STRIPE_WEBHOOK_SECRET  
+Paiements Stripe
+ STRIPE_SECRET_KEY ,   STRIPE_PUBLISHABLE_KEY ,
+ NEXTAUTH_SECRET   Signature des sessions
+http://localhost:3000)
+ NEXTAUTH_URL  
+URL publique de l’app (ex.
+Variable   Usage
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 4 / 17
+mobile pour s’adapter aux habitudes d’utilisation contemporaines. La plateforme est actuellement
+ INKSPOT est construite comme une application web moderne et responsive, privilégiant l’expérience
+ Approche Technique
+projets de tatouage.
+artistes, explorer différents styles, suivre leurs créateurs favoris, et organiser facilement leurs
+ Pour les Amateurs d’Art Corporel   : La plateforme permet aux passionnés de découvrir des
+leur activité dans un environnement sécurisé et moderne.
+pour présenter leur portfolio, gérer leurs rendez-vous, échanger avec leur clientèle et développer
+ Pour les Artistes Tatoueurs   : INKSPOT offre aux professionnels du tatouage un espace dédié
+ Pour qui ?
+Créer une communauté bienveillante autour de la passion commune
+Simplifier les échanges entre professionnels et clients
+Faciliter la découverte d’artistes et de styles pour les amateurs de tatouage
+Valoriser le travail des artistes en leur offrant une vitrine professionnelle moderne
+talentueux et clients en quête d’expression artistique personnelle. INKSPOT vise à :
+ Notre mission est de démocratiser l’accès à l’art du tatouage en créant un pont numérique entre artistes
+ Vision et Mission
+rencontrent, échangent et collaborent.
+rapprocher les talents des amateurs, INKSPOT révolutionne la façon dont artistes et clients se
+du tatouage prend vie dans l’ère digitale. Née de la passion pour l’art corporel et de la volonté de
+ INKSPOT est bien plus qu’une simple plateforme numérique : c’est un véritable carrefour créatif où l’art
+ Présentation d’INKSPOT
+ 1. Introduction
+Table des sections
+Références croisées
+Glossaire
+ Annexes (A–H)
+ Annexes & références
+ Dépannage rapide
+ Exploitation & runbook
+ Monitoring / Healthchecks
+Évolutivité & maintenabilité
+ Manuel de mise à jour (C2.4.1)
+ Accessibilité (RGAA 4.1)
+ Sécurité (OWASP Top 10)
+ Tests & couverture (CO2.4)
+ Configuration & scripts
+ Données & intégrité
+ Exigences techniques
+Parcours fonctionnels clés
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 5 / 17
+ npm run test   – exécution des tests unitaires Jest
+ npm run start   – lance un serveur de production
+ npm run build   – crée un Build de production avec migrations Prisma
+ npm run dev   – lance un serveur de développement avec Next.js
+ Les scripts disponibles sont notés dans le   package.json   :
+ 3.a Scripts
+(écrite dans le fichier   .nvmrc ).
+ La partie la plus lourde de l’application sont les dépendances ; actuellement la version de Node est la 22
+ 3. Dépendances
+jsdoc.
+Complément technique : Next.js 15 (app router), S3 (assets), Nginx (reverse-proxy), Docker, swagger-
+Tests   Jest + Playwright
+Monitoring   Prometheus + Grafana
+Cache & Sessions   Redis
+Payement   Stripe
+Authentification   NextAuth.js
+Base de données   PostgreSQL + Prisma ORM
+Hébergement/Service Railway
+Backend/API   Next.js API Routes, Tailwind CSS, Radix UI / shadcn/ui
+ Frontend   Next.js (TypeScript) – Interface mobile-first
+ Catégorie   Technologie
+ Voici un tableau de la stack technique. Un schéma détaillé est disponible en annexe A.
+ 2. Stack technique
+interaction.
+bienveillante où le respect mutuel, la créativité et l’excellence artistique sont au cœur de chaque
+clients une expérience de découverte riche et personnalisée. INKSPOT cultive ainsi une communauté
+vitrine mondiale aux artistes tatoueurs, qu’ils soient émergents ou confirmés, tout en garantissant aux
+talent et sa créativité. La plateforme transcende les barrières géographiques traditionnelles en offrant une
+que chaque tatouage raconte une histoire unique et que chaque artiste mérite d’être reconnu pour son
+ INKSPOT s’inscrit dans une démarche de respect et de valorisation de l’art du tatouage. Nous croyons
+ Philosophie du Projet
+garantissant une expérience utilisateur optimale sur tous les supports.
+ Conçue en « mobile first », INKSPOT s’adapte parfaitement aux smartphones, tablettes et ordinateurs,
+ Accessibilité Multi-plateforme
+nouvelles fonctionnalités basées sur les retours des utilisateurs.
+hébergée en environnement de développement, permettant une évolution continue et l’ajout progressif de
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 6 / 17
+ 4. Système de supervision
+bugs.
+ pour une analyse supplémentaire, testez manuellement l’application pour détecter d’éventuels
+mise à jour, validez la stabilité : lancez les tests unitaires avec   npm test , exécutez   npm run analyze
+une alternative. Cette approche minimise les risques tout en gardant le projet à jour. Après toute
+jour majeures. Si une dépendance est critique et vulnérable sans mise à jour compatible, envisagez
+si possible pour isoler les problèmes. Consultez les changelogs sur npmjs.com avant les mises à
+4.   Conseils pour la sécurité   : Mettez à jour régulièrement, mais pas plus d’une dépendance à la fois
+install   pour mettre à jour le   package-lock.json .
+(ex. 1.x → 2.x), éditez manuellement le   package.json   pour spécifier la nouvelle version, puis   npm
+compatibles (méthode la plus sûre pour changements mineurs). Pour des mises à jour majeures
+3.   Mettre à jour de manière sûre   : Utilisez   npm update   pour les mises à jour mineures et de patch
+désirées et les dernières disponibles (respect des contraintes semver du   package.json ).
+2.   Identifier les dépendances obsolètes   : Lancez   npm outdated   pour voir les versions actuelles,
+sont disponibles, appliquez   npm audit fix   et vérifiez manuellement les impacts sur le code.
+1.   Vérifier les vulnérabilités   : Exécutez   npm audit   pour lister les vulnérabilités. Si des corrections
+disruptions.
+production. Effectuez ces étapes dans un environnement de test (ex. branche Git dédiée) pour éviter les
+ ⚠   Attention   : Testez toujours les mises à jour dans un environnement de développement avant la
+analyser les paquets. Voici une approche simple et sûre pour les mettre à jour :
+Ce projet utilise peu de dépendances, dispose de tests unitaires et d’un script   npm run analyze   pour
+ Pour maintenir le projet à jour et sécurisé, il est essentiel de gérer les dépendances de manière prudente.
+ 3.c Procédure détaillée de gestion des dépendances
+Redis optimise les performances avec le cache et la gestion des sessions.
+ Système de monitoring   : Prometheus collecte les métriques, Grafana fournit les dashboards,
+composants avec   npx shadcn-ui@latest add button   (par exemple).
+ shadcn/ui   : bibliothèque de composants UI réutilisables (Tailwind CSS, Radix UI). Ajoutez des
+sortie de ce manuel, les données sont factices donc lors d’un achat personne n’est débité.
+ Stripe   : plateforme de paiement en ligne (cartes de crédit, abonnements, facturation). Lors de la
+OAuth, JWT).
+ NextAuth.js   : solution d’authentification complète pour Next.js (inscription, connexion, sessions,
+routes.
+prisma migrate . Utilisez le client généré pour effectuer des requêtes CRUD dans vos pages ou API
+ schema.prisma . Générez le client avec   npx prisma generate   et appliquez les migrations avec   npx
+ Prisma   : Initialisez avec   npx prisma init   pour créer un schéma. Les modèles sont dans
+monitoring :
+ Les dépendances principales sont celles de Prisma, NextAuth.js, Stripe, shadcn/ui et le système de
+ 3.b Dépendances principales
+ npm run analyze   – génère un rapport du poids du bundle
+ npm run lint   – Vérification du code
+ npm run db:setup   – fait la configuration initiale de la base de données
+ npm run db:seed   – peuple la base de données
+npm run test:e2e   – exécution des tests end-to-end Playwright
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 7 / 17
+ Niveaux de priorité
+dossier clôturé.  
+Fermé   Rapport traité et archivé après validation.
+Vérification post-correction effectuée,
+la normale.
+Résolu   Problème identifié et corrigé.  
+Patch déployé, les temps de réponse reviennent à
+En cours   Analyse ou correction en cours.   Un admin enquête sur des requêtes DB lentes.
+rapport  
+Rapport créé, en attente de prise en charge.   Signalement initial d’une hausse d’erreurs API.
+ En
+ Statut   Définition   Exemple d’usage
+ Tableau des statuts possibles
+métier).
+anormalement longs, problèmes de connectivité avec la base de données ou anomalies dans les métriques
+comportements anormaux sont détectés (taux d’erreurs élevés sur les API, temps de réponse
+d’engagement). Le système génère automatiquement des alertes lorsque certains seuils ou
+actifs simultanés, fréquence d’utilisation des fonctionnalités clés, qualité du contenu, tendances
+Les métriques métier aident à suivre l’activité réelle des utilisateurs (inscriptions par jour, utilisateurs
+Temps de réponse DB   <100 ms • 100 ms–1 s • >1 s   Rapide • Lente • À corriger
+Taux d’erreurs (HTTP) <1 % • 1–5 % • >5 %   Normal • À surveiller • Critique
+ Temps de réponse API <200 ms • 200–500 ms • >1 s Excellent • Bon • À corriger
+ Métrique   Seuils principaux   Interprétation rapide
+ Interprétation des indicateurs
+global pour chaque utilisateur.
+L’interface d’administration est disponible sur Grafana en production, accessible à partir d’un compte
+connexions base de données et Redis.
+réservations, nombre total de paiements, réservations du jour, revenus du jour, statut des
+ Métriques métier   : Nombre total d’utilisateurs, nombre total de posts, nombre total de
+connexions.
+requêtes (secondes), types d’opérations (select, create, update, delete), performance des
+ Métriques Base de données   : Nombre de requêtes exécutées par table, temps de réponse des
+d’erreurs par code de statut HTTP, méthodes HTTP utilisées (GET, POST, etc.).
+ Métriques API   : Nombre total de requêtes par endpoint, durée des requêtes (secondes), taux
+ Les types de métriques implémentés
+collecte des données de performance.
+personnalisé, basé sur Prometheus, qui instrumente automatiquement l’application et centralise la
+ce qui se passe dans la plateforme. Le cœur du monitoring repose sur un collecteur de métriques
+couvrant les API, la base de données et les activités métier, afin d’offrir une vision claire et continue de
+les performances, la santé et l’activité de l’application. Il collecte automatiquement des métriques
+ Le système de supervision d’INKSPOT s’appuie sur Prometheus et Grafana pour surveiller en temps réel
+Vue d’ensemble
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 8 / 17
+GitHub Actions et aux déploiements Railway, maintient un cycle de livraison maîtrisé : on protège la
+refactorés régulièrement pour rester utiles et lisibles. Cette discipline de tests, combinée au pipeline
+fonctionnelle doit ajouter ou mettre à jour des tests pertinents. Les tests fragiles ou redondants sont
+lorsque cela affecte la logique.   Revue et dette technique   : toute Pull Request modifiant la logique
+défaut utilisées en test, et couvrir le comportement sous flags ou modes (ex. préproduction/production)
+; un test instable nuit à toute la chaîne.   Variables d’environnement et flags   : documenter les valeurs par
+s’exécuter en millisecondes et donner toujours le même résultat. Éliminer les tests « flaky » avant fusion
+pour une bonne raison et réussir pour la bonne raison.   Rapidité et fiabilité   : un test unitaire doit
+chemins critiques) sans transformer la couverture en objectif purement quantitatif. Un test doit échouer
+massifs et volatils.   Critères de qualité   : viser une couverture significative et pertinente (branches et
+de base, interactions critiques). Les snapshots doivent rester ciblés et stables ; éviter les snapshots
+formats d’entrées/sorties, gestion des erreurs, contrats de composants (rendu conditionnel, accessibilité
+coût des régressions.   Ce qu’il faut tester en priorité   : règles métiers, transformations de données,
+du flux CI/CD. Ils servent à verrouiller le comportement attendu, faciliter les refactorings et réduire le
+ Pour assurer une maintenance durable, les tests unitaires et end-to-end font partie intégrante du code et
+ 5.b Méthodologie de test
+annexe diagramme de flux.
+déploiement n’est requise : la chaîne CI/CD garantit des livraisons rapides, fiables et traçables. Voir
+valider la Preview Railway, puis fusionner. La recette s’effectue sur   dev . Aucune commande de
+développer sur une branche dédiée, ouvrir une Pull Request, laisser la CI exécuter les vérifications,
+Railway pour renforcer la protection dans le navigateur. En pratique, le flux de travail est le suivant :
+permettre une évolution rapide et continue de la plateforme. Les en-têtes de sécurité sont appliqués côté
+Actuellement, la production est temporairement hébergée sur l’environnement de développement pour
+validation visuelle et fonctionnelle. La branche   dev   sert d’environnement de préproduction (recette).
+Chaque Pull Request déclenche la création d’un environnement de Preview avec une URL dédiée pour la
+une traçabilité claire des évolutions. Le déploiement est assuré par Railway, sans action manuelle.
+( CHANGELOG.md ) est mis à jour automatiquement par un script dédié, puis poussé sur le dépôt pour assurer
+bundle afin de contrôler la taille et les performances. En parallèle, le journal des changements
+tests unitaires et d’intégration. Pour la branche de production ( main ), une étape supplémentaire analyse le
+Pull Request vers les branches   dev   ou   main , une pipeline sous Node.js 22 exécute automatiquement les
+ INKSPOT dispose d’un système de CI/CD appuyé sur GitHub Actions et Railway. À chaque push ou
+ 5.a Déploiement continu
+ 5. Maintenance et évolution
+fonction de l’évolution de la charge et planifier les améliorations à mettre en œuvre.
+Une fois par mois, effectuer une révision complète du système, mettre à jour les seuils d’alerte en
+revoir les rapports non résolus et analyser les tendances de performance afin d’anticiper les problèmes.
+ 💡   Bonnes pratiques   : Un entretien régulier facilite la stabilité et la performance. Chaque semaine,
+immédiate.  
+Urgente   Immédiat (heures).
+Problème critique nécessitant une intervention
+Élevée   Impact significatif sur les utilisateurs.   Sous 24 heures.
+Moyenne Impact modéré nécessitant une attention.   Sous 72 heures.
+maintenance.
+ Faible   Impact minimal sur le service.  
+Planifié dans le prochain cycle de
+Priorité   Définition   Délai de traitement conseillé
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 9 / 17
+doublures. Isolation et mock : isoler l’unité testée en remplaçant les appels aux services externes (HTTP,
+créer des objets cohérents sans bruit. Éviter les dépendances à des ressources externes ; préférer des
+utiliser des jeux de données simples, explicites et reproductibles. Les « fixtures » et « factories » aident à
+fichier de test par unité logique, des noms de cas lisibles et orientés comportement. Données de test :
+répertoire) avec une convention de nommage claire pour être découverts automatiquement par la CI. Un
+exportées, composants, utilitaires). Organisation : les tests vivent au plus près du code testé (même
+avoir des tests qui couvrent ses règles métiers, ses chemins d’erreur et ses contrats publics (fonctions
+ Implémentation et bonnes pratiques des tests   : Portée des tests : chaque module ou composant doit
+laissant de la place à l’amélioration continue.
+tests et livraison. Il s’intègre naturellement au pipeline CI/CD et aux Previews Railway, tout en
+garantit un flux prévisible, des déploiements sûrs, et une traçabilité complète entre besoin, code,
+méthode. Ce cadre, du ticket initial jusqu’à la suppression de la branche et la mise en « Fait »,
+sur le ticket ou dans la documentation associée, pour capitaliser et améliorer en continu la
+visibles les évolutions livrées. En cas d’incident ou d’écart, un court retour d’expérience est noté
+8.   Traçabilité et retour d’expérience   : Le changelog est mis à jour automatiquement, rendant
+Projects.
+automatiquement à l’état « Fait », ce qui clôt le cycle et met à jour la visibilité dans GitHub
+La branche de travail est supprimée afin d’éviter l’encombrement et les confusions. Le ticket passe
+fusionnée vers la branche cible ( dev   pour la préproduction,   main   pour la production selon le cas).
+7.   Fusion, nettoyage et passage du ticket en « Fait »   : Après approbation et checks verts, la PR est
+correspond aux critères d’acceptation et qu’aucune régression visuelle majeure n’a été introduite.
+(et, si nécessaire, par la personne qui a porté le besoin). Cette étape confirme que le résultat
+6.   Script de déploiement continue   : La Preview Railway associée à la PR est vérifiée par l’équipe
+automatiquement mis à jour lorsque la PR sera fusionnée.
+d’acceptation et, si pertinent, les impacts techniques. Cette liaison garantit que le ticket sera
+au ticket. La description rappelle brièvement l’objectif, les changements principaux, les critères
+5.   Pull Request et liaison au ticket   : Une fois la tâche aboutie, une Pull Request est ouverte et liée
+génère des Previews pour valider visuellement les changements au fil de l’eau.
+chaque push, la CI exécute les tests unitaires et les autres contrôles qualité. En parallèle, Railway
+Les commits sont atomiques et mentionnent l’identifiant du ticket pour conserver la traçabilité. À
+4.   Développement et synchronisation continue   : Le développement se fait sur cette branche dédiée.
+explicite entre code et besoin.
+Cette automatisation réduit les erreurs, applique les conventions d’équipe et garantit le lien
+de nommage reste cohérente et traçable (par exemple, préfixe lié au type et identifiant du ticket).
+une branche dédiée est créée automatiquement à partir des informations du ticket. La convention
+3.   Création automatique de la branche à partir du ticket   : Dès que le ticket est prêt à être traité,
+seuils spécifiques pour la performance, etc.).
+travail, et permettent d’appliquer des règles de qualité adaptées (revue renforcée pour la sécurité,
+a11y, sécurité) ainsi qu’une priorité. Ces tags facilitent la planification, la recherche et le suivi du
+2.   Classification par tags   : Le ticket reçoit un ou plusieurs tags (ex. feature, bug, tech-debt, perf,
+explicites les attentes et sert de référence pendant tout le cycle.
+les critères d’acceptation et, si nécessaire, les risques connus et impacts. Cette documentation rend
+il est créé dans GitHub Projects sous la forme d’un ticket. Le ticket décrit le contexte, l’objectif,
+1.   Création et cadrage du ticket   : Lorsqu’un besoin émerge (évolution, correction, dette technique),
+pour les développeurs. Voici les étapes :
+par une fonctionnalité livrée et tracée. L’objectif est d’assurer clarté, traçabilité et vitesse, sans surcharge
+ INKSPOT suit un flux de travail simple et reproductible qui part d’un besoin documenté et se termine
+ 5.c Méthodologie GitHub
+ (préproduction) puis sur   main   (production).
+qualité au plus près du code, on détecte tôt les régressions, et on livre en confiance sur   develop
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 10 / 17
+sécurité). Synchronisation base de données (statut des paiements mis à jour automatiquement).
+pour éviter les doublons). Vérification cryptographique (signature des webhooks vérifiée pour la
+paiement sont traitées en temps réel). Idempotence (chaque webhook est traité de manière idempotente
+tracées et consultables).   Synchronisation et webhooks   : Webhooks Stripe (toutes les notifications de
+artiste (le montant net est transféré sur le compte de l’artiste). Suivi financier (toutes les transactions sont
+Secure). Calcul des commissions (INKSPOT prélève automatiquement 3,5 % + 50 centimes). Virement
+procède au paiement). Paiement Stripe (transaction sécurisée via Stripe Checkout avec SCA/3‑D
+commissions.   Flux de paiement et commissions   : Réservation client (le client sélectionne un créneau et
+Chaque réservation génère automatiquement une transaction Stripe avec calcul automatique des
+ Le système de paiement d’INKSPOT est entièrement intégré avec Stripe pour assurer sécurité et fiabilité.
+ 6.c Gestion des paiements Stripe
+Suivi (historique des rendez-vous passés et à venir)
+Paiements sécurisés (Stripe avec protection SCA/3‑D Secure)
+ Réservations (prise de rendez-vous avec les artistes)
+ Pour les clients
+Évaluations (système de reviews et commentaires)
+Gestion des disponibilités (définition des créneaux disponibles)
+Suivi financier (historique des rendez-vous, revenus générés)
+Collaborations (possibilité de collaborer sur des posts)
+Outils professionnels (tableau de bord avancé, analytics de performance)
+ Gestion des réservations (proposition de créneaux, gestion du planning)
+ Pour les artistes (PRO)
+Contenu (création et partage de posts avec images et hashtags)
+Communication (envoi de messages directs aux artistes)
+Interactions sociales (abonnement aux artistes, commentaires, likes sur les posts)
+Recherche et découverte (recherche d’artistes et de posts, filtres avancés)
+ Création de compte et profil (inscription, authentification, personnalisation du profil)
+ Pour tous les utilisateurs
+ INKSPOT propose une plateforme complète de mise en relation entre artistes tatoueurs et clients.
+ 6.b Fonctionnalités principales
+supplémentaires.   🚀   Évolution future .
+l’avenir, offrant des fonctionnalités avancées aux utilisateurs qui souhaitent bénéficier d’options
+un service gratuit aux utilisateurs. Un système d’abonnement premium est également prévu pour
+commission de   3,5 % + 50 centimes . Ce modèle permet à la plateforme de se rémunérer tout en offrant
+effectuées par les utilisateurs. Pour chaque réservation payée via Stripe, INKSPOT prélève une
+ INKSPOT génère ses revenus principalement via un système de commissions sur les réservations
+ 6.a Modèle économique
+ 6. Modèle économique et fonctionnalités
+rapides, déterministes et indépendants du réseau.
+base de données, file system, SDK tiers) par des mocks/stubs contrôlés. Le but est d’obtenir des tests
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 11 / 17
+Messagerie : ouverture conversation → envoi → réception temps réel.
+Recherche d’un artiste → réservation → paiement Stripe → confirmation.
+ Inscription → vérification email → login → onboarding.
+ Parcours fonctionnels clés
+Contrôle d’accès : middleware + vérification des rôles sur routes sensibles.
+Admin : modération, gestion utilisateurs, accès aux dashboards.
+Artiste/Pro : gestion disponibilités, validation/annulation, stats, contenu.
+ Client : recherche, réservation, paiement, messagerie, gestion profil.
+ Rôles & permissions
+Recherche   /api/search/*   Posts, utilisateurs, tendances
+Messages   /api/conversations/*   Messagerie et realtime
+Notifications   /api/notifications ,   /api/push-subscriptions/*   Envoi et préférences
+Paiements   /api/payments/*   Checkout, confirm, payout, refund
+Bookings   /api/appointments/*   Création, statut, transitions
+ Auth   /api/auth/*   Login, register, reset, verify
+ Domaine   Endpoints   Objectif
+ API principales
+Messagerie Conversation → Message → Realtime   Conversation, Message, Notifications
+Paiement   Checkout → Webhook → Sync DB   Payment, Invoice, Commission
+Réservation Disponibilités → Booking → Confirmation Appointment, Booking, StatusHistory
+ Auth   Register → Email → Login → Session   User, Session, VerificationToken
+ Flux   Étapes clés   Données persistées
+ Flux de données
+Stockage fichiers : S3 (upload) ; Cache/session : Redis
+Prisma schema : modèles utilisateurs, posts, bookings, payments, notifications, etc.
+ Services métier : réservation, paiement, notifications, messagerie
+ Front/Back unifiés dans Next.js ; API routes sous   app/api/**
+ Architecture & modules
+constitue une base solide et opérationnelle pour l’exploitation et l’évolution de l’application.
+et compléter les aspects sécurité/RGPD et secrets. Une fois ces ajustements appliqués, le document
+corriger les doublons et coquilles, stabiliser la mise en forme des tableaux, préciser versions et prérequis,
+modèle économique repose sur des commissions transparentes via Stripe. Pour finaliser ce manuel,
+tests unitaires et e2e). La supervision couvre les couches API, base de données et métier, tandis que le
+Prometheus → Grafana) et un cycle de livraison maîtrisé (CI/CD GitHub Actions, previews Railway,
+ INKSPOT s’appuie sur une architecture moderne et cohérente (Next.js/Railway, PostgreSQL/Prisma,
+Conclusion
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 12 / 17
+SQL brut) ; validation d’entrée avec schémas Zod sur toutes les
+ A03 — Injection   Requêtes DB via Prisma ORM (paramétrage automatique, pas de Couvert
+Failures en variables d’env Railway (jamais en clair) ; rotation recommandée  
+Couvert
+ A02 — Cryptographic  Mots de passe hashés (bcryptjs) ; HTTPS via Nginx ; secrets stockés
+Control middleware de vérification sur toutes les routes API sensibles  
+Couvert
+A01 — Broken Access  Contrôle d’accès par rôles (USER / PRO / ADMIN) via NextAuth ;
+ Faille OWASP   Mesure implémentée dans INKSPOT   Statut
+sécurité principales décrites par l’OWASP, conformément au critère C2.2.3 du référentiel YNOV 2024.
+ Référentiel appliqué :   OWASP Top 10 (2021) — les mesures ci-dessous couvrent les 10 failles de
+ Sécurité (C2.2.3 — OWASP Top 10)
+upload, messaging).
+Prévention régressions : scénarios E2E alignés sur les parcours (auth, réservation, paiement,
+Modules critiques visés : Auth, Réservations, Paiement Stripe (commission), Notifications.
+Rapport de couverture :   coverage/lcov-report/index.html .
+d’erreur SWC — transpilation via ts-jest).
+Résultat :   npm test   exécute les tests unitaires ;   npm run test:coverage   génère le rapport lcov (plus
+Suites E2E :   e2e/auth-flow ,   booking-flow ,   payment-flow ,   basic-navigation ,   public-features .
+ __tests__/lib/*.test.ts .
+Suites unitaires :   __tests__/api/*.test.ts ,   __tests__/components/*.test.tsx ,
+Harnais ciblé : unitaires (Jest + ts-jest) + E2E (Playwright) + lint.
+ État actuel : Jest (ts-jest) opérationnel —   npm test   et   npm run test:coverage   fonctionnent.
+ Tests & couverture (CO2.4)
+Docs API :   api:docs:generate   /   api:docs:export .
+Notifications :   notifications:test   /   notifications:send-test .
+DB :   npm run db:generate ,   npm run db:push ,   npm run db:seed .
+ Variables env validées via   npm run env:check .
+ Configuration & scripts
+RGPD : suppression/anonymisation des comptes si requis.
+Historisation : statuts de réservation et paiements conservés.
+Contraintes : unicité email/username, relations booking↔paiement.
+ Modèles clés : User, Post, Booking, Payment, Notification, Message.
+ Données & intégrité
+Traçabilité : logs applicatifs + métriques (Prometheus/Grafana).
+Compatibilité : web + mobile responsive, navigateurs modernes.
+Sécurité : validation entrée, contrôle d’accès, secrets en env.
+ Performance : pages principales < 3s en conditions normales, pagination/filtrage.
+ Exigences techniques & fonctionnelles (CO2.5)
+Upload média : sélection fichier → upload S3 → affichage.
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 13 / 17
+ Évolutivité & maintenabilité
+ Statut   : audit axe/Lighthouse planifié — voir anomalie REC-003 dans le   Cahier de Recette
+ Audit Lighthouse   : score accessibilité cible ≥ 90/100
+messagerie)
+ Audit automatisé   :   axe-cli   et Playwright a11y sur les pages critiques (login, booking, paiement,
+ Lint statique   :   eslint-plugin-jsx-a11y   intégré au pipeline CI/CD
+ Outillage et audit
+(11.x) live   ; champs obligatoires marqués  
+Implémenté
+ Formulaires  Labels associés à chaque champ ; messages d’erreur annoncés via   aria-
+(12.x) (Escape) ; ordre de tabulation logique  
+Implémenté
+ Navigation  Focus visible ; navigation clavier complète ; modales fermables au clavier
+sur tous les éléments cliquables  
+ Scripts (7.x)   Implémenté
+Composants interactifs avec rôles ARIA explicites ; événements clavier
+ Liens (6.x)   Intitulés de liens explicites ; pas de « cliquez ici » sans contexte   Implémenté
+ Tableaux (5.x)   Attributs   scope ,   role="grid" ,   aria-label   sur tous les tableaux de données Implémenté
+information non transmise par la couleur seule  
+ Couleurs (3.x)   À auditer
+Contraste AA (ratio ≥ 4,5:1 pour texte normal, ≥ 3:1 pour grand texte) ;
+avec   alt=""  
+Images (1.x)   Implémenté
+Attributs   alt   sur toutes les images significatives ; images décoratives
+ Critère RGAA   Mesure implémentée   Statut
+applicable aux services numériques professionnels.
+référentiel d’accessibilité choisi, présenté et justifié ». Le RGAA est le référentiel officiel français,
+WCAG 2.1 niveau AA — conformément au critère C2.2.3 du référentiel YNOV 2024 qui exige un «
+ Référentiel choisi :   RGAA 4.1 (Référentiel Général d’Amélioration de l’Accessibilité), aligné sur
+ Accessibilité (CO2.5 — RGAA 4.1 / WCAG 2.1)
+restriction des URLs autorisées pour les webhooks entrants  
+ A10 — SSRF   Couvert
+Validation des types et tailles de fichiers uploadés ; ACL S3 +
+métriques
+Failures
+5xx) ; logs Nginx + applicatifs ; Prometheus/Grafana pour les Couvert
+ A09 — Logging
+ Journalisation des événements critiques (auth, paiements, erreurs
+artefacts
+Integrity Failures
+(prévention des replays) ; pipeline CI/CD avec vérification des Couvert
+ A08 — Software
+ Webhooks Stripe : vérification de signature HMAC + idempotence
+endpoints d’authentification ; verrouillage après tentatives échouées  
+ A07 — Auth Failures   Couvert
+Sessions NextAuth (JWT + cookies httpOnly) ; rate-limit sur
+Components surveillance des dépendances (Dependabot recommandé)  
+Couvert
+ A06 — Vulnerable  npm audit   intégré au pipeline CI/CD ; script   security:scan   ;
+Misconfiguration sécurisés via Nginx ; ACL S3 restrictives  
+Couvert
+ A05 — Security  Variables d’env Railway (pas de .env en production) ; headers HTTP
+responsabilités ; revue de code via PR GitHub  
+ A04 — Insecure Design   Couvert
+Architecture modulaire (app/api, services, prisma) ; séparation des
+ routes sensibles
+Faille OWASP   Mesure implémentée dans INKSPOT   Statut
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 14 / 17
+ Manuel de mise à jour (C2.4.1)
+Docs Swagger : scripts   api:docs:generate   /   api:docs:export   (swagger-jsdoc)
+Booking, Payment, Invoice, Review, Notification, etc.)
+Modèles Prisma :   prisma/schema.prisma   (User, Post, Conversation, Message, Appointment,
+ Routes API : inventaire généré depuis   app/api/**   (≈ 80 routes listées)
+ Ressources projet
+H   Fonctionnalités & workflows clés
+G   Paiements & commissions (Stripe)
+F   Flux CI/CD et déploiement
+E   Supervision détaillée (métriques, séries temporelles)
+D   Gestion des dépendances (processus)
+C   Architecture de monitoring (vue synthétique)
+B   Flux d’authentification et données
+ A   Architecture de la stack technique (schéma)
+ Annexe   Contenu
+ Annexes du manuel (A à H) :
+ Annexes
+E2E KO : vérifier port webServer + config Playwright.
+Upload KO : vérifier credentials S3 + ACL.
+Paiement KO : vérifier clés Stripe + webhook secret.
+ Login KO : vérifier   NEXTAUTH_URL   + secrets.
+ Dépannage rapide
+Backups : base de données + sauvegarde des médias S3.
+Planifier les migrations Prisma hors pic de charge.
+Vérifier quotidiennement les jobs Stripe/webhooks.
+ Surveiller erreurs 5xx et latence des endpoints critiques.
+ Exploitation & runbook
+Logs : app, nginx, Stripe webhooks
+Prometheus + Grafana : métriques app/DB/cache
+ Endpoints santé :   /api/health   et variantes simples
+ Monitoring / Healthchecks
+Surveillance des dépendances (npm audit, security:scan)
+Modules séparés (app/api, services, prisma) pour limiter le couplage
+Cache/Redis pour sessions et optimisation requêtes fréquentes
+Migrations Prisma :   npm run db:migrate   /   db:push , versionning clair
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 15 / 17
+ CI/CD   Intégration et déploiement continus (GitHub Actions + Railway)
+ Terme   Définition
+ Glossaire
+L’historique complet des versions est tracé dans le   Changelog   (critère C4.3.2 — Journal des versions).
+Changement incompatible (breaking)   MAJOR (+1.0.0)   1.0.0 → 2.0.0
+Nouvelle fonctionnalité rétrocompatible MINOR (+0.1.0)   1.0.0 → 1.1.0
+ Correctif de bug (patch)   PATCH (+0.0.1)   1.0.0 → 1.0.1
+ Type de changement   Incrément de version   Exemple
+ Gestion des versions (SemVer)
+production (voir Manuel de Déploiement).
+ Sauvegarde avant migration   : toujours effectuer un backup DB avant une migration en
+ Vérifier l’état   :   npx prisma migrate status
+via Railway)
+ Appliquer en production   :   npx prisma migrate deploy   (exécuté automatiquement au démarrage
+développement)
+ Créer une migration   :   npx prisma migrate dev --name [nom-migration]   (environnement de
+ Migrations de base de données
+précédente.
+ Rollback   : Railway conserve l’historique des déploiements ; rollback en 1 clic vers une version
+ Type manuel   : via le dashboard Railway → « Deploy » → sélectionner le commit cible.
+automatique via Railway CI/CD.
+ Type automatique (Railway)   : tout push sur la branche   dev   déclenche un redéploiement
+ Mise à jour de l’application
+changes) complets  
+Planifiée (sprint dédié)
+Mise à jour majeure (breaking  npm install [package]@latest   + tests
+spécifique   sécurité
+npm update [package]  
+Mise à jour d’une dépendance Selon besoin / correctif de
+disponibles  
+npm outdated   Mensuelle
+Vérification des mises à jour
+vulnérabilités   détectée
+npm audit fix  
+Correction automatique des Dès qu’une vulnérabilité est
+PR
+ Audit de sécurité   npm audit  
+Hebdomadaire / après chaque
+ Étape   Commande   Fréquence
+ Mise à jour des dépendances
+dépendances, des versions applicatives et des migrations de base de données.
+documentation technique : manuel de mise à jour ». Il décrit la procédure de mise à jour des
+Référentiel :   Ce chapitre répond au critère C2.4.1 du référentiel YNOV 2024 — « Rédiger la
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 16 / 17
+d’utilisation technique.
+ Manuel d’utilisation technique INKSPOT.   Ce document constitue le livrable officiel du manuel
+ Référence document
+CI/CD, paiements, workflows)   techniques
+Oui  
+Annexes A à H (architecture, flux auth, monitoring, dépendances, #annexes   + sections
+ Conclusion   Oui   Même section
+6. Modèle économique — 6.a, 6.b, 6.c   Oui   #modele-economique
+5. Maintenance — 5.c Méthodologie GitHub   Oui   Même section
+ 5. Maintenance — 5.b Méthodologie de test   Oui   Même section
+ 5. Maintenance — 5.a Déploiement continu   Oui   #maintenance
+Statuts, Priorités)  
+Oui   #supervision
+4. Système de supervision (Vue d’ensemble, Métriques, Indicateurs,
+3. Dépendances — 3.c Procédure de gestion   Oui   Même section
+ 3. Dépendances — 3.b Dépendances principales   Oui   Même section
+3. Dépendances — 3.a Scripts   Oui   #dependances
+ 2. Stack technique (tableau + annexe A)   Oui   #stack   + Annexes
+Philosophie, Accessibilité)  
+Oui   #introduction
+ 1. Introduction (Présentation, Vision, Pour qui, Approche,
+ Informations du document   Oui   #infos-document
+ Section   Présent   Emplacement
+ Index des sections de ce manuel :
+ Table des sections
+VAPID, etc.).
+Documentation technique du dépôt :   docs/   (CI/CD, environnement, déploiement Railway, dépannage
+ Changelog   — Historique des évolutions et corrections du projet.
+migrations, CI/CD, observabilité, sauvegardes et incidents.
+ Manuel de Déploiement Railway   — Prérequis, variables d’environnement complètes, build,
+couverture (référentiel CO2.7).
+ Cahier de Recette   — Plan de tests, scénarios fonctionnels, critères d’acceptation, E2E et
+ Documents et pages complémentaires de la documentation INKSPOT :
+ Références croisées
+Healthcheck   Endpoint ou script vérifiant la disponibilité de l’application ou des services
+Runbook   Procédure opérationnelle pour l’exploitation et le dépannage
+Preview   Environnement Railway temporaire créé à partir d’une Pull Request
+Idempotence   Traitement d’un webhook ou d’une requête sans effet de bord en cas de doublon
+ SCA / 3‑D Secure Strong Customer Authentication : authentification forte pour les paiements en ligne
+Terme   Définition
+ INKSPOT   · Documentation   MUT
+
+ INKSPOT – Documentation   Page 17 / 17
+dans la section   Conformité référentiel .
+techniques, Sécurité, Accessibilité et Évolutivité sont détaillées et tracées ; la conformité est explicitée
+du référentiel YNOV 2024 (critères CO2.4 et CO2.5). Les sections Tests & couverture, Exigences
+Validation Master   : ce manuel est conforme aux attentes du livrable « Manuel d’utilisation technique »
+ INKSPOT   · Documentation   MUT

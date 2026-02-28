@@ -1,0 +1,81 @@
+﻿---
+import DocLayout from '../layouts/DocLayout.astro';
+---
+
+<DocLayout title="Guide des documents">
+  <div class="card toc">
+    <strong>Sommaire</strong>
+    <ul class="list-tight">
+      <li><a href="#documents">Documents</a></li>
+      <li><a href="#preuves">Où trouver les preuves</a></li>
+      <li><a href="#livrables">Documents à rendre</a></li>
+      <li><a href="#fichiers-texte">Annexes – Fichiers texte</a></li>
+    </ul>
+  </div>
+
+  <div class="card" id="documents">
+    <p class="pill">Aperçu</p>
+    <h2>Mini-site Astro des documents INKSPOT</h2>
+    <p>
+      Ce site regroupe les 5 documents du livrable pour les critères CO2.4, CO2.5 et CO2.7
+      du référentiel YNOV 2024 (<em>2024 Référentiel Expert en développement logiciel YNOV</em>). Chaque page constitue le document officiel de rendu.
+    </p>
+    <div class="two-col">
+      <div>
+        <h3>Documents</h3>
+        <ul class="list-tight">
+          <li><a href="/mut">Manuel d’Utilisation Technique</a></li>
+          <li><a href="/deploiement-railway">Manuel de Déploiement Railway</a></li>
+          <li><a href="/manuel-mise-a-jour">Manuel de Mise Ã  Jour</a></li>
+          <li><a href="/cahier-recette">Cahier de Recette</a></li>
+          <li><a href="/changelog">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Objectifs bloc 2</h3>
+        <ul class="list-tight">
+          <li>CO2.4 : Harnais de tests, couverture, prévention des régressions</li>
+          <li>CO2.5 : Évolutivité, sécurité, accessibilité, exigences techniques</li>
+          <li>CO2.7 : Cahier de recette complet (scénarios, résultats, checklists)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="preuves">
+    <p class="pill">Conformité bloc 2</p>
+    <h2>Où trouver les preuves</h2>
+    <ul class="list-tight">
+      <li>CO2.4 (tests & couverture) : section <a href="/mut#tests">MUT</a> + <a href="/cahier-recette#coverage">Cahier de Recette</a>.</li>
+      <li>Coverage lcov : <code>coverage/lcov-report/index.html</code> (résumé global intégré).</li>
+      <li>CO2.5 (sécurité + accessibilité) : sections <a href="/mut#securite">Sécurité</a> et <a href="/mut#accessibilite">Accessibilité</a>.</li>
+      <li>CO2.7 (cahier de recette complet) : <a href="/cahier-recette">scénarios détaillés + résultats</a>.</li>
+    </ul>
+  </div>
+
+  <div class="card" id="livrables">
+    <p class="pill">Livrables Master</p>
+    <h2>Documents à rendre</h2>
+    <p>Les documents officiels de rendu sont les pages suivantes :</p>
+    <ul class="list-tight">
+      <li><a href="/cahier-recette">Cahier de recette</a> : objectif, périmètre, scénarios, matrice de traçabilité, résultats et preuves, anomalies, E2E, couverture, accessibilité, sécurité, glossaire.</li>
+      <li><a href="/mut">Manuel d’utilisation technique (MUT)</a> : stack, architecture, flux, API, rôles, parcours, exigences, données, configuration, tests (CO2.4), sécurité, accessibilité (CO2.5), exploitation, dépannage, annexes.</li>
+      <li><a href="/deploiement-railway">Manuel de Déploiement Railway</a> : prérequis, variables d’environnement, build, migrations, pas à pas, checklists, CI/CD, observabilité, smoke tests, sauvegardes, scalabilité, incidents, secrets et rollback.</li>
+      <li><a href="/manuel-mise-a-jour">Manuel de Mise à Jour</a> : procédure de mise à jour des dépendances, de l'application, migrations Prisma, gestion des versions SemVer, rollback (C2.4.1).</li>
+      <li><a href="/changelog">Changelog</a> : format, entrées récentes, historique Git complet, écarts de conformité, prochaines étapes.</li>
+    </ul>
+  </div>
+  <div class="card" id="fichiers-texte">
+    <p class="pill">Annexes</p>
+    <h2>Fichiers texte (annexes)</h2>
+    <p>Fichiers .txt téléchargeables depuis chaque page.</p>
+    <ul class="list-tight">
+      <li><a href="/extracts/cahier-recette.txt" download="cahier-recette-INKSPOT.txt">cahier-recette.txt</a></li>
+      <li><a href="/extracts/manuel-utilisation.txt" download="manuel-utilisation-INKSPOT.txt">manuel-utilisation.txt</a></li>
+      <li><a href="/extracts/manuel-deploiement-railway.txt" download="manuel-deploiement-railway-INKSPOT.txt">manuel-deploiement-railway.txt</a></li>
+      <li><a href="/extracts/manuel-mise-a-jour.txt" download="manuel-mise-a-jour-INKSPOT.txt">manuel-mise-a-jour.txt</a></li>
+      <li><a href="/extracts/changelog.txt" download="changelog-INKSPOT.txt">changelog.txt</a></li>
+    </ul>
+    <p>Emplacement des fichiers : <code>docs-astro/public/extracts/</code>.</p>
+  </div>
+</DocLayout>

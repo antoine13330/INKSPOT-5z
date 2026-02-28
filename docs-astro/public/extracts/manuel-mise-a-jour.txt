@@ -1,0 +1,169 @@
+INKSPOT – Documentation   Page 1 / 5
+Manuel de Mise à Jour – INKSPOT
+
+ Informations du document
+
+ Numéro de document   MMJ-INKSPOT-2026-001
+ Titre   INKSPOT – Manuel de Mise à Jour
+ Version   1.0
+ Date   31 mars 2026
+ Référentiel (validation Master)   YNOV 2024 – Critère C2.4.1 (Manuel de mise à jour)
+ Public cible   Équipe dev, équipe ops, mainteneurs
+ Rédacteur / Responsable   DESPRES Antoine
+
+ Historique des versions
+
+ Version   Date   Modifications   Auteur
+ 1.0   31 mars 2026   Version initiale — procédures de mise à jour des dépendances, de l'application, migrations Prisma, SemVer — livrable autonome C2.4.1   DESPRES Antoine
+
+ Référentiel : Ce document répond au critère C2.4.1 du référentiel YNOV 2024 — « Rédiger la documentation technique d'exploitation du logiciel détaillant son fonctionnement afin d'assurer une traçabilité pour le suivi des équipes et des futures évolutions du logiciel — Le manuel de mise à jour. »
+
+-- 1 of 5 --
+
+INKSPOT – Documentation   Page 2 / 5
+
+ Prérequis
+
+- Accès au repository GitHub : antoine13330/INKSPOT-5z
+- Accès au dashboard Railway : railway.app
+- Node.js 22 installé localement (nvm use selon .nvmrc)
+- Railway CLI installé : npm install -g @railway/cli
+- Variables d'environnement configurées (voir Manuel de Déploiement Railway)
+
+Toujours effectuer les mises à jour d'abord en environnement de développement avant de déployer en production.
+
+ 1. Mise à jour des dépendances
+
+ Attention : Testez toujours les mises à jour dans un environnement de développement avant la production.
+
+ Étape   Commande   Fréquence
+ Audit de sécurité   npm audit   Hebdomadaire / après chaque PR
+ Correction automatique des vulnérabilités   npm audit fix   Dès qu'une vulnérabilité est détectée
+ Vérification des mises à jour disponibles   npm outdated   Mensuelle
+ Mise à jour d'une dépendance spécifique   npm update [package]   Selon besoin / correctif de sécurité
+ Mise à jour majeure (breaking changes)   npm install [package]@latest + tests complets   Planifiée (sprint dédié)
+
+ Bonnes pratiques :
+- Ne pas mettre à jour plus d'une dépendance à la fois pour isoler les problèmes.
+- Consulter les changelogs sur npmjs.com avant les mises à jour majeures.
+- Si une dépendance est critique et vulnérable sans mise à jour compatible, envisager une alternative.
+- Après toute mise à jour, valider la stabilité : npm test, puis npm run analyze.
+- Script de scan sécurité disponible : npm run security:scan.
+
+-- 2 of 5 --
+
+INKSPOT – Documentation   Page 3 / 5
+
+ 2. Mise à jour de l'application
+
+ Déploiement automatique (Railway CI/CD)
+
+Tout push sur la branche dev déclenche automatiquement le pipeline Railway :
+1. Lint & type-check (npm run lint && npm run type-check)
+2. Tests unitaires (npm test)
+3. Tests E2E Playwright (npm run test:e2e — conditionnel)
+4. Build Next.js (npm run build)
+5. Déploiement Railway automatique
+6. Migrations Prisma au démarrage (npx prisma migrate deploy)
+7. Smoke tests post-déploiement (/api/health)
+
+ Déploiement manuel
+- Via dashboard Railway → service INKSPOT-5z → « Deploy » → sélectionner le commit cible.
+- Via Railway CLI : railway up depuis le répertoire du projet.
+
+ Environnements de déploiement
+
+ Environnement   Branche   URL   Usage
+ Développement   feature/*   http://localhost:3003   Tests locaux, développement
+ Staging / Preview   dev (PR)   Railway Preview URL   Recette, tests E2E, validation fonctionnelle
+ Production   dev (merge)   URL Railway production   Utilisateurs finaux
+
+ 3. Migrations de base de données
+
+ Important : Toujours effectuer un backup de la base de données avant une migration en production.
+
+ Procédure de migration :
+- Créer une migration (dev) : npx prisma migrate dev --name [nom-migration]
+- Vérifier l'état : npx prisma migrate status
+- Appliquer en production : npx prisma migrate deploy (automatique au démarrage Railway)
+- Régénérer le client Prisma : npm run db:generate
+- Pousser le schéma sans migration (dev uniquement) : npm run db:push
+
+ Procédure complète en production :
+1. Effectuer un backup DB (Railway ou pg_dump)
+2. Créer la migration localement : npx prisma migrate dev --name [description]
+3. Tester en environnement de staging
+4. Merger la PR sur dev — Railway déploie et exécute prisma migrate deploy
+5. Vérifier les logs Railway et le health check : /api/health
+
+-- 3 of 5 --
+
+INKSPOT – Documentation   Page 4 / 5
+
+ 4. Gestion des versions (SemVer)
+
+INKSPOT suit la convention de versioning sémantique (semver.org) :
+
+ Type de changement   Incrément de version   Exemple
+ Correctif de bug (patch)   PATCH (+0.0.1)   1.0.0 → 1.0.1
+ Nouvelle fonctionnalité rétrocompatible   MINOR (+0.1.0)   1.0.0 → 1.1.0
+ Changement incompatible (breaking)   MAJOR (+1.0.0)   1.0.0 → 2.0.0
+
+L'historique complet des versions est tracé dans le Changelog (critère C4.3.2 — Journal des versions déployées).
+
+ Convention de tags Git :
+- Tag de release : git tag v[MAJOR].[MINOR].[PATCH]
+- Pousser le tag : git push origin v[MAJOR].[MINOR].[PATCH]
+- Format recommandé pour les commits : feat:, fix:, docs:, chore:, refactor:, test:
+
+ 5. Checklist de mise à jour
+
+ Avant la mise à jour :
+☑ Backup de la base de données effectué
+☑ Branche de travail créée (feature/update-* ou fix/*)
+☑ Tests locaux passants (npm test)
+☑ Variables d'environnement vérifiées (npm run env:check)
+
+ Pendant la mise à jour :
+☑ Dépendances mises à jour une par une
+☑ Tests relancés après chaque mise à jour
+☑ Migration Prisma créée si le schéma change
+☑ Build local validé (npm run build)
+
+ Après le déploiement :
+☑ Health check : GET /api/health → {"status":"ok"}
+☑ Smoke tests exécutés (auth, réservation, paiement)
+☑ Logs Railway sans erreur critique
+☑ Changelog mis à jour
+
+-- 4 of 5 --
+
+INKSPOT – Documentation   Page 5 / 5
+
+ 6. Procédure de rollback
+
+ Rollback applicatif (Railway) :
+1. Aller dans le dashboard Railway → service INKSPOT-5z → onglet « Deployments »
+2. Identifier le dernier déploiement stable
+3. Cliquer sur « Redeploy » sur ce déploiement précédent
+4. Surveiller le déploiement et vérifier /api/health
+
+ Rollback via Git :
+1. Identifier le commit stable : git log --oneline
+2. Créer une branche de revert : git revert [commit-sha]
+3. Pousser sur dev pour déclencher le redéploiement automatique
+
+ Rollback de migration Prisma :
+Prisma ne supporte pas le rollback automatique de migrations. En cas de problème :
+- Restaurer le backup PostgreSQL (voir Manuel de Déploiement — section Sauvegardes & restauration)
+- Corriger le fichier de migration dans prisma/migrations/
+- Relancer npx prisma migrate deploy
+
+ Références croisées
+
+- Manuel d'Utilisation Technique (MUT) — Stack, architecture, scripts, procédure de gestion des dépendances (section 3.c).
+- Manuel de Déploiement Railway — Prérequis, variables d'environnement, pipeline CI/CD complet (C2.1.1 & C2.1.2), sauvegardes.
+- Cahier de Recette — Plan de tests, scénarios, couverture (CO2.7).
+- Changelog — Journal des versions déployées (critère C4.3.2).
+
+ Manuel de Mise à Jour INKSPOT. Ce document constitue le livrable officiel du manuel de mise à jour (critère C2.4.1 du référentiel YNOV 2024).

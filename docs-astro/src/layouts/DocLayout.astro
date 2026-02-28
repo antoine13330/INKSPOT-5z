@@ -1,0 +1,28 @@
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{Astro.props.title} | INKSPOT Docs</title>
+    <link rel="stylesheet" href="../styles/global.css" />
+  </head>
+  <body>
+    <header class="doc-header-pdf" style="background: var(--inkspot-header-bg, #1a1a1a); color: white; padding: 0.75rem 1.25rem;">
+      <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <div style="font-weight:700; font-family: var(--inkspot-font, inherit);">INKSPOT · Documentation</div>
+        <nav style="display:flex;gap:0.75rem;font-size:0.95rem;">
+          <a style="color:white;" href="/">Accueil</a>
+          <a style="color:white;" href="/mut">MUT</a>
+          <a style="color:white;" href="/deploiement-railway">Déploiement</a>
+          <a style="color:white;" href="/cahier-recette">Recette</a>
+          <a style="color:white;" href="/changelog">Changelog</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <h1 class="section-title">
+        <span>{Astro.props.title}</span>
+      </h1>
+      <slot />
+    </main>
+  </body>
+</html>
