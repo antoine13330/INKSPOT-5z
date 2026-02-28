@@ -2,6 +2,7 @@
   "name": "inkspot-5z",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
