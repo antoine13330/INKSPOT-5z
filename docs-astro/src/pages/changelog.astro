@@ -74,15 +74,13 @@ import DocLayout from '../layouts/DocLayout.astro';
           <td>1.0.1</td>
           <td>ci</td>
           <td>
-            Correction définitive du pipeline CI/CD — erreur <code>EBADPLATFORM</code> persistante sur les runners Linux
-            (<code>@next/swc-win32-x64-msvc</code>, lockfile généré sous Windows).
-            Diagnostic : npm 9 lève <code>EBADPLATFORM</code> même avec <code>--omit=optional</code> ou <code>npm install</code> ;
-            le cache GitHub Actions peut réintroduire un ancien lockfile avec des entrées win32.
-            Solution en deux couches : (1) step <em>Sanitize lockfile</em> dans les trois jobs — script Node.js inline
-            qui supprime à la volée toute entrée dont <code>os</code> ne contient pas <code>linux</code>
-            (win32, darwin, android, freebsd) avant <code>npm ci</code> ;
-            (2) <code>cache-dependency-path: package-lock.json</code> ajouté à <code>actions/setup-node</code>
-            pour forcer l'invalidation du cache npm à chaque changement du lockfile.
+            Correction définitive du pipeline CI/CD — erreur <code>EBADPLATFORM</code> persistante sur les runners Linux.
+            Diagnostic approfondi : npm 11 (Node 22) résout les <code>optionalDependencies</code> des packages
+            depuis le registre si elles sont absentes du lockfile — supprimer les entrées win32 du lockfile
+            amène npm à récupérer la dernière version (<code>15.5.12</code>) qui contient aussi une entrée win32.
+            Solution définitive : <code>npm ci --os=linux --libc=glibc</code> dans les trois jobs,
+            ce qui force npm à ignorer les packages dont <code>os</code> ne correspond pas à <code>linux</code>
+            lors de la résolution <em>et</em> de la validation des dépendances optionnelles.
           </td>
         </tr>
         <tr>
