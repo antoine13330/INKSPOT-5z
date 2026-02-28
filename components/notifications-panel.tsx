@@ -135,10 +135,11 @@ export function NotificationsPanel({ isOpen, onClose }: NotificationsPanelProps)
         case "date":
           comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
           break
-        case "priority":
+        case "priority": {
           const priorityOrder = { high: 3, normal: 2, low: 1 }
           comparison = priorityOrder[a.priority] - priorityOrder[b.priority]
           break
+        }
         case "type":
           comparison = a.type.localeCompare(b.type)
           break

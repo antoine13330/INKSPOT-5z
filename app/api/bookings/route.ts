@@ -281,7 +281,7 @@ export async function PATCH(request: NextRequest) {
         }
         break
 
-      case "complete":
+      case "complete": {
         if (!isPro) {
           return NextResponse.json({ message: "Only the professional can complete bookings" }, { status: 403 })
         }
@@ -309,6 +309,7 @@ export async function PATCH(request: NextRequest) {
           })
         }
         break
+      }
 
       default:
         return NextResponse.json({ message: "Invalid action" }, { status: 400 })

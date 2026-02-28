@@ -41,25 +41,6 @@ export default function BookingPage({ params }: { params: Promise<{ proId: strin
   const { data: session } = useSession()
   const router = useRouter()
   const [pro, setPro] = useState<Pro | null>(null)
-
-  // Check if user is PRO - only PRO users can create appointment proposals
-  if (!session?.user || session.user.role !== "PRO") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md modern-card">
-          <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-bold text-foreground mb-2">Access Denied</h2>
-            <p className="text-muted-foreground mb-4">
-              Only PRO users can create appointment proposals. Clients receive proposals from professionals.
-            </p>
-            <Button onClick={() => router.push("/")} className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
-              Go Back
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
   const [selectedDate, setSelectedDate] = useState<Date>()
   const [selectedTime, setSelectedTime] = useState<string>("")
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([])
@@ -92,6 +73,25 @@ export default function BookingPage({ params }: { params: Promise<{ proId: strin
       fetchAvailableSlots()
     }
   }, [selectedDate, proId])
+
+  // Check if user is PRO - only PRO users can create appointment proposals
+  if (!session?.user || session.user.role !== "PRO") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md modern-card">
+          <CardContent className="p-6 text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">Access Denied</h2>
+            <p className="text-muted-foreground mb-4">
+              Only PRO users can create appointment proposals. Clients receive proposals from professionals.
+            </p>
+            <Button onClick={() => router.push("/")} className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
+              Go Back
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const fetchProData = async () => {
     try {

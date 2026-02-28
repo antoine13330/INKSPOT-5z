@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     // Build filter based on user role
     const isPro = session.user.role === 'PRO'
-    let where: any = {}
+    const where: any = {}
 
     if (isPro) {
       where.proId = session.user.id

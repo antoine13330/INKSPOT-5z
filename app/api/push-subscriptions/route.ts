@@ -131,7 +131,7 @@ export async function DELETE(request: NextRequest) {
       }, { status: 400 })
     }
 
-    let whereClause: any = { userId: session.user.id }
+    const whereClause: any = { userId: session.user.id }
     
     if (subscriptionId) {
       whereClause.id = subscriptionId

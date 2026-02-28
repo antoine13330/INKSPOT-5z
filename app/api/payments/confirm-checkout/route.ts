@@ -117,13 +117,7 @@ export async function POST(request: NextRequest) {
       await prisma.conversation.update({ where: { id: conversationId }, data: { updatedAt: new Date() } })
     }
 
-    // Best-effort real-time emit
-    try {
-      if (conversationId) {
-        // WebSocket functionality disabled for build compatibility
-        // Real-time updates will be handled through notifications and polling
-      }
-    } catch {}
+    // Best-effort real-time emit (WebSocket disabled for build compatibility)
 
     return NextResponse.json({
       success: true,

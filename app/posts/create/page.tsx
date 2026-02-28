@@ -65,25 +65,6 @@ export default function CreatePostPage() {
   const [mentionStartIndex, setMentionStartIndex] = useState(-1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Check if user is PRO
-  if (!session?.user || session.user.role !== "PRO") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md modern-card">
-          <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-bold text-foreground mb-2">Access Denied</h2>
-            <p className="text-muted-foreground mb-4">
-              Only PRO users can create posts. Please upgrade your account to continue.
-            </p>
-            <Button onClick={() => router.push("/")} className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
-              Go Back
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && newTag.trim()) {
       e.preventDefault();
@@ -257,6 +238,25 @@ export default function CreatePostPage() {
       setIsSubmitting(false);
     }
   }, [formData, imagePreviews, session, router, isCollaboration, selectedCollaborators, isSubmitting]);
+
+  // Check if user is PRO
+  if (!session?.user || session.user.role !== "PRO") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md modern-card">
+          <CardContent className="p-6 text-center">
+            <h2 className="text-xl font-bold text-foreground mb-2">Access Denied</h2>
+            <p className="text-muted-foreground mb-4">
+              Only PRO users can create posts. Please upgrade your account to continue.
+            </p>
+            <Button onClick={() => router.push("/")} className="modern-button bg-primary hover:bg-primary/90 text-primary-foreground">
+              Go Back
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20">

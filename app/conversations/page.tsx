@@ -297,16 +297,17 @@ export default function ConversationsPage() {
     })
     .sort((a, b) => {
       switch (sortOrder) {
-        case 'name':
+        case 'name': {
           const nameA = (a.members?.[0]?.user?.firstName || '') + (a.members?.[0]?.user?.lastName || '') || (a.members?.[0]?.user?.businessName || '') || (a.members?.[0]?.user?.username || '')
           const nameB = (b.members?.[0]?.user?.firstName || '') + (b.members?.[0]?.user?.lastName || '') || (b.members?.[0]?.user?.businessName || '') || (b.members?.[0]?.user?.username || '')
           return nameA.localeCompare(nameB)
-
+        }
         case 'date':
-        default:
+        default: {
           const dateA = new Date(a.lastMessage?.createdAt || a.createdAt).getTime()
           const dateB = new Date(b.lastMessage?.createdAt || b.createdAt).getTime()
           return dateB - dateA
+        }
       }
     })
 

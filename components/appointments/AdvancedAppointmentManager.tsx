@@ -383,8 +383,8 @@ export function AdvancedAppointmentManager({
     }
   }
 
-  // Use template
-  const useTemplate = (template: AppointmentTemplate) => {
+  // Apply template values to the custom appointment form
+  const applyTemplate = (template: AppointmentTemplate) => {
     setSelectedTemplate(template)
     setCustomAppointment({
       title: template.name,
@@ -572,7 +572,7 @@ export function AdvancedAppointmentManager({
                         </div>
                         
                         <Button
-                          onClick={() => useTemplate(template)}
+                          onClick={() => applyTemplate(template)}
                           className="w-full"
                           size="sm"
                         >

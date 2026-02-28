@@ -77,20 +77,6 @@ export default function UserProfilePage() {
   const { data: session } = useSession()
   const username = params?.username as string
   
-  // Early return if no username
-  if (!username) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Invalid username</h1>
-          <Link href="/">
-            <Button>Go back home</Button>
-          </Link>
-        </div>
-      </div>
-    )
-  }
-  
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
   const [favorites, setFavorites] = useState<Post[]>([])
@@ -118,6 +104,20 @@ export default function UserProfilePage() {
       fetchUserLikedPosts()
     }
   }, [activeTab])
+
+  // Early return if no username
+  if (!username) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Invalid username</h1>
+          <Link href="/">
+            <Button>Go back home</Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   const fetchUserProfile = async () => {
     try {

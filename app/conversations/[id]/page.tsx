@@ -301,7 +301,9 @@ export default function ConversationPage({ params }: ConversationPageProps) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sessionId })
           })
-        } catch (e) {}
+        } catch (_e) {
+          // Ignore confirm errors; still refresh messages
+        }
         refetchMessages()
         if (otherParticipant?.id) {
           refetchAppointmentStatus()
@@ -512,7 +514,7 @@ export default function ConversationPage({ params }: ConversationPageProps) {
       }
 
       // Send one message with all images attached (fallback REST)
-      let responses: any[] = []
+      const responses: any[] = []
       if (images.length > 0) {
         if (isDraft) {
           const firstData = await sendOnce({

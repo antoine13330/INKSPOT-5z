@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     // Calculate date ranges
     const now = new Date()
     let startDate: Date
-    let endDate = now
+    const endDate = now
 
     switch (timeRange) {
       case "7d":
