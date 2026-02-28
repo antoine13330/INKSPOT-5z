@@ -91,7 +91,12 @@ jest.mock('next/navigation', () => ({
 
 // Mock web-push pour éviter setVapidDetails (clé 65 bytes) et send en test
 jest.mock('web-push', () => ({
+  generateVAPIDKeys: jest.fn(() => ({
+    publicKey: 'mockPublicKey',
+    privateKey: 'mockPrivateKey',
+  })),
   setVapidDetails: jest.fn(),
+  sendNotification: jest.fn().mockResolvedValue({ statusCode: 201 }),
   send: jest.fn().mockResolvedValue({ statusCode: 201 }),
 }))
 

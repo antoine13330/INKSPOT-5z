@@ -2,6 +2,10 @@ import { sendPushNotification, subscribeToPush } from "@/lib/notifications"
 
 // Mock web-push
 jest.mock("web-push", () => ({
+  generateVAPIDKeys: jest.fn(() => ({
+    publicKey: 'mockPublicKey',
+    privateKey: 'mockPrivateKey',
+  })),
   setVapidDetails: jest.fn(),
   sendNotification: jest.fn(),
 }))
