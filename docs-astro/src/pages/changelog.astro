@@ -76,9 +76,11 @@ import DocLayout from '../layouts/DocLayout.astro';
           <td>
             Correction du pipeline CI/CD — erreur <code>EBADPLATFORM</code> sur les runners Linux
             causée par le <code>package-lock.json</code> généré sous Windows
-            (<code>@next/swc-win32-x64-msvc</code> non compatible Linux).
-            Remplacement de <code>npm ci</code> par <code>npm ci --omit=optional</code>
-            dans les trois jobs (<em>quality</em>, <em>build</em>, <em>security</em>).
+            (<code>@next/swc-win32-x64-msvc</code> / <code>devOptional</code>).
+            npm 9 valide l'intégralité du lockfile avant installation, rendant <code>--omit=optional</code> inopérant.
+            Solution : step de pré-traitement qui supprime les entrées <code>@next/swc-win32-*</code>
+            du lockfile via un script Node.js inline, dans les trois jobs (<em>quality</em>, <em>build</em>, <em>security</em>),
+            avant d'appeler <code>npm ci</code>.
           </td>
         </tr>
         <tr>

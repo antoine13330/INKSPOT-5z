@@ -19,8 +19,22 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
+      - name: Remove Windows-only swc from lockfile
+        run: |
+          node -e "
+            const fs = require('fs');
+            const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+            const win = [
+              'node_modules/@next/swc-win32-x64-msvc',
+              'node_modules/@next/swc-win32-ia32-msvc',
+              'node_modules/@next/swc-win32-arm64-msvc',
+            ];
+            win.forEach(k => { delete lock.packages[k]; });
+            fs.writeFileSync('package-lock.json', JSON.stringify(lock, null, 2));
+          "
+
       - name: Install dependencies
-        run: npm ci --omit=optional
+        run: npm ci
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -58,8 +72,22 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
+      - name: Remove Windows-only swc from lockfile
+        run: |
+          node -e "
+            const fs = require('fs');
+            const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+            const win = [
+              'node_modules/@next/swc-win32-x64-msvc',
+              'node_modules/@next/swc-win32-ia32-msvc',
+              'node_modules/@next/swc-win32-arm64-msvc',
+            ];
+            win.forEach(k => { delete lock.packages[k]; });
+            fs.writeFileSync('package-lock.json', JSON.stringify(lock, null, 2));
+          "
+
       - name: Install dependencies
-        run: npm ci --omit=optional
+        run: npm ci
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -82,8 +110,22 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
 
+      - name: Remove Windows-only swc from lockfile
+        run: |
+          node -e "
+            const fs = require('fs');
+            const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+            const win = [
+              'node_modules/@next/swc-win32-x64-msvc',
+              'node_modules/@next/swc-win32-ia32-msvc',
+              'node_modules/@next/swc-win32-arm64-msvc',
+            ];
+            win.forEach(k => { delete lock.packages[k]; });
+            fs.writeFileSync('package-lock.json', JSON.stringify(lock, null, 2));
+          "
+
       - name: Install dependencies
-        run: npm ci --omit=optional
+        run: npm ci
 
       - name: Audit dependencies
         run: npm audit --audit-level=critical
