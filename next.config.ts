@@ -6,13 +6,11 @@ const nextConfig: NextConfig = {
     domains: ['localhost'],
     // Pas besoin de remotePatterns pour les fichiers locaux
   },
-  // Configuration pour éviter les erreurs de build
   typescript: {
-    // Ignore les erreurs TypeScript pendant le build pour que le pipeline CI/CD passe
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    // Désactiver ESLint pendant le build pour éviter les warnings
+    // TODO: reactivate once 102 ESLint errors are fixed (65 unescaped-entities, 23 hooks/rules-of-hooks, 14 misc)
     ignoreDuringBuilds: true,
   },
   // Paquets externes côté serveur (remplace experimental.serverComponentsExternalPackages)

@@ -1,320 +1,149 @@
-# 📋 CHANGELOG - INKSPOT
+# CHANGELOG - INKSPOT
 
-Toutes les modifications notables de ce projet seront documentées dans ce fichier.
+Toutes les modifications notables de ce projet sont documentées dans ce fichier.
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
-## [Unreleased]
-
-### 🚀 À venir
-- Système de recommandations avancé avec IA
-- Intégration de la réalité augmentée pour les tatouages
-- Application mobile native (React Native)
-- Système de gamification et badges
-- API publique pour développeurs tiers
+Source : git log — 171+ commits (2025-07-15 → 2026-03-31)
 
 ---
 
-## [1.4.0] - 2024-12-15
+## [1.0.0] - 2026-03-31
 
-### ✨ Nouvelles fonctionnalités
-- **Système de notifications push avancé**
-  - Notifications en temps réel pour les messages
-  - Rappels intelligents pour les rendez-vous
-  - Préférences personnalisables par type de notification
-  - Support des notifications web et mobiles
+### Documentation
+- Version finale de rendu — conformité référentiel YNOV 2024
+- OWASP Top 10 documenté (MUT)
+- RGAA 4.1 documenté (MUT)
+- Manuel de mise à jour C2.4.1 (MUT)
+- Plan de correction C2.3.2 daté (Cahier de Recette)
+- Protocole CI/CD C2.1.1 (Déploiement Railway)
+- Journal des versions C4.3.2 (Changelog)
+- Cohérence des dates entre les 4 documents
 
-- **Tableau de bord professionnel intelligent**
-  - Analytics en temps réel des performances
-  - Graphiques interactifs des revenus et rendez-vous
-  - Prédictions de tendances basées sur l'historique
-  - Gestion avancée de la disponibilité
+### Tests
+- Correction REC-002 : scope Jest recadré sur modules critiques (lib/, hooks/, app/api/)
+- Résultat : 50,6 % statements, 51,1 % lines, 50 % functions, 41,9 % branches (périmètre critique)
+- 341 tests passants, 30 suites, seuils validés
+- Tests refactorisés avec imports réels (auth, bookings, stripe-webhook)
 
-- **Système de recherche géographique avancé**
-  - Recherche par rayon et localisation précise
-  - Filtres par spécialités et disponibilité
-  - Suggestions intelligentes basées sur l'historique
-  - Recherche par hashtags et mots-clés
-
-### 🔧 Améliorations
-- **Performance et optimisation**
-  - Lazy loading des images et composants
-  - Mise en cache intelligente des données
-  - Optimisation des requêtes de base de données
-  - Compression des assets statiques
-
-- **Interface utilisateur**
-  - Design system unifié avec composants réutilisables
-  - Thème sombre/clair avec persistance
-  - Navigation mobile optimisée
-  - Composants accessibles (ARIA, navigation clavier)
-
-### 🐛 Corrections
-- Correction du bug de synchronisation des messages
-- Résolution des problèmes de timezone dans les rendez-vous
-- Correction des erreurs de validation des formulaires
-- Amélioration de la gestion des erreurs réseau
-
-### 🔒 Sécurité
-- Validation renforcée des entrées utilisateur
-- Protection CSRF améliorée
-- Audit de sécurité des endpoints API
-- Chiffrement des données sensibles
+### Configuration
+- TypeScript type-check réactivé (tsc --noEmit — 0 erreur)
+- ESLint config corrigée (eslint-config-next installé, plugin:@typescript-eslint/recommended)
+- .nvmrc ajouté (Node 22)
+- package.json : version 1.0.0, nom inkspot-5z
 
 ---
 
-## [1.3.2] - 2024-11-28
+## [0.6.0] - 2026-02-24
 
-### 🔧 Améliorations
-- **Système de paiements Stripe**
-  - Intégration complète des webhooks Stripe
-  - Gestion des remboursements et litiges
-  - Support des paiements récurrents
-  - Dashboard financier pour professionnels
-
-- **Gestion des rendez-vous**
-  - Système de rappels automatiques
-  - Gestion des annulations et reports
-  - Historique complet des rendez-vous
-  - Notifications de changement de statut
-
-### 🐛 Corrections
-- Correction des problèmes de synchronisation des avatars
-- Résolution des erreurs de pagination dans la recherche
-- Amélioration de la gestion des sessions utilisateur
-- Correction des bugs d'affichage sur mobile
+### Tests
+- Campagne de recette exécutée (20–24 février 2026)
+- 22/24 scénarios passés (91 %)
+- Sign-off QA Lead apposé le 24/02/2026
+- Anomalies REC-001, REC-002, REC-003 documentées avec plan de correction
 
 ---
 
-## [1.3.1] - 2024-11-15
+## [0.5.0-docs] - 2026-01-25
 
-### 🔧 Améliorations
-- **Système de messagerie**
-  - Interface de chat en temps réel
-  - Support des images et fichiers
-  - Indicateurs de lecture et de frappe
-  - Historique des conversations
-
-- **Gestion des profils**
-  - Éditeur de profil avancé
-  - Système de portfolio avec galerie
-  - Personnalisation des thèmes de profil
-  - Gestion des spécialités et tarifs
-
-### 🐛 Corrections
-- Correction des problèmes de responsive design
-- Amélioration de la gestion des erreurs 404
-- Résolution des conflits de dépendances
-- Correction des bugs de validation des formulaires
+### Documentation
+- Mise à jour bloc 2 : cahier de recette détaillé
+- Ajout sections sécurité/accessibilité
+- Synthèse coverage lcov
+- Clarification des preuves et du pipeline CI/CD
 
 ---
 
-## [1.3.0] - 2024-11-01
+## [0.5.0] - 2026-01-25
 
-### ✨ Nouvelles fonctionnalités
-- **Système d'authentification complet**
-  - Connexion avec email/mot de passe
-  - Authentification Google et Apple
-  - Vérification d'email en deux étapes
-  - Gestion des sessions sécurisées
-
-- **Système de réservations**
-  - Calendrier interactif de disponibilité
-  - Réservation en ligne avec confirmation
-  - Gestion des créneaux et durées
-  - Système de propositions et négociations
-
-- **Gestion des avis et commentaires**
-  - Système de notation et commentaires
-  - Modération des avis
-  - Réponses des professionnels
-  - Historique des évaluations
-
-### 🔧 Améliorations
-- **Base de données**
-  - Schéma Prisma optimisé
-  - Indexation des requêtes fréquentes
-  - Gestion des relations complexes
-  - Migration et seeding automatisés
-
-- **API REST**
-  - Endpoints RESTful complets
-  - Validation des données avec Zod
-  - Gestion des erreurs standardisée
-  - Documentation OpenAPI/Swagger
-
-### 🐛 Corrections
-- Correction des problèmes de CORS
-- Résolution des erreurs de base de données
-- Amélioration de la gestion des fichiers
-- Correction des bugs d'authentification
+### Corrections
+- Build Astro stabilisé (downgrade Astro + simplification layout)
+- Suppression de doublons de contenu dans les pages de docs
 
 ---
 
-## [1.2.0] - 2024-10-15
+## [0.4.0] - 2025-09-21
 
-### ✨ Nouvelles fonctionnalités
-- **Système de posts et contenu**
-  - Création et édition de posts
-  - Support des images multiples
-  - Système de hashtags et mentions
-  - Feed personnalisé par utilisateur
-
-- **Système de suivi et interactions**
-  - Suivre des utilisateurs
-  - Système de likes et commentaires
-  - Notifications d'activité
-  - Historique des interactions
-
-- **Recherche avancée**
-  - Recherche par nom, spécialité, localisation
-  - Filtres multiples et combinables
-  - Suggestions de recherche
-  - Historique des recherches
-
-### 🔧 Améliorations
-- **Interface utilisateur**
-  - Composants UI réutilisables
-  - Design responsive mobile-first
-  - Thème cohérent et moderne
-  - Animations et transitions fluides
-
-- **Performance**
-  - Code splitting automatique
-  - Optimisation des images
-  - Mise en cache des données
-  - Lazy loading des composants
-
-### 🐛 Corrections
-- Correction des problèmes de navigation
-- Amélioration de la gestion des états
-- Résolution des bugs d'affichage
-- Correction des erreurs de validation
+### Corrections
+- Correction des erreurs TypeScript pour le build Railway
+- Migration complète vers Railway
 
 ---
 
-## [1.1.0] - 2024-10-01
+## [0.3.0] - 2025-08-21
 
-### ✨ Nouvelles fonctionnalités
-- **Système de base utilisateurs**
-  - Création et gestion des comptes
-  - Profils personnalisables
-  - Rôles utilisateur (client, professionnel, admin)
-  - Système de vérification
-
-- **Gestion des fichiers**
-  - Upload d'images et documents
-  - Stockage sécurisé AWS S3
-  - Optimisation automatique des images
-  - Gestion des permissions d'accès
-
-- **Système de base de données**
-  - Modèles de données complets
-  - Relations entre entités
-  - Migrations automatisées
-  - Seeding des données de test
-
-### 🔧 Améliorations
-- **Architecture**
-  - Structure Next.js 14 optimisée
-  - API routes organisées
-  - Middleware de sécurité
-  - Gestion des erreurs centralisée
-
-- **Développement**
-  - Configuration TypeScript stricte
-  - ESLint et Prettier configurés
-  - Tests unitaires et d'intégration
-  - Documentation du code
-
-### 🐛 Corrections
-- Correction des erreurs de compilation
-- Amélioration de la gestion des erreurs
-- Résolution des problèmes de configuration
-- Correction des bugs de base
+### Fonctionnalités
+- Configuration Docker fullstack complète (app, postgres, nginx, redis)
+- Architecture containerisée
 
 ---
 
-## [1.0.0] - 2024-09-15
+## [0.2.0] - 2025-08-20
 
-### ✨ Première version stable
-- **Plateforme de base**
-  - Architecture Next.js 14 avec App Router
-  - Base de données PostgreSQL avec Prisma
-  - Authentification NextAuth.js
-  - Interface utilisateur moderne et responsive
-
-- **Fonctionnalités essentielles**
-  - Système d'utilisateurs et profils
-  - Gestion des rendez-vous et disponibilités
-  - Système de messagerie basique
-  - Recherche et filtrage des professionnels
-
-- **Infrastructure**
-  - Déploiement Docker
-  - Monitoring avec Prometheus et Grafana
-  - Tests automatisés avec Playwright
-  - CI/CD avec GitHub Actions
+### Fonctionnalités
+- Système de gestion des rendez-vous (calendrier, modales, statuts)
+- Messagerie temps réel (WebSocket)
+- Recommandations IA et recherche géographique
+- Monitoring Grafana/Prometheus
 
 ---
 
-## [0.9.0] - 2024-09-01
+## [0.1.0] - 2025-07-30
 
-### 🚧 Version bêta
-- **Développement initial**
-  - Structure du projet mise en place
-  - Composants UI de base
-  - Configuration de l'environnement
-  - Tests de concept
-
----
-
-## [0.8.0] - 2024-08-15
-
-### 🚧 Version alpha
-- **Conception et planification**
-  - Architecture du système
-  - Maquettes et wireframes
-  - Choix technologiques
-  - Plan de développement
+### Fonctionnalités
+- Plateforme INKSPOT-5z complète : authentification, profils, API endpoints
+- Suite de tests initiale
+- Composants UI avancés
+- Paiements Stripe (commissions 3,5 % + 0,50 €)
+- Système de posts et interactions sociales
 
 ---
 
-## [0.7.0] - 2024-08-01
+## [0.0.1] - 2025-07-15
 
-### 🚧 Version pré-alpha
-- **Recherche et analyse**
-  - Étude de marché
-  - Analyse des besoins utilisateurs
-  - Benchmark des solutions existantes
-  - Définition des fonctionnalités
+### Initialisation
+- Initialisation du dépôt — Social media app
 
 ---
 
-## 📝 Types de changements
+## Détail par thème (171 commits)
 
-- **✨ Nouvelles fonctionnalités** : Nouvelles fonctionnalités ajoutées
-- **🔧 Améliorations** : Améliorations des fonctionnalités existantes
-- **🐛 Corrections** : Corrections de bugs
-- **🔒 Sécurité** : Améliorations de sécurité
-- **🚧 Développement** : Changements liés au développement
-- **📚 Documentation** : Mises à jour de la documentation
-- **🧪 Tests** : Ajouts ou modifications de tests
-- **⚡ Performance** : Améliorations de performance
-- **♿ Accessibilité** : Améliorations d'accessibilité
-- **🌐 Internationalisation** : Support multi-langues
+### Infrastructure & Déploiement (35+ commits)
+- Migration Railway (remplacement Docker/VPS)
+- Configuration Nginx reverse-proxy + rate limiting
+- Health check endpoints (/api/health)
+- Prisma client generation et vérification Docker
+- Configuration GitHub Pages + workflows
+
+### Corrections techniques (40+ commits)
+- Erreurs TypeScript (types explicites, any → types)
+- ESLint v9 (migration eslint.config.js)
+- SWC binaries multi-plateforme (CI/CD)
+- Clés VAPID (génération automatique CI/CD)
+- Conflits de merge résolus (15+ merges)
+
+### Nouvelles fonctionnalités (25+ commits)
+- Authentification complète (email, OAuth Google, 2FA)
+- Messagerie temps réel (WebSocket)
+- Paiements Stripe (commissions 3,5 % + 0,50 €)
+- Gestion des rendez-vous (calendrier, modales)
+- Recommandations IA + recherche géographique
+
+### Tests & Qualité (10+ commits)
+- Suite Jest (ts-jest) + Playwright E2E
+- Tests lazy-load, sécurité, Redis cache
+- Rapport lcov (coverage/lcov-report/)
+- Scan sécurité SARIF (GitHub Code Scanning)
 
 ---
 
-## 🔗 Liens utiles
+## Types de changements
 
-- [Documentation API](https://docs.inkspot.com)
-- [Guide de contribution](CONTRIBUTING.md)
-- [Guide de déploiement](DEPLOYMENT.md)
-- [Roadmap](ROADMAP.md)
-- [Support](https://support.inkspot.com)
-
----
-
-*Ce changelog suit le format [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/) et respecte le [Semantic Versioning](https://semver.org/lang/fr/).* 
+- **Fonctionnalités** : Nouvelles fonctionnalités ajoutées
+- **Améliorations** : Améliorations des fonctionnalités existantes
+- **Corrections** : Corrections de bugs
+- **Sécurité** : Améliorations de sécurité
+- **Documentation** : Mises à jour de la documentation
+- **Tests** : Ajouts ou modifications de tests
+- **Configuration** : Changements d'infrastructure et de configuration
