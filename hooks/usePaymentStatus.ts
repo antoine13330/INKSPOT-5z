@@ -29,9 +29,20 @@ export function usePaymentStatus(options: UsePaymentStatusOptions = {}) {
   } = options
 
   // Fonction pour rafraîchir manuellement les données
+  // Empêche le dispatch en boucle : on autorise un seul dispatch à la fois.
+  const isRefreshingRef = useRef(false)
+
   const refreshData = useCallback(() => {
+    if (isRefreshingRef.current) return
+    isRefreshingRef.current = true
+
     // Émettre un événement personnalisé pour déclencher le rafraîchissement
     window.dispatchEvent(new CustomEvent('payment-status-refresh'))
+
+    // Relâcher le flag après le tick courant
+    setTimeout(() => {
+      isRefreshingRef.current = false
+    }, 0)
   }, [])
 
   // Gestion des événements WebSocket
@@ -123,7 +134,7 @@ export function usePaymentStatus(options: UsePaymentStatusOptions = {}) {
   // Écouter les événements de rafraîchissement
   useEffect(() => {
     const handleRefresh = () => {
-      refreshData()
+      // ici on déclencherait un fetch réel; on évite de redéclencher refreshData
     }
 
     window.addEventListener('payment-status-refresh', handleRefresh)

@@ -90,8 +90,13 @@ describe('Security Alerts API', () => {
       ;(securityMonitor.getSecurityMetrics as jest.Mock).mockReturnValue({})
       ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)
 
-      const request = new NextRequest('http://localhost:3000/api/security/alerts')
-      await GET(request)
+    const request = new NextRequest('http://localhost:3000/api/security/alerts', {
+      headers: {
+        'x-forwarded-for': '127.0.0.1',
+        'user-agent': 'unknown',
+      },
+    })
+    await GET(request)
 
       expect(auditLogger.logDataAccessEvent).toHaveBeenCalledWith(
         'admin',
@@ -109,7 +114,12 @@ describe('Security Alerts API', () => {
       ;(securityMonitor.getSecurityMetrics as jest.Mock).mockReturnValue({})
       ;(auditLogger.logDataAccessEvent as jest.Mock).mockResolvedValue(undefined)
 
-      const request = new NextRequest('http://localhost:3000/api/security/alerts')
+    const request = new NextRequest('http://localhost:3000/api/security/alerts', {
+      headers: {
+        'x-forwarded-for': '127.0.0.1',
+        'user-agent': 'unknown',
+      },
+    })
       const response = await GET(request)
       const data = await response.json()
 

@@ -6,7 +6,7 @@ test.describe('Payment Flow', () => {
     await page.goto('/')
     
     // Check if user is already logged in
-    const signInButton = page.locator('text=Sign In')
+    const signInButton = page.getByRole('button', { name: 'Sign In' }).first()
     if (await signInButton.isVisible()) {
       // User is not logged in, so we'll skip these tests for now
       // In a real scenario, you'd want to create test users or mock authentication

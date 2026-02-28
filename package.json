@@ -12,7 +12,7 @@
     "type-check": "echo \"Type checking temporarily disabled\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "echo \"Tests temporarily disabled due to SWC binding issues\"",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:e2e": "playwright test",
@@ -33,7 +33,6 @@
     "logs:watch": "tail -f logs/app.log",
     "logs:error": "grep ERROR logs/app.log",
     "logs:perf": "grep PERFORMANCE logs/app.log",
-
     "pwa:generate": "next-pwa",
     "pwa:test": "next-pwa test",
     "pwa:manifest": "next-pwa manifest",
@@ -46,10 +45,8 @@
     "api:docs:generate": "swagger-jsdoc -d swaggerDef.js -o swagger.json",
     "api:docs:serve": "swagger-ui-serve swagger.json",
     "api:docs:export": "swagger-jsdoc -d swaggerDef.js -o swagger.yaml",
-
     "env:check": "node scripts/check-env.js",
     "vapid:generate": "node scripts/generate-vapid-keys.js",
-
     "db:test": "node scripts/test-db-connection.js",
     "db:fix-permissions": "node scripts/fix-db-permissions.js",
     "images:optimize": "node scripts/optimize-images.js",
@@ -59,7 +56,8 @@
     "logs:cleanup": "node scripts/cleanup-logs.js",
     "auth:test": "node scripts/test-auth.js",
     "auth:sessions": "node scripts/list-sessions.js",
-    "auth:cleanup": "node scripts/cleanup-sessions.js"
+    "auth:cleanup": "node scripts/cleanup-sessions.js",
+    "extract:pdf": "node scripts/extract-pdf-to-text.js"
   },
   "dependencies": {
     "@auth/core": "latest",
@@ -102,7 +100,6 @@
     "@testing-library/dom": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
-
     "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.20",
     "bcryptjs": "latest",
@@ -127,7 +124,6 @@
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
-
     "sonner": "^1.7.1",
     "stripe": "^18.4.0",
     "tailwind-merge": "^2.5.5",
@@ -142,9 +138,8 @@
     "seed": "npx tsx prisma/seed.ts"
   },
   "devDependencies": {
-    "docx": "^8.5.0",
-    "node-fetch": "^3.3.2",
     "@eslint/js": "^9.33.0",
+    "@next/swc-win32-x64-msvc": "^15.4.6",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.0",
     "@types/node": "^22",
@@ -154,9 +149,13 @@
     "@types/web-push": "^3.6.4",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
+    "docx": "^8.5.0",
     "eslint": "^9.33.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.0.5",
+    "ts-jest": "^29.2.5",
+    "node-fetch": "^3.3.2",
+    "pdf.js-extract": "^0.2.1",
     "postcss": "^8.5",
     "prisma": "^6.14.0",
     "tailwindcss": "^3.4.17",

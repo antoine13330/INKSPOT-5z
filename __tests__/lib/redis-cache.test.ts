@@ -122,7 +122,7 @@ describe('RedisCache', () => {
       expect(result).toEqual(mockUser)
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
         where: { id: '1' },
-        include: { profile: true, bookings: true },
+        include: { clientBookings: true, proBookings: true },
       })
     })
 

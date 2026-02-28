@@ -1,5 +1,14 @@
 require("@testing-library/jest-dom")
 
+// Polyfill requestSubmit pour jsdom (évite "Not implemented: HTMLFormElement.prototype.requestSubmit")
+if (typeof HTMLFormElement !== 'undefined' && !HTMLFormElement.prototype.requestSubmit) {
+  HTMLFormElement.prototype.requestSubmit = function (submitter) {
+    if (submitter && submitter.type === 'submit') {
+      this.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    }
+  }
+}
+
 // Mock IntersectionObserver
 global.IntersectionObserver = class MockIntersectionObserver {
   constructor(callback, options = {}) {
@@ -78,6 +87,12 @@ jest.mock('next/navigation', () => ({
   usePathname() {
     return '/'
   },
+}))
+
+// Mock web-push pour éviter setVapidDetails (clé 65 bytes) et send en test
+jest.mock('web-push', () => ({
+  setVapidDetails: jest.fn(),
+  send: jest.fn().mockResolvedValue({ statusCode: 201 }),
 }))
 
 // Mock environment variables
