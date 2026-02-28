@@ -20,8 +20,28 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
+      - name: Sanitize lockfile for Linux
+        run: |
+          node -e "
+            const fs = require('fs');
+            const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+            const nonLinux = /^@next\/swc-(?!linux)|^@img\/sharp-(?!linux)|^fsevents$|^@unrs\/resolver-binding-(?!linux)/;
+            for (const [key, pkg] of Object.entries(lock.packages)) {
+              if (pkg && pkg.os && !pkg.os.includes('linux')) {
+                delete lock.packages[key];
+              }
+              if (pkg && pkg.optionalDependencies) {
+                for (const dep of Object.keys(pkg.optionalDependencies)) {
+                  if (nonLinux.test(dep)) delete pkg.optionalDependencies[dep];
+                }
+              }
+            }
+            fs.writeFileSync('package-lock.json', JSON.stringify(lock, null, 2));
+            console.log('Lockfile sanitized for Linux');
+          "
+
       - name: Install dependencies
-        run: npm ci --os=linux --libc=glibc
+        run: npm ci
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -60,8 +80,28 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
+      - name: Sanitize lockfile for Linux
+        run: |
+          node -e "
+            const fs = require('fs');
+            const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+            const nonLinux = /^@next\/swc-(?!linux)|^@img\/sharp-(?!linux)|^fsevents$|^@unrs\/resolver-binding-(?!linux)/;
+            for (const [key, pkg] of Object.entries(lock.packages)) {
+              if (pkg && pkg.os && !pkg.os.includes('linux')) {
+                delete lock.packages[key];
+              }
+              if (pkg && pkg.optionalDependencies) {
+                for (const dep of Object.keys(pkg.optionalDependencies)) {
+                  if (nonLinux.test(dep)) delete pkg.optionalDependencies[dep];
+                }
+              }
+            }
+            fs.writeFileSync('package-lock.json', JSON.stringify(lock, null, 2));
+            console.log('Lockfile sanitized for Linux');
+          "
+
       - name: Install dependencies
-        run: npm ci --os=linux --libc=glibc
+        run: npm ci
 
       - name: Generate Prisma client
         run: npx prisma generate
@@ -85,8 +125,28 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
+      - name: Sanitize lockfile for Linux
+        run: |
+          node -e "
+            const fs = require('fs');
+            const lock = JSON.parse(fs.readFileSync('package-lock.json', 'utf8'));
+            const nonLinux = /^@next\/swc-(?!linux)|^@img\/sharp-(?!linux)|^fsevents$|^@unrs\/resolver-binding-(?!linux)/;
+            for (const [key, pkg] of Object.entries(lock.packages)) {
+              if (pkg && pkg.os && !pkg.os.includes('linux')) {
+                delete lock.packages[key];
+              }
+              if (pkg && pkg.optionalDependencies) {
+                for (const dep of Object.keys(pkg.optionalDependencies)) {
+                  if (nonLinux.test(dep)) delete pkg.optionalDependencies[dep];
+                }
+              }
+            }
+            fs.writeFileSync('package-lock.json', JSON.stringify(lock, null, 2));
+            console.log('Lockfile sanitized for Linux');
+          "
+
       - name: Install dependencies
-        run: npm ci --os=linux --libc=glibc
+        run: npm ci
 
       - name: Audit dependencies
         run: npm audit --audit-level=critical

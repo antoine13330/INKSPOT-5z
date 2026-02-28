@@ -74,13 +74,17 @@ import DocLayout from '../layouts/DocLayout.astro';
           <td>1.0.1</td>
           <td>ci</td>
           <td>
-            Correction définitive du pipeline CI/CD — erreur <code>EBADPLATFORM</code> persistante sur les runners Linux.
-            Diagnostic approfondi : npm 11 (Node 22) résout les <code>optionalDependencies</code> des packages
-            depuis le registre si elles sont absentes du lockfile — supprimer les entrées win32 du lockfile
-            amène npm à récupérer la dernière version (<code>15.5.12</code>) qui contient aussi une entrée win32.
-            Solution définitive : <code>npm ci --os=linux --libc=glibc</code> dans les trois jobs,
-            ce qui force npm à ignorer les packages dont <code>os</code> ne correspond pas à <code>linux</code>
-            lors de la résolution <em>et</em> de la validation des dépendances optionnelles.
+            Correction définitive du pipeline CI/CD — erreur <code>EBADPLATFORM</code> persistante sur les runners Linux
+            (npm 10.9.4 / Node 22.22.0).
+            Cause racine identifiée : npm résout les <code>optionalDependencies</code> manquantes du lockfile
+            depuis le registre npm — l'entrée <code>next@15.4.6</code> du lockfile déclarait encore
+            <code>@next/swc-win32-x64-msvc</code> dans ses <code>optionalDependencies</code>, ce qui amenait npm
+            à résoudre <code>15.5.12</code> (dernière version) et à lever <code>EBADPLATFORM</code>.
+            Solution en deux couches : (1) nettoyage du <code>package-lock.json</code> committé — suppression des
+            38 références non-Linux dans les <code>optionalDependencies</code> de chaque entrée du lockfile ;
+            (2) step <em>Sanitize lockfile for Linux</em> dans les trois jobs CI — regex
+            <code>nonLinux</code> qui supprime à la fois les entrées <code>packages[]</code> et les références
+            <code>optionalDependencies</code> non-Linux avant <code>npm ci</code>.
           </td>
         </tr>
         <tr>
