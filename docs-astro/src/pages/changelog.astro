@@ -71,6 +71,18 @@ import DocLayout from '../layouts/DocLayout.astro';
       <tbody>
         <tr>
           <td>2026-02-28</td>
+          <td>1.0.1</td>
+          <td>ci</td>
+          <td>
+            Correction du pipeline CI/CD — erreur <code>EBADPLATFORM</code> sur les runners Linux
+            causée par le <code>package-lock.json</code> généré sous Windows
+            (<code>@next/swc-win32-x64-msvc</code> non compatible Linux).
+            Remplacement de <code>npm ci</code> par <code>npm ci --omit=optional</code>
+            dans les trois jobs (<em>quality</em>, <em>build</em>, <em>security</em>).
+          </td>
+        </tr>
+        <tr>
+          <td>2026-02-28</td>
           <td>1.0.0</td>
           <td>docs</td>
           <td>
