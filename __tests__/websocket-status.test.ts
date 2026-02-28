@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals'
 import { websocketManager } from '@/lib/websocket-manager'
 
 // Mock WebSocket
