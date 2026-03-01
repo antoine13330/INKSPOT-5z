@@ -3,37 +3,32 @@ global:
   evaluation_interval: 15s
 
 rule_files:
-  # - "first_rules.yml"
-  # - "second_rules.yml"
+  # - "alert_rules.yml"
 
 scrape_configs:
-  # Prometheus itself
+  # Prometheus lui-même
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
 
-  # INKSPOT Application metrics
+  # INKSPOT App — métriques custom via /api/metrics
+  # En local Docker : app:3000
+  # Sur Railway : INKSPOT-5z.railway.internal:3000 (remplacer par l'URL interne Railway)
   - job_name: 'inkspot-app'
     static_configs:
-      - targets: ['app:3000']
+      - targets: ['${INKSPOT_INTERNAL_HOST:-inkspot-app:3000}']
     metrics_path: '/api/metrics'
     scrape_interval: 30s
 
-  # INKSPOT WebSocket metrics
-  - job_name: 'inkspot-websocket'
-    static_configs:
-      - targets: ['websocket:3001']
-    metrics_path: '/metrics'
-    scrape_interval: 30s
-
-  # PostgreSQL metrics
+  # PostgreSQL Exporter
+  # Sur Railway : postgres-exporter.railway.internal:9187
   - job_name: 'postgres'
     static_configs:
-      - targets: ['postgres-exporter:9187']
+      - targets: ['${POSTGRES_EXPORTER_HOST:-postgres-exporter:9187}']
     scrape_interval: 30s
 
-  # Node metrics
+  # Node Exporter (métriques système)
   - job_name: 'node'
     static_configs:
-      - targets: ['node-exporter:9100']
+      - targets: ['${NODE_EXPORTER_HOST:-node-exporter:9100}']
     scrape_interval: 30s

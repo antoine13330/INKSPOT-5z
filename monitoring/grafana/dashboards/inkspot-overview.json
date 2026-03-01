@@ -1,0 +1,311 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": { "list": [] },
+  "description": "INKSPOT — Vue d'ensemble des métriques métier et performance",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "Métriques Temps Réel",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] }, "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "id": 1,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "target": "live_user_count", "type": "timeseries" }],
+      "title": "Utilisateurs en ligne",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "blue", "value": null }] }, "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
+      "id": 2,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "target": "live_booking_count", "type": "timeseries" }],
+      "title": "Réservations actives",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "yellow", "value": null }] }, "unit": "currencyEUR" },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
+      "id": 3,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "target": "live_revenue_ticker", "type": "timeseries" }],
+      "title": "Revenu en temps réel",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 1 }, { "color": "red", "value": 5 }] }, "unit": "percent" },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
+      "id": 4,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "target": "live_error_rate", "type": "timeseries" }],
+      "title": "Taux d'erreur",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 50 }, { "color": "green", "value": 80 }] }, "unit": "percent", "min": 0, "max": 100 },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
+      "id": 5,
+      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [{ "target": "live_performance_score", "type": "timeseries" }],
+      "title": "Score de performance",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "id": 101,
+      "title": "Activité Utilisateurs",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "id": 10,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        { "target": "user_registrations", "type": "timeseries" },
+        { "target": "user_activity", "type": "timeseries" },
+        { "target": "active_users", "type": "timeseries" }
+      ],
+      "title": "Inscriptions & Activité",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "id": 11,
+      "targets": [
+        { "target": "user_engagement_score", "type": "timeseries" },
+        { "target": "user_retention_rate", "type": "timeseries" },
+        { "target": "user_churn_rate", "type": "timeseries" }
+      ],
+      "title": "Engagement & Rétention",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 },
+      "id": 102,
+      "title": "Revenus & Paiements",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "currencyEUR", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 15 },
+      "id": 20,
+      "targets": [
+        { "target": "daily_revenue", "type": "timeseries" },
+        { "target": "revenue_metrics", "type": "timeseries" }
+      ],
+      "title": "Revenus journaliers",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 15 },
+      "id": 21,
+      "targets": [
+        { "target": "payment_success_rate", "type": "timeseries" },
+        { "target": "booking_conversion", "type": "timeseries" },
+        { "target": "refund_rate_analysis", "type": "timeseries" }
+      ],
+      "title": "Taux de conversion & remboursements",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 },
+      "id": 103,
+      "title": "Performance Applicative",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "ms", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 24 },
+      "id": 30,
+      "targets": [
+        { "target": "api_response_time", "type": "timeseries" },
+        { "target": "page_load_time", "type": "timeseries" },
+        { "target": "db_query_time", "type": "timeseries" },
+        { "target": "network_latency", "type": "timeseries" }
+      ],
+      "title": "Temps de réponse",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 24 },
+      "id": 31,
+      "targets": [
+        { "target": "cache_hit_rate", "type": "timeseries" },
+        { "target": "error_rate", "type": "timeseries" },
+        { "target": "memory_usage", "type": "timeseries" }
+      ],
+      "title": "Cache, Erreurs & Mémoire",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 32 },
+      "id": 104,
+      "title": "Réservations & Contenu",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 33 },
+      "id": 40,
+      "targets": [
+        { "target": "booking_pattern_analysis", "type": "timeseries" },
+        { "target": "service_demand_trends", "type": "timeseries" },
+        { "target": "peak_hour_analysis", "type": "timeseries" }
+      ],
+      "title": "Patterns de réservation",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 33 },
+      "id": 41,
+      "targets": [
+        { "target": "post_engagement", "type": "timeseries" },
+        { "target": "message_volume", "type": "timeseries" },
+        { "target": "content_virality_rate", "type": "timeseries" }
+      ],
+      "title": "Engagement contenu",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 41 },
+      "id": 105,
+      "title": "Qualité & Sécurité",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 42 },
+      "id": 50,
+      "targets": [
+        { "target": "customer_satisfaction", "type": "timeseries" },
+        { "target": "review_sentiment_analysis", "type": "timeseries" },
+        { "target": "rating_distribution", "type": "timeseries" }
+      ],
+      "title": "Satisfaction & Avis",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "simpod-json-datasource", "uid": "${inkspot_ds}" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 10 }, { "color": "red", "value": 50 }] }, "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 42 },
+      "id": 51,
+      "targets": [
+        { "target": "failed_login_attempts", "type": "timeseries" },
+        { "target": "security_incidents", "type": "timeseries" },
+        { "target": "suspicious_activities", "type": "timeseries" }
+      ],
+      "title": "Sécurité",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 50 },
+      "id": 106,
+      "title": "Infrastructure (Prometheus)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 51 },
+      "id": 60,
+      "targets": [
+        { "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)", "legendFormat": "CPU Usage %", "refId": "A" }
+      ],
+      "title": "CPU Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "fieldConfig": { "defaults": { "unit": "bytes", "color": { "mode": "palette-classic" } }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 51 },
+      "id": 61,
+      "targets": [
+        { "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes", "legendFormat": "Mémoire utilisée", "refId": "A" },
+        { "expr": "node_memory_MemTotal_bytes", "legendFormat": "Mémoire totale", "refId": "B" }
+      ],
+      "title": "Mémoire",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["inkspot", "overview"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 2,
+        "name": "inkspot_ds",
+        "query": "simpod-json-datasource",
+        "type": "datasource"
+      },
+      {
+        "current": {},
+        "hide": 2,
+        "name": "prometheus_ds",
+        "query": "prometheus",
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "INKSPOT — Overview",
+  "uid": "inkspot-overview",
+  "version": 1
+}
