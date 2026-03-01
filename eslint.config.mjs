@@ -17,6 +17,8 @@ export default tseslint.config(
       'scripts/**',
       'docs-astro/**',
       'public/**',
+      'jest.setup.js',
+      'jest.setup.ts',
     ],
   },
   js.configs.recommended,
@@ -33,6 +35,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-require-imports': 'off',
       'no-undef': 'off',
     },
   },
@@ -42,6 +45,11 @@ export default tseslint.config(
       globals: {
         ...globals.jest,
       },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   }
 )
