@@ -20,15 +20,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   serverExternalPackages: ['@prisma/client'],
-  webpack: (config, { dev, isServer }) => {
-    if (dev && isServer) {
-      config.watchOptions = {
-        poll: 1000,
-        aggregateTimeout: 300,
-      }
-    }
-    return config
-  },
 }
 
 export default nextConfig
