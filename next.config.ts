@@ -19,9 +19,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   serverExternalPackages: ['@prisma/client'],
   webpack: (config, { dev, isServer }) => {
     if (dev && isServer) {
