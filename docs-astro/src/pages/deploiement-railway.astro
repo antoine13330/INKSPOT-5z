@@ -1,4 +1,4 @@
----
+﻿---
 import DocLayout from '../layouts/DocLayout.astro';
 ---
 
@@ -30,6 +30,7 @@ import DocLayout from '../layouts/DocLayout.astro';
       <tbody>
         <tr><td>1.0</td><td>Mars 2026</td><td>Version initiale — prérequis, pas à pas, checklists, observabilité, smoke tests, sauvegardes, incidents, rollback</td><td>DESPRES Antoine</td></tr>
         <tr><td>2.0</td><td>28 février 2026</td><td>Ajout protocole CI/CD complet (C2.1.1 &amp; C2.1.2), tableau des environnements, séquences de déploiement — version finale de rendu</td><td>DESPRES Antoine</td></tr>
+        <tr><td>3.0</td><td>1 mars 2026</td><td>Mise à jour complète suite au déploiement réel : migration Next.js 16 (proxy.ts, ESLint flat config, suppression eslint dans NextConfig), Dockerfile pnpm, standalone server, PORT Railway, Grafana provisioning automatique</td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
   </div>
@@ -51,7 +52,8 @@ import DocLayout from '../layouts/DocLayout.astro';
       <li><a href="#deploiement">5. Déploiement de l’application</a></li>
       <li><a href="#config-post">6. Configuration post-déploiement</a></li>
       <li><a href="#tests-verif">7. Tests et vérification</a></li>
-      <li><a href="#troubleshooting">8. Troubleshooting</a></li>
+      <li><a href="#troubleshooting">8. Troubleshooting (npm/pnpm, healthcheck, ESLint 9, Next.js 16)</a></li>
+      <li><a href="#grafana-monitoring">9. Configuration Grafana &amp; Monitoring</a></li>
       <li><a href="#checklists">Checklists déploiement</a></li>
       <li><a href="#liens-ressources">Liens et ressources</a></li>
       <li><a href="#verification-couverture-depl">Table des sections</a></li>
@@ -251,17 +253,56 @@ redis.ping().then(() => console.log('✅ Redis OK')).catch(console.error);
   <!-- 8. Troubleshooting -->
   <div class="card" id="troubleshooting">
     <h2 class="section-title">8. Troubleshooting</h2>
-    <h3>Problème 1 : Build échoue</h3>
-    <p><strong>Symptômes</strong> : Build échoue avec erreurs TypeScript, erreurs de dépendances ou erreurs Prisma.</p>
-    <p><strong>Solutions</strong> :</p>
+    <h3>Probl&#232;me 1 : Build &#233;choue &#8212; npm vs pnpm</h3>
+    <p><strong>Sympt&#244;mes</strong> : <code>npm error Invalid Version</code> ou <code>ERR_PNPM_OUTDATED_LOCKFILE</code> dans les logs Railway.</p>
+    <p><strong>Cause</strong> : Le Dockerfile utilisait <code>npm ci</code> alors que le projet utilise <strong>pnpm</strong>. Il n&#8217;existe pas de <code>package-lock.json</code>, uniquement un <code>pnpm-lock.yaml</code>.</p>
+    <p><strong>Solution appliqu&#233;e</strong> :</p>
     <ol class="list-tight">
-      <li>Vérifier les erreurs TypeScript : <code>npm run type-check</code></li>
-      <li>Vérifier les dépendances : <code>npm ci --only=production</code></li>
-      <li>Vérifier Prisma : <code>npx prisma validate</code>, <code>npx prisma generate</code></li>
-      <li>Vérifier les variables d’environnement : <code>npm run env:check</code></li>
+      <li>Activer pnpm dans l&#8217;image Docker : <code>RUN corepack enable &amp;&amp; corepack prepare pnpm@latest --activate</code></li>
+      <li>Remplacer <code>npm ci</code> par <code>pnpm install --frozen-lockfile</code></li>
+      <li>Remplacer <code>npm run build</code> par <code>pnpm build</code></li>
+    </ol>
+
+    <h3>Probl&#232;me 2 : Healthcheck &#8212; service unavailable</h3>
+    <p><strong>Sympt&#244;mes</strong> : Build r&#233;ussi mais tous les healthchecks &#233;chouent (<code>service unavailable</code>) pendant 5 minutes.</p>
+    <p><strong>Causes et solutions</strong> :</p>
+    <ol class="list-tight">
+      <li><strong><code>ENV PORT=3000</code> dans le Dockerfile</strong> : &#233;crase la variable <code>PORT</code> inject&#233;e par Railway. Railway fait son healthcheck sur le port qu&#8217;il a assign&#233; dynamiquement. <strong>Solution</strong> : supprimer <code>ENV PORT=3000</code> du Dockerfile.</li>
+      <li><strong>Script de d&#233;marrage trop complexe</strong> : <code>start-production.js</code> v&#233;rifiait <code>node_modules/.prisma</code> (inexistant avec pnpm) et plantait avant de d&#233;marrer Next.js. <strong>Solution</strong> : utiliser directement <code>CMD ["node", "server.js"]</code> (serveur standalone Next.js).</li>
+      <li><strong>Migrations bloquantes au d&#233;marrage</strong> : <code>prisma migrate deploy</code> dans le startCommand &#233;chouait si <code>DATABASE_URL</code> n&#8217;&#233;tait pas encore configur&#233;e. <strong>Solution</strong> : retirer les migrations du startCommand initial.</li>
+    </ol>
+
+    <h3>Probl&#232;me 3 : node_modules/.prisma introuvable</h3>
+    <p><strong>Sympt&#244;mes</strong> : <code>ERROR: "/app/node_modules/.prisma": not found</code> lors du build Docker.</p>
+    <p><strong>Cause</strong> : Avec pnpm, le client Prisma g&#233;n&#233;r&#233; est stock&#233; dans la structure virtuelle pnpm et non dans <code>node_modules/.prisma</code> comme avec npm.</p>
+    <p><strong>Solution appliqu&#233;e</strong> : Utiliser le mode <code>output: 'standalone'</code> de Next.js. Le Dockerfile copie <code>.next/standalone</code> (qui contient son propre <code>node_modules</code> minimal) et les dossiers <code>@prisma</code> explicitement depuis le stage builder.</p>
+
+    <h3>Probl&#232;me 4 : Migration ESLint 9 (Next.js 16)</h3>
+    <p><strong>Sympt&#244;mes</strong> : <code>ESLint couldn't find an eslint.config.(js|mjs|cjs) file</code>, <code>unknown option '--dir'</code>, <code>Definition for rule '@next/next/no-img-element' was not found</code>.</p>
+    <p><strong>Cause</strong> : Next.js 16 utilise ESLint 9 qui a cass&#233; la compatibilit&#233; avec <code>.eslintrc.json</code> et les options <code>--quiet</code>, <code>--max-warnings</code>, <code>--dir</code>, <code>--ext</code>.</p>
+    <p><strong>Solutions appliqu&#233;es</strong> :</p>
+    <ol class="list-tight">
+      <li>Suppression de <code>.eslintrc.json</code>, cr&#233;ation de <code>eslint.config.mjs</code> (flat config ESLint 9)</li>
+      <li>Script lint simplifi&#233; : <code>"lint": "eslint ."</code></li>
+      <li>Suppression des commentaires <code>eslint-disable-next-line @next/next/no-img-element</code> dans les tests</li>
+      <li>Exclusion de <code>jest.setup.js</code> du lint (utilise <code>require()</code> l&#233;gitimement)</li>
+    </ol>
+
+    <h3>Probl&#232;me 5 : Propri&#233;t&#233; <code>eslint</code> invalide dans NextConfig</h3>
+    <p><strong>Sympt&#244;mes</strong> : <code>error TS2353: 'eslint' does not exist in type 'NextConfig'</code>.</p>
+    <p><strong>Solution</strong> : Supprimer le bloc <code>eslint: &#123; ignoreDuringBuilds: true &#125;</code> de <code>next.config.ts</code> (supprim&#233; dans Next.js 16).</p>
+
+    <h3>Probl&#232;me 6 : Middleware d&#233;pr&#233;ci&#233; (Next.js 16)</h3>
+    <p><strong>Sympt&#244;mes</strong> : Warning <code>"middleware" file convention is deprecated, migrate to "proxy"</code>.</p>
+    <p><strong>Solution appliqu&#233;e</strong> : Renommage de <code>middleware.ts</code> &#8594; <code>proxy.ts</code> et de la fonction export&#233;e <code>middleware()</code> &#8594; <code>proxy()</code>. L&#8217;API reste identique. Migration automatis&#233;e via : <code>npx @next/codemod@canary middleware-to-proxy .</code></p>
+
+    <h3>Probl&#232;me 7 : Build TypeScript/Prisma g&#233;n&#233;ral</h3>
+    <ol class="list-tight">
+      <li>V&#233;rifier les erreurs TypeScript : <code>pnpm type-check</code></li>
+      <li>V&#233;rifier Prisma : <code>pnpm prisma validate</code>, <code>pnpm prisma generate</code></li>
+      <li>V&#233;rifier les variables d&#8217;environnement : <code>pnpm env:check</code></li>
     </ol>
   </div>
-
   <!-- Checklists -->
   <div class="card" id="checklists">
     <h2 class="section-title">Checklists déploiement</h2>
@@ -303,6 +344,55 @@ redis.ping().then(() => console.log('✅ Redis OK')).catch(console.error);
       <li>Migrations : avant start : <code>prisma migrate deploy</code> (ou <code>npm run db:migrate</code>)</li>
       <li>Seed optionnelle : <code>npm run db:seed</code> si contexte de démo</li>
       <li>Healthcheck : <code>/api/health</code> ou <code>/api/health/simple</code></li>
+    </ul>
+  </div>
+  <!-- 9. Configuration Grafana & Monitoring -->
+  <div class="card" id="grafana-monitoring">
+    <h2 class="section-title">9. Configuration Grafana &amp; Monitoring</h2>
+    <div class="callout callout-info">
+      <strong>Provisioning automatique :</strong> Les fichiers <code>monitoring/grafana/provisioning/</code> configurent automatiquement Grafana au d&#233;marrage (datasources + dashboards). Aucune configuration manuelle n&#8217;est n&#233;cessaire si les volumes sont correctement mont&#233;s.
+    </div>
+
+    <h3>Datasources configur&#233;es automatiquement</h3>
+    <table role="grid" aria-label="Datasources Grafana">
+      <thead><tr><th scope="col">Datasource</th><th scope="col">Type</th><th scope="col">URL interne Railway</th><th scope="col">Usage</th></tr></thead>
+      <tbody>
+        <tr><td>Prometheus</td><td>prometheus</td><td><code>http://prometheus:9090</code></td><td>M&#233;triques syst&#232;me, CPU, m&#233;moire, PostgreSQL</td></tr>
+        <tr><td>INKSPOT JSON API</td><td>simpod-json-datasource</td><td><code>http://inkspot-app:3000/api/grafana</code></td><td>40+ m&#233;triques m&#233;tier (revenus, r&#233;servations, utilisateurs)</td></tr>
+        <tr><td>Loki</td><td>loki</td><td><code>http://loki:3100</code></td><td>Logs applicatifs</td></tr>
+        <tr><td>Tempo</td><td>tempo</td><td><code>http://tempo:3200</code></td><td>Traces distribu&#233;es</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Connexion INKSPOT &#8594; Grafana sur Railway</h3>
+    <p>Sur Railway, les services communiquent via le r&#233;seau interne. L&#8217;URL interne de chaque service est visible dans <strong>Settings &gt; Networking</strong> du service concern&#233;.</p>
+    <ol class="list-tight">
+      <li>R&#233;cup&#233;rer l&#8217;URL interne du service INKSPOT-5z : format <code>inkspot-5z.railway.internal</code></li>
+      <li>Dans Grafana UI : <strong>Connections &gt; Data sources &gt; INKSPOT JSON API</strong></li>
+      <li>Mettre &#224; jour l&#8217;URL : <code>http://inkspot-5z.railway.internal:3000/api/grafana</code></li>
+      <li>Cliquer <strong>Save &amp; Test</strong> &#8212; r&#233;ponse attendue : HTTP 200</li>
+    </ol>
+
+    <h3>Variables Railway &#224; configurer sur le service Grafana</h3>
+    <table role="grid" aria-label="Variables Grafana">
+      <thead><tr><th scope="col">Variable</th><th scope="col">Valeur</th></tr></thead>
+      <tbody>
+        <tr><td><code>GF_SECURITY_ADMIN_PASSWORD</code></td><td>Mot de passe admin (&#224; changer)</td></tr>
+        <tr><td><code>GF_USERS_ALLOW_SIGN_UP</code></td><td><code>false</code></td></tr>
+        <tr><td><code>GF_INSTALL_PLUGINS</code></td><td><code>simpod-json-datasource</code></td></tr>
+        <tr><td><code>GF_SERVER_HTTP_PORT</code></td><td>Laisser vide (Railway injecte <code>PORT</code>)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Dashboard INKSPOT — Overview</h3>
+    <p>Le dashboard <code>monitoring/grafana/dashboards/inkspot-overview.json</code> est charg&#233; automatiquement par Grafana. Il contient 6 sections :</p>
+    <ul class="list-tight">
+      <li><strong>Temps r&#233;el</strong> : utilisateurs en ligne, r&#233;servations actives, revenu en direct, taux d&#8217;erreur, score de performance</li>
+      <li><strong>Activit&#233; utilisateurs</strong> : inscriptions, engagement, r&#233;tention, churn</li>
+      <li><strong>Revenus &amp; paiements</strong> : revenus journaliers, taux de conversion, remboursements</li>
+      <li><strong>Performance applicative</strong> : temps de r&#233;ponse API, cache Redis, m&#233;moire</li>
+      <li><strong>R&#233;servations &amp; contenu</strong> : patterns de r&#233;servation, engagement posts</li>
+      <li><strong>S&#233;curit&#233;</strong> : tentatives de login &#233;chou&#233;es, incidents, activit&#233;s suspectes</li>
     </ul>
   </div>
 

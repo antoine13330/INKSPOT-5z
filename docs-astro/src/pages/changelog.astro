@@ -1,4 +1,4 @@
----
+﻿---
 import DocLayout from '../layouts/DocLayout.astro';
 ---
 
@@ -11,9 +11,9 @@ import DocLayout from '../layouts/DocLayout.astro';
       <tbody>
         <tr><td><strong>Numéro de document</strong></td><td>CL-INKSPOT-2026-001</td></tr>
         <tr><td><strong>Titre</strong></td><td>Rapport d’évolution INKSPOT-5z – Historique complet</td></tr>
-        <tr><td><strong>Version</strong></td><td>1.1</td></tr>
-        <tr><td><strong>Date</strong></td><td>28 février 2026</td></tr>
-        <tr><td><strong>Période couverte</strong></td><td>2025-07-15 → 2026-02-28 (début développement → rendu final)</td></tr>
+        <tr><td><strong>Version</strong></td><td>1.2</td></tr>
+        <tr><td><strong>Date</strong></td><td>1 mars 2026</td></tr>
+        <tr><td><strong>Période couverte</strong></td><td>2025-07-15 &#8594; 2026-03-01 (d&#233;but d&#233;veloppement &#8594; d&#233;ploiement production)</td></tr>
         <tr><td><strong>Public cible</strong></td><td>Équipe dev, évaluateurs, mainteneurs</td></tr>
         <tr><td><strong>Rédacteur</strong></td><td>DESPRES Antoine</td></tr>
       </tbody>
@@ -70,6 +70,18 @@ import DocLayout from '../layouts/DocLayout.astro';
       </thead>
       <tbody>
         <tr>
+          <td>2026-03-01</td>
+          <td>1.2.0</td>
+          <td>feat / fix</td>
+          <td>
+            <strong>D&#233;ploiement Railway op&#233;rationnel</strong> &#8212; Projet <code>humorous-healing</code> en ligne avec stack compl&#232;te (INKSPOT-5z, PostgreSQL, Redis, Grafana Stack : Grafana, Prometheus, Loki, Tempo).
+            <br/><strong>Migration Next.js 16</strong> : (1) <code>middleware.ts</code> &#8594; <code>proxy.ts</code> + fonction <code>middleware()</code> &#8594; <code>proxy()</code> ; (2) suppression de la propri&#233;t&#233; <code>eslint</code> du type <code>NextConfig</code> ; (3) suppression de la config <code>webpack</code> incompatible Turbopack.
+            <br/><strong>Migration ESLint 9</strong> : suppression de <code>.eslintrc.json</code>, cr&#233;ation de <code>eslint.config.mjs</code> (flat config), ajout du package <code>globals</code>, script lint simplifi&#233; en <code>eslint .</code>, exclusion de <code>jest.setup.js</code>, suppression des commentaires <code>eslint-disable @next/next/*</code> dans les tests.
+            <br/><strong>Dockerfile pnpm</strong> : remplacement complet de <code>npm ci</code> par <code>pnpm install --frozen-lockfile</code> via <code>corepack</code> ; utilisation du serveur standalone Next.js (<code>CMD ["node", "server.js"]</code>) ; suppression de <code>ENV PORT=3000</code> pour laisser Railway injecter son propre <code>PORT</code> (fix healthcheck).
+            <br/><strong>Grafana provisioning</strong> : cr&#233;ation de <code>monitoring/grafana/provisioning/datasources/datasources.yml</code> (Prometheus, INKSPOT JSON API, Loki, Tempo) et <code>monitoring/grafana/dashboards/inkspot-overview.json</code> (dashboard complet 6 sections, 40+ m&#233;triques).
+            <br/><strong>Script <code>railway-configure.js</code></strong> : nouveau script de configuration d&#8217;un projet Railway existant (variables d&#8217;env, domaine, services).
+          </td>
+        </tr>        <tr>
           <td>2026-02-28</td>
           <td>1.0.1</td>
           <td>ci</td>
