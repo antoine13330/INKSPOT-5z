@@ -44,7 +44,6 @@ RUN adduser --system --uid 1001 nextjs
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 # Standalone output (contient son propre node_modules minimal)
