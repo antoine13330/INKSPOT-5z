@@ -26,11 +26,18 @@ if (process.env.DATABASE_URL) {
 }
 
 // Utiliser le serveur standalone si disponible (output: 'standalone' dans next.config)
-const standaloneServer = path.join(process.cwd(), '.next', 'standalone', 'server.js')
-const useStandalone = fs.existsSync(standaloneServer)
+// En image Docker runner, le standalone est copié à la racine (/app/server.js)
+// En dev local, il peut être dans .next/standalone/server.js
+const standaloneServerRoot = path.join(process.cwd(), 'server.js')
+const standaloneServerNested = path.join(process.cwd(), '.next', 'standalone', 'server.js')
+const standaloneServer = fs.existsSync(standaloneServerRoot)
+  ? standaloneServerRoot
+  : fs.existsSync(standaloneServerNested)
+    ? standaloneServerNested
+    : null
 
-if (useStandalone) {
-  console.log('▶️  Starting Next.js standalone server...')
+if (standaloneServer) {
+  console.log(`▶️  Starting Next.js standalone server (${standaloneServer})...`)
   process.env.PORT = String(PORT)
   process.env.HOSTNAME = HOSTNAME
   require(standaloneServer)

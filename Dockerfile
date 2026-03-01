@@ -57,8 +57,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_module
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 
+# Script de démarrage qui respecte $PORT injecté par Railway
+COPY --from=builder --chown=nextjs:nodejs /app/scripts/start-production.js ./scripts/start-production.js
+
 USER nextjs
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["node", "scripts/start-production.js"]
