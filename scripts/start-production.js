@@ -5,7 +5,7 @@
  * Gère différents modes de démarrage et vérifications
  */
 
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -68,6 +68,16 @@ try {
 } catch (error) {
     console.error('❌ Prisma verification failed:', error.message);
     console.error('💡 Prisma client not properly generated');
+    process.exit(1);
+}
+
+// Exécuter les migrations de base de données
+console.log('🗄️  Running database migrations...');
+try {
+    execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+    console.log('✅ Database migrations complete.');
+} catch (error) {
+    console.error('❌ Database migration failed:', error.message);
     process.exit(1);
 }
 

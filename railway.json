@@ -11,7 +11,7 @@
     ]
   },
   "deploy": {
-    "startCommand": "npm start",
+    "startCommand": "node scripts/start-production.js",
     "healthcheckPath": "/api/health/simple",
     "healthcheckTimeout": 300,
     "restartPolicyType": "on_failure",

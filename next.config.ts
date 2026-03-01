@@ -5,8 +5,16 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   distDir: '.next',
   images: {
-    domains: ['localhost'],
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.amazonaws.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+    ],
   },
   typescript: {
     ignoreBuildErrors: false,
