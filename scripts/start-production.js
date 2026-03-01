@@ -1,133 +1,51 @@
 #!/usr/bin/env node
 
-/**
- * Script de démarrage de production pour Docker
- * Gère différents modes de démarrage et vérifications
- */
+const { execSync, spawn } = require('child_process')
+const fs = require('fs')
+const path = require('path')
 
-const { spawn, execSync } = require('child_process');
-const path = require('path');
-const fs = require('fs');
+const PORT = process.env.PORT || 3000
+const HOSTNAME = process.env.HOSTNAME || '0.0.0.0'
 
-console.log('🚀 Starting INKSPOT production server...');
+console.log('🚀 Starting INKSPOT production server...')
+console.log(`   NODE_ENV : ${process.env.NODE_ENV}`)
+console.log(`   PORT     : ${PORT}`)
+console.log(`   HOSTNAME : ${HOSTNAME}`)
 
-// Vérifier l'environnement
-console.log('🔍 Environment check:');
-console.log(`- NODE_ENV: ${process.env.NODE_ENV}`);
-console.log(`- PORT: ${process.env.PORT || 3000}`);
-console.log(`- HOSTNAME: ${process.env.HOSTNAME || '0.0.0.0'}`);
-
-// Vérifier les fichiers nécessaires
-const requiredFiles = [
-    'package.json',
-    '.next',
-    'node_modules'
-];
-
-console.log('📋 Checking required files:');
-requiredFiles.forEach(file => {
-    const exists = fs.existsSync(file);
-    console.log(`- ${file}: ${exists ? '✅' : '❌'}`);
-    if (!exists) {
-        console.error(`❌ Required file/directory missing: ${file}`);
-        process.exit(1);
-    }
-});
-
-// Vérifier Next.js
-try {
-    const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    const nextVersion = packageJson.dependencies?.next;
-    console.log(`📦 Next.js version: ${nextVersion || 'Not found'}`);
-    
-    if (!nextVersion) {
-        console.error('❌ Next.js not found in dependencies');
-        process.exit(1);
-    }
-} catch (error) {
-    console.error('❌ Error reading package.json:', error.message);
-    process.exit(1);
+// Migrations Prisma
+if (process.env.DATABASE_URL) {
+  console.log('🗄️  Running database migrations...')
+  try {
+    execSync('npx prisma migrate deploy', { stdio: 'inherit' })
+    console.log('✅ Migrations complete.')
+  } catch (err) {
+    console.error('⚠️  Migration failed (non-fatal):', err.message)
+  }
+} else {
+  console.warn('⚠️  DATABASE_URL not set — skipping migrations.')
 }
 
-// Vérifier Prisma
-console.log('🔍 Verifying Prisma...');
-try {
-    const { PrismaClient } = require('@prisma/client');
-    console.log('✅ PrismaClient imported successfully');
-    
-    // Vérifier que les dossiers Prisma existent
-    const prismaDirs = ['node_modules/.prisma', 'node_modules/@prisma/client'];
-    prismaDirs.forEach(dir => {
-        if (!fs.existsSync(dir)) {
-            console.error(`❌ Prisma directory missing: ${dir}`);
-            process.exit(1);
-        }
-    });
-    
-    console.log('✅ Prisma directories found');
-} catch (error) {
-    console.error('❌ Prisma verification failed:', error.message);
-    console.error('💡 Prisma client not properly generated');
-    process.exit(1);
-}
+// Utiliser le serveur standalone si disponible (output: 'standalone' dans next.config)
+const standaloneServer = path.join(process.cwd(), '.next', 'standalone', 'server.js')
+const useStandalone = fs.existsSync(standaloneServer)
 
-// Exécuter les migrations de base de données
-console.log('🗄️  Running database migrations...');
-try {
-    execSync('npx prisma migrate deploy', { stdio: 'inherit' });
-    console.log('✅ Database migrations complete.');
-} catch (error) {
-    console.error('❌ Database migration failed:', error.message);
-    process.exit(1);
-}
-
-// Essayer de démarrer le serveur
-console.log('🚀 Attempting to start server...');
-
-// Méthode 1: Essayer next start directement
-try {
-    console.log('🔄 Method 1: Direct next start...');
-    const nextStart = spawn('npx', ['next', 'start'], {
-        stdio: 'inherit',
-        env: process.env
-    });
-    
-    nextStart.on('error', (error) => {
-        console.error('❌ Method 1 failed:', error.message);
-        console.log('🔄 Trying Method 2: npm start...');
-        
-        // Méthode 2: npm start
-        const npmStart = spawn('npm', ['start'], {
-            stdio: 'inherit',
-            env: process.env
-        });
-        
-        npmStart.on('error', (error2) => {
-            console.error('❌ Method 2 failed:', error2.message);
-            console.log('🔄 Trying Method 3: node server.js...');
-            
-            // Méthode 3: Vérifier si standalone existe
-            if (fs.existsSync('server.js')) {
-                const nodeServer = spawn('node', ['server.js'], {
-                    stdio: 'inherit',
-                    env: process.env
-                });
-                
-                nodeServer.on('error', (error3) => {
-                    console.error('❌ All startup methods failed');
-                    console.error('Error 1:', error.message);
-                    console.error('Error 2:', error2.message);
-                    console.error('Error 3:', error3.message);
-                    process.exit(1);
-                });
-            } else {
-                console.error('❌ No startup method available');
-                process.exit(1);
-            }
-        });
-    });
-    
-} catch (error) {
-    console.error('❌ Failed to start server:', error.message);
-    process.exit(1);
+if (useStandalone) {
+  console.log('▶️  Starting Next.js standalone server...')
+  process.env.PORT = String(PORT)
+  process.env.HOSTNAME = HOSTNAME
+  require(standaloneServer)
+} else {
+  console.log('▶️  Starting Next.js via next start...')
+  const server = spawn(
+    'node',
+    ['node_modules/.bin/next', 'start', '--port', String(PORT), '--hostname', HOSTNAME],
+    { stdio: 'inherit', env: process.env }
+  )
+  server.on('error', (err) => {
+    console.error('❌ Failed to start Next.js:', err.message)
+    process.exit(1)
+  })
+  server.on('exit', (code) => {
+    process.exit(code ?? 1)
+  })
 }
