@@ -13,7 +13,7 @@ COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 
 # Installer toutes les dépendances (incluant devDependencies pour Prisma et ESLint)
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # Étape de build
 FROM base AS builder
