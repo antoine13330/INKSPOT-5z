@@ -54,6 +54,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # Prisma complet (CLI + engines) pour migrations — pnpm symlinks nécessitent node_modules complet
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/scripts/railway-start.js ./scripts/
 
 USER nextjs
 
