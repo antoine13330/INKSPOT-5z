@@ -51,17 +51,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
-# Prisma pour les migrations au démarrage
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+# Prisma complet (CLI + engines) pour migrations — pnpm symlinks nécessitent node_modules complet
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-
-# Script de démarrage qui respecte $PORT injecté par Railway
-COPY --from=builder --chown=nextjs:nodejs /app/scripts/start-production.js ./scripts/start-production.js
 
 USER nextjs
 
 EXPOSE 3000
 
-CMD ["node", "scripts/start-production.js"]
+CMD ["node", "server.js"]
