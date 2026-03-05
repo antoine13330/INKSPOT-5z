@@ -8,8 +8,8 @@ import fs from 'node:fs';
 
 const pages = [
   { slug: 'mut', title: 'Manuel-Utilisation-Technique', label: 'MUT' },
-  { slug: 'deploiement-railway', title: 'Manuel-Deploiement-Railway', label: 'Déploiement Railway' },
-  { slug: 'manuel-mise-a-jour', title: 'Manuel-Mise-a-Jour', label: 'Mise à Jour' },
+  { slug: 'deploiement-railway', title: 'Manuel-Deploiement-Railway', label: 'D&eacute;ploiement Railway' },
+  { slug: 'manuel-mise-a-jour', title: 'Manuel-Mise-a-Jour', label: 'Mise &agrave; Jour' },
   { slug: 'cahier-recette', title: 'Cahier-de-Recette', label: 'Cahier de recette' },
   { slug: 'changelog', title: 'Changelog', label: 'Changelog' },
 ];
@@ -62,14 +62,16 @@ async function exportAll() {
   const previewProc = await startPreview();
 
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({
+  const context = await browser.newContext({
     viewport: { width: 1400, height: 2400 },
+    locale: 'fr-FR',
   });
+  const page = await context.newPage();
 
   for (const entry of pages) {
     const url = `${BASE_URL}/${entry.slug}`;
     console.log(`→ Export ${url} (charte INKSPOT)`);
-    await page.goto(url, { waitUntil: 'networkidle' });
+    await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
     await wait(800);
     // Charte INKSPOT + masquer navbar + forcer bordures des tableaux
     await page.evaluate(() => {

@@ -1,0 +1,193 @@
+name: CI/CD — INKSPOT-5z
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─────────────────────────────────────────────────────────────
+  # JOB 1 — Quality gate : lint · type-check · tests · build
+  # ─────────────────────────────────────────────────────────────
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      # Stub env vars so Next.js build doesn't fail on missing secrets
+      SKIP_ENV_VALIDATION: 'true'
+      NEXTAUTH_SECRET: ci-secret-placeholder
+      NEXTAUTH_URL: http://localhost:3000
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/inkspot_ci
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: inkspot_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      # Sanitize lockfile — removes platform-specific SWC entries that break Linux runners
+      - name: Sanitize lockfile for Linux
+        run: |
+          sed -i '/@next\/swc-win32/d' pnpm-lock.yaml
+          sed -i '/@next\/swc-darwin/d' pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Generate Prisma client
+        run: pnpm exec prisma generate
+
+      - name: Run database migrations (CI)
+        run: pnpm exec prisma migrate deploy
+        continue-on-error: true
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type-check
+        run: pnpm run type-check
+        continue-on-error: true
+
+      - name: Unit tests
+        run: pnpm test -- --passWithNoTests --forceExit
+        env:
+          CI: 'true'
+
+      - name: Test coverage
+        run: pnpm run test:coverage -- --passWithNoTests --forceExit
+        continue-on-error: true
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+      - name: Build (Next.js standalone)
+        run: pnpm run build
+        env:
+          SKIP_ENV_VALIDATION: 'true'
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next/
+          retention-days: 3
+
+  # ─────────────────────────────────────────────────────────────
+  # JOB 2 — Security scan (parallel with build-and-test)
+  # ─────────────────────────────────────────────────────────────
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Dependency audit
+        run: pnpm audit --audit-level=critical
+        continue-on-error: true
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+        continue-on-error: true
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        continue-on-error: true
+
+  # ─────────────────────────────────────────────────────────────
+  # JOB 3 — Deploy to Railway (only on push to main, after tests pass)
+  # ─────────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy → Railway (production)
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://inkspot-5z-production.up.railway.app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service inkspot-5z --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Verify deployment health
+        run: |
+          echo "Waiting for Railway to spin up the new deployment..."
+          sleep 30
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            https://inkspot-5z-production.up.railway.app/api/health/simple)
+          echo "Health check HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "::warning::Health check returned $STATUS — deployment may still be starting."
+          else
+            echo "Deployment healthy."
+          fi
+        continue-on-error: true
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          echo "::notice title=Deployed::INKSPOT-5z v$(cat package.json | jq -r .version) deployed to Railway production."

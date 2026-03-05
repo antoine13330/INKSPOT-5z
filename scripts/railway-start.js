@@ -44,7 +44,17 @@ try {
   }
 }
 
-// 4. Démarre le serveur
+// 4. Seed de la base (comptes de test : client1, pierce, admin — idempotent via upsert)
+console.log('🌱  Running prisma db seed...')
+try {
+  execSync('npx prisma db seed', { stdio: 'inherit', env: cleanEnv })
+  console.log('✅ db seed OK')
+} catch (seedErr) {
+  console.warn('⚠️  db seed failed (non-blocking):', seedErr.message)
+  // Continue — l'app peut démarrer sans seed (DB peut déjà être peuplée)
+}
+
+// 5. Démarre le serveur
 const serverPath = path.join(process.cwd(), 'server.js')
 console.log('▶️  Starting server...')
 spawn('node', [serverPath], { stdio: 'inherit', env: cleanEnv }).on('exit', (code) => {
