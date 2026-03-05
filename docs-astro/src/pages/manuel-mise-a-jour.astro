@@ -2,26 +2,26 @@
 import DocLayout from '../layouts/DocLayout.astro';
 ---
 
-<DocLayout title="Manuel de Mise &agrave; Jour &ndash; INKSPOT">
+<DocLayout title="Manuel de Mise à Jour – INKSPOT">
 
   <div class="card" id="infos-document">
     <h2 class="section-title">Informations du document</h2>
-    <table role="grid" aria-label="M&eacute;tadonn&eacute;es du manuel de mise &agrave; jour">
+    <table role="grid" aria-label="Métadonnées du manuel de mise à jour">
       <thead>
-        <tr><th scope="col">&Eacute;l&eacute;ment</th><th scope="col">Valeur</th></tr>
+        <tr><th scope="col">Élément</th><th scope="col">Valeur</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>Num&eacute;ro de document</strong></td><td>MMJ-INKSPOT-2026-001</td></tr>
-        <tr><td><strong>Titre</strong></td><td>INKSPOT &ndash; Manuel de Mise &agrave; Jour</td></tr>
-        <tr><td><strong>Version</strong></td><td>1.1</td></tr>
+        <tr><td><strong>Numéro de document</strong></td><td>MMJ-INKSPOT-2026-001</td></tr>
+        <tr><td><strong>Titre</strong></td><td>INKSPOT – Manuel de Mise à Jour</td></tr>
+        <tr><td><strong>Version</strong></td><td>1.2</td></tr>
         <tr><td><strong>Date</strong></td><td>6 mars 2026</td></tr>
-        <tr><td><strong>R&eacute;f&eacute;rentiel (validation Master)</strong></td><td>YNOV 2024 &ndash; Crit&egrave;re C2.4.1 (Manuel de mise &agrave; jour)</td></tr>
-        <tr><td><strong>Public cible</strong></td><td>&Eacute;quipe dev, &eacute;quipe ops, mainteneurs</td></tr>
-        <tr><td><strong>R&eacute;dacteur / Responsable</strong></td><td>DESPRES Antoine</td></tr>
+        <tr><td><strong>Référentiel (validation Master)</strong></td><td>YNOV 2024 – Critère C2.4.1 (Manuel de mise à jour)</td></tr>
+        <tr><td><strong>Public cible</strong></td><td>Équipe dev, équipe ops, mainteneurs</td></tr>
+        <tr><td><strong>Rédacteur / Responsable</strong></td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
     <p><strong>Historique des versions</strong></p>
-    <table role="grid" aria-label="Historique des versions du manuel de mise &agrave; jour">
+    <table role="grid" aria-label="Historique des versions du manuel de mise à jour">
       <thead>
         <tr>
           <th scope="col">Version</th>
@@ -31,12 +31,13 @@ import DocLayout from '../layouts/DocLayout.astro';
         </tr>
       </thead>
       <tbody>
-        <tr><td>1.0</td><td>28 f&eacute;vrier 2026</td><td>Version initiale &mdash; proc&eacute;dures de mise &agrave; jour des d&eacute;pendances, de l'application, migrations Prisma, SemVer &mdash; livrable autonome C2.4.1</td><td>DESPRES Antoine</td></tr>
-        <tr><td>1.1</td><td>6 mars 2026</td><td>Migration npm→pnpm, ajout section 7 (Workflow Git recommand&eacute;), section 8 (Bonnes pratiques DevOps), clarification CI (GitHub Actions) vs CD (Railway), rollback avec exemple concret, monitoring post-mise-&agrave;-jour &mdash; version finale de livraison</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.0</td><td>28 février 2026</td><td>Version initiale — procédures de mise à jour des dépendances, de l'application, migrations Prisma, SemVer — livrable autonome C2.4.1</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.1</td><td>6 mars 2026</td><td>Migration npm→pnpm, ajout section 7 (Workflow Git recommandé), section 8 (Bonnes pratiques DevOps), clarification CI (GitHub Actions) vs CD (Railway), rollback avec exemple concret, monitoring post-mise-à-jour</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.2</td><td>6 mars 2026</td><td>Correction encodage UTF-8 final — version finale de livraison</td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
     <div class="callout callout-info">
-      <strong>R&eacute;f&eacute;rentiel :</strong> Ce document r&eacute;pond au crit&egrave;re C2.4.1 du r&eacute;f&eacute;rentiel YNOV 2024 &mdash; « R&eacute;diger la documentation technique d'exploitation du logiciel d&eacute;taillant son fonctionnement afin d'assurer une tra&ccedil;abilit&eacute; pour le suivi des &eacute;quipes et des futures &eacute;volutions du logiciel &mdash; Le manuel de mise &agrave; jour. »
+      <strong>Référentiel :</strong> Ce document répond au critère C2.4.1 du référentiel YNOV 2024 — « Rédiger la documentation technique d'exploitation du logiciel détaillant son fonctionnement afin d'assurer une traçabilité pour le suivi des équipes et des futures évolutions du logiciel — Le manuel de mise à jour. »
     </div>
   </div>
 
@@ -44,86 +45,86 @@ import DocLayout from '../layouts/DocLayout.astro';
     <strong>Sommaire</strong>
     <ul class="list-tight">
       <li><a href="#infos-document">Informations du document</a></li>
-      <li><a href="#prerequis">Pr&eacute;requis</a></li>
-      <li><a href="#dependances">1. Mise &agrave; jour des d&eacute;pendances</a></li>
-      <li><a href="#application">2. Mise &agrave; jour de l'application</a></li>
-      <li><a href="#migrations">3. Migrations de base de donn&eacute;es</a></li>
+      <li><a href="#prerequis">Prérequis</a></li>
+      <li><a href="#dependances">1. Mise à jour des dépendances</a></li>
+      <li><a href="#application">2. Mise à jour de l'application</a></li>
+      <li><a href="#migrations">3. Migrations de base de données</a></li>
       <li><a href="#semver">4. Gestion des versions (SemVer)</a></li>
-      <li><a href="#checklist">5. Checklist de mise &agrave; jour</a></li>
-      <li><a href="#rollback">6. Proc&eacute;dure de rollback</a></li>
-      <li><a href="#workflow-git">7. Workflow Git recommand&eacute;</a></li>
+      <li><a href="#checklist">5. Checklist de mise à jour</a></li>
+      <li><a href="#rollback">6. Procédure de rollback</a></li>
+      <li><a href="#workflow-git">7. Workflow Git recommandé</a></li>
       <li><a href="#devops">8. Bonnes pratiques DevOps</a></li>
-      <li><a href="#references">R&eacute;f&eacute;rences crois&eacute;es</a></li>
+      <li><a href="#references">Références croisées</a></li>
     </ul>
   </div>
 
   <div class="card" id="prerequis">
-    <h2 class="section-title">Pr&eacute;requis</h2>
+    <h2 class="section-title">Prérequis</h2>
     <ul class="list-tight">
-      <li>Acc&egrave;s au repository GitHub : <code>antoine13330/INKSPOT-5z</code></li>
-      <li>Acc&egrave;s au dashboard Railway : <a href="https://railway.app">railway.app</a></li>
-      <li>Node.js 22 install&eacute; localement (<code>nvm use</code> selon <code>.nvmrc</code>)</li>
-      <li>pnpm install&eacute; : <code>npm install -g pnpm</code> ou via <code>corepack enable</code></li>
-      <li>Railway CLI install&eacute; : <code>npm install -g @railway/cli</code></li>
-      <li>Variables d'environnement configur&eacute;es (voir <a href="/deploiement-railway">Manuel de D&eacute;ploiement Railway</a>)</li>
+      <li>Accès au repository GitHub : <code>antoine13330/INKSPOT-5z</code></li>
+      <li>Accès au dashboard Railway : <a href="https://railway.app">railway.app</a></li>
+      <li>Node.js 22 installé localement (<code>nvm use</code> selon <code>.nvmrc</code>)</li>
+      <li>pnpm installé : <code>npm install -g pnpm</code> ou via <code>corepack enable</code></li>
+      <li>Railway CLI installé : <code>npm install -g @railway/cli</code></li>
+      <li>Variables d'environnement configurées (voir <a href="/deploiement-railway">Manuel de Déploiement Railway</a>)</li>
     </ul>
     <h3>Gestion de la version Node.js</h3>
-    <p>Le projet utilise Node.js 22 (d&eacute;fini dans <code>.nvmrc</code>). Pour garantir la coh&eacute;rence entre les environnements :</p>
+    <p>Le projet utilise Node.js 22 (défini dans <code>.nvmrc</code>). Pour garantir la cohérence entre les environnements :</p>
     <ul class="list-tight">
-      <li><strong>nvm (recommand&eacute;)</strong> : <code>nvm install 22</code> puis <code>nvm use</code> (lit automatiquement <code>.nvmrc</code>)</li>
-      <li><strong>V&eacute;rification</strong> : <code>node --version</code> doit afficher <code>v22.x.x</code></li>
-      <li><strong>CI/CD</strong> : GitHub Actions utilise <code>actions/setup-node</code> avec <code>node-version-file: '.nvmrc'</code> pour garantir la m&ecirc;me version</li>
+      <li><strong>nvm (recommandé)</strong> : <code>nvm install 22</code> puis <code>nvm use</code> (lit automatiquement <code>.nvmrc</code>)</li>
+      <li><strong>Vérification</strong> : <code>node --version</code> doit afficher <code>v22.x.x</code></li>
+      <li><strong>CI/CD</strong> : GitHub Actions utilise <code>actions/setup-node</code> avec <code>node-version-file: '.nvmrc'</code> pour garantir la même version</li>
     </ul>
-    <p>Toujours effectuer les mises &agrave; jour d'abord en environnement de d&eacute;veloppement avant de d&eacute;ployer en production.</p>
+    <p>Toujours effectuer les mises à jour d'abord en environnement de développement avant de déployer en production.</p>
   </div>
 
   <div class="card" id="dependances">
-    <h2 class="section-title">1. Mise &agrave; jour des d&eacute;pendances</h2>
+    <h2 class="section-title">1. Mise à jour des dépendances</h2>
     <div class="callout callout-warning">
-      <strong>Attention :</strong> Testez toujours les mises &agrave; jour dans un environnement de d&eacute;veloppement avant la production. Effectuez ces &eacute;tapes dans un environnement de test (ex. branche Git d&eacute;di&eacute;e) pour &eacute;viter les disruptions.
+      <strong>Attention :</strong> Testez toujours les mises à jour dans un environnement de développement avant la production. Effectuez ces étapes dans un environnement de test (ex. branche Git dédiée) pour éviter les disruptions.
     </div>
     <h3>Commandes pnpm</h3>
-    <table role="grid" aria-label="Proc&eacute;dure de mise &agrave; jour des d&eacute;pendances">
+    <table role="grid" aria-label="Procédure de mise à jour des dépendances">
       <thead>
         <tr>
-          <th scope="col">&Eacute;tape</th>
+          <th scope="col">Étape</th>
           <th scope="col">Commande pnpm</th>
-          <th scope="col">Fr&eacute;quence</th>
+          <th scope="col">Fréquence</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Audit de s&eacute;curit&eacute;</td>
+          <td>Audit de sécurité</td>
           <td><code>pnpm audit</code></td>
-          <td>Hebdomadaire / apr&egrave;s chaque PR</td>
+          <td>Hebdomadaire / après chaque PR</td>
         </tr>
         <tr>
-          <td>Correction automatique des vuln&eacute;rabilit&eacute;s</td>
+          <td>Correction automatique des vulnérabilités</td>
           <td><code>pnpm audit --fix</code></td>
-          <td>D&egrave;s qu'une vuln&eacute;rabilit&eacute; est d&eacute;tect&eacute;e</td>
+          <td>Dès qu'une vulnérabilité est détectée</td>
         </tr>
         <tr>
-          <td>V&eacute;rification des mises &agrave; jour disponibles</td>
+          <td>Vérification des mises à jour disponibles</td>
           <td><code>pnpm outdated</code></td>
           <td>Mensuelle</td>
         </tr>
         <tr>
-          <td>Mise &agrave; jour d'une d&eacute;pendance sp&eacute;cifique</td>
+          <td>Mise à jour d'une dépendance spécifique</td>
           <td><code>pnpm update [package]</code></td>
-          <td>Selon besoin / correctif de s&eacute;curit&eacute;</td>
+          <td>Selon besoin / correctif de sécurité</td>
         </tr>
         <tr>
-          <td>Mise &agrave; jour de toutes les d&eacute;pendances (patch/minor)</td>
+          <td>Mise à jour de toutes les dépendances (patch/minor)</td>
           <td><code>pnpm update --recursive</code></td>
-          <td>Mensuelle (apr&egrave;s audit)</td>
+          <td>Mensuelle (après audit)</td>
         </tr>
         <tr>
-          <td>Mise &agrave; jour majeure (breaking changes)</td>
+          <td>Mise à jour majeure (breaking changes)</td>
           <td><code>pnpm add [package]@latest</code> + tests complets</td>
-          <td>Planifi&eacute;e (sprint d&eacute;di&eacute;)</td>
+          <td>Planifiée (sprint dédié)</td>
         </tr>
         <tr>
-          <td>V&eacute;rification de l'int&eacute;grit&eacute; du lockfile</td>
+          <td>Vérification de l'intégrité du lockfile</td>
           <td><code>pnpm install --frozen-lockfile</code></td>
           <td>À chaque CI/CD (automatique)</td>
         </tr>
@@ -131,43 +132,43 @@ import DocLayout from '../layouts/DocLayout.astro';
     </table>
     <h3>Bonnes pratiques</h3>
     <ul class="list-tight">
-      <li>Ne pas mettre &agrave; jour plus d'une d&eacute;pendance &agrave; la fois pour isoler les probl&egrave;mes.</li>
-      <li>Consulter les changelogs sur <code>npmjs.com</code> avant les mises &agrave; jour majeures.</li>
-      <li>Si une d&eacute;pendance est critique et vuln&eacute;rable sans mise &agrave; jour compatible, envisager une alternative.</li>
-      <li>Apr&egrave;s toute mise &agrave; jour, valider la stabilit&eacute; : <code>pnpm test</code>, puis <code>pnpm analyze</code>.</li>
-      <li>Script de scan s&eacute;curit&eacute; disponible : <code>pnpm security:scan</code> (audit mod&eacute;r&eacute; via GitHub Code Scanning SARIF).</li>
-      <li>Le lockfile <code>pnpm-lock.yaml</code> doit toujours &ecirc;tre commit&eacute; &mdash; il garantit la reproductibilit&eacute; des builds.</li>
+      <li>Ne pas mettre à jour plus d'une dépendance à la fois pour isoler les problèmes.</li>
+      <li>Consulter les changelogs sur <code>npmjs.com</code> avant les mises à jour majeures.</li>
+      <li>Si une dépendance est critique et vulnérable sans mise à jour compatible, envisager une alternative.</li>
+      <li>Apr&egrave;s toute mise à jour, valider la stabilité : <code>pnpm test</code>, puis <code>pnpm analyze</code>.</li>
+      <li>Script de scan sécurité disponible : <code>pnpm security:scan</code> (audit modéré via GitHub Code Scanning SARIF).</li>
+      <li>Le lockfile <code>pnpm-lock.yaml</code> doit toujours être commité — il garantit la reproductibilité des builds.</li>
     </ul>
   </div>
 
   <div class="card" id="application">
-    <h2 class="section-title">2. Mise &agrave; jour de l'application</h2>
+    <h2 class="section-title">2. Mise à jour de l'application</h2>
     <div class="callout callout-info">
-      <strong>Architecture CI/CD :</strong> La chaîne de livraison INKSPOT est divis&eacute;e en deux responsabilit&eacute;s distinctes &mdash; <strong>GitHub Actions</strong> g&egrave;re l'int&eacute;gration continue (CI : lint, tests, build, s&eacute;curit&eacute;) et <strong>Railway</strong> g&egrave;re le d&eacute;ploiement continu (CD : build Docker, d&eacute;ploiement, migrations). Ces deux syst&egrave;mes sont compl&eacute;mentaires et ind&eacute;pendants.
+      <strong>Architecture CI/CD :</strong> La chaîne de livraison INKSPOT est divisée en deux responsabilités distinctes — <strong>GitHub Actions</strong> gère l'intégration continue (CI : lint, tests, build, sécurité) et <strong>Railway</strong> gère le déploiement continu (CD : build Docker, déploiement, migrations). Ces deux systèmes sont complémentaires et indépendants.
     </div>
-    <h3>Int&eacute;gration continue &mdash; GitHub Actions (CI)</h3>
-    <p>À chaque push ou Pull Request sur les branches <code>dev</code> ou <code>main</code>, GitHub Actions ex&eacute;cute automatiquement :</p>
+    <h3>Intégration continue — GitHub Actions (CI)</h3>
+    <p>À chaque push ou Pull Request sur les branches <code>dev</code> ou <code>main</code>, GitHub Actions exécute automatiquement :</p>
     <ol>
       <li><strong>Job quality</strong> : lint (<code>pnpm lint</code>), type-check (<code>pnpm type-check</code>), tests unitaires (<code>pnpm test</code>), rapport de couverture</li>
-      <li><strong>Job build</strong> : build Next.js complet (<code>pnpm build</code>) &mdash; d&eacute;clench&eacute; apr&egrave;s le job quality</li>
+      <li><strong>Job build</strong> : build Next.js complet (<code>pnpm build</code>) — déclenché après le job quality</li>
       <li><strong>Job security</strong> : <code>pnpm audit --audit-level=critical</code> + scan SARIF GitHub Code Scanning</li>
     </ol>
-    <p>Si l'un de ces jobs &eacute;choue, la PR est bloqu&eacute;e et le d&eacute;ploiement n'est pas d&eacute;clench&eacute;.</p>
-    <h3>D&eacute;ploiement continu &mdash; Railway (CD)</h3>
-    <p>Tout push sur la branche <code>dev</code> (apr&egrave;s validation CI) d&eacute;clenche automatiquement le pipeline Railway :</p>
+    <p>Si l'un de ces jobs échoue, la PR est bloquée et le déploiement n'est pas déclenché.</p>
+    <h3>Déploiement continu — Railway (CD)</h3>
+    <p>Tout push sur la branche <code>dev</code> (après validation CI) déclenche automatiquement le pipeline Railway :</p>
     <ol>
-      <li>D&eacute;tection du push GitHub par Railway</li>
+      <li>Détection du push GitHub par Railway</li>
       <li>Build Docker (Dockerfile multi-stage, pnpm, standalone Next.js)</li>
-      <li>D&eacute;ploiement du conteneur sur l'infrastructure Railway</li>
-      <li>Migrations Prisma + seed au d&eacute;marrage (<code>npx prisma migrate deploy</code> puis <code>npx prisma db seed</code> via <code>railway-start.js</code>) &mdash; comptes de test disponibles pour la d&eacute;mo</li>
-      <li>Health check automatique (<code>/api/health</code>) &mdash; d&eacute;ploiement valid&eacute; si HTTP 200</li>
+      <li>Déploiement du conteneur sur l'infrastructure Railway</li>
+      <li>Migrations Prisma + seed au démarrage (<code>npx prisma migrate deploy</code> puis <code>npx prisma db seed</code> via <code>railway-start.js</code>) — comptes de test disponibles pour la démo</li>
+      <li>Health check automatique (<code>/api/health</code>) — déploiement validé si HTTP 200</li>
     </ol>
-    <h3>D&eacute;ploiement manuel</h3>
+    <h3>Déploiement manuel</h3>
     <ul class="list-tight">
-      <li>Via dashboard Railway → service INKSPOT-5z → « Deploy » → s&eacute;lectionner le commit cible.</li>
-      <li>Via Railway CLI : <code>railway up</code> depuis le r&eacute;pertoire du projet.</li>
+      <li>Via dashboard Railway → service INKSPOT-5z → « Deploy » → sélectionner le commit cible.</li>
+      <li>Via Railway CLI : <code>railway up</code> depuis le répertoire du projet.</li>
     </ul>
-    <h3>Environnements de d&eacute;ploiement</h3>
+    <h3>Environnements de déploiement</h3>
     <table role="grid" aria-label="Environnements disponibles">
       <thead>
         <tr>
@@ -178,7 +179,7 @@ import DocLayout from '../layouts/DocLayout.astro';
         </tr>
       </thead>
       <tbody>
-        <tr><td>D&eacute;veloppement</td><td><code>feature/*</code></td><td><code>http://localhost:3000</code></td><td>Tests locaux, d&eacute;veloppement</td></tr>
+        <tr><td>Développement</td><td><code>feature/*</code></td><td><code>http://localhost:3000</code></td><td>Tests locaux, développement</td></tr>
         <tr><td>Staging / Preview</td><td><code>dev</code> (PR)</td><td>Railway Preview URL</td><td>Recette, tests E2E (<code>E2E_PORT=3003</code>), validation fonctionnelle</td></tr>
         <tr><td>Production</td><td><code>dev</code> (merge)</td><td>URL Railway production</td><td>Utilisateurs finaux</td></tr>
       </tbody>
@@ -186,53 +187,53 @@ import DocLayout from '../layouts/DocLayout.astro';
   </div>
 
   <div class="card" id="migrations">
-    <h2 class="section-title">3. Migrations de base de donn&eacute;es</h2>
+    <h2 class="section-title">3. Migrations de base de données</h2>
     <div class="callout callout-warning">
-      <strong>Important :</strong> Toujours effectuer un backup de la base de donn&eacute;es avant une migration en production (voir <a href="/deploiement-railway">Manuel de D&eacute;ploiement Railway</a> &mdash; section Sauvegardes &amp; restauration).
+      <strong>Important :</strong> Toujours effectuer un backup de la base de données avant une migration en production (voir <a href="/deploiement-railway">Manuel de Déploiement Railway</a> — section Sauvegardes &amp; restauration).
     </div>
-    <h3>Proc&eacute;dure de migration</h3>
+    <h3>Procédure de migration</h3>
     <ul class="list-tight">
-      <li><strong>Cr&eacute;er une migration</strong> (dev) : <code>npx prisma migrate dev --name [nom-migration]</code></li>
-      <li><strong>V&eacute;rifier l'&eacute;tat</strong> : <code>npx prisma migrate status</code></li>
-      <li><strong>Appliquer en production</strong> : <code>npx prisma migrate deploy</code> (ex&eacute;cut&eacute; automatiquement au d&eacute;marrage via Railway)</li>
-      <li><strong>R&eacute;g&eacute;n&eacute;rer le client Prisma</strong> : <code>pnpm db:generate</code></li>
-      <li><strong>Pousser le sch&eacute;ma sans migration</strong> (dev uniquement) : <code>pnpm db:push</code></li>
+      <li><strong>Créer une migration</strong> (dev) : <code>npx prisma migrate dev --name [nom-migration]</code></li>
+      <li><strong>Vérifier l'état</strong> : <code>npx prisma migrate status</code></li>
+      <li><strong>Appliquer en production</strong> : <code>npx prisma migrate deploy</code> (exécuté automatiquement au démarrage via Railway)</li>
+      <li><strong>Régénérer le client Prisma</strong> : <code>pnpm db:generate</code></li>
+      <li><strong>Pousser le schéma sans migration</strong> (dev uniquement) : <code>pnpm db:push</code></li>
     </ul>
-    <h3>Proc&eacute;dure compl&egrave;te en production</h3>
+    <h3>Procédure complète en production</h3>
     <ol>
       <li>Effectuer un backup DB (Railway dashboard → PostgreSQL → Backups, ou <code>pg_dump</code>)</li>
-      <li>Cr&eacute;er la migration localement : <code>npx prisma migrate dev --name [description]</code></li>
+      <li>Créer la migration localement : <code>npx prisma migrate dev --name [description]</code></li>
       <li>Tester en environnement de staging (Railway Preview)</li>
-      <li>Merger la PR sur <code>dev</code> &mdash; Railway d&eacute;ploie et ex&eacute;cute <code>prisma migrate deploy</code> automatiquement</li>
-      <li>V&eacute;rifier les logs Railway et le health check : <code>GET /api/health</code> → <code>{"status":"ok","db":"connected"}</code></li>
+      <li>Merger la PR sur <code>dev</code> — Railway déploie et exécute <code>prisma migrate deploy</code> automatiquement</li>
+      <li>Vérifier les logs Railway et le health check : <code>GET /api/health</code> → <code>&#123;"status":"ok","db":"connected"&#125;</code></li>
     </ol>
-    <h3>R&egrave;gles de migration s&eacute;curis&eacute;e</h3>
+    <h3>Règles de migration sécurisée</h3>
     <ul class="list-tight">
-      <li><strong>Migrations additives d'abord</strong> : ajouter les nouvelles colonnes avec valeur par d&eacute;faut avant de supprimer les anciennes (d&eacute;ploiement sans interruption).</li>
-      <li><strong>Jamais de DROP en production directement</strong> : utiliser une migration interm&eacute;diaire pour marquer la colonne comme obsol&egrave;te, puis la supprimer dans un sprint suivant.</li>
-      <li><strong>Tester sur un dump de production</strong> : avant toute migration critique, tester sur une copie des donn&eacute;es de production pour d&eacute;tecter les probl&egrave;mes de contraintes.</li>
+      <li><strong>Migrations additives d'abord</strong> : ajouter les nouvelles colonnes avec valeur par défaut avant de supprimer les anciennes (déploiement sans interruption).</li>
+      <li><strong>Jamais de DROP en production directement</strong> : utiliser une migration intermédiaire pour marquer la colonne comme obsolète, puis la supprimer dans un sprint suivant.</li>
+      <li><strong>Tester sur un dump de production</strong> : avant toute migration critique, tester sur une copie des données de production pour détecter les problèmes de contraintes.</li>
     </ul>
   </div>
 
   <div class="card" id="semver">
     <h2 class="section-title">4. Gestion des versions (SemVer)</h2>
-    <p>INKSPOT suit la convention de versioning s&eacute;mantique (<a href="https://semver.org">semver.org</a>) :</p>
-    <table role="grid" aria-label="Convention de versioning s&eacute;mantique">
+    <p>INKSPOT suit la convention de versioning sémantique (<a href="https://semver.org">semver.org</a>) :</p>
+    <table role="grid" aria-label="Convention de versioning sémantique">
       <thead>
         <tr>
           <th scope="col">Type de changement</th>
-          <th scope="col">Incr&eacute;ment de version</th>
+          <th scope="col">Incrément de version</th>
           <th scope="col">Exemple</th>
-          <th scope="col">D&eacute;clencheur typique</th>
+          <th scope="col">Déclencheur typique</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>Correctif de bug (patch)</td><td>PATCH (+0.0.1)</td><td>1.0.0 → 1.0.1</td><td>Fix d'une r&eacute;gression, correction de typo, hotfix s&eacute;curit&eacute;</td></tr>
-        <tr><td>Nouvelle fonctionnalit&eacute; r&eacute;trocompatible</td><td>MINOR (+0.1.0)</td><td>1.0.0 → 1.1.0</td><td>Nouvelle route API, nouveau composant, nouvelle fonctionnalit&eacute;</td></tr>
-        <tr><td>Changement incompatible (breaking)</td><td>MAJOR (+1.0.0)</td><td>1.0.0 → 2.0.0</td><td>Refactoring d'API, changement de sch&eacute;ma DB incompatible, migration framework</td></tr>
+        <tr><td>Correctif de bug (patch)</td><td>PATCH (+0.0.1)</td><td>1.0.0 → 1.0.1</td><td>Fix d'une régression, correction de typo, hotfix sécurité</td></tr>
+        <tr><td>Nouvelle fonctionnalité rétrocompatible</td><td>MINOR (+0.1.0)</td><td>1.0.0 → 1.1.0</td><td>Nouvelle route API, nouveau composant, nouvelle fonctionnalité</td></tr>
+        <tr><td>Changement incompatible (breaking)</td><td>MAJOR (+1.0.0)</td><td>1.0.0 → 2.0.0</td><td>Refactoring d'API, changement de schéma DB incompatible, migration framework</td></tr>
       </tbody>
     </table>
-    <p>L'historique complet des versions est trac&eacute; dans le <a href="/changelog">Changelog</a> (crit&egrave;re C4.3.2 &mdash; Journal des versions d&eacute;ploy&eacute;es).</p>
+    <p>L'historique complet des versions est tracé dans le <a href="/changelog">Changelog</a> (critère C4.3.2 — Journal des versions déployées).</p>
     <h3>Convention de tags Git</h3>
     <ul class="list-tight">
       <li>Tag de release : <code>git tag v[MAJOR].[MINOR].[PATCH]</code></li>
@@ -240,10 +241,10 @@ import DocLayout from '../layouts/DocLayout.astro';
       <li>Exemple complet : <code>git tag v1.0.0 &amp;&amp; git push origin v1.0.0</code></li>
     </ul>
     <h3>Convention de commits (Conventional Commits)</h3>
-    <p>Tous les messages de commit doivent suivre la sp&eacute;cification <a href="https://www.conventionalcommits.org/">Conventional Commits</a> en anglais :</p>
+    <p>Tous les messages de commit doivent suivre la spécification <a href="https://www.conventionalcommits.org/">Conventional Commits</a> en anglais :</p>
     <p><code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code></p>
     <ul class="list-tight">
-      <li><strong>Types</strong> : <code>feat</code> (nouvelle fonctionnalit&eacute;), <code>fix</code> (correction de bug), <code>docs</code> (documentation), <code>test</code> (ajout/modification de tests), <code>chore</code> (maintenance), <code>refactor</code> (refactoring sans changement fonctionnel), <code>ci</code> (CI/CD), <code>perf</code> (performance)</li>
+      <li><strong>Types</strong> : <code>feat</code> (nouvelle fonctionnalité), <code>fix</code> (correction de bug), <code>docs</code> (documentation), <code>test</code> (ajout/modification de tests), <code>chore</code> (maintenance), <code>refactor</code> (refactoring sans changement fonctionnel), <code>ci</code> (CI/CD), <code>perf</code> (performance)</li>
       <li><strong>Scopes optionnels</strong> : <code>auth</code>, <code>stripe</code>, <code>booking</code>, <code>e2e</code>, <code>a11y</code>, <code>prisma</code>, <code>docs</code></li>
       <li><strong>Langue</strong> : anglais uniquement pour les messages de commit</li>
       <li><strong>Exemples</strong> : <code>feat(auth): add password reset flow</code>, <code>fix(stripe): handle webhook signature verification</code>, <code>test(e2e): add payment flow tests</code></li>
@@ -251,68 +252,68 @@ import DocLayout from '../layouts/DocLayout.astro';
   </div>
 
   <div class="card" id="checklist">
-    <h2 class="section-title">5. Checklist de mise &agrave; jour</h2>
-    <h3>Avant la mise &agrave; jour</h3>
+    <h2 class="section-title">5. Checklist de mise à jour</h2>
+    <h3>Avant la mise à jour</h3>
     <ul class="list-tight">
-      <li>☑ Backup de la base de donn&eacute;es effectu&eacute;</li>
-      <li>☑ Branche de travail cr&eacute;&eacute;e (<code>feature/update-*</code> ou <code>fix/*</code>)</li>
+      <li>☑ Backup de la base de données effectué</li>
+      <li>☑ Branche de travail créée (<code>feature/update-*</code> ou <code>fix/*</code>)</li>
       <li>☑ Tests locaux passants (<code>pnpm test</code>)</li>
-      <li>☑ Variables d'environnement v&eacute;rifi&eacute;es (<code>pnpm env:check</code>)</li>
+      <li>☑ Variables d'environnement vérifiées (<code>pnpm env:check</code>)</li>
       <li>☑ Version Node.js correcte (<code>nvm use</code> → Node 22)</li>
     </ul>
-    <h3>Pendant la mise &agrave; jour</h3>
+    <h3>Pendant la mise à jour</h3>
     <ul class="list-tight">
-      <li>☑ D&eacute;pendances mises &agrave; jour une par une</li>
-      <li>☑ Tests relanc&eacute;s apr&egrave;s chaque mise &agrave; jour (<code>pnpm test</code>)</li>
-      <li>☑ Migration Prisma cr&eacute;&eacute;e si le sch&eacute;ma change</li>
-      <li>☑ Build local valid&eacute; (<code>pnpm build</code>)</li>
+      <li>☑ Dépendances mises à jour une par une</li>
+      <li>☑ Tests relancés après chaque mise à jour (<code>pnpm test</code>)</li>
+      <li>☑ Migration Prisma créée si le schéma change</li>
+      <li>☑ Build local validé (<code>pnpm build</code>)</li>
       <li>☑ Lint sans erreur (<code>pnpm lint</code>)</li>
     </ul>
-    <h3>Apr&egrave;s le d&eacute;ploiement</h3>
+    <h3>Apr&egrave;s le déploiement</h3>
     <ul class="list-tight">
       <li>☑ Health check : <code>GET /api/health</code> → <code>&#123;"status":"ok"&#125;</code></li>
-      <li>☑ Smoke tests ex&eacute;cut&eacute;s (auth, r&eacute;servation, paiement)</li>
+      <li>☑ Smoke tests exécutés (auth, réservation, paiement)</li>
       <li>☑ Logs Railway sans erreur critique</li>
-      <li>☑ M&eacute;triques Grafana v&eacute;rifi&eacute;es (taux d'erreurs, latence)</li>
-      <li>☑ Changelog mis &agrave; jour manuellement ou via <code>git log --oneline</code></li>
+      <li>☑ Métriques Grafana vérifiées (taux d'erreurs, latence)</li>
+      <li>☑ Changelog mis à jour manuellement ou via <code>git log --oneline</code></li>
     </ul>
   </div>
 
   <div class="card" id="rollback">
-    <h2 class="section-title">6. Proc&eacute;dure de rollback</h2>
+    <h2 class="section-title">6. Procédure de rollback</h2>
     <h3>Rollback applicatif (Railway)</h3>
     <ol>
       <li>Aller dans le dashboard Railway → service INKSPOT-5z → onglet « Deployments »</li>
-      <li>Identifier le dernier d&eacute;ploiement stable (statut « Healthy »)</li>
-      <li>Cliquer sur « Redeploy » sur ce d&eacute;ploiement pr&eacute;c&eacute;dent</li>
-      <li>Surveiller le d&eacute;ploiement et v&eacute;rifier <code>/api/health</code></li>
+      <li>Identifier le dernier déploiement stable (statut « Healthy »)</li>
+      <li>Cliquer sur « Redeploy » sur ce déploiement précédent</li>
+      <li>Surveiller le déploiement et vérifier <code>/api/health</code></li>
     </ol>
     <h3>Rollback via Git</h3>
     <ol>
       <li>Identifier le commit stable : <code>git log --oneline</code></li>
-      <li>Cr&eacute;er un commit de revert : <code>git revert [commit-sha]</code></li>
-      <li>Pousser sur <code>dev</code> pour d&eacute;clencher le red&eacute;ploiement automatique : <code>git push origin dev</code></li>
-      <li>V&eacute;rifier le d&eacute;ploiement dans Railway et le health check</li>
+      <li>Créer un commit de revert : <code>git revert [commit-sha]</code></li>
+      <li>Pousser sur <code>dev</code> pour déclencher le redéploiement automatique : <code>git push origin dev</code></li>
+      <li>Vérifier le déploiement dans Railway et le health check</li>
     </ol>
     <h3>Exemple concret de rollback complet</h3>
     <div class="callout callout-warning">
-      <strong>Sc&eacute;nario :</strong> Le d&eacute;ploiement du commit <code>abc1234</code> a introduit une r&eacute;gression sur le module de paiement. Les transactions Stripe &eacute;chouent avec une erreur 500.
+      <strong>Scénario :</strong> Le déploiement du commit <code>abc1234</code> a introduit une régression sur le module de paiement. Les transactions Stripe échouent avec une erreur 500.
     </div>
-    <pre style="background:var(--color-bg,#0d1117);color:var(--color-text,#e6edf3);border:1px solid var(--color-border,#30363d);border-radius:6px;padding:1rem 1.25rem;font-size:0.82rem;line-height:1.6;overflow-x:auto;font-family:'Fira Mono','Cascadia Code',monospace;"># 1. Identifier le commit stable pr&eacute;c&eacute;dent
+    <pre style="background:var(--color-bg,#0d1117);color:var(--color-text,#e6edf3);border:1px solid var(--color-border,#30363d);border-radius:6px;padding:1rem 1.25rem;font-size:0.82rem;line-height:1.6;overflow-x:auto;font-family:'Fira Mono','Cascadia Code',monospace;"># 1. Identifier le commit stable précédent
 git log --oneline -10
-# → abc1234 fix(stripe): update webhook handler  ← PROBL&Eacute;MATIQUE
+# → abc1234 fix(stripe): update webhook handler  ← PROBLÉMATIQUE
 # → def5678 feat(booking): add cancellation flow  ← STABLE
 
-# 2. Cr&eacute;er un commit de revert (pr&eacute;f&eacute;rable au hard reset)
+# 2. Créer un commit de revert (préférable au hard reset)
 git revert abc1234 --no-edit
-# → Cr&eacute;e un nouveau commit "Revert fix(stripe): update webhook handler"
+# → Crée un nouveau commit "Revert fix(stripe): update webhook handler"
 
-# 3. Pousser sur dev pour d&eacute;clencher le red&eacute;ploiement Railway
+# 3. Pousser sur dev pour déclencher le redéploiement Railway
 git push origin dev
 
-# 4. V&eacute;rifier le health check apr&egrave;s d&eacute;ploiement (attendre ~3-5 min)
+# 4. Vérifier le health check après déploiement (attendre ~3-5 min)
 curl https://inkspot-app.up.railway.app/api/health
-# → {"status":"ok","db":"connected","redis":"connected"}
+# → &#123;"status":"ok","db":"connected","redis":"connected"&#125;
 
 # 5. Tester le flux de paiement manuellement
 # → Stripe checkout avec carte test 4242 4242 4242 4242
@@ -320,70 +321,70 @@ curl https://inkspot-app.up.railway.app/api/health
 # 6. Documenter l'incident dans le Changelog</pre>
     <h3>Rollback de migration Prisma</h3>
     <div class="callout callout-warning">
-      Prisma ne supporte pas le rollback automatique de migrations. En cas de probl&egrave;me : restaurer le backup DB effectu&eacute; avant la migration, puis corriger la migration avant de la r&eacute;appliquer.
+      Prisma ne supporte pas le rollback automatique de migrations. En cas de probl&egrave;me : restaurer le backup DB effectué avant la migration, puis corriger la migration avant de la réappliquer.
     </div>
     <ul class="list-tight">
-      <li>Restaurer le backup PostgreSQL (voir Manuel de D&eacute;ploiement &mdash; section Sauvegardes &amp; restauration)</li>
+      <li>Restaurer le backup PostgreSQL (voir Manuel de Déploiement — section Sauvegardes &amp; restauration)</li>
       <li>Corriger le fichier de migration dans <code>prisma/migrations/</code></li>
       <li>Relancer <code>npx prisma migrate deploy</code></li>
     </ul>
   </div>
 
   <div class="card" id="workflow-git">
-    <h2 class="section-title">7. Workflow Git recommand&eacute;</h2>
-    <p>INKSPOT suit un workflow Git bas&eacute; sur le mod&egrave;le <strong>Feature Branch Workflow</strong>, adapt&eacute; &agrave; un d&eacute;ploiement continu sur Railway.</p>
+    <h2 class="section-title">7. Workflow Git recommandé</h2>
+    <p>INKSPOT suit un workflow Git basé sur le modèle <strong>Feature Branch Workflow</strong>, adapté à un déploiement continu sur Railway.</p>
 
     <h3>Structure des branches</h3>
     <table role="grid" aria-label="Structure des branches Git">
       <thead>
         <tr>
           <th scope="col">Branche</th>
-          <th scope="col">R&ocirc;le</th>
-          <th scope="col">D&eacute;ploiement</th>
+          <th scope="col">Rôle</th>
+          <th scope="col">Déploiement</th>
           <th scope="col">Protection</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><code>main</code></td>
-          <td>Branche principale &mdash; historique stable</td>
-          <td>Production (si configur&eacute;)</td>
-          <td>Prot&eacute;g&eacute;e &mdash; merge via PR uniquement</td>
+          <td>Branche principale — historique stable</td>
+          <td>Production (si configuré)</td>
+          <td>Protégée — merge via PR uniquement</td>
         </tr>
         <tr>
           <td><code>dev</code></td>
-          <td>Branche d'int&eacute;gration &mdash; staging</td>
+          <td>Branche d'intégration — staging</td>
           <td>Production Railway (automatique)</td>
-          <td>Prot&eacute;g&eacute;e &mdash; merge via PR uniquement</td>
+          <td>Protégée — merge via PR uniquement</td>
         </tr>
         <tr>
           <td><code>feature/*</code></td>
-          <td>D&eacute;veloppement de nouvelles fonctionnalit&eacute;s</td>
+          <td>Développement de nouvelles fonctionnalités</td>
           <td>Local / Railway Preview (PR)</td>
-          <td>Non prot&eacute;g&eacute;e</td>
+          <td>Non protégée</td>
         </tr>
         <tr>
           <td><code>fix/*</code></td>
           <td>Corrections de bugs</td>
           <td>Local / Railway Preview (PR)</td>
-          <td>Non prot&eacute;g&eacute;e</td>
+          <td>Non protégée</td>
         </tr>
         <tr>
           <td><code>hotfix/*</code></td>
           <td>Corrections urgentes en production</td>
-          <td>Merge direct sur <code>dev</code> apr&egrave;s validation</td>
-          <td>Non prot&eacute;g&eacute;e</td>
+          <td>Merge direct sur <code>dev</code> après validation</td>
+          <td>Non protégée</td>
         </tr>
       </tbody>
     </table>
 
-    <h3>Cycle de vie d'une fonctionnalit&eacute;</h3>
-    <pre style="background:var(--color-bg,#0d1117);color:var(--color-text,#e6edf3);border:1px solid var(--color-border,#30363d);border-radius:6px;padding:1rem 1.25rem;font-size:0.82rem;line-height:1.6;overflow-x:auto;font-family:'Fira Mono','Cascadia Code',monospace;"># 1. Cr&eacute;er une branche depuis dev
+    <h3>Cycle de vie d'une fonctionnalité</h3>
+    <pre style="background:var(--color-bg,#0d1117);color:var(--color-text,#e6edf3);border:1px solid var(--color-border,#30363d);border-radius:6px;padding:1rem 1.25rem;font-size:0.82rem;line-height:1.6;overflow-x:auto;font-family:'Fira Mono','Cascadia Code',monospace;"># 1. Créer une branche depuis dev
 git checkout dev
 git pull origin dev
 git checkout -b feature/add-artist-reviews
 
-# 2. D&eacute;velopper et committer (Conventional Commits)
+# 2. Développer et committer (Conventional Commits)
 git add .
 git commit -m "feat(reviews): add review creation endpoint"
 git commit -m "test(reviews): add unit tests for review service"
@@ -391,116 +392,116 @@ git commit -m "test(reviews): add unit tests for review service"
 # 3. Pousser et ouvrir une Pull Request
 git push origin feature/add-artist-reviews
 # → Ouvrir une PR sur GitHub vers la branche dev
-# → GitHub Actions CI s'ex&eacute;cute automatiquement
-# → Railway cr&eacute;e un environnement Preview
+# → GitHub Actions CI s'exécute automatiquement
+# → Railway crée un environnement Preview
 
 # 4. Revue de code et validation
 # → Reviewer approuve la PR
 # → CI verte (lint, tests, build, security)
-# → Preview Railway valid&eacute;e
+# → Preview Railway validée
 
 # 5. Merger la PR
 # → Merge squash ou merge commit sur dev
-# → Railway d&eacute;ploie automatiquement en production
+# → Railway déploie automatiquement en production
 # → Supprimer la branche feature
 
-# 6. V&eacute;rifier le d&eacute;ploiement
+# 6. Vérifier le déploiement
 curl https://inkspot-app.up.railway.app/api/health</pre>
 
-    <h3>R&egrave;gles de revue de code</h3>
+    <h3>Règles de revue de code</h3>
     <ul class="list-tight">
       <li><strong>Au moins 1 approbation</strong> requise avant le merge sur <code>dev</code>.</li>
       <li><strong>CI verte obligatoire</strong> : tous les jobs GitHub Actions doivent passer.</li>
-      <li><strong>Pas de merge si tests cass&eacute;s</strong> : un test en &eacute;chec bloque le merge.</li>
-      <li><strong>Description de PR</strong> : inclure le contexte, les changements principaux et les crit&egrave;res d'acceptation.</li>
-      <li><strong>Commits atomiques</strong> : chaque commit doit repr&eacute;senter un changement logique unique et compilable.</li>
+      <li><strong>Pas de merge si tests cassés</strong> : un test en échec bloque le merge.</li>
+      <li><strong>Description de PR</strong> : inclure le contexte, les changements principaux et les critères d'acceptation.</li>
+      <li><strong>Commits atomiques</strong> : chaque commit doit représenter un changement logique unique et compilable.</li>
     </ul>
   </div>
 
   <div class="card" id="devops">
     <h2 class="section-title">8. Bonnes pratiques DevOps</h2>
 
-    <h3>Parit&eacute; des environnements</h3>
-    <p>Les trois environnements (d&eacute;veloppement, staging, production) doivent &ecirc;tre aussi similaires que possible pour &eacute;viter les surprises lors des d&eacute;ploiements :</p>
+    <h3>Parité des environnements</h3>
+    <p>Les trois environnements (développement, staging, production) doivent être aussi similaires que possible pour éviter les surprises lors des déploiements :</p>
     <ul class="list-tight">
-      <li><strong>M&ecirc;me version Node.js</strong> : <code>.nvmrc</code> garantit Node 22 en local, GitHub Actions et Railway utilisent la m&ecirc;me version.</li>
-      <li><strong>M&ecirc;me gestionnaire de paquets</strong> : pnpm avec <code>pnpm-lock.yaml</code> commit&eacute; &mdash; <code>pnpm install --frozen-lockfile</code> en CI/CD.</li>
-      <li><strong>Variables d'environnement document&eacute;es</strong> : <code>railway.env.example</code> liste toutes les variables requises avec des valeurs d'exemple.</li>
-      <li><strong>M&ecirc;me sch&eacute;ma de base de donn&eacute;es</strong> : les migrations Prisma sont appliqu&eacute;es automatiquement au d&eacute;marrage dans tous les environnements.</li>
+      <li><strong>Même version Node.js</strong> : <code>.nvmrc</code> garantit Node 22 en local, GitHub Actions et Railway utilisent la même version.</li>
+      <li><strong>Même gestionnaire de paquets</strong> : pnpm avec <code>pnpm-lock.yaml</code> commité — <code>pnpm install --frozen-lockfile</code> en CI/CD.</li>
+      <li><strong>Variables d'environnement documentées</strong> : <code>railway.env.example</code> liste toutes les variables requises avec des valeurs d'exemple.</li>
+      <li><strong>Même schéma de base de données</strong> : les migrations Prisma sont appliquées automatiquement au démarrage dans tous les environnements.</li>
     </ul>
 
-    <h3>D&eacute;ploiement sans interruption (Zero-downtime)</h3>
-    <p>Railway g&egrave;re le d&eacute;ploiement sans interruption par d&eacute;faut grâce &agrave; :</p>
+    <h3>Déploiement sans interruption (Zero-downtime)</h3>
+    <p>Railway gère le déploiement sans interruption par défaut grâce à :</p>
     <ul class="list-tight">
-      <li><strong>Health check avant basculement</strong> : Railway attend que le nouveau conteneur r&eacute;ponde sur <code>/api/health</code> avant de rediriger le trafic.</li>
-      <li><strong>Migrations r&eacute;trocompatibles</strong> : les migrations Prisma doivent &ecirc;tre additives (ajout de colonnes avec valeur par d&eacute;faut) pour &eacute;viter les erreurs pendant la transition.</li>
-      <li><strong>Rollback automatique</strong> : si le health check &eacute;choue, Railway conserve l'ancien d&eacute;ploiement actif.</li>
+      <li><strong>Health check avant basculement</strong> : Railway attend que le nouveau conteneur réponde sur <code>/api/health</code> avant de rediriger le trafic.</li>
+      <li><strong>Migrations rétrocompatibles</strong> : les migrations Prisma doivent être additives (ajout de colonnes avec valeur par défaut) pour éviter les erreurs pendant la transition.</li>
+      <li><strong>Rollback automatique</strong> : si le health check échoue, Railway conserve l'ancien déploiement actif.</li>
     </ul>
 
-    <h3>Monitoring post-mise-&agrave;-jour</h3>
-    <p>Apr&egrave;s chaque d&eacute;ploiement, surveiller les m&eacute;triques suivantes pendant 15 &agrave; 30 minutes :</p>
-    <table role="grid" aria-label="M&eacute;triques &agrave; surveiller post-d&eacute;ploiement">
+    <h3>Monitoring post-mise-à-jour</h3>
+    <p>Apr&egrave;s chaque déploiement, surveiller les métriques suivantes pendant 15 à 30 minutes :</p>
+    <table role="grid" aria-label="Métriques à surveiller post-déploiement">
       <thead>
         <tr>
-          <th scope="col">M&eacute;trique</th>
+          <th scope="col">Métrique</th>
           <th scope="col">Seuil d'alerte</th>
-          <th scope="col">Action si d&eacute;pass&eacute;</th>
+          <th scope="col">Action si dépassé</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Taux d'erreurs HTTP 5xx</td>
           <td>&gt; 1 % sur 5 minutes</td>
-          <td>Rollback imm&eacute;diat via Railway Dashboard</td>
+          <td>Rollback immédiat via Railway Dashboard</td>
         </tr>
         <tr>
-          <td>Temps de r&eacute;ponse API (p95)</td>
+          <td>Temps de réponse API (p95)</td>
           <td>&gt; 1 s (vs baseline)</td>
-          <td>Analyser les logs, identifier la r&eacute;gression</td>
+          <td>Analyser les logs, identifier la régression</td>
         </tr>
         <tr>
           <td>Connexions PostgreSQL</td>
           <td>&gt; 80 % du pool</td>
-          <td>V&eacute;rifier les requ&ecirc;tes N+1 introduites</td>
+          <td>Vérifier les requêtes N+1 introduites</td>
         </tr>
         <tr>
           <td>Taux de hit Redis</td>
           <td>Chute &gt; 20 % vs baseline</td>
-          <td>V&eacute;rifier la configuration du cache</td>
+          <td>Vérifier la configuration du cache</td>
         </tr>
       </tbody>
     </table>
-    <p>Acc&eacute;der au dashboard Grafana : <code>https://grafana-inkspot.up.railway.app.up.railway.app</code> → dashboard INKSPOT Overview.</p>
+    <p>Accéder au dashboard Grafana : <code>https://grafana-inkspot.up.railway.app.up.railway.app</code> → dashboard INKSPOT Overview.</p>
 
     <h3>Gestion des secrets</h3>
     <ul class="list-tight">
-      <li><strong>Jamais de secrets dans le code</strong> : utiliser les variables d'environnement Railway (chiffr&eacute;es au repos).</li>
-      <li><strong>Rotation r&eacute;guli&egrave;re</strong> : changer les cl&eacute;s Stripe, NEXTAUTH_SECRET et les cl&eacute;s AWS tous les 6 mois minimum.</li>
-      <li><strong>Principe du moindre privil&egrave;ge</strong> : les cl&eacute;s AWS S3 doivent avoir uniquement les permissions <code>s3:PutObject</code>, <code>s3:GetObject</code> sur le bucket INKSPOT.</li>
-      <li><strong>Audit des acc&egrave;s</strong> : v&eacute;rifier r&eacute;guli&egrave;rement les logs d'acc&egrave;s Railway et AWS CloudTrail pour d&eacute;tecter les acc&egrave;s non autoris&eacute;s.</li>
+      <li><strong>Jamais de secrets dans le code</strong> : utiliser les variables d'environnement Railway (chiffrées au repos).</li>
+      <li><strong>Rotation régulière</strong> : changer les clés Stripe, NEXTAUTH_SECRET et les clés AWS tous les 6 mois minimum.</li>
+      <li><strong>Principe du moindre privilège</strong> : les clés AWS S3 doivent avoir uniquement les permissions <code>s3:PutObject</code>, <code>s3:GetObject</code> sur le bucket INKSPOT.</li>
+      <li><strong>Audit des accès</strong> : vérifier régulièrement les logs d'accès Railway et AWS CloudTrail pour détecter les accès non autorisés.</li>
     </ul>
 
     <h3>Infrastructure as Code</h3>
-    <p>La configuration de l'infrastructure INKSPOT est versionn&eacute;e dans le d&eacute;p&ocirc;t :</p>
+    <p>La configuration de l'infrastructure INKSPOT est versionnée dans le dépôt :</p>
     <ul class="list-tight">
-      <li><code>railway.json</code> &mdash; configuration Railway (builder Dockerfile, commande de d&eacute;marrage)</li>
-      <li><code>Dockerfile</code> &mdash; image Docker multi-stage (deps → builder → runner)</li>
-      <li><code>docker-compose.yml</code> &mdash; stack locale compl&egrave;te (app, PostgreSQL, Nginx, Redis)</li>
-      <li><code>monitoring/grafana/provisioning/</code> &mdash; datasources et dashboards Grafana en YAML/JSON</li>
-      <li><code>.github/workflows/ci.yml</code> &mdash; pipeline GitHub Actions</li>
+      <li><code>railway.json</code> — configuration Railway (builder Dockerfile, commande de démarrage)</li>
+      <li><code>Dockerfile</code> — image Docker multi-stage (deps → builder → runner)</li>
+      <li><code>docker-compose.yml</code> — stack locale complète (app, PostgreSQL, Nginx, Redis)</li>
+      <li><code>monitoring/grafana/provisioning/</code> — datasources et dashboards Grafana en YAML/JSON</li>
+      <li><code>.github/workflows/ci.yml</code> — pipeline GitHub Actions</li>
     </ul>
     <p>Toute modification d'infrastructure doit passer par une PR avec revue de code, comme pour le code applicatif.</p>
   </div>
 
   <div class="card" id="references">
-    <h2 class="section-title">R&eacute;f&eacute;rences crois&eacute;es</h2>
+    <h2 class="section-title">Références croisées</h2>
     <ul class="list-tight">
-      <li><strong><a href="/mut">Manuel d'Utilisation Technique (MUT)</a></strong> &mdash; Stack, architecture, scripts, proc&eacute;dure de gestion des d&eacute;pendances (section 3.c), syst&egrave;me de supervision.</li>
-      <li><strong><a href="/deploiement-railway">Manuel de D&eacute;ploiement Railway</a></strong> &mdash; Pr&eacute;requis, variables d'environnement, pipeline CI/CD complet (C2.1.1 &amp; C2.1.2), sauvegardes, troubleshooting.</li>
-      <li><strong><a href="/cahier-recette">Cahier de Recette</a></strong> &mdash; Plan de tests, sc&eacute;narios, couverture (CO2.7).</li>
-      <li><strong><a href="/changelog">Changelog</a></strong> &mdash; Journal des versions d&eacute;ploy&eacute;es (crit&egrave;re C4.3.2).</li>
+      <li><strong><a href="/mut">Manuel d'Utilisation Technique (MUT)</a></strong> — Stack, architecture, scripts, procédure de gestion des dépendances (section 3.c), syst&egrave;me de supervision.</li>
+      <li><strong><a href="/deploiement-railway">Manuel de Déploiement Railway</a></strong> — Prérequis, variables d'environnement, pipeline CI/CD complet (C2.1.1 &amp; C2.1.2), sauvegardes, troubleshooting.</li>
+      <li><strong><a href="/cahier-recette">Cahier de Recette</a></strong> — Plan de tests, scénarios, couverture (CO2.7).</li>
+      <li><strong><a href="/changelog">Changelog</a></strong> — Journal des versions déployées (critère C4.3.2).</li>
     </ul>
-    <p>Documentation technique du d&eacute;p&ocirc;t : <code>docs/</code> (CI/CD, environnement, d&eacute;ploiement Railway, d&eacute;pannage VAPID, etc.).</p>
+    <p>Documentation technique du dépôt : <code>docs/</code> (CI/CD, environnement, déploiement Railway, dépannage VAPID, etc.).</p>
   </div>
 
   <div class="card" id="table-sections">
@@ -509,25 +510,25 @@ curl https://inkspot-app.up.railway.app/api/health</pre>
       <thead>
         <tr>
           <th scope="col">Section</th>
-          <th scope="col">Pr&eacute;sent</th>
+          <th scope="col">Présent</th>
           <th scope="col">Emplacement</th>
         </tr>
       </thead>
       <tbody>
         <tr><td>Informations du document</td><td>Oui</td><td><a href="#infos-document">#infos-document</a></td></tr>
-        <tr><td>Pr&eacute;requis (Node.js 22, pnpm, Railway CLI, nvm)</td><td>Oui</td><td><a href="#prerequis">#prerequis</a></td></tr>
-        <tr><td>1. Mise &agrave; jour des d&eacute;pendances (tableau pnpm / fr&eacute;quence, bonnes pratiques)</td><td>Oui</td><td><a href="#dependances">#dependances</a></td></tr>
-        <tr><td>2. Mise &agrave; jour de l'application (CI GitHub Actions vs CD Railway, environnements)</td><td>Oui</td><td><a href="#application">#application</a></td></tr>
-        <tr><td>3. Migrations de base de donn&eacute;es (Prisma, backup, r&egrave;gles s&eacute;curis&eacute;es)</td><td>Oui</td><td><a href="#migrations">#migrations</a></td></tr>
+        <tr><td>Prérequis (Node.js 22, pnpm, Railway CLI, nvm)</td><td>Oui</td><td><a href="#prerequis">#prerequis</a></td></tr>
+        <tr><td>1. Mise à jour des dépendances (tableau pnpm / fréquence, bonnes pratiques)</td><td>Oui</td><td><a href="#dependances">#dependances</a></td></tr>
+        <tr><td>2. Mise à jour de l'application (CI GitHub Actions vs CD Railway, environnements)</td><td>Oui</td><td><a href="#application">#application</a></td></tr>
+        <tr><td>3. Migrations de base de données (Prisma, backup, règles sécurisées)</td><td>Oui</td><td><a href="#migrations">#migrations</a></td></tr>
         <tr><td>4. Gestion des versions (SemVer, tags Git, Conventional Commits)</td><td>Oui</td><td><a href="#semver">#semver</a></td></tr>
-        <tr><td>5. Checklist de mise &agrave; jour (avant / pendant / apr&egrave;s)</td><td>Oui</td><td><a href="#checklist">#checklist</a></td></tr>
-        <tr><td>6. Proc&eacute;dure de rollback (Railway, Git, exemple concret, Prisma)</td><td>Oui</td><td><a href="#rollback">#rollback</a></td></tr>
-        <tr><td>7. Workflow Git recommand&eacute; (branches, cycle de vie, revue de code)</td><td>Oui</td><td><a href="#workflow-git">#workflow-git</a></td></tr>
-        <tr><td>8. Bonnes pratiques DevOps (parit&eacute; environnements, zero-downtime, monitoring, secrets, IaC)</td><td>Oui</td><td><a href="#devops">#devops</a></td></tr>
-        <tr><td>R&eacute;f&eacute;rences crois&eacute;es</td><td>Oui</td><td><a href="#references">#references</a></td></tr>
+        <tr><td>5. Checklist de mise à jour (avant / pendant / après)</td><td>Oui</td><td><a href="#checklist">#checklist</a></td></tr>
+        <tr><td>6. Procédure de rollback (Railway, Git, exemple concret, Prisma)</td><td>Oui</td><td><a href="#rollback">#rollback</a></td></tr>
+        <tr><td>7. Workflow Git recommandé (branches, cycle de vie, revue de code)</td><td>Oui</td><td><a href="#workflow-git">#workflow-git</a></td></tr>
+        <tr><td>8. Bonnes pratiques DevOps (parité environnements, zero-downtime, monitoring, secrets, IaC)</td><td>Oui</td><td><a href="#devops">#devops</a></td></tr>
+        <tr><td>Références croisées</td><td>Oui</td><td><a href="#references">#references</a></td></tr>
       </tbody>
     </table>
-    <p><strong>Manuel de Mise &agrave; Jour INKSPOT.</strong> Ce document constitue le livrable officiel du manuel de mise &agrave; jour (crit&egrave;re C2.4.1 du r&eacute;f&eacute;rentiel YNOV 2024).</p>
+    <p><strong>Manuel de Mise à Jour INKSPOT.</strong> Ce document constitue le livrable officiel du manuel de mise à jour (critère C2.4.1 du référentiel YNOV 2024).</p>
   </div>
 
 </DocLayout>

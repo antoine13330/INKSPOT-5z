@@ -6,16 +6,16 @@ import DocLayout from '../layouts/DocLayout.astro';
 
   <div class="card" id="infos-document">
     <h2 class="section-title">Informations du document</h2>
-    <table role="grid" aria-label="M&eacute;tadonn&eacute;es du changelog">
-      <thead><tr><th scope="col">&Eacute;l&eacute;ment</th><th scope="col">Valeur</th></tr></thead>
+    <table role="grid" aria-label="Métadonnées du changelog">
+      <thead><tr><th scope="col">Élément</th><th scope="col">Valeur</th></tr></thead>
       <tbody>
-        <tr><td><strong>Num&eacute;ro de document</strong></td><td>CL-INKSPOT-2026-001</td></tr>
-        <tr><td><strong>Titre</strong></td><td>Rapport d'&eacute;volution INKSPOT-5z &ndash; Historique complet</td></tr>
-        <tr><td><strong>Version</strong></td><td>2.0</td></tr>
+        <tr><td><strong>Numéro de document</strong></td><td>CL-INKSPOT-2026-001</td></tr>
+        <tr><td><strong>Titre</strong></td><td>Rapport d'évolution INKSPOT-5z – Historique complet</td></tr>
+        <tr><td><strong>Version</strong></td><td>2.1</td></tr>
         <tr><td><strong>Date</strong></td><td>6 mars 2026</td></tr>
-        <tr><td><strong>P&eacute;riode couverte</strong></td><td>2025-07-15 → 2026-03-06 (initialisation du d&eacute;p&ocirc;t → livraison finale v1.0)</td></tr>
-        <tr><td><strong>Public cible</strong></td><td>&Eacute;quipe dev, &eacute;valuateurs, mainteneurs</td></tr>
-        <tr><td><strong>R&eacute;dacteur</strong></td><td>DESPRES Antoine</td></tr>
+        <tr><td><strong>Période couverte</strong></td><td>2025-07-15 → 2026-03-06 (initialisation du dépôt → livraison finale v1.0)</td></tr>
+        <tr><td><strong>Public cible</strong></td><td>Équipe dev, évaluateurs, mainteneurs</td></tr>
+        <tr><td><strong>Rédacteur</strong></td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
     <p><strong>Historique des versions du document</strong></p>
@@ -29,9 +29,10 @@ import DocLayout from '../layouts/DocLayout.astro';
         </tr>
       </thead>
       <tbody>
-        <tr><td>1.0</td><td>28 f&eacute;vrier 2026</td><td>Version initiale &mdash; journal des versions C4.3.2, convention Conventional Commits, historique Git complet</td><td>DESPRES Antoine</td></tr>
-        <tr><td>1.2</td><td>1 mars 2026</td><td>Ajout d&eacute;ploiement Railway op&eacute;rationnel, migration Next.js 16, Dockerfile pnpm, Grafana provisioning</td><td>DESPRES Antoine</td></tr>
-        <tr><td>2.0</td><td>6 mars 2026</td><td>Restructuration compl&egrave;te : timeline v0.1→v1.0, d&eacute;tail par version, conformit&eacute; r&eacute;solue, roadmap post-v1.0 &mdash; version finale de livraison</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.0</td><td>28 février 2026</td><td>Version initiale — journal des versions C4.3.2, convention Conventional Commits, historique Git complet</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.2</td><td>1 mars 2026</td><td>Ajout déploiement Railway opérationnel, migration Next.js 16, Dockerfile pnpm, Grafana provisioning</td><td>DESPRES Antoine</td></tr>
+        <tr><td>2.0</td><td>6 mars 2026</td><td>Restructuration complète : timeline v0.1→v1.0, détail par version, conformité résolue, roadmap post-v1.0</td><td>DESPRES Antoine</td></tr>
+        <tr><td>2.1</td><td>6 mars 2026</td><td>Correction encodage UTF-8 dans toute la documentation — version finale de livraison</td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
   </div>
@@ -40,25 +41,25 @@ import DocLayout from '../layouts/DocLayout.astro';
     <strong>Sommaire</strong>
     <ul class="list-tight">
       <li><a href="#infos-document">Informations du document</a></li>
-      <li><a href="#format-convention">Format recommand&eacute; &amp; convention</a></li>
+      <li><a href="#format-convention">Format recommandé &amp; convention</a></li>
       <li><a href="#historique-git">Journal des versions (C4.3.2)</a></li>
-      <li><a href="#detail-versions">D&eacute;tail des versions</a></li>
-      <li><a href="#detail-themes">D&eacute;tail par th&egrave;me (181 commits)</a></li>
-      <li><a href="#ecarts-conformite">Conformit&eacute; r&eacute;f&eacute;rentiel (bloc 2)</a></li>
+      <li><a href="#detail-versions">Détail des versions</a></li>
+      <li><a href="#detail-themes">Détail par thème (181 commits)</a></li>
+      <li><a href="#ecarts-conformite">Conformité référentiel (bloc 2)</a></li>
       <li><a href="#roadmap">Roadmap post-v1.0</a></li>
       <li><a href="#table-sections-changelog">Table des sections</a></li>
     </ul>
   </div>
 
   <div class="card" id="format-convention">
-    <h2 class="section-title">Format recommand&eacute; &amp; convention</h2>
-    <p>Convention de commits : <a href="https://www.conventionalcommits.org/">Conventional Commits</a> en anglais &mdash; <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code></p>
+    <h2 class="section-title">Format recommandé &amp; convention</h2>
+    <p>Convention de commits : <a href="https://www.conventionalcommits.org/">Conventional Commits</a> en anglais — <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code></p>
     <ul class="list-tight">
       <li><strong>Date / Version</strong> : format SemVer (ex. 1.0.0, 0.5.0).</li>
       <li><strong>Types</strong> : <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>test</code>, <code>chore</code>, <code>refactor</code>, <code>ci</code>, <code>perf</code>.</li>
       <li><strong>Scopes</strong> : <code>auth</code>, <code>stripe</code>, <code>booking</code>, <code>e2e</code>, <code>a11y</code>, <code>prisma</code>, <code>docs</code>, <code>search</code>, <code>messaging</code>.</li>
-      <li><strong>D&eacute;tails</strong> : tests ajout&eacute;s, couverture, contr&ocirc;les s&eacute;curit&eacute;/a11y, sections doc modifi&eacute;es.</li>
-      <li><strong>R&eacute;f&eacute;rences</strong> : tickets / PR / liens vers rapports tests.</li>
+      <li><strong>Détails</strong> : tests ajoutés, couverture, contrôles sécurité/a11y, sections doc modifiées.</li>
+      <li><strong>Références</strong> : tickets / PR / liens vers rapports tests.</li>
     </ul>
     <p><strong>Exemples de commits conformes :</strong></p>
     <ul class="list-tight">
@@ -73,9 +74,9 @@ import DocLayout from '../layouts/DocLayout.astro';
   <div class="card" id="historique-git">
     <h2 class="section-title">Journal des versions (C4.3.2)</h2>
     <div class="callout callout-info">
-      <strong>R&eacute;f&eacute;rentiel :</strong> Ce journal r&eacute;pond au crit&egrave;re C4.3.2 du r&eacute;f&eacute;rentiel YNOV 2024 &mdash; « &Eacute;tablir un journal des versions d&eacute;ploy&eacute;es en y int&eacute;grant la documentation des correctifs r&eacute;alis&eacute;s ». Il retrace les anomalies corrig&eacute;es, les nouvelles fonctionnalit&eacute;s et les &eacute;volutions de chaque version depuis l'initialisation du projet jusqu'&agrave; la livraison finale v1.0.
+      <strong>Référentiel :</strong> Ce journal répond au critère C4.3.2 du référentiel YNOV 2024 — « Établir un journal des versions déployées en y intégrant la documentation des correctifs réalisés ». Il retrace les anomalies corrigées, les nouvelles fonctionnalités et les évolutions de chaque version depuis l'initialisation du projet jusqu'à la livraison finale v1.0.
     </div>
-    <p class="pill badge-neutral">Source : git log &mdash; 181 commits (2025-07-15 → 2026-03-06)</p>
+    <p class="pill badge-neutral">Source : git log — 181 commits (2025-07-15 → 2026-03-06)</p>
 
     <h3>Tableau des versions majeures</h3>
     <table role="grid" aria-label="Journal des versions majeures INKSPOT">
@@ -84,8 +85,8 @@ import DocLayout from '../layouts/DocLayout.astro';
           <th scope="col">Version</th>
           <th scope="col">Date</th>
           <th scope="col">Type</th>
-          <th scope="col">Description synth&eacute;tique</th>
-          <th scope="col">Commits cl&eacute;s</th>
+          <th scope="col">Description synthétique</th>
+          <th scope="col">Commits clés</th>
         </tr>
       </thead>
       <tbody>
@@ -93,77 +94,77 @@ import DocLayout from '../layouts/DocLayout.astro';
           <td><strong>1.0.0</strong></td>
           <td>2026-03-06</td>
           <td><span class="pill badge-success">release</span></td>
-          <td>Livraison finale &mdash; documentation compl&egrave;te, conformit&eacute; YNOV 2024 valid&eacute;e, d&eacute;ploiement Railway op&eacute;rationnel, tous les crit&egrave;res bloc 2 satisfaits</td>
+          <td>Livraison finale — documentation complète, conformité YNOV 2024 validée, déploiement Railway opérationnel, tous les critères bloc 2 satisfaits</td>
           <td><code>3d4a0d3</code></td>
         </tr>
         <tr>
           <td><strong>0.9.0</strong></td>
           <td>2026-02-24</td>
           <td><span class="pill">test</span></td>
-          <td>Phase de recette &mdash; campagne de tests (22/24 pass, 91 %), correction des anomalies REC-001/002/003, couverture Jest 50,6 %, audit accessibilit&eacute; WCAG 2.1 AA</td>
+          <td>Phase de recette — campagne de tests (22/24 pass, 91 %), correction des anomalies REC-001/002/003, couverture Jest 50,6 %, audit accessibilité WCAG 2.1 AA</td>
           <td><code>sign-off 24/02</code></td>
         </tr>
         <tr>
           <td><strong>0.8.0</strong></td>
           <td>2026-02-10</td>
           <td><span class="pill">perf / fix</span></td>
-          <td>S&eacute;curisation et performances &mdash; audit OWASP Top 10, rate-limiting Redis, optimisation cache, audit accessibilit&eacute;, correction ESLint 9 flat config</td>
+          <td>Sécurisation et performances — audit OWASP Top 10, rate-limiting Redis, optimisation cache, audit accessibilité, correction ESLint 9 flat config</td>
           <td><code>46c59cb</code>, <code>ed526ff</code></td>
         </tr>
         <tr>
           <td><strong>0.7.0</strong></td>
           <td>2026-01-28</td>
           <td><span class="pill">refactor</span></td>
-          <td>Refactoring architecture &mdash; Zustand stores restructur&eacute;s, gestion des erreurs am&eacute;lior&eacute;e, nettoyage codebase, suppression des doublons, types TypeScript renforc&eacute;s</td>
+          <td>Refactoring architecture — Zustand stores restructurés, gestion des erreurs améliorée, nettoyage codebase, suppression des doublons, types TypeScript renforcés</td>
           <td><code>95c54d9</code>, <code>8be4478</code></td>
         </tr>
         <tr>
           <td><strong>0.6.0</strong></td>
           <td>2026-01-10</td>
           <td><span class="pill">feat</span></td>
-          <td>Compl&eacute;tion des fonctionnalit&eacute;s principales &mdash; tableau de bord PRO, gestion des disponibilit&eacute;s, recherche g&eacute;ographique, syst&egrave;me de reviews, notifications push VAPID</td>
+          <td>Complétion des fonctionnalités principales — tableau de bord PRO, gestion des disponibilités, recherche géographique, système de reviews, notifications push VAPID</td>
           <td><code>43e8799</code>, <code>0e9a19e</code></td>
         </tr>
         <tr>
           <td><strong>0.5.0</strong></td>
           <td>2025-11-15</td>
           <td><span class="pill">feat / docs</span></td>
-          <td>Optimisation architecture &mdash; syst&egrave;me de documentation Astro, am&eacute;lioration des tests (ts-jest), durcissement s&eacute;curit&eacute;, configuration monitoring Grafana provisioning automatique</td>
+          <td>Optimisation architecture — système de documentation Astro, amélioration des tests (ts-jest), durcissement sécurité, configuration monitoring Grafana provisioning automatique</td>
           <td><code>7456fb3</code>, <code>2084a0e</code></td>
         </tr>
         <tr>
           <td><strong>0.4.0</strong></td>
           <td>2025-09-21</td>
           <td><span class="pill">fix / chore</span></td>
-          <td>Migration Railway &mdash; correction des erreurs TypeScript pour le build Railway, migration compl&egrave;te depuis Docker/VPS, configuration standalone Next.js, Dockerfile pnpm</td>
+          <td>Migration Railway — correction des erreurs TypeScript pour le build Railway, migration complète depuis Docker/VPS, configuration standalone Next.js, Dockerfile pnpm</td>
           <td><code>a86055b</code>, <code>d6e6991</code></td>
         </tr>
         <tr>
           <td><strong>0.3.0</strong></td>
           <td>2025-08-20</td>
           <td><span class="pill">feat</span></td>
-          <td>Containerisation et CI/CD &mdash; configuration Docker fullstack (app, PostgreSQL, Nginx, Redis), pipeline GitHub Actions, GitHub Pages, scan s&eacute;curit&eacute; SARIF</td>
+          <td>Containerisation et CI/CD — configuration Docker fullstack (app, PostgreSQL, Nginx, Redis), pipeline GitHub Actions, GitHub Pages, scan sécurité SARIF</td>
           <td><code>5ec1db4</code>, <code>29f116c</code></td>
         </tr>
         <tr>
           <td><strong>0.2.0</strong></td>
           <td>2025-08-04</td>
           <td><span class="pill">feat</span></td>
-          <td>Premi&egrave;res fonctionnalit&eacute;s avanc&eacute;es &mdash; syst&egrave;me de rendez-vous, messagerie temps r&eacute;el WebSocket, recommandations IA, paiements Stripe avec commissions, monitoring Prometheus/Grafana</td>
+          <td>Premières fonctionnalités avancées — système de rendez-vous, messagerie temps réel WebSocket, recommandations IA, paiements Stripe avec commissions, monitoring Prometheus/Grafana</td>
           <td><code>ada91b3</code>, <code>1f40a39</code>, <code>ea37556</code></td>
         </tr>
         <tr>
           <td><strong>0.1.0</strong></td>
           <td>2025-07-30</td>
           <td><span class="pill">feat</span></td>
-          <td>Initialisation plateforme &mdash; Next.js App Router, authentification compl&egrave;te (email + Google OAuth), profils utilisateurs, API endpoints core, composants UI, suite de tests initiale</td>
+          <td>Initialisation plateforme — Next.js App Router, authentification complète (email + Google OAuth), profils utilisateurs, API endpoints core, composants UI, suite de tests initiale</td>
           <td><code>bbc14e6</code>, <code>1ca03ed</code>, <code>fa886a2</code></td>
         </tr>
         <tr>
           <td><strong>0.0.1</strong></td>
           <td>2025-07-15</td>
           <td><span class="pill">chore</span></td>
-          <td>Initialisation du d&eacute;p&ocirc;t GitHub &mdash; structure de projet Next.js, configuration TypeScript, premier commit</td>
+          <td>Initialisation du dépôt GitHub — structure de projet Next.js, configuration TypeScript, premier commit</td>
           <td><code>4a5d3b3</code></td>
         </tr>
       </tbody>
@@ -171,124 +172,124 @@ import DocLayout from '../layouts/DocLayout.astro';
   </div>
 
   <div class="card" id="detail-versions">
-    <h2 class="section-title">D&eacute;tail des versions</h2>
+    <h2 class="section-title">Détail des versions</h2>
 
-    <h3>v1.0.0 &mdash; 6 mars 2026 &mdash; Livraison finale</h3>
+    <h3>v1.0.0 — 6 mars 2026 — Livraison finale</h3>
     <div class="callout callout-success" style="border-left:4px solid #2ea043;background:rgba(46,160,67,0.08);">
-      Version officielle de livraison acad&eacute;mique &mdash; conformit&eacute; compl&egrave;te r&eacute;f&eacute;rentiel YNOV 2024 (CO2.4, CO2.5, CO2.7, C2.1.1, C2.1.2, C2.3.2, C2.4.1, C4.3.2).
+      Version officielle de livraison académique — conformité complète référentiel YNOV 2024 (CO2.4, CO2.5, CO2.7, C2.1.1, C2.1.2, C2.3.2, C2.4.1, C4.3.2).
     </div>
     <ul class="list-tight">
-      <li><strong>docs</strong> : documentation technique finalis&eacute;e &mdash; MUT v1.2 (diagramme architecture, justification choix technologiques, conclusion), Manuel D&eacute;ploiement v4.0 (supervision monitoring), Cahier de Recette v1.4 (synth&egrave;se finale validation), Changelog v2.0 (timeline compl&egrave;te)</li>
-      <li><strong>feat</strong> : d&eacute;ploiement Railway op&eacute;rationnel &mdash; projet <code>humorous-healing</code> en ligne avec stack compl&egrave;te (INKSPOT-5z, PostgreSQL, Redis, Grafana Stack : Grafana, Prometheus, Loki, Tempo)</li>
-      <li><strong>feat</strong> : migration Next.js 16 &mdash; <code>middleware.ts</code> → <code>proxy.ts</code>, suppression propri&eacute;t&eacute; <code>eslint</code> du type <code>NextConfig</code>, suppression config <code>webpack</code> incompatible Turbopack</li>
-      <li><strong>feat</strong> : migration ESLint 9 &mdash; suppression <code>.eslintrc.json</code>, cr&eacute;ation <code>eslint.config.mjs</code> (flat config), ajout package <code>globals</code>, script lint simplifi&eacute;</li>
-      <li><strong>fix</strong> : Dockerfile pnpm &mdash; remplacement complet de <code>npm ci</code> par <code>pnpm install --frozen-lockfile</code> via <code>corepack</code>, serveur standalone Next.js, suppression <code>ENV PORT=3000</code></li>
-      <li><strong>feat</strong> : Grafana provisioning automatique &mdash; <code>monitoring/grafana/provisioning/datasources/datasources.yml</code> (Prometheus, INKSPOT JSON API, Loki, Tempo) et dashboard <code>inkspot-overview.json</code> (6 sections, 40+ m&eacute;triques)</li>
-      <li><strong>ci</strong> : correction pipeline CI/CD &mdash; r&eacute;solution erreur <code>EBADPLATFORM</code> sur runners Linux, nettoyage <code>pnpm-lock.yaml</code>, step <em>Sanitize lockfile for Linux</em></li>
+      <li><strong>docs</strong> : documentation technique finalisée — MUT v1.2 (diagramme architecture, justification choix technologiques, conclusion), Manuel Déploiement v4.0 (supervision monitoring), Cahier de Recette v1.4 (synthèse finale validation), Changelog v2.0 (timeline complète)</li>
+      <li><strong>feat</strong> : déploiement Railway opérationnel — projet <code>humorous-healing</code> en ligne avec stack complète (INKSPOT-5z, PostgreSQL, Redis, Grafana Stack : Grafana, Prometheus, Loki, Tempo)</li>
+      <li><strong>feat</strong> : migration Next.js 16 — <code>middleware.ts</code> → <code>proxy.ts</code>, suppression propriété <code>eslint</code> du type <code>NextConfig</code>, suppression config <code>webpack</code> incompatible Turbopack</li>
+      <li><strong>feat</strong> : migration ESLint 9 — suppression <code>.eslintrc.json</code>, création <code>eslint.config.mjs</code> (flat config), ajout package <code>globals</code>, script lint simplifié</li>
+      <li><strong>fix</strong> : Dockerfile pnpm — remplacement complet de <code>npm ci</code> par <code>pnpm install --frozen-lockfile</code> via <code>corepack</code>, serveur standalone Next.js, suppression <code>ENV PORT=3000</code></li>
+      <li><strong>feat</strong> : Grafana provisioning automatique — <code>monitoring/grafana/provisioning/datasources/datasources.yml</code> (Prometheus, INKSPOT JSON API, Loki, Tempo) et dashboard <code>inkspot-overview.json</code> (6 sections, 40+ métriques)</li>
+      <li><strong>ci</strong> : correction pipeline CI/CD — résolution erreur <code>EBADPLATFORM</code> sur runners Linux, nettoyage <code>pnpm-lock.yaml</code>, step <em>Sanitize lockfile for Linux</em></li>
     </ul>
 
-    <h3>v0.9.0 &mdash; 24 f&eacute;vrier 2026 &mdash; Phase de recette</h3>
+    <h3>v0.9.0 — 24 février 2026 — Phase de recette</h3>
     <ul class="list-tight">
-      <li><strong>test</strong> : campagne de recette ex&eacute;cut&eacute;e (20&ndash;24 f&eacute;vrier 2026) &mdash; 22/24 sc&eacute;narios pass&eacute;s (91 %), sign-off QA Lead appos&eacute; le 24/02/2026</li>
-      <li><strong>fix</strong> : anomalie REC-002 r&eacute;solue &mdash; scope Jest recadr&eacute; sur modules critiques (<code>lib/</code>, <code>hooks/</code>, <code>app/api/</code>), couverture 50,6 % statements, 341 tests passants</li>
-      <li><strong>fix</strong> : anomalie REC-003 r&eacute;solue &mdash; test E2E <code>e2e/accessibility-audit.spec.ts</code> cr&eacute;&eacute; (<code>@axe-core/playwright</code>), violation critique <code>button-name</code> corrig&eacute;e sur login/register/reset-password</li>
-      <li><strong>docs</strong> : mise &agrave; jour bloc 2 &mdash; cahier de recette d&eacute;taill&eacute;, sections s&eacute;curit&eacute;/accessibilit&eacute;, synth&egrave;se coverage lcov, clarification pipeline CI/CD</li>
-      <li><strong>fix</strong> : build Astro stabilis&eacute; &mdash; downgrade Astro + simplification layout, suppression de doublons de contenu dans les pages de docs</li>
+      <li><strong>test</strong> : campagne de recette exécutée (20–24 février 2026) — 22/24 scénarios passés (91 %), sign-off QA Lead apposé le 24/02/2026</li>
+      <li><strong>fix</strong> : anomalie REC-002 résolue — scope Jest recadré sur modules critiques (<code>lib/</code>, <code>hooks/</code>, <code>app/api/</code>), couverture 50,6 % statements, 341 tests passants</li>
+      <li><strong>fix</strong> : anomalie REC-003 résolue — test E2E <code>e2e/accessibility-audit.spec.ts</code> créé (<code>@axe-core/playwright</code>), violation critique <code>button-name</code> corrigée sur login/register/reset-password</li>
+      <li><strong>docs</strong> : mise à jour bloc 2 — cahier de recette détaillé, sections sécurité/accessibilité, synthèse coverage lcov, clarification pipeline CI/CD</li>
+      <li><strong>fix</strong> : build Astro stabilisé — downgrade Astro + simplification layout, suppression de doublons de contenu dans les pages de docs</li>
     </ul>
 
-    <h3>v0.8.0 &mdash; 10 f&eacute;vrier 2026 &mdash; S&eacute;curisation et performances</h3>
+    <h3>v0.8.0 — 10 février 2026 — Sécurisation et performances</h3>
     <ul class="list-tight">
-      <li><strong>feat</strong> : audit OWASP Top 10 complet &mdash; validation Zod sur toutes les routes API sensibles, rate-limiting par IP sur endpoints d'authentification, headers HTTP s&eacute;curis&eacute;s (CSP, X-Frame-Options, HSTS)</li>
-      <li><strong>perf</strong> : optimisation cache Redis &mdash; mise en cache des r&eacute;sultats de recherche (TTL 5 min), sessions utilisateurs, r&eacute;duction de 40 % des requ&ecirc;tes PostgreSQL sur les pages populaires</li>
-      <li><strong>feat</strong> : audit accessibilit&eacute; WCAG 2.1 AA &mdash; int&eacute;gration <code>eslint-plugin-jsx-a11y</code>, audit <code>axe-cli</code> sur pages critiques, score Lighthouse accessibilit&eacute; ≥ 90</li>
-      <li><strong>fix</strong> : migration ESLint 9 flat config &mdash; suppression <code>.eslintrc.json</code>, cr&eacute;ation <code>eslint.config.mjs</code>, r&eacute;duction des erreurs lint de 1388 &agrave; 0 (-100 %)</li>
-      <li><strong>fix</strong> : correction des types TypeScript &mdash; remplacement de tous les <code>any</code> par des types explicites dans <code>lib/auth.ts</code>, <code>lib/utils.ts</code>, <code>hooks/useWebSocket.ts</code></li>
+      <li><strong>feat</strong> : audit OWASP Top 10 complet — validation Zod sur toutes les routes API sensibles, rate-limiting par IP sur endpoints d'authentification, headers HTTP sécurisés (CSP, X-Frame-Options, HSTS)</li>
+      <li><strong>perf</strong> : optimisation cache Redis — mise en cache des résultats de recherche (TTL 5 min), sessions utilisateurs, réduction de 40 % des requêtes PostgreSQL sur les pages populaires</li>
+      <li><strong>feat</strong> : audit accessibilité WCAG 2.1 AA — intégration <code>eslint-plugin-jsx-a11y</code>, audit <code>axe-cli</code> sur pages critiques, score Lighthouse accessibilité ≥ 90</li>
+      <li><strong>fix</strong> : migration ESLint 9 flat config — suppression <code>.eslintrc.json</code>, création <code>eslint.config.mjs</code>, réduction des erreurs lint de 1388 à 0 (-100 %)</li>
+      <li><strong>fix</strong> : correction des types TypeScript — remplacement de tous les <code>any</code> par des types explicites dans <code>lib/auth.ts</code>, <code>lib/utils.ts</code>, <code>hooks/useWebSocket.ts</code></li>
     </ul>
 
-    <h3>v0.7.0 &mdash; 28 janvier 2026 &mdash; Refactoring architecture</h3>
+    <h3>v0.7.0 — 28 janvier 2026 — Refactoring architecture</h3>
     <ul class="list-tight">
-      <li><strong>refactor</strong> : Zustand stores restructur&eacute;s &mdash; s&eacute;paration claire des stores (auth, posts, users, UI), suppression des d&eacute;pendances circulaires, am&eacute;lioration de la performance des re-renders</li>
-      <li><strong>refactor</strong> : gestion des erreurs am&eacute;lior&eacute;e &mdash; <code>ErrorBoundary</code> React avec fallback UI, ID d'erreur pour le support, stack trace en mode d&eacute;veloppement uniquement</li>
-      <li><strong>refactor</strong> : nettoyage codebase &mdash; suppression des fichiers obsol&egrave;tes, r&eacute;organisation des imports, standardisation des conventions de nommage</li>
-      <li><strong>fix</strong> : correction des conflits de merge (15+ branches feature) &mdash; uniformisation des branches et ajout des scripts de d&eacute;veloppement</li>
-      <li><strong>perf</strong> : optimisation des requ&ecirc;tes Prisma &mdash; ajout d'index sur les colonnes fr&eacute;quemment filtr&eacute;es (userId, status, createdAt), r&eacute;duction des N+1 queries</li>
+      <li><strong>refactor</strong> : Zustand stores restructurés — séparation claire des stores (auth, posts, users, UI), suppression des dépendances circulaires, amélioration de la performance des re-renders</li>
+      <li><strong>refactor</strong> : gestion des erreurs améliorée — <code>ErrorBoundary</code> React avec fallback UI, ID d'erreur pour le support, stack trace en mode développement uniquement</li>
+      <li><strong>refactor</strong> : nettoyage codebase — suppression des fichiers obsolètes, réorganisation des imports, standardisation des conventions de nommage</li>
+      <li><strong>fix</strong> : correction des conflits de merge (15+ branches feature) — uniformisation des branches et ajout des scripts de développement</li>
+      <li><strong>perf</strong> : optimisation des requêtes Prisma — ajout d'index sur les colonnes fréquemment filtrées (userId, status, createdAt), réduction des N+1 queries</li>
     </ul>
 
-    <h3>v0.6.0 &mdash; 10 janvier 2026 &mdash; Compl&eacute;tion des fonctionnalit&eacute;s</h3>
+    <h3>v0.6.0 — 10 janvier 2026 — Complétion des fonctionnalités</h3>
     <ul class="list-tight">
-      <li><strong>feat</strong> : tableau de bord PRO complet &mdash; analytics de performance, historique des revenus, gestion des disponibilit&eacute;s avec calendrier, statistiques d'engagement</li>
-      <li><strong>feat</strong> : gestion des disponibilit&eacute;s &mdash; mod&egrave;le <code>AvailabilitySchedule</code> et <code>AvailabilityTimeSlot</code>, API <code>/api/pro/availability/*</code>, interface de configuration des cr&eacute;neaux</li>
-      <li><strong>feat</strong> : recherche g&eacute;ographique &mdash; endpoint <code>/api/search/geographic</code>, filtres par localisation, suggestions d'artistes &agrave; proximit&eacute;</li>
-      <li><strong>feat</strong> : syst&egrave;me de reviews &mdash; mod&egrave;le <code>Review</code>, API <code>/api/reviews</code>, affichage sur les profils artistes avec note moyenne</li>
-      <li><strong>feat</strong> : notifications push VAPID &mdash; g&eacute;n&eacute;ration automatique des cl&eacute;s VAPID en CI/CD, endpoint <code>/api/push-subscriptions</code>, notifications pour confirmations de RDV</li>
-      <li><strong>feat</strong> : collaborations &mdash; mod&egrave;le <code>Collaboration</code>, API <code>/api/collaborations</code>, workflow de co-cr&eacute;ation de posts entre artistes</li>
+      <li><strong>feat</strong> : tableau de bord PRO complet — analytics de performance, historique des revenus, gestion des disponibilités avec calendrier, statistiques d'engagement</li>
+      <li><strong>feat</strong> : gestion des disponibilités — modèle <code>AvailabilitySchedule</code> et <code>AvailabilityTimeSlot</code>, API <code>/api/pro/availability/*</code>, interface de configuration des créneaux</li>
+      <li><strong>feat</strong> : recherche géographique — endpoint <code>/api/search/geographic</code>, filtres par localisation, suggestions d'artistes à proximité</li>
+      <li><strong>feat</strong> : système de reviews — modèle <code>Review</code>, API <code>/api/reviews</code>, affichage sur les profils artistes avec note moyenne</li>
+      <li><strong>feat</strong> : notifications push VAPID — génération automatique des clés VAPID en CI/CD, endpoint <code>/api/push-subscriptions</code>, notifications pour confirmations de RDV</li>
+      <li><strong>feat</strong> : collaborations — modèle <code>Collaboration</code>, API <code>/api/collaborations</code>, workflow de co-création de posts entre artistes</li>
     </ul>
 
-    <h3>v0.5.0 &mdash; 15 novembre 2025 &mdash; Optimisation architecture</h3>
+    <h3>v0.5.0 — 15 novembre 2025 — Optimisation architecture</h3>
     <ul class="list-tight">
-      <li><strong>feat</strong> : syst&egrave;me de documentation Astro &mdash; site de documentation statique g&eacute;n&eacute;r&eacute; avec Astro 4, export PDF via Playwright Chromium, 5 documents techniques (MUT, D&eacute;ploiement, Cahier de Recette, Changelog, Manuel Mise &agrave; Jour)</li>
-      <li><strong>feat</strong> : Grafana provisioning automatique &mdash; datasources et dashboards configur&eacute;s via fichiers YAML/JSON, 40+ m&eacute;triques m&eacute;tier expos&eacute;es via <code>/api/grafana</code></li>
-      <li><strong>test</strong> : am&eacute;lioration des tests &mdash; migration vers ts-jest (suppression des erreurs SWC binaries multi-plateforme), configuration Jest recadr&eacute;e sur modules critiques, rapport lcov op&eacute;rationnel</li>
-      <li><strong>feat</strong> : durcissement s&eacute;curit&eacute; &mdash; middleware <code>security.ts</code> (rate-limiting, CSRF, XSS headers), audit-logger, security-monitor, scan SARIF GitHub Code Scanning</li>
-      <li><strong>fix</strong> : r&eacute;solution des probl&egrave;mes de build CI/CD &mdash; correction <code>EBADPLATFORM</code> SWC sur runners Linux, sanitization du lockfile, step d&eacute;di&eacute; dans les 3 jobs CI</li>
+      <li><strong>feat</strong> : système de documentation Astro — site de documentation statique généré avec Astro 4, export PDF via Playwright Chromium, 5 documents techniques (MUT, Déploiement, Cahier de Recette, Changelog, Manuel Mise à Jour)</li>
+      <li><strong>feat</strong> : Grafana provisioning automatique — datasources et dashboards configurés via fichiers YAML/JSON, 40+ métriques métier exposées via <code>/api/grafana</code></li>
+      <li><strong>test</strong> : amélioration des tests — migration vers ts-jest (suppression des erreurs SWC binaries multi-plateforme), configuration Jest recadrée sur modules critiques, rapport lcov opérationnel</li>
+      <li><strong>feat</strong> : durcissement sécurité — middleware <code>security.ts</code> (rate-limiting, CSRF, XSS headers), audit-logger, security-monitor, scan SARIF GitHub Code Scanning</li>
+      <li><strong>fix</strong> : résolution des problèmes de build CI/CD — correction <code>EBADPLATFORM</code> SWC sur runners Linux, sanitization du lockfile, step dédié dans les 3 jobs CI</li>
     </ul>
 
-    <h3>v0.4.0 &mdash; 21 septembre 2025 &mdash; Migration Railway</h3>
+    <h3>v0.4.0 — 21 septembre 2025 — Migration Railway</h3>
     <ul class="list-tight">
-      <li><strong>fix</strong> : correction de toutes les erreurs TypeScript pour le build Railway &mdash; types explicites sur les param&egrave;tres de transaction Prisma, routes d'annulation, handlers API</li>
-      <li><strong>refactor</strong> : migration compl&egrave;te depuis Docker/VPS vers Railway &mdash; suppression des workflows GitHub Actions de d&eacute;ploiement manuel, configuration <code>railway.json</code>, script <code>railway-start.js</code></li>
-      <li><strong>feat</strong> : configuration standalone Next.js &mdash; <code>output: 'standalone'</code> dans <code>next.config.ts</code>, Dockerfile multi-stage optimis&eacute;, serveur <code>server.js</code> autonome</li>
-      <li><strong>fix</strong> : health check Railway &mdash; endpoint <code>/api/health</code> et <code>/api/health/simple</code>, suppression <code>ENV PORT=3000</code> pour laisser Railway injecter son propre port</li>
-      <li><strong>fix</strong> : Prisma client generation &mdash; v&eacute;rification et g&eacute;n&eacute;ration dans le Dockerfile, copie explicite des dossiers <code>@prisma</code> depuis le stage builder</li>
+      <li><strong>fix</strong> : correction de toutes les erreurs TypeScript pour le build Railway — types explicites sur les paramètres de transaction Prisma, routes d'annulation, handlers API</li>
+      <li><strong>refactor</strong> : migration complète depuis Docker/VPS vers Railway — suppression des workflows GitHub Actions de déploiement manuel, configuration <code>railway.json</code>, script <code>railway-start.js</code></li>
+      <li><strong>feat</strong> : configuration standalone Next.js — <code>output: 'standalone'</code> dans <code>next.config.ts</code>, Dockerfile multi-stage optimisé, serveur <code>server.js</code> autonome</li>
+      <li><strong>fix</strong> : health check Railway — endpoint <code>/api/health</code> et <code>/api/health/simple</code>, suppression <code>ENV PORT=3000</code> pour laisser Railway injecter son propre port</li>
+      <li><strong>fix</strong> : Prisma client generation — vérification et génération dans le Dockerfile, copie explicite des dossiers <code>@prisma</code> depuis le stage builder</li>
     </ul>
 
-    <h3>v0.3.0 &mdash; 20 août 2025 &mdash; Containerisation et CI/CD</h3>
+    <h3>v0.3.0 — 20 août 2025 — Containerisation et CI/CD</h3>
     <ul class="list-tight">
-      <li><strong>feat</strong> : configuration Docker fullstack &mdash; <code>docker-compose.yml</code> (app, PostgreSQL 15, Nginx, Redis), <code>docker-compose.prod.yml</code>, Dockerfile multi-stage Node 22 Alpine</li>
-      <li><strong>feat</strong> : pipeline GitHub Actions &mdash; jobs quality (lint, type-check, tests, coverage), build, security (audit + SARIF) ; d&eacute;clenchement sur push/PR branches <code>dev</code> et <code>main</code></li>
-      <li><strong>feat</strong> : configuration GitHub Pages &mdash; d&eacute;ploiement automatique de la documentation Astro, URLs r&eacute;elles configur&eacute;es</li>
-      <li><strong>feat</strong> : scan s&eacute;curit&eacute; SARIF &mdash; int&eacute;gration GitHub Code Scanning, r&eacute;solution des conflits d'upload SARIF</li>
-      <li><strong>fix</strong> : correction des probl&egrave;mes de build CI/CD &mdash; configuration Jest (moduleNameMapper, exclusion tests E2E), suppression des exports dynamiques dupliqu&eacute;s, installation pnpm</li>
+      <li><strong>feat</strong> : configuration Docker fullstack — <code>docker-compose.yml</code> (app, PostgreSQL 15, Nginx, Redis), <code>docker-compose.prod.yml</code>, Dockerfile multi-stage Node 22 Alpine</li>
+      <li><strong>feat</strong> : pipeline GitHub Actions — jobs quality (lint, type-check, tests, coverage), build, security (audit + SARIF) ; déclenchement sur push/PR branches <code>dev</code> et <code>main</code></li>
+      <li><strong>feat</strong> : configuration GitHub Pages — déploiement automatique de la documentation Astro, URLs réelles configurées</li>
+      <li><strong>feat</strong> : scan sécurité SARIF — intégration GitHub Code Scanning, résolution des conflits d'upload SARIF</li>
+      <li><strong>fix</strong> : correction des problèmes de build CI/CD — configuration Jest (moduleNameMapper, exclusion tests E2E), suppression des exports dynamiques dupliqués, installation pnpm</li>
     </ul>
 
-    <h3>v0.2.0 &mdash; 4 août 2025 &mdash; Premi&egrave;res fonctionnalit&eacute;s avanc&eacute;es</h3>
+    <h3>v0.2.0 — 4 août 2025 — Premières fonctionnalités avancées</h3>
     <ul class="list-tight">
-      <li><strong>feat</strong> : syst&egrave;me de gestion des rendez-vous &mdash; mod&egrave;le <code>Appointment</code> avec statuts (PENDING, CONFIRMED, CANCELLED, COMPLETED), historique des statuts, API compl&egrave;te (<code>/api/appointments/*</code>)</li>
-      <li><strong>feat</strong> : messagerie temps r&eacute;el WebSocket &mdash; <code>lib/websocket-manager.ts</code>, composants chat avec indicateur de frappe, upload d'images dans les conversations</li>
-      <li><strong>feat</strong> : paiements Stripe avec commissions &mdash; <code>lib/services/payment-service.ts</code>, PaymentIntent, confirmation, remboursement, commission 3,5 % + 0,50 €, webhooks idempotents</li>
-      <li><strong>feat</strong> : recommandations IA &mdash; <code>lib/recommendations-ai.ts</code>, scoring de pertinence (texte, filtres, r&eacute;cence, popularit&eacute;, qualit&eacute;), cache en m&eacute;moire 5 min</li>
-      <li><strong>feat</strong> : monitoring Prometheus/Grafana &mdash; m&eacute;triques API, DB, m&eacute;tier ; <code>/api/metrics</code> au format Prometheus ; <code>/api/grafana</code> datasource JSON</li>
-      <li><strong>feat</strong> : fonctionnalit&eacute;s financi&egrave;res &mdash; mod&egrave;les <code>Invoice</code>, <code>Transaction</code>, API <code>/api/invoices</code>, export, tableau de bord financier PRO</li>
-      <li><strong>refactor</strong> : Zustand stores et hooks &mdash; <code>lib/stores/</code> (auth, posts, users), hooks personnalis&eacute;s (<code>usePaymentStatus</code>, <code>useWebSocket</code>)</li>
+      <li><strong>feat</strong> : système de gestion des rendez-vous — modèle <code>Appointment</code> avec statuts (PENDING, CONFIRMED, CANCELLED, COMPLETED), historique des statuts, API complète (<code>/api/appointments/*</code>)</li>
+      <li><strong>feat</strong> : messagerie temps réel WebSocket — <code>lib/websocket-manager.ts</code>, composants chat avec indicateur de frappe, upload d'images dans les conversations</li>
+      <li><strong>feat</strong> : paiements Stripe avec commissions — <code>lib/services/payment-service.ts</code>, PaymentIntent, confirmation, remboursement, commission 3,5 % + 0,50 €, webhooks idempotents</li>
+      <li><strong>feat</strong> : recommandations IA — <code>lib/recommendations-ai.ts</code>, scoring de pertinence (texte, filtres, récence, popularité, qualité), cache en mémoire 5 min</li>
+      <li><strong>feat</strong> : monitoring Prometheus/Grafana — métriques API, DB, métier ; <code>/api/metrics</code> au format Prometheus ; <code>/api/grafana</code> datasource JSON</li>
+      <li><strong>feat</strong> : fonctionnalités financières — modèles <code>Invoice</code>, <code>Transaction</code>, API <code>/api/invoices</code>, export, tableau de bord financier PRO</li>
+      <li><strong>refactor</strong> : Zustand stores et hooks — <code>lib/stores/</code> (auth, posts, users), hooks personnalisés (<code>usePaymentStatus</code>, <code>useWebSocket</code>)</li>
     </ul>
 
-    <h3>v0.1.0 &mdash; 30 juillet 2025 &mdash; Initialisation de la plateforme</h3>
+    <h3>v0.1.0 — 30 juillet 2025 — Initialisation de la plateforme</h3>
     <ul class="list-tight">
-      <li><strong>feat</strong> : Next.js 16 App Router &mdash; structure <code>app/</code>, layouts, providers (ThemeProvider, SessionProvider, OnlineStatusProvider), PWA (manifest, service worker)</li>
-      <li><strong>feat</strong> : authentification compl&egrave;te &mdash; NextAuth.js 4 (Credentials + Google OAuth), bcrypt, v&eacute;rification email (MagicLink), r&eacute;initialisation mot de passe, sessions JWT 30 jours</li>
-      <li><strong>feat</strong> : profils utilisateurs &mdash; mod&egrave;le <code>User</code> (CLIENT/PRO/ADMIN), pages <code>/profile/[id]</code>, &eacute;dition, stats, upload avatar S3</li>
-      <li><strong>feat</strong> : API endpoints core &mdash; <code>/api/posts/*</code>, <code>/api/users/*</code>, <code>/api/auth/*</code>, <code>/api/search/*</code>, <code>/api/upload</code></li>
-      <li><strong>feat</strong> : composants UI avanc&eacute;s &mdash; Radix UI / shadcn-style, Tailwind CSS, formulaires React Hook Form + Zod, toasts Sonner, charts Recharts</li>
-      <li><strong>feat</strong> : sch&eacute;ma Prisma initial &mdash; mod&egrave;les User, Post, Comment, Like, Follow, Conversation, Message, Notification, SearchHistory</li>
-      <li><strong>test</strong> : suite de tests initiale &mdash; Jest + ts-jest, Playwright E2E (auth-flow, basic-navigation, public-features), seed Prisma avec donn&eacute;es r&eacute;alistes</li>
+      <li><strong>feat</strong> : Next.js 16 App Router — structure <code>app/</code>, layouts, providers (ThemeProvider, SessionProvider, OnlineStatusProvider), PWA (manifest, service worker)</li>
+      <li><strong>feat</strong> : authentification complète — NextAuth.js 4 (Credentials + Google OAuth), bcrypt, vérification email (MagicLink), réinitialisation mot de passe, sessions JWT 30 jours</li>
+      <li><strong>feat</strong> : profils utilisateurs — modèle <code>User</code> (CLIENT/PRO/ADMIN), pages <code>/profile/[id]</code>, édition, stats, upload avatar S3</li>
+      <li><strong>feat</strong> : API endpoints core — <code>/api/posts/*</code>, <code>/api/users/*</code>, <code>/api/auth/*</code>, <code>/api/search/*</code>, <code>/api/upload</code></li>
+      <li><strong>feat</strong> : composants UI avancés — Radix UI / shadcn-style, Tailwind CSS, formulaires React Hook Form + Zod, toasts Sonner, charts Recharts</li>
+      <li><strong>feat</strong> : schéma Prisma initial — modèles User, Post, Comment, Like, Follow, Conversation, Message, Notification, SearchHistory</li>
+      <li><strong>test</strong> : suite de tests initiale — Jest + ts-jest, Playwright E2E (auth-flow, basic-navigation, public-features), seed Prisma avec données réalistes</li>
     </ul>
 
-    <h3>v0.0.1 &mdash; 15 juillet 2025 &mdash; Initialisation du d&eacute;p&ocirc;t</h3>
+    <h3>v0.0.1 — 15 juillet 2025 — Initialisation du dépôt</h3>
     <ul class="list-tight">
-      <li><strong>chore</strong> : initialisation du d&eacute;p&ocirc;t GitHub &mdash; structure de projet Next.js, configuration TypeScript strict, <code>.nvmrc</code> Node 22, <code>pnpm-workspace.yaml</code></li>
+      <li><strong>chore</strong> : initialisation du dépôt GitHub — structure de projet Next.js, configuration TypeScript strict, <code>.nvmrc</code> Node 22, <code>pnpm-workspace.yaml</code></li>
     </ul>
   </div>
 
   <div class="card" id="detail-themes">
-    <h2 class="section-title">D&eacute;tail par th&egrave;me (181 commits)</h2>
+    <h2 class="section-title">Détail par thème (181 commits)</h2>
     <div class="two-col">
       <div>
-        <p><strong>Infrastructure &amp; D&eacute;ploiement (35+ commits)</strong></p>
+        <p><strong>Infrastructure &amp; Déploiement (35+ commits)</strong></p>
         <ul class="list-tight">
           <li>Migration Railway (remplacement Docker/VPS)</li>
           <li>Configuration Nginx reverse-proxy + rate limiting</li>
           <li>Health check endpoints (<code>/api/health</code>)</li>
-          <li>Prisma client generation et v&eacute;rification Docker</li>
+          <li>Prisma client generation et vérification Docker</li>
           <li>Configuration GitHub Pages + workflows</li>
           <li>Grafana provisioning automatique (datasources + dashboards)</li>
         </ul>
@@ -297,182 +298,182 @@ import DocLayout from '../layouts/DocLayout.astro';
           <li>Erreurs TypeScript (types explicites, any → types)</li>
           <li>ESLint v9 (migration eslint.config.mjs flat config)</li>
           <li>pnpm / SWC binaries multi-plateforme (CI/CD)</li>
-          <li>Cl&eacute;s VAPID (g&eacute;n&eacute;ration automatique CI/CD)</li>
-          <li>Conflits de merge r&eacute;solus (15+ merges)</li>
+          <li>Clés VAPID (génération automatique CI/CD)</li>
+          <li>Conflits de merge résolus (15+ merges)</li>
           <li>Correction EBADPLATFORM lockfile Linux</li>
         </ul>
       </div>
       <div>
-        <p><strong>Nouvelles fonctionnalit&eacute;s (25+ commits)</strong></p>
+        <p><strong>Nouvelles fonctionnalités (25+ commits)</strong></p>
         <ul class="list-tight">
-          <li>Authentification compl&egrave;te (email, OAuth Google)</li>
-          <li>Messagerie temps r&eacute;el (WebSocket)</li>
+          <li>Authentification complète (email, OAuth Google)</li>
+          <li>Messagerie temps réel (WebSocket)</li>
           <li>Paiements Stripe (commissions 3,5 % + 0,50 €)</li>
           <li>Gestion des rendez-vous (calendrier, modales)</li>
-          <li>Recommandations IA + recherche g&eacute;ographique</li>
+          <li>Recommandations IA + recherche géographique</li>
           <li>Tableau de bord PRO + analytics</li>
           <li>Notifications push VAPID</li>
         </ul>
-        <p><strong>Tests &amp; Qualit&eacute; (10+ commits)</strong></p>
+        <p><strong>Tests &amp; Qualité (10+ commits)</strong></p>
         <ul class="list-tight">
           <li>Suite Jest (ts-jest) + Playwright E2E</li>
-          <li>Tests lazy-load, s&eacute;curit&eacute;, Redis cache</li>
+          <li>Tests lazy-load, sécurité, Redis cache</li>
           <li>Rapport lcov (<code>coverage/lcov-report/</code>)</li>
-          <li>Scan s&eacute;curit&eacute; SARIF (GitHub Code Scanning)</li>
-          <li>Audit accessibilit&eacute; axe-core/playwright</li>
+          <li>Scan sécurité SARIF (GitHub Code Scanning)</li>
+          <li>Audit accessibilité axe-core/playwright</li>
         </ul>
       </div>
     </div>
 
     <details>
-      <summary>Afficher la liste compl&egrave;te des commits s&eacute;lectionn&eacute;s</summary>
+      <summary>Afficher la liste complète des commits sélectionnés</summary>
       <ul class="list-tight">
-        <li><code>3d4a0d3</code> &mdash; 2026-03-06 &mdash; docs: version finale v1.0 &mdash; conformit&eacute; r&eacute;f&eacute;rentiel YNOV 2024 compl&egrave;te</li>
-        <li><code>a86055b</code> &mdash; 2025-09-21 &mdash; fix: Corriger les erreurs TypeScript pour le build Railway</li>
-        <li><code>68c6db1</code> &mdash; 2025-09-16 &mdash; chore: save for presentation</li>
-        <li><code>d23c439</code> &mdash; 2025-08-21 &mdash; fix: Prisma client generation and verification in Docker</li>
-        <li><code>488e559</code> &mdash; 2025-08-21 &mdash; fix: health check endpoints and Railway configuration</li>
-        <li><code>c59e0ae</code> &mdash; 2025-08-21 &mdash; fix: robust Docker startup with multiple fallback methods</li>
-        <li><code>6bf4e9c</code> &mdash; 2025-08-21 &mdash; fix: Docker runtime issues - fallback to traditional Next.js mode</li>
-        <li><code>58b94c0</code> &mdash; 2025-08-21 &mdash; fix: resolve Railway build issues - ESLint config and VAPID keys</li>
-        <li><code>d8e17b0</code> &mdash; 2025-08-21 &mdash; fix: Railway deployment configuration and add troubleshooting tools</li>
-        <li><code>4edbf98</code> &mdash; 2025-08-21 &mdash; fix: add proper typing for Prisma transaction parameter</li>
-        <li><code>a9ba38a</code> &mdash; 2025-08-21 &mdash; fix: add explicit types to resolve TypeScript errors in cancel route</li>
-        <li><code>a5e3581</code> &mdash; 2025-08-21 &mdash; cleanup: remove all GitHub Actions workflows for Railway migration</li>
-        <li><code>d6e6991</code> &mdash; 2025-08-21 &mdash; refactor: migrate from manual deployment to Railway</li>
-        <li><code>9643410</code> &mdash; 2025-08-21 &mdash; fix: resolve all build errors and TypeScript issues</li>
-        <li><code>7bea416</code> &mdash; 2025-08-21 &mdash; fix: Correction des erreurs Next.js 16 pour Railway</li>
-        <li><code>5ec1db4</code> &mdash; 2025-08-20 &mdash; feat: Configuration Docker fullstack compl&egrave;te</li>
-        <li><code>1ef03fe</code> &mdash; 2025-08-20 &mdash; fix: Correction des erreurs Next.js 16 et TypeScript</li>
-        <li><code>68dabf8</code> &mdash; 2025-08-20 &mdash; feat: Configuration compl&egrave;te GitHub Pages</li>
-        <li><code>f2b4e97</code> &mdash; 2025-08-20 &mdash; feat: Configuration du vrai d&eacute;ploiement GitHub avec URLs r&eacute;elles</li>
-        <li><code>aadedfb</code> &mdash; 2025-08-20 &mdash; ci: Restauration du workflow CI/CD original complet</li>
-        <li><code>9e89f08</code> &mdash; 2025-08-20 &mdash; ci: R&eacute;solution automatique VAPID pour CI/CD</li>
-        <li><code>da09660</code> &mdash; 2025-08-20 &mdash; feat: add GitHub secrets setup scripts</li>
-        <li><code>0f02c86</code> &mdash; 2025-08-20 &mdash; fix: resolve Stripe authentication error during build</li>
-        <li><code>ee995dd</code> &mdash; 2025-08-20 &mdash; fix: resolve all build errors - disable ESLint/TypeScript validation</li>
-        <li><code>55ced84</code> &mdash; 2025-08-20 &mdash; fix: temporarily disable tests due to SWC binding issues on Windows</li>
-        <li><code>29f116c</code> &mdash; 2025-08-20 &mdash; feat: add comprehensive CI/CD pipeline workflow</li>
-        <li><code>45ae16f</code> &mdash; 2025-08-20 &mdash; docs: clean up obsolete documentation and create comprehensive README</li>
-        <li><code>3bcf651</code> &mdash; 2025-08-20 &mdash; merge: integrate all fixes and improvements from test/ci-cd-pipeline</li>
-        <li><code>d8dac95</code> &mdash; 2025-08-20 &mdash; fix: initialize profile edit form with session data</li>
-        <li><code>b3e1f47</code> &mdash; 2025-08-20 &mdash; fix: restore deleted search.test.tsx file to prevent test regression</li>
-        <li><code>ada91b3</code> &mdash; 2025-08-20 &mdash; feat: add comprehensive appointment management system</li>
-        <li><code>dd678ef</code> &mdash; 2025-08-20 &mdash; chore: update configs, dependencies, UI components, docs, and styles</li>
-        <li><code>17d77e1</code> &mdash; 2025-08-20 &mdash; feat: add new APIs, pages, components, hooks (appointments, realtime, subscriptions)</li>
-        <li><code>6abae64</code> &mdash; 2025-08-16 &mdash; feat: major cleanup and new features implementation</li>
-        <li><code>336a84a</code> &mdash; 2025-08-16 &mdash; feat: add comprehensive E2E test suite for authentication and navigation</li>
-        <li><code>c8f39ff</code> &mdash; 2025-08-13 &mdash; feat: merge complet de toutes les branches cursor et feature</li>
-        <li><code>7903325</code> &mdash; 2025-08-13 &mdash; feat: uniformisation compl&egrave;te des branches et ajout des scripts de d&eacute;veloppement</li>
-        <li><code>6edb9c9</code> &mdash; 2025-08-12 &mdash; fix: resolve GitHub Container Registry permissions and Dockerfile ENV format</li>
-        <li><code>580cdff</code> &mdash; 2025-08-12 &mdash; feat: activate Docker build and staging deployment</li>
-        <li><code>b80ab48</code> &mdash; 2025-08-12 &mdash; fix: resolve SARIF upload conflicts and add code scanning setup guide</li>
-        <li><code>16c9cfc</code> &mdash; 2025-08-12 &mdash; fix: resolve Redis cache test failures</li>
-        <li><code>077ce58</code> &mdash; 2025-08-12 &mdash; fix: Remove macOS-specific SWC from package.json</li>
-        <li><code>4213713</code> &mdash; 2025-08-12 &mdash; fix: 100% tests passing - SWC binary, mocks Jest, security alerts</li>
-        <li><code>caf068d</code> &mdash; 2025-08-11 &mdash; test: Correction des tests lazy-load - tous les tests passent (21/21)</li>
-        <li><code>0a15925</code> &mdash; 2025-08-11 &mdash; test(ci): fix failing tests, enhance lazy-load components, search API</li>
-        <li><code>d4b0158</code> &mdash; 2025-08-11 &mdash; fix: change database config from inkspot_user to postgres for CI/CD</li>
-        <li><code>84049b0</code> &mdash; 2025-08-11 &mdash; fix: IntersectionObserver mock, isomorphic-dompurify import</li>
-        <li><code>bc1aaee</code> &mdash; 2025-08-11 &mdash; fix: CI/CD critical issues - duplicate dynamic exports, pnpm installation</li>
-        <li><code>ec2ecce</code> &mdash; 2025-08-11 &mdash; fix: major linting improvements - reduce errors from 1388+ to 519 (-62%)</li>
-        <li><code>44e76f2</code> &mdash; 2025-08-11 &mdash; fix: Configuration Jest corrig&eacute;e - moduleNameMapper, exclusion tests e2e</li>
-        <li><code>783e6fc</code> &mdash; 2025-08-11 &mdash; fix: Remplacement des types any par des types explicites (lib/utils.ts)</li>
-        <li><code>b07d000</code> &mdash; 2025-08-11 &mdash; fix: Remplacement des types any (lib/auth.ts, hooks/useWebSocket.ts)</li>
-        <li><code>46c59cb</code> &mdash; 2025-08-11 &mdash; fix: Migration vers ESLint v9 avec configuration moderne eslint.config.mjs</li>
-        <li><code>f4a7d19</code> &mdash; 2025-08-11 &mdash; fix: Correction compl&egrave;te du pipeline CI/CD et scan de s&eacute;curit&eacute;</li>
-        <li><code>2084a0e</code> &mdash; 2025-08-04 &mdash; test: implement comprehensive test coverage and E2E testing</li>
-        <li><code>ddce72b</code> &mdash; 2025-08-04 &mdash; perf: implement comprehensive performance optimization system</li>
-        <li><code>ed526ff</code> &mdash; 2025-08-04 &mdash; feat: implement comprehensive security hardening system</li>
-        <li><code>c374af9</code> &mdash; 2025-08-04 &mdash; docs: add comprehensive ticket management and update system</li>
-        <li><code>8be4478</code> &mdash; 2025-08-04 &mdash; refactor: clean up codebase and remove duplicates</li>
-        <li><code>c858569</code> &mdash; 2025-08-04 &mdash; ci: add complete CI/CD pipeline and deployment automation</li>
-        <li><code>7456fb3</code> &mdash; 2025-08-04 &mdash; feat: add comprehensive monitoring with Grafana, Prometheus, metrics</li>
-        <li><code>ea37556</code> &mdash; 2025-08-04 &mdash; feat: add financial features - payments, invoices, disputes, pro dashboard</li>
-        <li><code>43e8799</code> &mdash; 2025-08-04 &mdash; feat: add comprehensive PRO user management features</li>
-        <li><code>1f40a39</code> &mdash; 2025-08-04 &mdash; feat: implement real-time messaging with WebSocket</li>
-        <li><code>0e9a19e</code> &mdash; 2025-08-04 &mdash; feat: add AI-powered recommendations with advanced search and geographic features</li>
-        <li><code>5ef8d97</code> &mdash; 2025-08-04 &mdash; feat: complete authentication system with email verification and password reset</li>
-        <li><code>95c54d9</code> &mdash; 2025-08-04 &mdash; refactor: Zustand stores, hooks, improved state management</li>
-        <li><code>bbc14e6</code> &mdash; 2025-07-30 &mdash; feat: complete INKSPOT-5z platform development</li>
-        <li><code>68f215e</code> &mdash; 2025-07-30 &mdash; feat: enhance frontend UI and user experience</li>
-        <li><code>6abfbc0</code> &mdash; 2025-07-30 &mdash; feat: enhance APIs, security, and database integration</li>
-        <li><code>f0cefda</code> &mdash; 2025-07-30 &mdash; feat: add advanced UI components and post creation</li>
-        <li><code>1ca03ed</code> &mdash; 2025-07-30 &mdash; feat: implement core API endpoints</li>
-        <li><code>3072ddc</code> &mdash; 2025-07-30 &mdash; test: add comprehensive test suite</li>
-        <li><code>56e8b01</code> &mdash; 2025-07-28 &mdash; merge: Merge feature/profile-system into dev</li>
-        <li><code>13d7129</code> &mdash; 2025-07-28 &mdash; merge: Merge feature/authentication-system into dev</li>
-        <li><code>14af164</code> &mdash; 2025-07-27 &mdash; feat: Implement comprehensive profile page with editing, stats, and settings</li>
-        <li><code>3c8401c</code> &mdash; 2025-07-26 &mdash; feat: implement profile system</li>
-        <li><code>fa886a2</code> &mdash; 2025-07-26 &mdash; feat: implement authentication system</li>
-        <li><code>e34b4ce</code> &mdash; 2025-07-26 &mdash; feat: complete project setup and authentication system</li>
-        <li><code>4a5d3b3</code> &mdash; 2025-07-15 &mdash; chore: Initialized repository for project Social media app</li>
+        <li><code>3d4a0d3</code> — 2026-03-06 — docs: version finale v1.0 — conformité référentiel YNOV 2024 complète</li>
+        <li><code>a86055b</code> — 2025-09-21 — fix: Corriger les erreurs TypeScript pour le build Railway</li>
+        <li><code>68c6db1</code> — 2025-09-16 — chore: save for presentation</li>
+        <li><code>d23c439</code> — 2025-08-21 — fix: Prisma client generation and verification in Docker</li>
+        <li><code>488e559</code> — 2025-08-21 — fix: health check endpoints and Railway configuration</li>
+        <li><code>c59e0ae</code> — 2025-08-21 — fix: robust Docker startup with multiple fallback methods</li>
+        <li><code>6bf4e9c</code> — 2025-08-21 — fix: Docker runtime issues - fallback to traditional Next.js mode</li>
+        <li><code>58b94c0</code> — 2025-08-21 — fix: resolve Railway build issues - ESLint config and VAPID keys</li>
+        <li><code>d8e17b0</code> — 2025-08-21 — fix: Railway deployment configuration and add troubleshooting tools</li>
+        <li><code>4edbf98</code> — 2025-08-21 — fix: add proper typing for Prisma transaction parameter</li>
+        <li><code>a9ba38a</code> — 2025-08-21 — fix: add explicit types to resolve TypeScript errors in cancel route</li>
+        <li><code>a5e3581</code> — 2025-08-21 — cleanup: remove all GitHub Actions workflows for Railway migration</li>
+        <li><code>d6e6991</code> — 2025-08-21 — refactor: migrate from manual deployment to Railway</li>
+        <li><code>9643410</code> — 2025-08-21 — fix: resolve all build errors and TypeScript issues</li>
+        <li><code>7bea416</code> — 2025-08-21 — fix: Correction des erreurs Next.js 16 pour Railway</li>
+        <li><code>5ec1db4</code> — 2025-08-20 — feat: Configuration Docker fullstack complète</li>
+        <li><code>1ef03fe</code> — 2025-08-20 — fix: Correction des erreurs Next.js 16 et TypeScript</li>
+        <li><code>68dabf8</code> — 2025-08-20 — feat: Configuration complète GitHub Pages</li>
+        <li><code>f2b4e97</code> — 2025-08-20 — feat: Configuration du vrai déploiement GitHub avec URLs réelles</li>
+        <li><code>aadedfb</code> — 2025-08-20 — ci: Restauration du workflow CI/CD original complet</li>
+        <li><code>9e89f08</code> — 2025-08-20 — ci: Résolution automatique VAPID pour CI/CD</li>
+        <li><code>da09660</code> — 2025-08-20 — feat: add GitHub secrets setup scripts</li>
+        <li><code>0f02c86</code> — 2025-08-20 — fix: resolve Stripe authentication error during build</li>
+        <li><code>ee995dd</code> — 2025-08-20 — fix: resolve all build errors - disable ESLint/TypeScript validation</li>
+        <li><code>55ced84</code> — 2025-08-20 — fix: temporarily disable tests due to SWC binding issues on Windows</li>
+        <li><code>29f116c</code> — 2025-08-20 — feat: add comprehensive CI/CD pipeline workflow</li>
+        <li><code>45ae16f</code> — 2025-08-20 — docs: clean up obsolete documentation and create comprehensive README</li>
+        <li><code>3bcf651</code> — 2025-08-20 — merge: integrate all fixes and improvements from test/ci-cd-pipeline</li>
+        <li><code>d8dac95</code> — 2025-08-20 — fix: initialize profile edit form with session data</li>
+        <li><code>b3e1f47</code> — 2025-08-20 — fix: restore deleted search.test.tsx file to prevent test regression</li>
+        <li><code>ada91b3</code> — 2025-08-20 — feat: add comprehensive appointment management system</li>
+        <li><code>dd678ef</code> — 2025-08-20 — chore: update configs, dependencies, UI components, docs, and styles</li>
+        <li><code>17d77e1</code> — 2025-08-20 — feat: add new APIs, pages, components, hooks (appointments, realtime, subscriptions)</li>
+        <li><code>6abae64</code> — 2025-08-16 — feat: major cleanup and new features implementation</li>
+        <li><code>336a84a</code> — 2025-08-16 — feat: add comprehensive E2E test suite for authentication and navigation</li>
+        <li><code>c8f39ff</code> — 2025-08-13 — feat: merge complet de toutes les branches cursor et feature</li>
+        <li><code>7903325</code> — 2025-08-13 — feat: uniformisation complète des branches et ajout des scripts de développement</li>
+        <li><code>6edb9c9</code> — 2025-08-12 — fix: resolve GitHub Container Registry permissions and Dockerfile ENV format</li>
+        <li><code>580cdff</code> — 2025-08-12 — feat: activate Docker build and staging deployment</li>
+        <li><code>b80ab48</code> — 2025-08-12 — fix: resolve SARIF upload conflicts and add code scanning setup guide</li>
+        <li><code>16c9cfc</code> — 2025-08-12 — fix: resolve Redis cache test failures</li>
+        <li><code>077ce58</code> — 2025-08-12 — fix: Remove macOS-specific SWC from package.json</li>
+        <li><code>4213713</code> — 2025-08-12 — fix: 100% tests passing - SWC binary, mocks Jest, security alerts</li>
+        <li><code>caf068d</code> — 2025-08-11 — test: Correction des tests lazy-load - tous les tests passent (21/21)</li>
+        <li><code>0a15925</code> — 2025-08-11 — test(ci): fix failing tests, enhance lazy-load components, search API</li>
+        <li><code>d4b0158</code> — 2025-08-11 — fix: change database config from inkspot_user to postgres for CI/CD</li>
+        <li><code>84049b0</code> — 2025-08-11 — fix: IntersectionObserver mock, isomorphic-dompurify import</li>
+        <li><code>bc1aaee</code> — 2025-08-11 — fix: CI/CD critical issues - duplicate dynamic exports, pnpm installation</li>
+        <li><code>ec2ecce</code> — 2025-08-11 — fix: major linting improvements - reduce errors from 1388+ to 519 (-62%)</li>
+        <li><code>44e76f2</code> — 2025-08-11 — fix: Configuration Jest corrigée - moduleNameMapper, exclusion tests e2e</li>
+        <li><code>783e6fc</code> — 2025-08-11 — fix: Remplacement des types any par des types explicites (lib/utils.ts)</li>
+        <li><code>b07d000</code> — 2025-08-11 — fix: Remplacement des types any (lib/auth.ts, hooks/useWebSocket.ts)</li>
+        <li><code>46c59cb</code> — 2025-08-11 — fix: Migration vers ESLint v9 avec configuration moderne eslint.config.mjs</li>
+        <li><code>f4a7d19</code> — 2025-08-11 — fix: Correction complète du pipeline CI/CD et scan de sécurité</li>
+        <li><code>2084a0e</code> — 2025-08-04 — test: implement comprehensive test coverage and E2E testing</li>
+        <li><code>ddce72b</code> — 2025-08-04 — perf: implement comprehensive performance optimization system</li>
+        <li><code>ed526ff</code> — 2025-08-04 — feat: implement comprehensive security hardening system</li>
+        <li><code>c374af9</code> — 2025-08-04 — docs: add comprehensive ticket management and update system</li>
+        <li><code>8be4478</code> — 2025-08-04 — refactor: clean up codebase and remove duplicates</li>
+        <li><code>c858569</code> — 2025-08-04 — ci: add complete CI/CD pipeline and deployment automation</li>
+        <li><code>7456fb3</code> — 2025-08-04 — feat: add comprehensive monitoring with Grafana, Prometheus, metrics</li>
+        <li><code>ea37556</code> — 2025-08-04 — feat: add financial features - payments, invoices, disputes, pro dashboard</li>
+        <li><code>43e8799</code> — 2025-08-04 — feat: add comprehensive PRO user management features</li>
+        <li><code>1f40a39</code> — 2025-08-04 — feat: implement real-time messaging with WebSocket</li>
+        <li><code>0e9a19e</code> — 2025-08-04 — feat: add AI-powered recommendations with advanced search and geographic features</li>
+        <li><code>5ef8d97</code> — 2025-08-04 — feat: complete authentication system with email verification and password reset</li>
+        <li><code>95c54d9</code> — 2025-08-04 — refactor: Zustand stores, hooks, improved state management</li>
+        <li><code>bbc14e6</code> — 2025-07-30 — feat: complete INKSPOT-5z platform development</li>
+        <li><code>68f215e</code> — 2025-07-30 — feat: enhance frontend UI and user experience</li>
+        <li><code>6abfbc0</code> — 2025-07-30 — feat: enhance APIs, security, and database integration</li>
+        <li><code>f0cefda</code> — 2025-07-30 — feat: add advanced UI components and post creation</li>
+        <li><code>1ca03ed</code> — 2025-07-30 — feat: implement core API endpoints</li>
+        <li><code>3072ddc</code> — 2025-07-30 — test: add comprehensive test suite</li>
+        <li><code>56e8b01</code> — 2025-07-28 — merge: Merge feature/profile-system into dev</li>
+        <li><code>13d7129</code> — 2025-07-28 — merge: Merge feature/authentication-system into dev</li>
+        <li><code>14af164</code> — 2025-07-27 — feat: Implement comprehensive profile page with editing, stats, and settings</li>
+        <li><code>3c8401c</code> — 2025-07-26 — feat: implement profile system</li>
+        <li><code>fa886a2</code> — 2025-07-26 — feat: implement authentication system</li>
+        <li><code>e34b4ce</code> — 2025-07-26 — feat: complete project setup and authentication system</li>
+        <li><code>4a5d3b3</code> — 2025-07-15 — chore: Initialized repository for project Social media app</li>
       </ul>
     </details>
   </div>
 
   <div class="card" id="ecarts-conformite">
-    <h2 class="section-title">Conformit&eacute; r&eacute;f&eacute;rentiel (bloc 2)</h2>
+    <h2 class="section-title">Conformité référentiel (bloc 2)</h2>
     <div class="callout callout-success" style="border-left:4px solid #2ea043;background:rgba(46,160,67,0.08);">
-      <strong>Statut au 6 mars 2026 :</strong> Tous les crit&egrave;res du bloc 2 sont satisfaits pour la livraison v1.0.
+      <strong>Statut au 6 mars 2026 :</strong> Tous les critères du bloc 2 sont satisfaits pour la livraison v1.0.
     </div>
-    <table role="grid" aria-label="Conformit&eacute; r&eacute;f&eacute;rentiel bloc 2">
+    <table role="grid" aria-label="Conformité référentiel bloc 2">
       <thead>
         <tr>
-          <th scope="col">Crit&egrave;re</th>
+          <th scope="col">Critère</th>
           <th scope="col">Description</th>
           <th scope="col">Statut</th>
-          <th scope="col">Document de r&eacute;f&eacute;rence</th>
+          <th scope="col">Document de référence</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><strong>CO2.4</strong></td>
-          <td>Harnais de tests, couverture, pr&eacute;vention des r&eacute;gressions</td>
+          <td>Harnais de tests, couverture, prévention des régressions</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>Jest (ts-jest) op&eacute;rationnel &mdash; <code>pnpm test:coverage</code> g&eacute;n&egrave;re le rapport lcov. 341 tests passants, couverture 50,6 % sur modules critiques. E2E Playwright : 4 suites ex&eacute;cut&eacute;es.</td>
+          <td>Jest (ts-jest) opérationnel — <code>pnpm test:coverage</code> génère le rapport lcov. 341 tests passants, couverture 50,6 % sur modules critiques. E2E Playwright : 4 suites exécutées.</td>
         </tr>
         <tr>
           <td><strong>CO2.5</strong></td>
-          <td>&Eacute;volutivit&eacute;, s&eacute;curit&eacute;, accessibilit&eacute;, exigences techniques</td>
+          <td>Évolutivité, sécurité, accessibilité, exigences techniques</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>OWASP Top 10 couvert (MUT), RGAA 4.1 / WCAG 2.1 AA audit&eacute; (axe-core/playwright), violation critique corrig&eacute;e, Redis cache, architecture modulaire.</td>
+          <td>OWASP Top 10 couvert (MUT), RGAA 4.1 / WCAG 2.1 AA audité (axe-core/playwright), violation critique corrigée, Redis cache, architecture modulaire.</td>
         </tr>
         <tr>
           <td><strong>CO2.7</strong></td>
           <td>Cahier de recette complet</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>24 sc&eacute;narios, 100 % pass apr&egrave;s corrections, sign-off QA Lead 24/02/2026, synth&egrave;se finale validation 06/03/2026.</td>
+          <td>24 scénarios, 100 % pass après corrections, sign-off QA Lead 24/02/2026, synthèse finale validation 06/03/2026.</td>
         </tr>
         <tr>
           <td><strong>C2.1.1</strong></td>
-          <td>Environnements de d&eacute;veloppement et d&eacute;ploiement continu</td>
+          <td>Environnements de développement et déploiement continu</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>3 environnements : dev (local), staging (Railway Preview), production (Railway). Pipeline automatis&eacute; git push → build → deploy.</td>
+          <td>3 environnements : dev (local), staging (Railway Preview), production (Railway). Pipeline automatisé git push → build → deploy.</td>
         </tr>
         <tr>
           <td><strong>C2.1.2</strong></td>
-          <td>Configuration du syst&egrave;me d'int&eacute;gration continue</td>
+          <td>Configuration du système d'intégration continue</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>GitHub Actions : jobs quality, build, security. D&eacute;clenchement sur push/PR branches dev et main.</td>
+          <td>GitHub Actions : jobs quality, build, security. Déclenchement sur push/PR branches dev et main.</td>
         </tr>
         <tr>
           <td><strong>C2.3.2</strong></td>
           <td>Plan de correction des bogues</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>Anomalies REC-001, REC-002, REC-003 document&eacute;es avec s&eacute;v&eacute;rit&eacute;, plan de correction dat&eacute;, statut de r&eacute;solution.</td>
+          <td>Anomalies REC-001, REC-002, REC-003 documentées avec sévérité, plan de correction daté, statut de résolution.</td>
         </tr>
         <tr>
           <td><strong>C2.4.1</strong></td>
-          <td>Manuel de mise &agrave; jour</td>
+          <td>Manuel de mise à jour</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>Manuel de Mise &agrave; Jour v1.1 &mdash; proc&eacute;dures pnpm, migrations Prisma, SemVer, workflow Git, DevOps.</td>
+          <td>Manuel de Mise à Jour v1.1 — procédures pnpm, migrations Prisma, SemVer, workflow Git, DevOps.</td>
         </tr>
         <tr>
           <td><strong>C4.3.2</strong></td>
-          <td>Journal des versions d&eacute;ploy&eacute;es</td>
+          <td>Journal des versions déployées</td>
           <td><span class="pill badge-success">Satisfait</span></td>
-          <td>Ce document &mdash; 181 commits trac&eacute;s, versions v0.0.1 &agrave; v1.0.0 d&eacute;taill&eacute;es par fonctionnalit&eacute;, correctif et am&eacute;lioration.</td>
+          <td>Ce document — 181 commits tracés, versions v0.0.1 à v1.0.0 détaillées par fonctionnalité, correctif et amélioration.</td>
         </tr>
       </tbody>
     </table>
@@ -480,39 +481,39 @@ import DocLayout from '../layouts/DocLayout.astro';
 
   <div class="card" id="roadmap">
     <h2 class="section-title">Roadmap post-v1.0</h2>
-    <p>Les &eacute;volutions suivantes sont planifi&eacute;es pour les versions futures de la plateforme INKSPOT, apr&egrave;s la livraison acad&eacute;mique v1.0 du 6 mars 2026.</p>
+    <p>Les évolutions suivantes sont planifiées pour les versions futures de la plateforme INKSPOT, après la livraison académique v1.0 du 6 mars 2026.</p>
     <table role="grid" aria-label="Roadmap post-v1.0">
       <thead>
         <tr>
           <th scope="col">Version cible</th>
-          <th scope="col">Fonctionnalit&eacute;</th>
-          <th scope="col">Priorit&eacute;</th>
+          <th scope="col">Fonctionnalité</th>
+          <th scope="col">Priorité</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><strong>v1.1.0</strong></td>
-          <td>Abonnements premium &mdash; Stripe Billing, fonctionnalit&eacute;s avanc&eacute;es pour les artistes PRO (mise en avant du profil, analytics d&eacute;taill&eacute;es, portfolio &eacute;tendu)</td>
+          <td>Abonnements premium — Stripe Billing, fonctionnalités avancées pour les artistes PRO (mise en avant du profil, analytics détaillées, portfolio étendu)</td>
           <td><span class="pill badge-danger">Haute</span></td>
         </tr>
         <tr>
           <td><strong>v1.2.0</strong></td>
-          <td>Application mobile React Native &mdash; r&eacute;utilisation de l'API REST existante, notifications push natives, exp&eacute;rience mobile optimis&eacute;e</td>
+          <td>Application mobile React Native — réutilisation de l'API REST existante, notifications push natives, expérience mobile optimisée</td>
           <td><span class="pill badge-danger">Haute</span></td>
         </tr>
         <tr>
           <td><strong>v1.3.0</strong></td>
-          <td>Internationalisation (i18n) &mdash; support anglais/espagnol/allemand via next-intl, adaptation des formats de date et devise</td>
+          <td>Internationalisation (i18n) — support anglais/espagnol/allemand via next-intl, adaptation des formats de date et devise</td>
           <td><span class="pill badge-neutral">Moyenne</span></td>
         </tr>
         <tr>
           <td><strong>v1.4.0</strong></td>
-          <td>Stripe Connect &mdash; virements directs aux artistes, gestion des comptes marchands, tableaux de bord financiers avanc&eacute;s</td>
+          <td>Stripe Connect — virements directs aux artistes, gestion des comptes marchands, tableaux de bord financiers avancés</td>
           <td><span class="pill badge-neutral">Moyenne</span></td>
         </tr>
         <tr>
           <td><strong>v2.0.0</strong></td>
-          <td>Marketplace d'art num&eacute;rique &mdash; vente de cr&eacute;ations digitales (NFT ou prints), syst&egrave;me de licences, galerie virtuelle</td>
+          <td>Marketplace d'art numérique — vente de créations digitales (NFT ou prints), système de licences, galerie virtuelle</td>
           <td><span class="pill">Basse</span></td>
         </tr>
       </tbody>
@@ -523,21 +524,21 @@ import DocLayout from '../layouts/DocLayout.astro';
     <h2 class="section-title">Table des sections</h2>
     <p>Index des sections de ce changelog :</p>
     <table role="grid" aria-label="Sections du changelog">
-      <thead><tr><th scope="col">Section</th><th scope="col">Pr&eacute;sent</th><th scope="col">Emplacement</th></tr></thead>
+      <thead><tr><th scope="col">Section</th><th scope="col">Présent</th><th scope="col">Emplacement</th></tr></thead>
       <tbody>
-        <tr><td>Informations du document (m&eacute;tadonn&eacute;es, historique versions du document)</td><td>Oui</td><td><a href="#infos-document">#infos-document</a></td></tr>
-        <tr><td>Format recommand&eacute; &amp; convention (Conventional Commits, types, scopes)</td><td>Oui</td><td><a href="#format-convention">#format-convention</a></td></tr>
+        <tr><td>Informations du document (métadonnées, historique versions du document)</td><td>Oui</td><td><a href="#infos-document">#infos-document</a></td></tr>
+        <tr><td>Format recommandé &amp; convention (Conventional Commits, types, scopes)</td><td>Oui</td><td><a href="#format-convention">#format-convention</a></td></tr>
         <tr><td>Journal des versions C4.3.2 (tableau v0.0.1 → v1.0.0)</td><td>Oui</td><td><a href="#historique-git">#historique-git</a></td></tr>
-        <tr><td>D&eacute;tail des versions (v0.1 → v1.0, feat/fix/refactor par version)</td><td>Oui</td><td><a href="#detail-versions">#detail-versions</a></td></tr>
-        <tr><td>D&eacute;tail par th&egrave;me (Infrastructure, Corrections, Fonctionnalit&eacute;s, Tests)</td><td>Oui</td><td><a href="#detail-themes">#detail-themes</a></td></tr>
-        <tr><td>Conformit&eacute; r&eacute;f&eacute;rentiel bloc 2 (CO2.4, CO2.5, CO2.7, C2.1.1, C2.1.2, C2.3.2, C2.4.1, C4.3.2)</td><td>Oui</td><td><a href="#ecarts-conformite">#ecarts-conformite</a></td></tr>
+        <tr><td>Détail des versions (v0.1 → v1.0, feat/fix/refactor par version)</td><td>Oui</td><td><a href="#detail-versions">#detail-versions</a></td></tr>
+        <tr><td>Détail par thème (Infrastructure, Corrections, Fonctionnalités, Tests)</td><td>Oui</td><td><a href="#detail-themes">#detail-themes</a></td></tr>
+        <tr><td>Conformité référentiel bloc 2 (CO2.4, CO2.5, CO2.7, C2.1.1, C2.1.2, C2.3.2, C2.4.1, C4.3.2)</td><td>Oui</td><td><a href="#ecarts-conformite">#ecarts-conformite</a></td></tr>
         <tr><td>Roadmap post-v1.0 (v1.1 → v2.0)</td><td>Oui</td><td><a href="#roadmap">#roadmap</a></td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="card" id="reference-changelog">
-    <h2 class="section-title">R&eacute;f&eacute;rence document</h2>
-    <p><strong>Rapport d'&eacute;volution INKSPOT-5z &ndash; Historique complet.</strong> Ce document constitue le livrable officiel du changelog INKSPOT (crit&egrave;re C4.3.2 du r&eacute;f&eacute;rentiel YNOV 2024), compl&eacute;t&eacute; par l'historique Git complet et la timeline de d&eacute;veloppement du projet du 15 juillet 2025 au 6 mars 2026.</p>
+    <h2 class="section-title">Référence document</h2>
+    <p><strong>Rapport d'évolution INKSPOT-5z – Historique complet.</strong> Ce document constitue le livrable officiel du changelog INKSPOT (critère C4.3.2 du référentiel YNOV 2024), complété par l'historique Git complet et la timeline de développement du projet du 15 juillet 2025 au 6 mars 2026.</p>
   </div>
 </DocLayout>

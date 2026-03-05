@@ -8,8 +8,8 @@ import fs from 'node:fs';
 
 const pages = [
   { slug: 'mut', title: 'Manuel-Utilisation-Technique', label: 'MUT' },
-  { slug: 'deploiement-railway', title: 'Manuel-Deploiement-Railway', label: 'D&eacute;ploiement Railway' },
-  { slug: 'manuel-mise-a-jour', title: 'Manuel-Mise-a-Jour', label: 'Mise &agrave; Jour' },
+  { slug: 'deploiement-railway', title: 'Manuel-Deploiement-Railway', label: 'Déploiement Railway' },
+  { slug: 'manuel-mise-a-jour', title: 'Manuel-Mise-a-Jour', label: 'Mise à Jour' },
   { slug: 'cahier-recette', title: 'Cahier-de-Recette', label: 'Cahier de recette' },
   { slug: 'changelog', title: 'Changelog', label: 'Changelog' },
 ];
@@ -73,7 +73,7 @@ async function exportAll() {
     console.log(`→ Export ${url} (charte INKSPOT)`);
     await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
     await wait(800);
-    // Charte INKSPOT + masquer navbar + forcer bordures des tableaux
+    // Charte INKSPOT + masquer navbar + forcer bordures + police UTF-8 pour le français
     await page.evaluate(() => {
       document.body.classList.add('charte-inkspot');
       const header = document.querySelector('header.doc-header-pdf, header');
@@ -83,6 +83,7 @@ async function exportAll() {
       style.textContent = `
         table { border: 2px solid #0f172a !important; border-collapse: collapse !important; }
         table th, table td { border: 2px solid #0f172a !important; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important; }
       `;
       document.head.appendChild(style);
     });

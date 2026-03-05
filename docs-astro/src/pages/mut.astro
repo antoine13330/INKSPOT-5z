@@ -6,18 +6,18 @@ import DocLayout from '../layouts/DocLayout.astro';
 
   <div class="card" id="infos-document">
     <h2 class="section-title">Informations du document</h2>
-    <table role="grid" aria-label="M&eacute;tadonn&eacute;es du manuel">
-      <thead><tr><th scope="col">&Eacute;l&eacute;ment</th><th scope="col">Valeur</th></tr></thead>
+    <table role="grid" aria-label="Métadonnées du manuel">
+      <thead><tr><th scope="col">Élément</th><th scope="col">Valeur</th></tr></thead>
       <tbody>
-        <tr><td><strong>Num&eacute;ro de document</strong></td><td>MUT-INKSPOT-2026-001</td></tr>
-        <tr><td><strong>Titre</strong></td><td>INKSPOT &ndash; Manuel d’Utilisation Technique</td></tr>
-        <tr><td><strong>Version</strong></td><td>1.2</td></tr>
+        <tr><td><strong>Numéro de document</strong></td><td>MUT-INKSPOT-2026-001</td></tr>
+        <tr><td><strong>Titre</strong></td><td>INKSPOT – Manuel d’Utilisation Technique</td></tr>
+        <tr><td><strong>Version</strong></td><td>1.3</td></tr>
         <tr><td><strong>Date</strong></td><td>6 mars 2026</td></tr>
-        <tr><td><strong>Contenu</strong></td><td>Chapitres 1&ndash;6, annexes A&ndash;H, r&eacute;f&eacute;rence technique</td></tr>
-        <tr><td><strong>R&eacute;f&eacute;rentiel (validation Master)</strong></td><td>YNOV 2024 &ndash; Crit&egrave;res CO2.4 (tests &amp; couverture), CO2.5 (exigences techniques, s&eacute;curit&eacute;, accessibilit&eacute;, &eacute;volutivit&eacute;)</td></tr>
+        <tr><td><strong>Contenu</strong></td><td>Chapitres 1–6, annexes A–H, référence technique</td></tr>
+        <tr><td><strong>Référentiel (validation Master)</strong></td><td>YNOV 2024 – Critères CO2.4 (tests &amp; couverture), CO2.5 (exigences techniques, sécurité, accessibilité, évolutivité)</td></tr>
         <tr><td><strong>Plateforme</strong></td><td>Web Full Stack &amp; Mobile First</td></tr>
         <tr><td><strong>Technologies</strong></td><td>Next.js, TypeScript, Railway, PostgreSQL, Prisma</td></tr>
-        <tr><td><strong>R&eacute;dacteur / Responsable</strong></td><td>Document r&eacute;dig&eacute; par l’&eacute;quipe projet INKSPOT ; r&eacute;dacteur : DESPRES Antoine</td></tr>
+        <tr><td><strong>Rédacteur / Responsable</strong></td><td>Document rédigé par l’équipe projet INKSPOT ; rédacteur : DESPRES Antoine</td></tr>
       </tbody>
     </table>
     <p><strong>Historique des versions</strong></p>
@@ -31,82 +31,95 @@ import DocLayout from '../layouts/DocLayout.astro';
         </tr>
       </thead>
       <tbody>
-        <tr><td>1.0</td><td>Mars 2026</td><td>Version initiale &mdash; stack, architecture, flux, API, tests, s&eacute;curit&eacute;, accessibilit&eacute;, annexes A&ndash;H</td><td>DESPRES Antoine</td></tr>
-        <tr><td>1.1</td><td>28 f&eacute;vrier 2026</td><td>Ajout OWASP Top 10, RGAA 4.1, manuel de mise &agrave; jour (C2.4.1)</td><td>DESPRES Antoine</td></tr>
-        <tr><td>1.2</td><td>6 mars 2026</td><td>Correction npm→pnpm, Next.js 16, ajout diagramme architecture ASCII, justification choix technologiques, conclusion technique, annexes A&ndash;H enrichies &mdash; version finale de livraison</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.0</td><td>Mars 2026</td><td>Version initiale — stack, architecture, flux, API, tests, sécurité, accessibilité, annexes A–H</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.1</td><td>28 février 2026</td><td>Ajout OWASP Top 10, RGAA 4.1, manuel de mise à jour (C2.4.1)</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.2</td><td>6 mars 2026</td><td>Correction npm→pnpm, Next.js 16, ajout diagramme architecture ASCII, justification choix technologiques, conclusion technique, annexes A–H enrichies</td><td>DESPRES Antoine</td></tr>
+        <tr><td>1.3</td><td>6 mars 2026</td><td>Correction encodage UTF-8 final — version finale de livraison</td><td>DESPRES Antoine</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="card" id="conformite-referentiel-mut">
-    <h2 class="section-title">Conformit&eacute; r&eacute;f&eacute;rentiel (validation Master)</h2>
-    <p>Ce manuel couvre les crit&egrave;res du bloc 2 (r&eacute;f&eacute;rentiel YNOV 2024) attendus pour le livrable « Manuel d’utilisation technique » :</p>
-    <table role="grid" aria-label="Correspondance crit&egrave;res Master et sections MUT">
-      <thead><tr><th scope="col">Crit&egrave;re</th><th scope="col">Attendu</th><th scope="col">Section(s) de ce manuel</th></tr></thead>
+    <h2 class="section-title">Conformité référentiel (validation Master)</h2>
+    <p>Ce manuel couvre les critères du bloc 2 (référentiel YNOV 2024) attendus pour le livrable « Manuel d’utilisation technique » :</p>
+    <table role="grid" aria-label="Correspondance critères Master et sections MUT">
+      <thead><tr><th scope="col">Critère</th><th scope="col">Attendu</th><th scope="col">Section(s) de ce manuel</th></tr></thead>
       <tbody>
         <tr>
           <td><strong>CO2.4</strong></td>
-          <td>Harnais de tests, couverture, pr&eacute;vention des r&eacute;gressions</td>
-          <td><a href="#tests">Tests &amp; couverture (CO2.4)</a> &mdash; Jest, Playwright, suites unitaires/E2E, coverage, modules critiques (Auth, R&eacute;servations, Paiement, Notifications). M&eacute;thodologie de test (section 5.b).</td>
+          <td>Harnais de tests, couverture, prévention des régressions</td>
+          <td><a href="#tests">Tests &amp; couverture (CO2.4)</a> — Jest, Playwright, suites unitaires/E2E, coverage, modules critiques (Auth, Réservations, Paiement, Notifications). Méthodologie de test (section 5.b).</td>
         </tr>
         <tr>
           <td><strong>CO2.5</strong></td>
-          <td>&Eacute;volutivit&eacute;, s&eacute;curit&eacute;, accessibilit&eacute;, exigences techniques</td>
-          <td><a href="#exigences">Exigences techniques &amp; fonctionnelles (CO2.5)</a>, <a href="#securite">S&eacute;curit&eacute;</a> (webhooks Stripe, validation zod, rate-limit, secrets, auth), <a href="#accessibilite">Accessibilit&eacute; (CO2.5)</a> (checklist ARIA, focus, clavier, contrastes), <a href="#evolutivite">&Eacute;volutivit&eacute; &amp; maintenabilit&eacute;</a> (Prisma, Redis, modules).</td>
+          <td>Évolutivité, sécurité, accessibilité, exigences techniques</td>
+          <td><a href="#exigences">Exigences techniques &amp; fonctionnelles (CO2.5)</a>, <a href="#securite">Sécurité</a> (webhooks Stripe, validation zod, rate-limit, secrets, auth), <a href="#accessibilite">Accessibilité (CO2.5)</a> (checklist ARIA, focus, clavier, contrastes), <a href="#evolutivite">Évolutivité &amp; maintenabilité</a> (Prisma, Redis, modules).</td>
         </tr>
       </tbody>
     </table>
-    <p>Le livrable « Cahier de recette » (crit&egrave;re CO2.7) est trait&eacute; dans le document d&eacute;di&eacute; : <a href="/cahier-recette">Cahier de Recette</a>.</p>
+    <p>Le livrable « Cahier de recette » (critère CO2.7) est traité dans le document dédié : <a href="/cahier-recette">Cahier de Recette</a>.</p>
   </div>
 
   <div class="card" id="resume-executif">
-    <h2 class="section-title">R&eacute;sum&eacute; ex&eacute;cutif</h2>
+    <h2 class="section-title">Résumé exécutif</h2>
     <p>Contenu couvert :</p>
     <ul class="list-tight">
-      <li><strong>Document (chapitres 1&ndash;6)</strong> : Introduction (pr&eacute;sentation INKSPOT, vision, pour qui, approche technique, philosophie), stack technique, d&eacute;pendances (scripts, principales, proc&eacute;dure de gestion), syst&egrave;me de supervision (m&eacute;triques, statuts, indicateurs), maintenance et &eacute;volution (CI/CD, m&eacute;thodologie de test, m&eacute;thodologie GitHub), mod&egrave;le &eacute;conomique et fonctionnalit&eacute;s (commissions 3,5 % + 0,50 €, paiements Stripe), conclusion.</li>
-      <li><strong>Annexes A &agrave; H</strong> : architecture stack, flux auth, monitoring, gestion des d&eacute;pendances, CI/CD, supervision d&eacute;taill&eacute;e, paiements &amp; commissions, fonctionnalit&eacute;s &amp; workflows.</li>
-      <li><strong>R&eacute;f&eacute;rence technique rapide</strong> : architecture &amp; modules, flux de donn&eacute;es, API principales, r&ocirc;les &amp; permissions, parcours fonctionnels, exigences, donn&eacute;es &amp; int&eacute;grit&eacute;, configuration, tests &amp; couverture (CO2.4), s&eacute;curit&eacute;, accessibilit&eacute; (CO2.5), &eacute;volutivit&eacute;, monitoring, exploitation, d&eacute;pannage.</li>
+      <li><strong>Document (chapitres 1–6)</strong> : Introduction (présentation INKSPOT, vision, pour qui, approche technique, philosophie), stack technique, dépendances (scripts, principales, procédure de gestion), système de supervision (métriques, statuts, indicateurs), maintenance et évolution (CI/CD, méthodologie de test, méthodologie GitHub), modèle économique et fonctionnalités (commissions 3,5 % + 0,50 €, paiements Stripe), conclusion.</li>
+      <li><strong>Annexes A à H</strong> : architecture stack, flux auth, monitoring, gestion des dépendances, CI/CD, supervision détaillée, paiements &amp; commissions, fonctionnalités &amp; workflows.</li>
+      <li><strong>Référence technique rapide</strong> : architecture &amp; modules, flux de données, API principales, rôles &amp; permissions, parcours fonctionnels, exigences, données &amp; intégrité, configuration, tests &amp; couverture (CO2.4), sécurité, accessibilité (CO2.5), évolutivité, monitoring, exploitation, dépannage.</li>
     </ul>
   </div>
 
   <div class="card" id="prerequis-mut">
-    <h2 class="section-title">Pr&eacute;requis</h2>
-    <p>Pr&eacute;requis pour l’application INKSPOT :</p>
+    <h2 class="section-title">Prérequis</h2>
+    <p>Prérequis pour l’application INKSPOT :</p>
     <ul class="list-tight">
       <li><strong>Environnement</strong> : Node.js 22 (fichier <code>.nvmrc</code>), npm 10+</li>
-      <li><strong>Outils</strong> : Git, &eacute;diteur de code, terminal</li>
-      <li><strong>Comptes / services</strong> : GitHub (d&eacute;p&ocirc;t projet), Railway (h&eacute;bergement), Stripe (paiements), optionnellement Redis, S3-compatible (assets)</li>
+      <li><strong>Outils</strong> : Git, éditeur de code, terminal</li>
+      <li><strong>Comptes / services</strong> : GitHub (dépôt projet), Railway (hébergement), Stripe (paiements), optionnellement Redis, S3-compatible (assets)</li>
       <li><strong>Connaissances</strong> : bases Next.js/TypeScript, Prisma, REST API</li>
     </ul>
   </div>
 
   <div class="card" id="demarrage-rapide">
-    <h2 class="section-title">D&eacute;marrage rapide</h2>
-    <p>Pour lancer le projet en local (d&eacute;veloppement) :</p>
+    <h2 class="section-title">Démarrage rapide</h2>
+    <p>Pour lancer le projet en local (développement) :</p>
     <ol class="list-tight">
-      <li><strong>Cloner le d&eacute;p&ocirc;t</strong> : <code>git clone https://github.com/antoine13330/INKSPOT-5z</code> puis <code>cd INKSPOT-5z</code></li>
+      <li><strong>Cloner le dépôt</strong> : <code>git clone https://github.com/antoine13330/INKSPOT-5z</code> puis <code>cd INKSPOT-5z</code></li>
       <li><strong>Version Node</strong> : <code>nvm use</code> (ou installer Node 22 selon <code>.nvmrc</code>)</li>
-      <li><strong>Installer les d&eacute;pendances</strong> : <code>pnpm install</code></li>
-      <li><strong>Variables d’environnement</strong> : copier <code>railway.env.example</code> vers <code>.env.local</code> et renseigner les valeurs (voir section <a href="#variables-env-mut">Variables d’environnement</a> et <a href="/deploiement-railway">Manuel D&eacute;ploiement Railway</a>)</li>
-      <li><strong>Base de donn&eacute;es</strong> : <code>pnpm db:setup</code> (ou <code>npx prisma migrate deploy</code> + <code>pnpm db:seed</code>)</li>
-      <li><strong>Lancer l’application</strong> : <code>pnpm dev</code> &mdash; l’app est disponible sur <code>http://localhost:3000</code></li>
+      <li><strong>Installer les dépendances</strong> : <code>pnpm install</code></li>
+      <li><strong>Variables d’environnement</strong> : copier <code>railway.env.example</code> vers <code>.env.local</code> et renseigner les valeurs (voir section <a href="#variables-env-mut">Variables d’environnement</a> et <a href="/deploiement-railway">Manuel Déploiement Railway</a>)</li>
+      <li><strong>Base de données</strong> : <code>pnpm db:setup</code> (ou <code>npx prisma migrate deploy</code> + <code>pnpm db:seed</code>)</li>
+      <li><strong>Lancer l’application</strong> : <code>pnpm dev</code> — l’app est disponible sur <code>http://localhost:3000</code></li>
     </ol>
-    <p>V&eacute;rification rapide : <code>pnpm lint</code>, <code>pnpm test</code> (tests unitaires), <code>pnpm test:e2e</code> (E2E).</p>
+    <p>Vérification rapide : <code>pnpm lint</code>, <code>pnpm test</code> (tests unitaires), <code>pnpm test:e2e</code> (E2E).</p>
+    <div class="callout callout-success" style="border-left:4px solid #2ea043;background:rgba(46,160,67,0.08);margin-top:1rem;">
+      <strong>🔑 Comptes de démo (après seed)</strong>
+      <p style="margin:0.5rem 0 0.25rem;">Après <code>pnpm db:setup</code> ou sur Railway, ces comptes sont disponibles :</p>
+      <table role="grid" aria-label="Comptes de démo" style="margin-top:0.5rem;font-size:0.9em;">
+        <thead><tr><th scope="col">Rôle</th><th scope="col">Email</th><th scope="col">Mot de passe</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Client</strong></td><td><code>client1@example.com</code></td><td><code>client123</code></td></tr>
+          <tr><td><strong>Artiste / PRO</strong></td><td><code>pierce@example.com</code> ou <code>artist@example.com</code></td><td><code>pro123</code></td></tr>
+          <tr><td><strong>Admin</strong></td><td><code>admin@example.com</code></td><td><code>admin123</code></td></tr>
+        </tbody>
+      </table>
+    </div>
     <div class="callout" style="margin-top:1rem;">
-      <strong>Checklist premi&egrave;re mise en route</strong>
+      <strong>Checklist première mise en route</strong>
       <ul class="list-tight" style="margin-bottom:0;">
         <li>Node 22 (<code>nvm use</code> ou selon <code>.nvmrc</code>)</li>
-        <li><code>.env.local</code> renseign&eacute; (voir <a href="#variables-env-mut">Variables d’environnement</a>)</li>
-        <li>Base de donn&eacute;es migr&eacute;e et seed&eacute;e (<code>pnpm db:setup</code>)</li>
+        <li><code>.env.local</code> renseigné (voir <a href="#variables-env-mut">Variables d’environnement</a>)</li>
+        <li>Base de données migrée et seedée (<code>pnpm db:setup</code>)</li>
         <li><code>pnpm dev</code> lance l’app sans erreur</li>
-        <li><code>pnpm lint</code> et <code>pnpm test</code> passent (ou &agrave; corriger)</li>
+        <li><code>pnpm lint</code> et <code>pnpm test</code> passent (ou à corriger)</li>
       </ul>
     </div>
   </div>
 
   <div class="card" id="variables-env-mut">
     <h2 class="section-title">Variables d’environnement</h2>
-    <p>Les variables suivantes sont n&eacute;cessaires au fonctionnement de l’application. Pour la liste compl&egrave;te et le d&eacute;tail (Requis / Usage), voir le <a href="/deploiement-railway">Manuel de D&eacute;ploiement Railway</a>.</p>
+    <p>Les variables suivantes sont nécessaires au fonctionnement de l’application. Pour la liste complète et le détail (Requis / Usage), voir le <a href="/deploiement-railway">Manuel de Déploiement Railway</a>.</p>
     <table role="grid" aria-label="Variables d’environnement principales">
       <thead><tr><th scope="col">Variable</th><th scope="col">Usage</th></tr></thead>
       <tbody>
@@ -114,28 +127,28 @@ import DocLayout from '../layouts/DocLayout.astro';
         <tr><td><code>NEXTAUTH_URL</code></td><td>URL publique de l’app (ex. http://localhost:3000)</td></tr>
         <tr><td><code>NEXTAUTH_SECRET</code></td><td>Signature des sessions</td></tr>
         <tr><td><code>STRIPE_SECRET_KEY</code>, <code>STRIPE_PUBLISHABLE_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code></td><td>Paiements Stripe</td></tr>
-        <tr><td><code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, <code>AWS_S3_BUCKET</code>, <code>AWS_REGION</code></td><td>Stockage S3 (m&eacute;dias)</td></tr>
+        <tr><td><code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, <code>AWS_S3_BUCKET</code>, <code>AWS_REGION</code></td><td>Stockage S3 (médias)</td></tr>
         <tr><td><code>VAPID_PUBLIC_KEY</code>, <code>VAPID_PRIVATE_KEY</code></td><td>Notifications push (optionnel)</td></tr>
         <tr><td><code>REDIS_URL</code></td><td>Cache / sessions (optionnel en dev)</td></tr>
       </tbody>
     </table>
-    <p>Validation : <code>pnpm env:check</code> (si disponible) ou v&eacute;rifier la pr&eacute;sence des cl&eacute;s dans <code>.env.local</code>.</p>
+    <p>Validation : <code>pnpm env:check</code> (si disponible) ou vérifier la présence des clés dans <code>.env.local</code>.</p>
   </div>
 
   <div class="card" id="structure-projet-mut">
     <h2 class="section-title">Structure du projet</h2>
-    <p>Organisation des r&eacute;pertoires principaux :</p>
+    <p>Organisation des répertoires principaux :</p>
     <ul class="list-tight">
-      <li><code>app/</code> &mdash; Pages et routes Next.js (App Router) ; <code>app/api/**</code> pour les API</li>
-      <li><code>components/</code> &mdash; Composants React r&eacute;utilisables (UI, layout, m&eacute;tier)</li>
-      <li><code>lib/</code> &mdash; Utilitaires, services, configuration (Stripe, validation, websocket)</li>
-      <li><code>prisma/</code> &mdash; Sch&eacute;ma Prisma (<code>schema.prisma</code>), seed, migrations</li>
-      <li><code>hooks/</code> &mdash; Hooks React personnalis&eacute;s</li>
-      <li><code>middleware/</code> &mdash; Middleware Next.js (s&eacute;curit&eacute;, monitoring)</li>
-      <li><code>e2e/</code> &mdash; Tests end-to-end Playwright</li>
-      <li><code>__tests__/</code> &mdash; Tests unitaires et d’int&eacute;gration Jest</li>
-      <li><code>docs/</code> &mdash; Documentation technique (CI/CD, d&eacute;ploiement, env)</li>
-      <li><code>scripts/</code> &mdash; Scripts utilitaires (d&eacute;ploiement, v&eacute;rification)</li>
+      <li><code>app/</code> — Pages et routes Next.js (App Router) ; <code>app/api/**</code> pour les API</li>
+      <li><code>components/</code> — Composants React réutilisables (UI, layout, métier)</li>
+      <li><code>lib/</code> — Utilitaires, services, configuration (Stripe, validation, websocket)</li>
+      <li><code>prisma/</code> — Schéma Prisma (<code>schema.prisma</code>), seed, migrations</li>
+      <li><code>hooks/</code> — Hooks React personnalisés</li>
+      <li><code>middleware/</code> — Middleware Next.js (sécurité, monitoring)</li>
+      <li><code>e2e/</code> — Tests end-to-end Playwright</li>
+      <li><code>__tests__/</code> — Tests unitaires et d’intégration Jest</li>
+      <li><code>docs/</code> — Documentation technique (CI/CD, déploiement, env)</li>
+      <li><code>scripts/</code> — Scripts utilitaires (déploiement, vérification)</li>
     </ul>
   </div>
 
@@ -144,87 +157,87 @@ import DocLayout from '../layouts/DocLayout.astro';
     <p class="toc-group"><strong>Document</strong></p>
     <ul class="list-tight">
       <li><a href="#infos-document">Informations du document</a></li>
-      <li><a href="#conformite-referentiel-mut">Conformit&eacute; r&eacute;f&eacute;rentiel (validation Master)</a></li>
-      <li><a href="#resume-executif">R&eacute;sum&eacute; ex&eacute;cutif</a></li>
-      <li><a href="#prerequis-mut">Pr&eacute;requis</a></li>
-      <li><a href="#demarrage-rapide">D&eacute;marrage rapide</a></li>
+      <li><a href="#conformite-referentiel-mut">Conformité référentiel (validation Master)</a></li>
+      <li><a href="#resume-executif">Résumé exécutif</a></li>
+      <li><a href="#prerequis-mut">Prérequis</a></li>
+      <li><a href="#demarrage-rapide">Démarrage rapide</a></li>
       <li><a href="#variables-env-mut">Variables d’environnement</a></li>
       <li><a href="#structure-projet-mut">Structure du projet</a></li>
       <li><a href="#introduction">1. Introduction</a></li>
       <li><a href="#stack">2. Stack technique</a></li>
-      <li><a href="#dependances">3. D&eacute;pendances</a></li>
-      <li><a href="#supervision">4. Syst&egrave;me de supervision</a></li>
-      <li><a href="#maintenance">5. Maintenance et &eacute;volution</a></li>
-      <li><a href="#modele-economique">6. Mod&egrave;le &eacute;conomique et fonctionnalit&eacute;s</a></li>
+      <li><a href="#dependances">3. Dépendances</a></li>
+      <li><a href="#supervision">4. Système de supervision</a></li>
+      <li><a href="#maintenance">5. Maintenance et évolution</a></li>
+      <li><a href="#modele-economique">6. Modèle économique et fonctionnalités</a></li>
     </ul>
-    <p class="toc-group"><strong>R&eacute;f&eacute;rence technique rapide</strong></p>
+    <p class="toc-group"><strong>Référence technique rapide</strong></p>
     <ul class="list-tight">
-      <li><a href="#vue-architecture">Vue d'architecture simplifi&eacute;e</a></li>
+      <li><a href="#vue-architecture">Vue d'architecture simplifiée</a></li>
       <li><a href="#justification-choix">Justification des choix technologiques</a></li>
       <li><a href="#architecture">Architecture &amp; modules</a></li>
-      <li><a href="#flux">Flux de donn&eacute;es</a></li>
+      <li><a href="#flux">Flux de données</a></li>
       <li><a href="#api">API principales</a></li>
-      <li><a href="#roles">R&ocirc;les &amp; permissions</a></li>
-      <li><a href="#parcours">Parcours fonctionnels cl&eacute;s</a></li>
+      <li><a href="#roles">Rôles &amp; permissions</a></li>
+      <li><a href="#parcours">Parcours fonctionnels clés</a></li>
       <li><a href="#exigences">Exigences techniques</a></li>
-      <li><a href="#donnees">Donn&eacute;es &amp; int&eacute;grit&eacute;</a></li>
+      <li><a href="#donnees">Données &amp; intégrité</a></li>
       <li><a href="#configuration">Configuration &amp; scripts</a></li>
       <li><a href="#tests">Tests &amp; couverture (CO2.4)</a></li>
-      <li><a href="#securite">S&eacute;curit&eacute; (OWASP Top 10)</a></li>
-      <li><a href="#accessibilite">Accessibilit&eacute; (RGAA 4.1)</a></li>
-      <li><a href="#mise-a-jour">Manuel de mise &agrave; jour (C2.4.1)</a></li>
-            <li><a href="#evolutivite">&Eacute;volutivit&eacute; &amp; maintenabilit&eacute;</a></li>
+      <li><a href="#securite">Sécurité (OWASP Top 10)</a></li>
+      <li><a href="#accessibilite">Accessibilité (RGAA 4.1)</a></li>
+      <li><a href="#mise-a-jour">Manuel de mise à jour (C2.4.1)</a></li>
+            <li><a href="#evolutivite">Évolutivité &amp; maintenabilité</a></li>
       <li><a href="#monitoring">Monitoring / Healthchecks</a></li>
       <li><a href="#exploitation">Exploitation &amp; runbook</a></li>
-      <li><a href="#depannage">D&eacute;pannage rapide</a></li>
+      <li><a href="#depannage">Dépannage rapide</a></li>
       <li><a href="#conclusion-technique">Conclusion technique</a></li>
     </ul>
-    <p class="toc-group"><strong>Annexes &amp; r&eacute;f&eacute;rences</strong></p>
+    <p class="toc-group"><strong>Annexes &amp; références</strong></p>
     <ul class="list-tight">
-      <li><a href="#annexes">Annexes (A&ndash;H)</a></li>
+      <li><a href="#annexes">Annexes (A–H)</a></li>
       <li><a href="#glossaire-mut">Glossaire</a></li>
-      <li><a href="#references-croisees-mut">R&eacute;f&eacute;rences crois&eacute;es</a></li>
+      <li><a href="#references-croisees-mut">Références croisées</a></li>
       <li><a href="#table-sections-mut">Table des sections</a></li>
     </ul>
   </div>
 
   <div class="card" id="introduction">
     <h2 class="section-title">1. Introduction</h2>
-    <h3>Pr&eacute;sentation d’INKSPOT</h3>
-    <p>INKSPOT est bien plus qu’une simple plateforme num&eacute;rique : c’est un v&eacute;ritable carrefour cr&eacute;atif où l’art du tatouage prend vie dans l’&egrave;re digitale. N&eacute;e de la passion pour l’art corporel et de la volont&eacute; de rapprocher les talents des amateurs, INKSPOT r&eacute;volutionne la fa&ccedil;on dont artistes et clients se rencontrent, &eacute;changent et collaborent.</p>
+    <h3>Présentation d’INKSPOT</h3>
+    <p>INKSPOT est bien plus qu’une simple plateforme numérique : c’est un véritable carrefour créatif où l’art du tatouage prend vie dans l’ère digitale. Née de la passion pour l’art corporel et de la volonté de rapprocher les talents des amateurs, INKSPOT révolutionne la façon dont artistes et clients se rencontrent, échangent et collaborent.</p>
     <h3>Vision et Mission</h3>
-    <p>Notre mission est de d&eacute;mocratiser l’acc&egrave;s &agrave; l’art du tatouage en cr&eacute;ant un pont num&eacute;rique entre artistes talentueux et clients en qu&ecirc;te d’expression artistique personnelle. INKSPOT vise &agrave; :</p>
+    <p>Notre mission est de démocratiser l’accès à l’art du tatouage en créant un pont numérique entre artistes talentueux et clients en quête d’expression artistique personnelle. INKSPOT vise à :</p>
     <ul class="list-tight">
       <li>Valoriser le travail des artistes en leur offrant une vitrine professionnelle moderne</li>
-      <li>Faciliter la d&eacute;couverte d’artistes et de styles pour les amateurs de tatouage</li>
-      <li>Simplifier les &eacute;changes entre professionnels et clients</li>
-      <li>Cr&eacute;er une communaut&eacute; bienveillante autour de la passion commune</li>
+      <li>Faciliter la découverte d’artistes et de styles pour les amateurs de tatouage</li>
+      <li>Simplifier les échanges entre professionnels et clients</li>
+      <li>Créer une communauté bienveillante autour de la passion commune</li>
     </ul>
     <h3>Pour qui ?</h3>
     <ul class="list-tight">
-      <li><strong>Pour les Artistes Tatoueurs</strong> : INKSPOT offre aux professionnels du tatouage un espace d&eacute;di&eacute; pour pr&eacute;senter leur portfolio, g&eacute;rer leurs rendez-vous, &eacute;changer avec leur client&egrave;le et d&eacute;velopper leur activit&eacute; dans un environnement s&eacute;curis&eacute; et moderne.</li>
-      <li><strong>Pour les Amateurs d’Art Corporel</strong> : La plateforme permet aux passionn&eacute;s de d&eacute;couvrir des artistes, explorer diff&eacute;rents styles, suivre leurs cr&eacute;ateurs favoris, et organiser facilement leurs projets de tatouage.</li>
+      <li><strong>Pour les Artistes Tatoueurs</strong> : INKSPOT offre aux professionnels du tatouage un espace dédié pour présenter leur portfolio, gérer leurs rendez-vous, échanger avec leur clientèle et développer leur activité dans un environnement sécurisé et moderne.</li>
+      <li><strong>Pour les Amateurs d’Art Corporel</strong> : La plateforme permet aux passionnés de découvrir des artistes, explorer différents styles, suivre leurs créateurs favoris, et organiser facilement leurs projets de tatouage.</li>
     </ul>
     <h3>Approche Technique</h3>
-    <p>INKSPOT est construite comme une application web moderne et responsive, privil&eacute;giant l’exp&eacute;rience mobile pour s’adapter aux habitudes d’utilisation contemporaines. La plateforme est actuellement h&eacute;berg&eacute;e en environnement de d&eacute;veloppement, permettant une &eacute;volution continue et l’ajout progressif de nouvelles fonctionnalit&eacute;s bas&eacute;es sur les retours des utilisateurs.</p>
-    <h3>Accessibilit&eacute; Multi-plateforme</h3>
-    <p>Con&ccedil;ue en « mobile first », INKSPOT s’adapte parfaitement aux smartphones, tablettes et ordinateurs, garantissant une exp&eacute;rience utilisateur optimale sur tous les supports.</p>
+    <p>INKSPOT est construite comme une application web moderne et responsive, privilégiant l’expérience mobile pour s’adapter aux habitudes d’utilisation contemporaines. La plateforme est actuellement hébergée en environnement de développement, permettant une évolution continue et l’ajout progressif de nouvelles fonctionnalités basées sur les retours des utilisateurs.</p>
+    <h3>Accessibilité Multi-plateforme</h3>
+    <p>Conçue en « mobile first », INKSPOT s’adapte parfaitement aux smartphones, tablettes et ordinateurs, garantissant une expérience utilisateur optimale sur tous les supports.</p>
     <h3>Philosophie du Projet</h3>
-    <p>INKSPOT s’inscrit dans une d&eacute;marche de respect et de valorisation de l’art du tatouage. Nous croyons que chaque tatouage raconte une histoire unique et que chaque artiste m&eacute;rite d’&ecirc;tre reconnu pour son talent et sa cr&eacute;ativit&eacute;. La plateforme transcende les barri&egrave;res g&eacute;ographiques traditionnelles en offrant une vitrine mondiale aux artistes tatoueurs, qu’ils soient &eacute;mergents ou confirm&eacute;s, tout en garantissant aux clients une exp&eacute;rience de d&eacute;couverte riche et personnalis&eacute;e. INKSPOT cultive ainsi une communaut&eacute; bienveillante où le respect mutuel, la cr&eacute;ativit&eacute; et l’excellence artistique sont au cœur de chaque interaction.</p>
+    <p>INKSPOT s’inscrit dans une démarche de respect et de valorisation de l’art du tatouage. Nous croyons que chaque tatouage raconte une histoire unique et que chaque artiste mérite d’être reconnu pour son talent et sa créativité. La plateforme transcende les barrières géographiques traditionnelles en offrant une vitrine mondiale aux artistes tatoueurs, qu’ils soient émergents ou confirmés, tout en garantissant aux clients une expérience de découverte riche et personnalisée. INKSPOT cultive ainsi une communauté bienveillante où le respect mutuel, la créativité et l’excellence artistique sont au cœur de chaque interaction.</p>
   </div>
 
   <div class="card" id="stack">
     <h2 class="section-title">2. Stack technique</h2>
-    <p>Voici un tableau de la stack technique. Un sch&eacute;ma d&eacute;taill&eacute; est disponible en annexe A.</p>
-    <table role="grid" aria-label="Stack technique par cat&eacute;gorie">
+    <p>Voici un tableau de la stack technique. Un schéma détaillé est disponible en annexe A.</p>
+    <table role="grid" aria-label="Stack technique par catégorie">
       <thead>
-        <tr><th scope="col">Cat&eacute;gorie</th><th scope="col">Technologie</th></tr>
+        <tr><th scope="col">Catégorie</th><th scope="col">Technologie</th></tr>
       </thead>
       <tbody>
-        <tr><td>Frontend</td><td>Next.js (TypeScript) &ndash; Interface mobile-first</td></tr>
+        <tr><td>Frontend</td><td>Next.js (TypeScript) – Interface mobile-first</td></tr>
         <tr><td>Backend/API</td><td>Next.js API Routes, Tailwind CSS, Radix UI / shadcn/ui</td></tr>
-        <tr><td>H&eacute;bergement/Service</td><td>Railway</td></tr>
-        <tr><td>Base de donn&eacute;es</td><td>PostgreSQL + Prisma ORM</td></tr>
+        <tr><td>Hébergement/Service</td><td>Railway</td></tr>
+        <tr><td>Base de données</td><td>PostgreSQL + Prisma ORM</td></tr>
         <tr><td>Authentification</td><td>NextAuth.js</td></tr>
         <tr><td>Paiement</td><td>Stripe</td></tr>
         <tr><td>Cache & Sessions</td><td>Redis</td></tr>
@@ -232,148 +245,148 @@ import DocLayout from '../layouts/DocLayout.astro';
         <tr><td>Tests</td><td>Jest + Playwright</td></tr>
       </tbody>
     </table>
-    <p>Compl&eacute;ment technique : Next.js 16 (app router), S3 (assets), Nginx (reverse-proxy), Docker, swagger-jsdoc.</p>
+    <p>Complément technique : Next.js 16 (app router), S3 (assets), Nginx (reverse-proxy), Docker, swagger-jsdoc.</p>
   </div>
 
   <div class="card" id="dependances">
-    <h2 class="section-title">3. D&eacute;pendances</h2>
-    <p>La partie la plus lourde de l’application sont les d&eacute;pendances ; actuellement la version de Node est la 22 (&eacute;crite dans le fichier <code>.nvmrc</code>).</p>
+    <h2 class="section-title">3. Dépendances</h2>
+    <p>La partie la plus lourde de l’application sont les dépendances ; actuellement la version de Node est la 22 (écrite dans le fichier <code>.nvmrc</code>).</p>
     <h3>3.a Scripts</h3>
-    <p>Les scripts disponibles sont not&eacute;s dans le <code>package.json</code> :</p>
+    <p>Les scripts disponibles sont notés dans le <code>package.json</code> :</p>
     <ul class="list-tight">
-      <li><code>pnpm dev</code> &ndash; lance un serveur de d&eacute;veloppement avec Next.js</li>
-      <li><code>pnpm build</code> &ndash; cr&eacute;e un Build de production avec migrations Prisma</li>
-      <li><code>pnpm start</code> &ndash; lance un serveur de production</li>
-      <li><code>pnpm test</code> &ndash; ex&eacute;cution des tests unitaires Jest</li>
-      <li><code>pnpm test:e2e</code> &ndash; ex&eacute;cution des tests end-to-end Playwright</li>
-      <li><code>pnpm db:seed</code> &ndash; peuple la base de donn&eacute;es</li>
-      <li><code>pnpm db:setup</code> &ndash; fait la configuration initiale de la base de donn&eacute;es</li>
-      <li><code>pnpm lint</code> &ndash; V&eacute;rification du code</li>
-      <li><code>pnpm analyze</code> &ndash; g&eacute;n&egrave;re un rapport du poids du bundle</li>
+      <li><code>pnpm dev</code> – lance un serveur de développement avec Next.js</li>
+      <li><code>pnpm build</code> – crée un Build de production avec migrations Prisma</li>
+      <li><code>pnpm start</code> – lance un serveur de production</li>
+      <li><code>pnpm test</code> – exécution des tests unitaires Jest</li>
+      <li><code>pnpm test:e2e</code> – exécution des tests end-to-end Playwright</li>
+      <li><code>pnpm db:seed</code> – peuple la base de données</li>
+      <li><code>pnpm db:setup</code> – fait la configuration initiale de la base de données</li>
+      <li><code>pnpm lint</code> – Vérification du code</li>
+      <li><code>pnpm analyze</code> – génère un rapport du poids du bundle</li>
     </ul>
-    <h3>3.b D&eacute;pendances principales</h3>
-    <p>Les d&eacute;pendances principales sont celles de Prisma, NextAuth.js, Stripe, shadcn/ui et le syst&egrave;me de monitoring :</p>
+    <h3>3.b Dépendances principales</h3>
+    <p>Les dépendances principales sont celles de Prisma, NextAuth.js, Stripe, shadcn/ui et le système de monitoring :</p>
     <ul class="list-tight">
-      <li><strong>Prisma</strong> : Initialisez avec <code>npx prisma init</code> pour cr&eacute;er un sch&eacute;ma. Les mod&egrave;les sont dans <code>schema.prisma</code>. G&eacute;n&eacute;rez le client avec <code>npx prisma generate</code> et appliquez les migrations avec <code>npx prisma migrate</code>. Utilisez le client g&eacute;n&eacute;r&eacute; pour effectuer des requ&ecirc;tes CRUD dans vos pages ou API routes.</li>
-      <li><strong>NextAuth.js</strong> : solution d’authentification compl&egrave;te pour Next.js (inscription, connexion, sessions, OAuth, JWT).</li>
-      <li><strong>Stripe</strong> : plateforme de paiement en ligne (cartes de cr&eacute;dit, abonnements, facturation). Lors de la sortie de ce manuel, les donn&eacute;es sont factices donc lors d’un achat personne n’est d&eacute;bit&eacute;.</li>
-      <li><strong>shadcn/ui</strong> : biblioth&egrave;que de composants UI r&eacute;utilisables (Tailwind CSS, Radix UI). Ajoutez des composants avec <code>npx shadcn-ui@latest add button</code> (par exemple).</li>
-      <li><strong>Syst&egrave;me de monitoring</strong> : Prometheus collecte les m&eacute;triques, Grafana fournit les dashboards, Redis optimise les performances avec le cache et la gestion des sessions.</li>
+      <li><strong>Prisma</strong> : Initialisez avec <code>npx prisma init</code> pour créer un schéma. Les modèles sont dans <code>schema.prisma</code>. Générez le client avec <code>npx prisma generate</code> et appliquez les migrations avec <code>npx prisma migrate</code>. Utilisez le client généré pour effectuer des requêtes CRUD dans vos pages ou API routes.</li>
+      <li><strong>NextAuth.js</strong> : solution d’authentification complète pour Next.js (inscription, connexion, sessions, OAuth, JWT).</li>
+      <li><strong>Stripe</strong> : plateforme de paiement en ligne (cartes de crédit, abonnements, facturation). Lors de la sortie de ce manuel, les données sont factices donc lors d’un achat personne n’est débité.</li>
+      <li><strong>shadcn/ui</strong> : bibliothèque de composants UI réutilisables (Tailwind CSS, Radix UI). Ajoutez des composants avec <code>npx shadcn-ui@latest add button</code> (par exemple).</li>
+      <li><strong>Système de monitoring</strong> : Prometheus collecte les métriques, Grafana fournit les dashboards, Redis optimise les performances avec le cache et la gestion des sessions.</li>
     </ul>
-    <h3>3.c Proc&eacute;dure d&eacute;taill&eacute;e de gestion des d&eacute;pendances</h3>
-    <p>Pour maintenir le projet &agrave; jour et s&eacute;curis&eacute;, il est essentiel de g&eacute;rer les d&eacute;pendances de mani&egrave;re prudente. Ce projet utilise peu de d&eacute;pendances, dispose de tests unitaires et d’un script <code>pnpm analyze</code> pour analyser les paquets. Voici une approche simple et sûre pour les mettre &agrave; jour :</p>
-    <p><strong>⚠ Attention</strong> : Testez toujours les mises &agrave; jour dans un environnement de d&eacute;veloppement avant la production. Effectuez ces &eacute;tapes dans un environnement de test (ex. branche Git d&eacute;di&eacute;e) pour &eacute;viter les disruptions.</p>
+    <h3>3.c Procédure détaillée de gestion des dépendances</h3>
+    <p>Pour maintenir le projet à jour et sécurisé, il est essentiel de gérer les dépendances de manière prudente. Ce projet utilise peu de dépendances, dispose de tests unitaires et d’un script <code>pnpm analyze</code> pour analyser les paquets. Voici une approche simple et sûre pour les mettre à jour :</p>
+    <p><strong>⚠ Attention</strong> : Testez toujours les mises à jour dans un environnement de développement avant la production. Effectuez ces étapes dans un environnement de test (ex. branche Git dédiée) pour éviter les disruptions.</p>
     <ol class="list-tight">
-      <li><strong>V&eacute;rifier les vuln&eacute;rabilit&eacute;s</strong> : Ex&eacute;cutez <code>pnpm audit</code> pour lister les vuln&eacute;rabilit&eacute;s. Si des corrections sont disponibles, appliquez <code>pnpm audit --fix</code> et v&eacute;rifiez manuellement les impacts sur le code.</li>
-      <li><strong>Identifier les d&eacute;pendances obsol&egrave;tes</strong> : Lancez <code>pnpm outdated</code> pour voir les versions actuelles, d&eacute;sir&eacute;es et les derni&egrave;res disponibles (respect des contraintes semver du <code>package.json</code>).</li>
-      <li><strong>Mettre &agrave; jour de mani&egrave;re sûre</strong> : Utilisez <code>pnpm update</code> pour les mises &agrave; jour mineures et de patch compatibles (m&eacute;thode la plus sûre pour changements mineurs). Pour des mises &agrave; jour majeures (ex. 1.x → 2.x), &eacute;ditez manuellement le <code>package.json</code> pour sp&eacute;cifier la nouvelle version, puis <code>pnpm install</code> pour mettre &agrave; jour le <code>package-lock.json</code>.</li>
-      <li><strong>Conseils pour la s&eacute;curit&eacute;</strong> : Mettez &agrave; jour r&eacute;guli&egrave;rement, mais pas plus d’une d&eacute;pendance &agrave; la fois si possible pour isoler les probl&egrave;mes. Consultez les changelogs sur npmjs.com avant les mises &agrave; jour majeures. Si une d&eacute;pendance est critique et vuln&eacute;rable sans mise &agrave; jour compatible, envisagez une alternative. Cette approche minimise les risques tout en gardant le projet &agrave; jour. Apr&egrave;s toute mise &agrave; jour, validez la stabilit&eacute; : lancez les tests unitaires avec <code>pnpm test</code>, ex&eacute;cutez <code>pnpm analyze</code> pour une analyse suppl&eacute;mentaire, testez manuellement l’application pour d&eacute;tecter d’&eacute;ventuels bugs.</li>
+      <li><strong>Vérifier les vulnérabilités</strong> : Exécutez <code>pnpm audit</code> pour lister les vulnérabilités. Si des corrections sont disponibles, appliquez <code>pnpm audit --fix</code> et vérifiez manuellement les impacts sur le code.</li>
+      <li><strong>Identifier les dépendances obsolètes</strong> : Lancez <code>pnpm outdated</code> pour voir les versions actuelles, désirées et les dernières disponibles (respect des contraintes semver du <code>package.json</code>).</li>
+      <li><strong>Mettre à jour de manière sûre</strong> : Utilisez <code>pnpm update</code> pour les mises à jour mineures et de patch compatibles (méthode la plus sûre pour changements mineurs). Pour des mises à jour majeures (ex. 1.x → 2.x), éditez manuellement le <code>package.json</code> pour spécifier la nouvelle version, puis <code>pnpm install</code> pour mettre à jour le <code>package-lock.json</code>.</li>
+      <li><strong>Conseils pour la sécurité</strong> : Mettez à jour régulièrement, mais pas plus d’une dépendance à la fois si possible pour isoler les problèmes. Consultez les changelogs sur npmjs.com avant les mises à jour majeures. Si une dépendance est critique et vulnérable sans mise à jour compatible, envisagez une alternative. Cette approche minimise les risques tout en gardant le projet à jour. Après toute mise à jour, validez la stabilité : lancez les tests unitaires avec <code>pnpm test</code>, exécutez <code>pnpm analyze</code> pour une analyse supplémentaire, testez manuellement l’application pour détecter d’éventuels bugs.</li>
     </ol>
   </div>
 
   <div class="card" id="supervision">
-    <h2 class="section-title">4. Syst&egrave;me de supervision</h2>
+    <h2 class="section-title">4. Système de supervision</h2>
     <h3>Vue d’ensemble</h3>
-    <p>Le syst&egrave;me de supervision d’INKSPOT s’appuie sur Prometheus et Grafana pour surveiller en temps r&eacute;el les performances, la sant&eacute; et l’activit&eacute; de l’application. Il collecte automatiquement des m&eacute;triques couvrant les API, la base de donn&eacute;es et les activit&eacute;s m&eacute;tier, afin d’offrir une vision claire et continue de ce qui se passe dans la plateforme. Le cœur du monitoring repose sur un collecteur de m&eacute;triques personnalis&eacute;, bas&eacute; sur Prometheus, qui instrumente automatiquement l’application et centralise la collecte des donn&eacute;es de performance.</p>
-    <h3>Les types de m&eacute;triques impl&eacute;ment&eacute;s</h3>
+    <p>Le système de supervision d’INKSPOT s’appuie sur Prometheus et Grafana pour surveiller en temps réel les performances, la santé et l’activité de l’application. Il collecte automatiquement des métriques couvrant les API, la base de données et les activités métier, afin d’offrir une vision claire et continue de ce qui se passe dans la plateforme. Le cœur du monitoring repose sur un collecteur de métriques personnalisé, basé sur Prometheus, qui instrumente automatiquement l’application et centralise la collecte des données de performance.</p>
+    <h3>Les types de métriques implémentés</h3>
     <ul class="list-tight">
-      <li><strong>M&eacute;triques API</strong> : Nombre total de requ&ecirc;tes par endpoint, dur&eacute;e des requ&ecirc;tes (secondes), taux d’erreurs par code de statut HTTP, m&eacute;thodes HTTP utilis&eacute;es (GET, POST, etc.).</li>
-      <li><strong>M&eacute;triques Base de donn&eacute;es</strong> : Nombre de requ&ecirc;tes ex&eacute;cut&eacute;es par table, temps de r&eacute;ponse des requ&ecirc;tes (secondes), types d’op&eacute;rations (select, create, update, delete), performance des connexions.</li>
-      <li><strong>M&eacute;triques m&eacute;tier</strong> : Nombre total d’utilisateurs, nombre total de posts, nombre total de r&eacute;servations, nombre total de paiements, r&eacute;servations du jour, revenus du jour, statut des connexions base de donn&eacute;es et Redis.</li>
+      <li><strong>Métriques API</strong> : Nombre total de requêtes par endpoint, durée des requêtes (secondes), taux d’erreurs par code de statut HTTP, méthodes HTTP utilisées (GET, POST, etc.).</li>
+      <li><strong>Métriques Base de données</strong> : Nombre de requêtes exécutées par table, temps de réponse des requêtes (secondes), types d’opérations (select, create, update, delete), performance des connexions.</li>
+      <li><strong>Métriques métier</strong> : Nombre total d’utilisateurs, nombre total de posts, nombre total de réservations, nombre total de paiements, réservations du jour, revenus du jour, statut des connexions base de données et Redis.</li>
     </ul>
-    <p>L’interface d’administration est disponible sur Grafana en production, accessible &agrave; partir d’un compte global pour chaque utilisateur.</p>
-    <h3>Interpr&eacute;tation des indicateurs</h3>
-    <table role="grid" aria-label="Seuils et interpr&eacute;tation des m&eacute;triques">
-      <thead><tr><th scope="col">M&eacute;trique</th><th scope="col">Seuils principaux</th><th scope="col">Interpr&eacute;tation rapide</th></tr></thead>
+    <p>L’interface d’administration est disponible sur Grafana en production, accessible à partir d’un compte global pour chaque utilisateur.</p>
+    <h3>Interprétation des indicateurs</h3>
+    <table role="grid" aria-label="Seuils et interprétation des métriques">
+      <thead><tr><th scope="col">Métrique</th><th scope="col">Seuils principaux</th><th scope="col">Interprétation rapide</th></tr></thead>
       <tbody>
-        <tr><td>Temps de r&eacute;ponse API</td><td>&lt;200 ms • 200&ndash;500 ms • &gt;1 s</td><td>Excellent • Bon • À corriger</td></tr>
-        <tr><td>Taux d’erreurs (HTTP)</td><td>&lt;1 % • 1&ndash;5 % • &gt;5 %</td><td>Normal • À surveiller • Critique</td></tr>
-        <tr><td>Temps de r&eacute;ponse DB</td><td>&lt;100 ms • 100 ms&ndash;1 s • &gt;1 s</td><td>Rapide • Lente • À corriger</td></tr>
+        <tr><td>Temps de réponse API</td><td>&lt;200 ms • 200–500 ms • &gt;1 s</td><td>Excellent • Bon • À corriger</td></tr>
+        <tr><td>Taux d’erreurs (HTTP)</td><td>&lt;1 % • 1–5 % • &gt;5 %</td><td>Normal • À surveiller • Critique</td></tr>
+        <tr><td>Temps de réponse DB</td><td>&lt;100 ms • 100 ms–1 s • &gt;1 s</td><td>Rapide • Lente • À corriger</td></tr>
       </tbody>
     </table>
-    <p>Les m&eacute;triques m&eacute;tier aident &agrave; suivre l’activit&eacute; r&eacute;elle des utilisateurs (inscriptions par jour, utilisateurs actifs simultan&eacute;s, fr&eacute;quence d’utilisation des fonctionnalit&eacute;s cl&eacute;s, qualit&eacute; du contenu, tendances d’engagement). Le syst&egrave;me g&eacute;n&egrave;re automatiquement des alertes lorsque certains seuils ou comportements anormaux sont d&eacute;tect&eacute;s (taux d’erreurs &eacute;lev&eacute;s sur les API, temps de r&eacute;ponse anormalement longs, probl&egrave;mes de connectivit&eacute; avec la base de donn&eacute;es ou anomalies dans les m&eacute;triques m&eacute;tier).</p>
+    <p>Les métriques métier aident à suivre l’activité réelle des utilisateurs (inscriptions par jour, utilisateurs actifs simultanés, fréquence d’utilisation des fonctionnalités clés, qualité du contenu, tendances d’engagement). Le système génère automatiquement des alertes lorsque certains seuils ou comportements anormaux sont détectés (taux d’erreurs élevés sur les API, temps de réponse anormalement longs, problèmes de connectivité avec la base de données ou anomalies dans les métriques métier).</p>
     <h3>Tableau des statuts possibles</h3>
     <table role="grid" aria-label="Statuts des rapports de supervision">
-      <thead><tr><th scope="col">Statut</th><th scope="col">D&eacute;finition</th><th scope="col">Exemple d’usage</th></tr></thead>
+      <thead><tr><th scope="col">Statut</th><th scope="col">Définition</th><th scope="col">Exemple d’usage</th></tr></thead>
       <tbody>
-        <tr><td>En rapport</td><td>Rapport cr&eacute;&eacute;, en attente de prise en charge.</td><td>Signalement initial d’une hausse d’erreurs API.</td></tr>
-        <tr><td>En cours</td><td>Analyse ou correction en cours.</td><td>Un admin enqu&ecirc;te sur des requ&ecirc;tes DB lentes.</td></tr>
-        <tr><td>R&eacute;solu</td><td>Probl&egrave;me identifi&eacute; et corrig&eacute;.</td><td>Patch d&eacute;ploy&eacute;, les temps de r&eacute;ponse reviennent &agrave; la normale.</td></tr>
-        <tr><td>Ferm&eacute;</td><td>V&eacute;rification post-correction effectu&eacute;e, dossier cl&ocirc;tur&eacute;.</td><td>Rapport trait&eacute; et archiv&eacute; apr&egrave;s validation.</td></tr>
+        <tr><td>En rapport</td><td>Rapport créé, en attente de prise en charge.</td><td>Signalement initial d’une hausse d’erreurs API.</td></tr>
+        <tr><td>En cours</td><td>Analyse ou correction en cours.</td><td>Un admin enquête sur des requêtes DB lentes.</td></tr>
+        <tr><td>Résolu</td><td>Problème identifié et corrigé.</td><td>Patch déployé, les temps de réponse reviennent à la normale.</td></tr>
+        <tr><td>Fermé</td><td>Vérification post-correction effectuée, dossier clôturé.</td><td>Rapport traité et archivé après validation.</td></tr>
       </tbody>
     </table>
-    <h3>Niveaux de priorit&eacute;</h3>
-    <table role="grid" aria-label="Niveaux de priorit&eacute; des alertes">
-      <thead><tr><th scope="col">Priorit&eacute;</th><th scope="col">D&eacute;finition</th><th scope="col">D&eacute;lai de traitement conseill&eacute;</th></tr></thead>
+    <h3>Niveaux de priorité</h3>
+    <table role="grid" aria-label="Niveaux de priorité des alertes">
+      <thead><tr><th scope="col">Priorité</th><th scope="col">Définition</th><th scope="col">Délai de traitement conseillé</th></tr></thead>
       <tbody>
-        <tr><td>Faible</td><td>Impact minimal sur le service.</td><td>Planifi&eacute; dans le prochain cycle de maintenance.</td></tr>
-        <tr><td>Moyenne</td><td>Impact mod&eacute;r&eacute; n&eacute;cessitant une attention.</td><td>Sous 72 heures.</td></tr>
-        <tr><td>&Eacute;lev&eacute;e</td><td>Impact significatif sur les utilisateurs.</td><td>Sous 24 heures.</td></tr>
-        <tr><td>Urgente</td><td>Probl&egrave;me critique n&eacute;cessitant une intervention imm&eacute;diate.</td><td>Imm&eacute;diat (heures).</td></tr>
+        <tr><td>Faible</td><td>Impact minimal sur le service.</td><td>Planifié dans le prochain cycle de maintenance.</td></tr>
+        <tr><td>Moyenne</td><td>Impact modéré nécessitant une attention.</td><td>Sous 72 heures.</td></tr>
+        <tr><td>Élevée</td><td>Impact significatif sur les utilisateurs.</td><td>Sous 24 heures.</td></tr>
+        <tr><td>Urgente</td><td>Problème critique nécessitant une intervention immédiate.</td><td>Immédiat (heures).</td></tr>
       </tbody>
     </table>
-    <p><strong>💡 Bonnes pratiques</strong> : Un entretien r&eacute;gulier facilite la stabilit&eacute; et la performance. Chaque semaine, revoir les rapports non r&eacute;solus et analyser les tendances de performance afin d’anticiper les probl&egrave;mes. Une fois par mois, effectuer une r&eacute;vision compl&egrave;te du syst&egrave;me, mettre &agrave; jour les seuils d’alerte en fonction de l’&eacute;volution de la charge et planifier les am&eacute;liorations &agrave; mettre en œuvre.</p>
+    <p><strong>💡 Bonnes pratiques</strong> : Un entretien régulier facilite la stabilité et la performance. Chaque semaine, revoir les rapports non résolus et analyser les tendances de performance afin d’anticiper les problèmes. Une fois par mois, effectuer une révision complète du système, mettre à jour les seuils d’alerte en fonction de l’évolution de la charge et planifier les améliorations à mettre en œuvre.</p>
   </div>
 
   <div class="card" id="maintenance">
-    <h2 class="section-title">5. Maintenance et &eacute;volution</h2>
-    <h3>5.a D&eacute;ploiement continu</h3>
-    <p>INKSPOT dispose d’un syst&egrave;me de CI/CD appuy&eacute; sur GitHub Actions et Railway. À chaque push ou Pull Request vers les branches <code>dev</code> ou <code>main</code>, une pipeline sous Node.js 22 ex&eacute;cute automatiquement les tests unitaires et d’int&eacute;gration. Pour la branche de production (<code>main</code>), une &eacute;tape suppl&eacute;mentaire analyse le bundle afin de contr&ocirc;ler la taille et les performances. En parall&egrave;le, le journal des changements (<code>CHANGELOG.md</code>) est mis &agrave; jour automatiquement par un script d&eacute;di&eacute;, puis pouss&eacute; sur le d&eacute;p&ocirc;t pour assurer une tra&ccedil;abilit&eacute; claire des &eacute;volutions. Le d&eacute;ploiement est assur&eacute; par Railway, sans action manuelle. Chaque Pull Request d&eacute;clenche la cr&eacute;ation d’un environnement de Preview avec une URL d&eacute;di&eacute;e pour la validation visuelle et fonctionnelle. La branche <code>dev</code> sert d’environnement de pr&eacute;production (recette). Actuellement, la production est temporairement h&eacute;berg&eacute;e sur l’environnement de d&eacute;veloppement pour permettre une &eacute;volution rapide et continue de la plateforme. Les en-t&ecirc;tes de s&eacute;curit&eacute; sont appliqu&eacute;s c&ocirc;t&eacute; Railway pour renforcer la protection dans le navigateur. En pratique, le flux de travail est le suivant : d&eacute;velopper sur une branche d&eacute;di&eacute;e, ouvrir une Pull Request, laisser la CI ex&eacute;cuter les v&eacute;rifications, valider la Preview Railway, puis fusionner. La recette s’effectue sur <code>dev</code>. Aucune commande de d&eacute;ploiement n’est requise : la chaîne CI/CD garantit des livraisons rapides, fiables et tra&ccedil;ables. Voir annexe diagramme de flux.</p>
-    <h3>5.b M&eacute;thodologie de test</h3>
-    <p>Pour assurer une maintenance durable, les tests unitaires et end-to-end font partie int&eacute;grante du code et du flux CI/CD. Ils servent &agrave; verrouiller le comportement attendu, faciliter les refactorings et r&eacute;duire le coût des r&eacute;gressions. <strong>Ce qu’il faut tester en priorit&eacute;</strong> : r&egrave;gles m&eacute;tiers, transformations de donn&eacute;es, formats d’entr&eacute;es/sorties, gestion des erreurs, contrats de composants (rendu conditionnel, accessibilit&eacute; de base, interactions critiques). Les snapshots doivent rester cibl&eacute;s et stables ; &eacute;viter les snapshots massifs et volatils. <strong>Crit&egrave;res de qualit&eacute;</strong> : viser une couverture significative et pertinente (branches et chemins critiques) sans transformer la couverture en objectif purement quantitatif. Un test doit &eacute;chouer pour une bonne raison et r&eacute;ussir pour la bonne raison. <strong>Rapidit&eacute; et fiabilit&eacute;</strong> : un test unitaire doit s’ex&eacute;cuter en millisecondes et donner toujours le m&ecirc;me r&eacute;sultat. &Eacute;liminer les tests « flaky » avant fusion ; un test instable nuit &agrave; toute la chaîne. <strong>Variables d’environnement et flags</strong> : documenter les valeurs par d&eacute;faut utilis&eacute;es en test, et couvrir le comportement sous flags ou modes (ex. pr&eacute;production/production) lorsque cela affecte la logique. <strong>Revue et dette technique</strong> : toute Pull Request modifiant la logique fonctionnelle doit ajouter ou mettre &agrave; jour des tests pertinents. Les tests fragiles ou redondants sont refactor&eacute;s r&eacute;guli&egrave;rement pour rester utiles et lisibles. Cette discipline de tests, combin&eacute;e au pipeline GitHub Actions et aux d&eacute;ploiements Railway, maintient un cycle de livraison maîtris&eacute; : on prot&egrave;ge la qualit&eacute; au plus pr&egrave;s du code, on d&eacute;tecte t&ocirc;t les r&eacute;gressions, et on livre en confiance sur <code>develop</code> (pr&eacute;production) puis sur <code>main</code> (production).</p>
-    <h3>5.c M&eacute;thodologie GitHub</h3>
-    <p>INKSPOT suit un flux de travail simple et reproductible qui part d’un besoin document&eacute; et se termine par une fonctionnalit&eacute; livr&eacute;e et trac&eacute;e. L’objectif est d’assurer clart&eacute;, tra&ccedil;abilit&eacute; et vitesse, sans surcharge pour les d&eacute;veloppeurs. Voici les &eacute;tapes :</p>
+    <h2 class="section-title">5. Maintenance et évolution</h2>
+    <h3>5.a Déploiement continu</h3>
+    <p>INKSPOT dispose d’un système de CI/CD appuyé sur GitHub Actions et Railway. À chaque push ou Pull Request vers les branches <code>dev</code> ou <code>main</code>, une pipeline sous Node.js 22 exécute automatiquement les tests unitaires et d’intégration. Pour la branche de production (<code>main</code>), une étape supplémentaire analyse le bundle afin de contrôler la taille et les performances. En parallèle, le journal des changements (<code>CHANGELOG.md</code>) est mis à jour automatiquement par un script dédié, puis poussé sur le dépôt pour assurer une traçabilité claire des évolutions. Le déploiement est assuré par Railway, sans action manuelle. Chaque Pull Request déclenche la création d’un environnement de Preview avec une URL dédiée pour la validation visuelle et fonctionnelle. La branche <code>dev</code> sert d’environnement de préproduction (recette). Actuellement, la production est temporairement hébergée sur l’environnement de développement pour permettre une évolution rapide et continue de la plateforme. Les en-têtes de sécurité sont appliqués côté Railway pour renforcer la protection dans le navigateur. En pratique, le flux de travail est le suivant : développer sur une branche dédiée, ouvrir une Pull Request, laisser la CI exécuter les vérifications, valider la Preview Railway, puis fusionner. La recette s’effectue sur <code>dev</code>. Aucune commande de déploiement n’est requise : la chaîne CI/CD garantit des livraisons rapides, fiables et traçables. Voir annexe diagramme de flux.</p>
+    <h3>5.b Méthodologie de test</h3>
+    <p>Pour assurer une maintenance durable, les tests unitaires et end-to-end font partie intégrante du code et du flux CI/CD. Ils servent à verrouiller le comportement attendu, faciliter les refactorings et réduire le coût des régressions. <strong>Ce qu’il faut tester en priorité</strong> : règles métiers, transformations de données, formats d’entrées/sorties, gestion des erreurs, contrats de composants (rendu conditionnel, accessibilité de base, interactions critiques). Les snapshots doivent rester ciblés et stables ; éviter les snapshots massifs et volatils. <strong>Critères de qualité</strong> : viser une couverture significative et pertinente (branches et chemins critiques) sans transformer la couverture en objectif purement quantitatif. Un test doit échouer pour une bonne raison et réussir pour la bonne raison. <strong>Rapidité et fiabilité</strong> : un test unitaire doit s’exécuter en millisecondes et donner toujours le même résultat. Éliminer les tests « flaky » avant fusion ; un test instable nuit à toute la chaîne. <strong>Variables d’environnement et flags</strong> : documenter les valeurs par défaut utilisées en test, et couvrir le comportement sous flags ou modes (ex. préproduction/production) lorsque cela affecte la logique. <strong>Revue et dette technique</strong> : toute Pull Request modifiant la logique fonctionnelle doit ajouter ou mettre à jour des tests pertinents. Les tests fragiles ou redondants sont refactorés régulièrement pour rester utiles et lisibles. Cette discipline de tests, combinée au pipeline GitHub Actions et aux déploiements Railway, maintient un cycle de livraison maîtrisé : on protège la qualité au plus près du code, on détecte tôt les régressions, et on livre en confiance sur <code>develop</code> (préproduction) puis sur <code>main</code> (production).</p>
+    <h3>5.c Méthodologie GitHub</h3>
+    <p>INKSPOT suit un flux de travail simple et reproductible qui part d’un besoin documenté et se termine par une fonctionnalité livrée et tracée. L’objectif est d’assurer clarté, traçabilité et vitesse, sans surcharge pour les développeurs. Voici les étapes :</p>
     <ol class="list-tight">
-      <li><strong>Cr&eacute;ation et cadrage du ticket</strong> : Lorsqu’un besoin &eacute;merge (&eacute;volution, correction, dette technique), il est cr&eacute;&eacute; dans GitHub Projects sous la forme d’un ticket. Le ticket d&eacute;crit le contexte, l’objectif, les crit&egrave;res d’acceptation et, si n&eacute;cessaire, les risques connus et impacts. Cette documentation rend explicites les attentes et sert de r&eacute;f&eacute;rence pendant tout le cycle.</li>
-      <li><strong>Classification par tags</strong> : Le ticket re&ccedil;oit un ou plusieurs tags (ex. feature, bug, tech-debt, perf, a11y, s&eacute;curit&eacute;) ainsi qu’une priorit&eacute;. Ces tags facilitent la planification, la recherche et le suivi du travail, et permettent d’appliquer des r&egrave;gles de qualit&eacute; adapt&eacute;es (revue renforc&eacute;e pour la s&eacute;curit&eacute;, seuils sp&eacute;cifiques pour la performance, etc.).</li>
-      <li><strong>Cr&eacute;ation automatique de la branche &agrave; partir du ticket</strong> : D&egrave;s que le ticket est pr&ecirc;t &agrave; &ecirc;tre trait&eacute;, une branche d&eacute;di&eacute;e est cr&eacute;&eacute;e automatiquement &agrave; partir des informations du ticket. La convention de nommage reste coh&eacute;rente et tra&ccedil;able (par exemple, pr&eacute;fixe li&eacute; au type et identifiant du ticket). Cette automatisation r&eacute;duit les erreurs, applique les conventions d’&eacute;quipe et garantit le lien explicite entre code et besoin.</li>
-      <li><strong>D&eacute;veloppement et synchronisation continue</strong> : Le d&eacute;veloppement se fait sur cette branche d&eacute;di&eacute;e. Les commits sont atomiques et mentionnent l’identifiant du ticket pour conserver la tra&ccedil;abilit&eacute;. À chaque push, la CI ex&eacute;cute les tests unitaires et les autres contr&ocirc;les qualit&eacute;. En parall&egrave;le, Railway g&eacute;n&egrave;re des Previews pour valider visuellement les changements au fil de l’eau.</li>
-      <li><strong>Pull Request et liaison au ticket</strong> : Une fois la tâche aboutie, une Pull Request est ouverte et li&eacute;e au ticket. La description rappelle bri&egrave;vement l’objectif, les changements principaux, les crit&egrave;res d’acceptation et, si pertinent, les impacts techniques. Cette liaison garantit que le ticket sera automatiquement mis &agrave; jour lorsque la PR sera fusionn&eacute;e.</li>
-      <li><strong>Script de d&eacute;ploiement continue</strong> : La Preview Railway associ&eacute;e &agrave; la PR est v&eacute;rifi&eacute;e par l’&eacute;quipe (et, si n&eacute;cessaire, par la personne qui a port&eacute; le besoin). Cette &eacute;tape confirme que le r&eacute;sultat correspond aux crit&egrave;res d’acceptation et qu’aucune r&eacute;gression visuelle majeure n’a &eacute;t&eacute; introduite.</li>
-      <li><strong>Fusion, nettoyage et passage du ticket en « Fait »</strong> : Apr&egrave;s approbation et checks verts, la PR est fusionn&eacute;e vers la branche cible (<code>dev</code> pour la pr&eacute;production, <code>main</code> pour la production selon le cas). La branche de travail est supprim&eacute;e afin d’&eacute;viter l’encombrement et les confusions. Le ticket passe automatiquement &agrave; l’&eacute;tat « Fait », ce qui cl&ocirc;t le cycle et met &agrave; jour la visibilit&eacute; dans GitHub Projects.</li>
-      <li><strong>Tra&ccedil;abilit&eacute; et retour d’exp&eacute;rience</strong> : Le changelog est mis &agrave; jour automatiquement, rendant visibles les &eacute;volutions livr&eacute;es. En cas d’incident ou d’&eacute;cart, un court retour d’exp&eacute;rience est not&eacute; sur le ticket ou dans la documentation associ&eacute;e, pour capitaliser et am&eacute;liorer en continu la m&eacute;thode. Ce cadre, du ticket initial jusqu’&agrave; la suppression de la branche et la mise en « Fait », garantit un flux pr&eacute;visible, des d&eacute;ploiements sûrs, et une tra&ccedil;abilit&eacute; compl&egrave;te entre besoin, code, tests et livraison. Il s’int&egrave;gre naturellement au pipeline CI/CD et aux Previews Railway, tout en laissant de la place &agrave; l’am&eacute;lioration continue.</li>
+      <li><strong>Création et cadrage du ticket</strong> : Lorsqu’un besoin émerge (évolution, correction, dette technique), il est créé dans GitHub Projects sous la forme d’un ticket. Le ticket décrit le contexte, l’objectif, les critères d’acceptation et, si nécessaire, les risques connus et impacts. Cette documentation rend explicites les attentes et sert de référence pendant tout le cycle.</li>
+      <li><strong>Classification par tags</strong> : Le ticket reçoit un ou plusieurs tags (ex. feature, bug, tech-debt, perf, a11y, sécurité) ainsi qu’une priorité. Ces tags facilitent la planification, la recherche et le suivi du travail, et permettent d’appliquer des règles de qualité adaptées (revue renforcée pour la sécurité, seuils spécifiques pour la performance, etc.).</li>
+      <li><strong>Création automatique de la branche à partir du ticket</strong> : Dès que le ticket est prêt à être traité, une branche dédiée est créée automatiquement à partir des informations du ticket. La convention de nommage reste cohérente et traçable (par exemple, préfixe lié au type et identifiant du ticket). Cette automatisation réduit les erreurs, applique les conventions d’équipe et garantit le lien explicite entre code et besoin.</li>
+      <li><strong>Développement et synchronisation continue</strong> : Le développement se fait sur cette branche dédiée. Les commits sont atomiques et mentionnent l’identifiant du ticket pour conserver la traçabilité. À chaque push, la CI exécute les tests unitaires et les autres contrôles qualité. En parallèle, Railway génère des Previews pour valider visuellement les changements au fil de l’eau.</li>
+      <li><strong>Pull Request et liaison au ticket</strong> : Une fois la tâche aboutie, une Pull Request est ouverte et liée au ticket. La description rappelle brièvement l’objectif, les changements principaux, les critères d’acceptation et, si pertinent, les impacts techniques. Cette liaison garantit que le ticket sera automatiquement mis à jour lorsque la PR sera fusionnée.</li>
+      <li><strong>Script de déploiement continue</strong> : La Preview Railway associée à la PR est vérifiée par l’équipe (et, si nécessaire, par la personne qui a porté le besoin). Cette étape confirme que le résultat correspond aux critères d’acceptation et qu’aucune régression visuelle majeure n’a été introduite.</li>
+      <li><strong>Fusion, nettoyage et passage du ticket en « Fait »</strong> : Après approbation et checks verts, la PR est fusionnée vers la branche cible (<code>dev</code> pour la préproduction, <code>main</code> pour la production selon le cas). La branche de travail est supprimée afin d’éviter l’encombrement et les confusions. Le ticket passe automatiquement à l’état « Fait », ce qui clôt le cycle et met à jour la visibilité dans GitHub Projects.</li>
+      <li><strong>Traçabilité et retour d’expérience</strong> : Le changelog est mis à jour automatiquement, rendant visibles les évolutions livrées. En cas d’incident ou d’écart, un court retour d’expérience est noté sur le ticket ou dans la documentation associée, pour capitaliser et améliorer en continu la méthode. Ce cadre, du ticket initial jusqu’à la suppression de la branche et la mise en « Fait », garantit un flux prévisible, des déploiements sûrs, et une traçabilité complète entre besoin, code, tests et livraison. Il s’intègre naturellement au pipeline CI/CD et aux Previews Railway, tout en laissant de la place à l’amélioration continue.</li>
     </ol>
-    <p><strong>Impl&eacute;mentation et bonnes pratiques des tests</strong> : Port&eacute;e des tests : chaque module ou composant doit avoir des tests qui couvrent ses r&egrave;gles m&eacute;tiers, ses chemins d’erreur et ses contrats publics (fonctions export&eacute;es, composants, utilitaires). Organisation : les tests vivent au plus pr&egrave;s du code test&eacute; (m&ecirc;me r&eacute;pertoire) avec une convention de nommage claire pour &ecirc;tre d&eacute;couverts automatiquement par la CI. Un fichier de test par unit&eacute; logique, des noms de cas lisibles et orient&eacute;s comportement. Donn&eacute;es de test : utiliser des jeux de donn&eacute;es simples, explicites et reproductibles. Les « fixtures » et « factories » aident &agrave; cr&eacute;er des objets coh&eacute;rents sans bruit. &Eacute;viter les d&eacute;pendances &agrave; des ressources externes ; pr&eacute;f&eacute;rer des doublures. Isolation et mock : isoler l’unit&eacute; test&eacute;e en rempla&ccedil;ant les appels aux services externes (HTTP, base de donn&eacute;es, file system, SDK tiers) par des mocks/stubs contr&ocirc;l&eacute;s. Le but est d’obtenir des tests rapides, d&eacute;terministes et ind&eacute;pendants du r&eacute;seau.</p>
+    <p><strong>Implémentation et bonnes pratiques des tests</strong> : Portée des tests : chaque module ou composant doit avoir des tests qui couvrent ses règles métiers, ses chemins d’erreur et ses contrats publics (fonctions exportées, composants, utilitaires). Organisation : les tests vivent au plus près du code testé (même répertoire) avec une convention de nommage claire pour être découverts automatiquement par la CI. Un fichier de test par unité logique, des noms de cas lisibles et orientés comportement. Données de test : utiliser des jeux de données simples, explicites et reproductibles. Les « fixtures » et « factories » aident à créer des objets cohérents sans bruit. Éviter les dépendances à des ressources externes ; préférer des doublures. Isolation et mock : isoler l’unité testée en remplaçant les appels aux services externes (HTTP, base de données, file system, SDK tiers) par des mocks/stubs contrôlés. Le but est d’obtenir des tests rapides, déterministes et indépendants du réseau.</p>
   </div>
 
   <div class="card" id="modele-economique">
-    <h2 class="section-title">6. Mod&egrave;le &eacute;conomique et fonctionnalit&eacute;s</h2>
-    <h3>6.a Mod&egrave;le &eacute;conomique</h3>
-    <p>INKSPOT g&eacute;n&egrave;re ses revenus principalement via un syst&egrave;me de commissions sur les r&eacute;servations effectu&eacute;es par les utilisateurs. Pour chaque r&eacute;servation pay&eacute;e via Stripe, INKSPOT pr&eacute;l&egrave;ve une commission de <strong>3,5 % + 50 centimes</strong>. Ce mod&egrave;le permet &agrave; la plateforme de se r&eacute;mun&eacute;rer tout en offrant un service gratuit aux utilisateurs. Un syst&egrave;me d’abonnement premium est &eacute;galement pr&eacute;vu pour l’avenir, offrant des fonctionnalit&eacute;s avanc&eacute;es aux utilisateurs qui souhaitent b&eacute;n&eacute;ficier d’options suppl&eacute;mentaires. <strong>🚀 &Eacute;volution future</strong>.</p>
-    <h3>6.b Fonctionnalit&eacute;s principales</h3>
-    <p>INKSPOT propose une plateforme compl&egrave;te de mise en relation entre artistes tatoueurs et clients.</p>
+    <h2 class="section-title">6. Modèle économique et fonctionnalités</h2>
+    <h3>6.a Modèle économique</h3>
+    <p>INKSPOT génère ses revenus principalement via un système de commissions sur les réservations effectuées par les utilisateurs. Pour chaque réservation payée via Stripe, INKSPOT prélève une commission de <strong>3,5 % + 50 centimes</strong>. Ce modèle permet à la plateforme de se rémunérer tout en offrant un service gratuit aux utilisateurs. Un système d’abonnement premium est également prévu pour l’avenir, offrant des fonctionnalités avancées aux utilisateurs qui souhaitent bénéficier d’options supplémentaires. <strong>🚀 Évolution future</strong>.</p>
+    <h3>6.b Fonctionnalités principales</h3>
+    <p>INKSPOT propose une plateforme complète de mise en relation entre artistes tatoueurs et clients.</p>
     <p><strong>Pour tous les utilisateurs</strong></p>
     <ul class="list-tight">
-      <li>Cr&eacute;ation de compte et profil (inscription, authentification, personnalisation du profil)</li>
-      <li>Recherche et d&eacute;couverte (recherche d’artistes et de posts, filtres avanc&eacute;s)</li>
+      <li>Création de compte et profil (inscription, authentification, personnalisation du profil)</li>
+      <li>Recherche et découverte (recherche d’artistes et de posts, filtres avancés)</li>
       <li>Interactions sociales (abonnement aux artistes, commentaires, likes sur les posts)</li>
       <li>Communication (envoi de messages directs aux artistes)</li>
-      <li>Contenu (cr&eacute;ation et partage de posts avec images et hashtags)</li>
+      <li>Contenu (création et partage de posts avec images et hashtags)</li>
     </ul>
     <p><strong>Pour les artistes (PRO)</strong></p>
     <ul class="list-tight">
-      <li>Gestion des r&eacute;servations (proposition de cr&eacute;neaux, gestion du planning)</li>
-      <li>Outils professionnels (tableau de bord avanc&eacute;, analytics de performance)</li>
-      <li>Collaborations (possibilit&eacute; de collaborer sur des posts)</li>
-      <li>Suivi financier (historique des rendez-vous, revenus g&eacute;n&eacute;r&eacute;s)</li>
-      <li>Gestion des disponibilit&eacute;s (d&eacute;finition des cr&eacute;neaux disponibles)</li>
-      <li>&Eacute;valuations (syst&egrave;me de reviews et commentaires)</li>
+      <li>Gestion des réservations (proposition de créneaux, gestion du planning)</li>
+      <li>Outils professionnels (tableau de bord avancé, analytics de performance)</li>
+      <li>Collaborations (possibilité de collaborer sur des posts)</li>
+      <li>Suivi financier (historique des rendez-vous, revenus générés)</li>
+      <li>Gestion des disponibilités (définition des créneaux disponibles)</li>
+      <li>Évaluations (système de reviews et commentaires)</li>
     </ul>
     <p><strong>Pour les clients</strong></p>
     <ul class="list-tight">
-      <li>R&eacute;servations (prise de rendez-vous avec les artistes)</li>
-      <li>Paiements s&eacute;curis&eacute;s (Stripe avec protection SCA/3‑D Secure)</li>
-      <li>Suivi (historique des rendez-vous pass&eacute;s et &agrave; venir)</li>
+      <li>Réservations (prise de rendez-vous avec les artistes)</li>
+      <li>Paiements sécurisés (Stripe avec protection SCA/3‑D Secure)</li>
+      <li>Suivi (historique des rendez-vous passés et à venir)</li>
     </ul>
     <h3>6.c Gestion des paiements Stripe</h3>
-    <p>Le syst&egrave;me de paiement d’INKSPOT est enti&egrave;rement int&eacute;gr&eacute; avec Stripe pour assurer s&eacute;curit&eacute; et fiabilit&eacute;. Chaque r&eacute;servation g&eacute;n&egrave;re automatiquement une transaction Stripe avec calcul automatique des commissions. <strong>Flux de paiement et commissions</strong> : R&eacute;servation client (le client s&eacute;lectionne un cr&eacute;neau et proc&egrave;de au paiement). Paiement Stripe (transaction s&eacute;curis&eacute;e via Stripe Checkout avec SCA/3‑D Secure). Calcul des commissions (INKSPOT pr&eacute;l&egrave;ve automatiquement 3,5 % + 50 centimes). Virement artiste (le montant net est transf&eacute;r&eacute; sur le compte de l’artiste). Suivi financier (toutes les transactions sont trac&eacute;es et consultables). <strong>Synchronisation et webhooks</strong> : Webhooks Stripe (toutes les notifications de paiement sont trait&eacute;es en temps r&eacute;el). Idempotence (chaque webhook est trait&eacute; de mani&egrave;re idempotente pour &eacute;viter les doublons). V&eacute;rification cryptographique (signature des webhooks v&eacute;rifi&eacute;e pour la s&eacute;curit&eacute;). Synchronisation base de donn&eacute;es (statut des paiements mis &agrave; jour automatiquement).</p>
+    <p>Le système de paiement d’INKSPOT est entièrement intégré avec Stripe pour assurer sécurité et fiabilité. Chaque réservation génère automatiquement une transaction Stripe avec calcul automatique des commissions. <strong>Flux de paiement et commissions</strong> : Réservation client (le client sélectionne un créneau et procède au paiement). Paiement Stripe (transaction sécurisée via Stripe Checkout avec SCA/3‑D Secure). Calcul des commissions (INKSPOT prélève automatiquement 3,5 % + 50 centimes). Virement artiste (le montant net est transféré sur le compte de l’artiste). Suivi financier (toutes les transactions sont tracées et consultables). <strong>Synchronisation et webhooks</strong> : Webhooks Stripe (toutes les notifications de paiement sont traitées en temps réel). Idempotence (chaque webhook est traité de manière idempotente pour éviter les doublons). Vérification cryptographique (signature des webhooks vérifiée pour la sécurité). Synchronisation base de données (statut des paiements mis à jour automatiquement).</p>
     <h3>Conclusion</h3>
-    <p>INKSPOT s’appuie sur une architecture moderne et coh&eacute;rente (Next.js 16/Railway, PostgreSQL/Prisma, Prometheus → Grafana) et un cycle de livraison maîtris&eacute; (CI/CD GitHub Actions, previews Railway, tests unitaires et E2E). La supervision couvre les couches API, base de donn&eacute;es et m&eacute;tier, tandis que le mod&egrave;le &eacute;conomique repose sur des commissions transparentes via Stripe. Ce document constitue la r&eacute;f&eacute;rence technique compl&egrave;te pour l’exploitation et l’&eacute;volution de la plateforme INKSPOT v1.0.</p>
+    <p>INKSPOT s’appuie sur une architecture moderne et cohérente (Next.js 16/Railway, PostgreSQL/Prisma, Prometheus → Grafana) et un cycle de livraison maîtrisé (CI/CD GitHub Actions, previews Railway, tests unitaires et E2E). La supervision couvre les couches API, base de données et métier, tandis que le modèle économique repose sur des commissions transparentes via Stripe. Ce document constitue la référence technique complète pour l’exploitation et l’évolution de la plateforme INKSPOT v1.0.</p>
   </div>
 
   <div class="card" id="vue-architecture">
-    <h2 class="section-title">Vue d'architecture simplifi&eacute;e du syst&egrave;me</h2>
-    <p>INKSPOT repose sur une architecture en couches claire, où chaque niveau a une responsabilit&eacute; unique. Cette s&eacute;paration garantit la maintenabilit&eacute;, la testabilit&eacute; et l'&eacute;volutivit&eacute; du syst&egrave;me.</p>
+    <h2 class="section-title">Vue d'architecture simplifiée du système</h2>
+    <p>INKSPOT repose sur une architecture en couches claire, où chaque niveau a une responsabilité unique. Cette séparation garantit la maintenabilité, la testabilité et l'évolutivité du système.</p>
     <pre style="background:var(--color-bg,#0d1117);color:var(--color-text,#e6edf3);border:1px solid var(--color-border,#30363d);border-radius:8px;padding:1.25rem 1.5rem;font-size:0.82rem;line-height:1.7;overflow-x:auto;font-family:'Fira Mono','Cascadia Code',monospace;">
 ┌─────────────────────────────────────────────────────────────┐
 │                  UTILISATEUR (Navigateur)                   │
@@ -381,7 +394,7 @@ import DocLayout from '../layouts/DocLayout.astro';
 └───────────────────────────┬─────────────────────────────────┘
                             │  HTTPS
 ┌───────────────────────────▼─────────────────────────────────┐
-│              NEXT.JS 16 &mdash; Frontend + API Routes             │
+│              NEXT.JS 16 — Frontend + API Routes             │
 │  ┌─────────────────────┐   ┌──────────────────────────────┐ │
 │  │  App Router (React) │   │  API Routes (app/api/**)     │ │
 │  │  Tailwind · Radix   │   │  ~91 endpoints REST          │ │
@@ -390,7 +403,7 @@ import DocLayout from '../layouts/DocLayout.astro';
 └───────────────────────────┬─────────────────────────────────┘
                             │
 ┌───────────────────────────▼─────────────────────────────────┐
-│                  SERVICES M&Eacute;TIER (lib/)                     │
+│                  SERVICES MÉTIER (lib/)                     │
 │  ┌──────────────┐ ┌──────────────┐ ┌─────────────────────┐  │
 │  │ AuthService  │ │  Appointment │ │  PaymentService     │  │
 │  │ NextAuth JWT │ │  Service     │ │  Stripe · Webhooks  │  │
@@ -403,7 +416,7 @@ import DocLayout from '../layouts/DocLayout.astro';
                             │
 ┌───────────────────────────▼─────────────────────────────────┐
 │                    PRISMA ORM (lib/prisma.ts)                │
-│         Mod&egrave;les typ&eacute;s · Migrations · Transactions           │
+│         Modèles typés · Migrations · Transactions           │
 └───────────────────────────┬─────────────────────────────────┘
                             │
 ┌───────────────────────────▼─────────────────────────────────┐
@@ -415,65 +428,65 @@ import DocLayout from '../layouts/DocLayout.astro';
 ┌───────────────┐ ┌───────────────┐ ┌──────────────────────┐
 │  STRIPE       │ │  AWS S3       │ │  REDIS               │
 │  Paiements    │ │  Stockage     │ │  Cache · Sessions    │
-│  Webhooks     │ │  M&eacute;dias/Images│ │  Rate-limiting       │
+│  Webhooks     │ │  Médias/Images│ │  Rate-limiting       │
 └───────────────┘ └───────────────┘ └──────────────────────┘
 ┌───────────────────────────────────────────────────────────┐
-│  OBSERVABILIT&Eacute; : Prometheus (m&eacute;triques) → Grafana (UI)    │
-│  GitHub Actions (CI) → Railway (CD + h&eacute;bergement)         │
+│  OBSERVABILITÉ : Prometheus (métriques) → Grafana (UI)    │
+│  GitHub Actions (CI) → Railway (CD + hébergement)         │
 └───────────────────────────────────────────────────────────┘</pre>
     <h3>Description des couches</h3>
     <table role="grid" aria-label="Description des couches architecturales">
       <thead>
         <tr>
           <th scope="col">Couche</th>
-          <th scope="col">R&ocirc;le</th>
+          <th scope="col">Rôle</th>
           <th scope="col">Technologies</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>Pr&eacute;sentation</strong></td>
-          <td>Interface utilisateur, rendu c&ocirc;t&eacute; serveur (SSR/SSG), navigation</td>
+          <td><strong>Présentation</strong></td>
+          <td>Interface utilisateur, rendu côté serveur (SSR/SSG), navigation</td>
           <td>Next.js App Router, React 18, Tailwind CSS, Radix UI</td>
         </tr>
         <tr>
           <td><strong>API</strong></td>
-          <td>Exposition des endpoints REST, validation des entr&eacute;es, contr&ocirc;le d'acc&egrave;s</td>
+          <td>Exposition des endpoints REST, validation des entrées, contrôle d'accès</td>
           <td>Next.js API Routes, Zod, NextAuth, rate-limit</td>
         </tr>
         <tr>
-          <td><strong>Services m&eacute;tier</strong></td>
+          <td><strong>Services métier</strong></td>
           <td>Logique applicative, orchestration des flux, gestion des erreurs</td>
           <td>TypeScript services (lib/services/), Zustand</td>
         </tr>
         <tr>
-          <td><strong>Acc&egrave;s donn&eacute;es</strong></td>
-          <td>Requ&ecirc;tes typ&eacute;es, migrations, transactions, int&eacute;grit&eacute; r&eacute;f&eacute;rentielle</td>
-          <td>Prisma ORM 6.x, migrations versionn&eacute;es</td>
+          <td><strong>Accès données</strong></td>
+          <td>Requêtes typées, migrations, transactions, intégrité référentielle</td>
+          <td>Prisma ORM 6.x, migrations versionnées</td>
         </tr>
         <tr>
           <td><strong>Persistance</strong></td>
-          <td>Stockage relationnel durable, requ&ecirc;tes complexes, indexation</td>
+          <td>Stockage relationnel durable, requêtes complexes, indexation</td>
           <td>PostgreSQL 15 (Railway managed)</td>
         </tr>
         <tr>
           <td><strong>Services tiers</strong></td>
-          <td>Paiements, m&eacute;dias, cache, notifications push</td>
+          <td>Paiements, médias, cache, notifications push</td>
           <td>Stripe, AWS S3, Redis, VAPID/web-push</td>
         </tr>
         <tr>
-          <td><strong>Observabilit&eacute;</strong></td>
-          <td>M&eacute;triques temps r&eacute;el, alertes, logs, traces distribu&eacute;es</td>
+          <td><strong>Observabilité</strong></td>
+          <td>Métriques temps réel, alertes, logs, traces distribuées</td>
           <td>Prometheus, Grafana, Loki, Tempo</td>
         </tr>
       </tbody>
     </table>
-    <p>Cette architecture en couches garantit une <strong>s&eacute;paration stricte des responsabilit&eacute;s</strong> : chaque couche ne connaît que la couche imm&eacute;diatement inf&eacute;rieure, ce qui facilite les tests unitaires, le remplacement de composants et l'&eacute;volution ind&eacute;pendante de chaque partie du syst&egrave;me.</p>
+    <p>Cette architecture en couches garantit une <strong>séparation stricte des responsabilités</strong> : chaque couche ne connaît que la couche immédiatement inférieure, ce qui facilite les tests unitaires, le remplacement de composants et l'évolution indépendante de chaque partie du système.</p>
   </div>
 
   <div class="card" id="justification-choix">
     <h2 class="section-title">Justification des choix technologiques</h2>
-    <p>Chaque technologie du projet a &eacute;t&eacute; s&eacute;lectionn&eacute;e sur la base de crit&egrave;res techniques pr&eacute;cis : maturit&eacute; de l'&eacute;cosyst&egrave;me, ad&eacute;quation avec les besoins fonctionnels, productivit&eacute; de d&eacute;veloppement et coût d'exploitation.</p>
+    <p>Chaque technologie du projet a été sélectionnée sur la base de critères techniques précis : maturité de l'écosystème, adéquation avec les besoins fonctionnels, productivité de développement et coût d'exploitation.</p>
     <table role="grid" aria-label="Justification des choix technologiques">
       <thead>
         <tr>
@@ -484,31 +497,31 @@ import DocLayout from '../layouts/DocLayout.astro';
       <tbody>
         <tr>
           <td><strong>Next.js 16</strong></td>
-          <td>Next.js unifie frontend et backend dans un seul projet, &eacute;liminant la n&eacute;cessit&eacute; d'une API s&eacute;par&eacute;e et r&eacute;duisant la complexit&eacute; op&eacute;rationnelle. L'App Router avec React Server Components permet un rendu hybride (SSR/SSG/ISR) optimisant les performances per&ccedil;ues et le r&eacute;f&eacute;rencement. Le support natif de TypeScript, du syst&egrave;me de fichiers comme routeur et des API Routes en fait le choix le plus productif pour une application full-stack en 2025&ndash;2026.</td>
+          <td>Next.js unifie frontend et backend dans un seul projet, éliminant la nécessité d'une API séparée et réduisant la complexité opérationnelle. L'App Router avec React Server Components permet un rendu hybride (SSR/SSG/ISR) optimisant les performances perçues et le référencement. Le support natif de TypeScript, du système de fichiers comme routeur et des API Routes en fait le choix le plus productif pour une application full-stack en 2025–2026.</td>
         </tr>
         <tr>
           <td><strong>TypeScript</strong></td>
-          <td>TypeScript apporte la v&eacute;rification statique des types &agrave; la compilation, r&eacute;duisant drastiquement les erreurs de r&eacute;gression sur un projet de cette envergure (91 routes API, 20+ mod&egrave;les Prisma). Le typage fort facilite la navigation dans le code, l'autocompl&eacute;tion et la d&eacute;tection pr&eacute;coce des incompatibilit&eacute;s d'interface entre couches. Il est aujourd'hui le standard de l'industrie pour les projets Node.js de taille moyenne &agrave; grande.</td>
+          <td>TypeScript apporte la vérification statique des types à la compilation, réduisant drastiquement les erreurs de régression sur un projet de cette envergure (91 routes API, 20+ modèles Prisma). Le typage fort facilite la navigation dans le code, l'autocomplétion et la détection précoce des incompatibilités d'interface entre couches. Il est aujourd'hui le standard de l'industrie pour les projets Node.js de taille moyenne à grande.</td>
         </tr>
         <tr>
           <td><strong>PostgreSQL</strong></td>
-          <td>PostgreSQL est le syst&egrave;me de gestion de bases de donn&eacute;es relationnelles open-source le plus avanc&eacute;, offrant des transactions ACID compl&egrave;tes indispensables pour les flux de paiement et de r&eacute;servation. Ses fonctionnalit&eacute;s avanc&eacute;es (index partiels, JSON natif, full-text search) permettent d'optimiser les requ&ecirc;tes de recherche d'artistes sans infrastructure suppl&eacute;mentaire. Railway propose PostgreSQL 15 en service manag&eacute; avec sauvegardes automatiques, simplifiant l'exploitation.</td>
+          <td>PostgreSQL est le système de gestion de bases de données relationnelles open-source le plus avancé, offrant des transactions ACID complètes indispensables pour les flux de paiement et de réservation. Ses fonctionnalités avancées (index partiels, JSON natif, full-text search) permettent d'optimiser les requêtes de recherche d'artistes sans infrastructure supplémentaire. Railway propose PostgreSQL 15 en service managé avec sauvegardes automatiques, simplifiant l'exploitation.</td>
         </tr>
         <tr>
           <td><strong>Prisma ORM</strong></td>
-          <td>Prisma g&eacute;n&egrave;re un client TypeScript enti&egrave;rement typ&eacute; &agrave; partir du sch&eacute;ma de base de donn&eacute;es, garantissant la coh&eacute;rence entre le mod&egrave;le de donn&eacute;es et le code applicatif. Son syst&egrave;me de migrations versionn&eacute;es assure une tra&ccedil;abilit&eacute; compl&egrave;te des &eacute;volutions du sch&eacute;ma et permet des d&eacute;ploiements reproductibles. La syntaxe d&eacute;clarative de Prisma r&eacute;duit significativement le risque d'injections SQL par rapport aux requ&ecirc;tes SQL brutes.</td>
+          <td>Prisma génère un client TypeScript entièrement typé à partir du schéma de base de données, garantissant la cohérence entre le modèle de données et le code applicatif. Son système de migrations versionnées assure une traçabilité complète des évolutions du schéma et permet des déploiements reproductibles. La syntaxe déclarative de Prisma réduit significativement le risque d'injections SQL par rapport aux requêtes SQL brutes.</td>
         </tr>
         <tr>
           <td><strong>Redis</strong></td>
-          <td>Redis est utilis&eacute; comme couche de cache en m&eacute;moire pour r&eacute;duire la charge sur PostgreSQL lors des requ&ecirc;tes fr&eacute;quentes (profils d'artistes, r&eacute;sultats de recherche, sessions). Sa structure de donn&eacute;es cl&eacute;-valeur avec TTL configurable permet d'impl&eacute;menter facilement le rate-limiting par IP, prot&eacute;geant les endpoints d'authentification contre les attaques par force brute. La latence sub-milliseconde de Redis est critique pour maintenir les temps de r&eacute;ponse API sous 200 ms.</td>
+          <td>Redis est utilisé comme couche de cache en mémoire pour réduire la charge sur PostgreSQL lors des requêtes fréquentes (profils d'artistes, résultats de recherche, sessions). Sa structure de données clé-valeur avec TTL configurable permet d'implémenter facilement le rate-limiting par IP, protégeant les endpoints d'authentification contre les attaques par force brute. La latence sub-milliseconde de Redis est critique pour maintenir les temps de réponse API sous 200 ms.</td>
         </tr>
         <tr>
           <td><strong>Railway</strong></td>
-          <td>Railway est une plateforme PaaS (Platform as a Service) qui simplifie le d&eacute;ploiement d'applications conteneuris&eacute;es sans n&eacute;cessiter de gestion d'infrastructure. Son int&eacute;gration native avec GitHub permet un d&eacute;ploiement continu automatique &agrave; chaque push, et la gestion des variables d'environnement chiffr&eacute;es &eacute;limine les risques de fuite de secrets. Le mod&egrave;le de facturation &agrave; l'usage et la scalabilit&eacute; automatique le rendent adapt&eacute; &agrave; une phase de lancement avec trafic variable.</td>
+          <td>Railway est une plateforme PaaS (Platform as a Service) qui simplifie le déploiement d'applications conteneurisées sans nécessiter de gestion d'infrastructure. Son intégration native avec GitHub permet un déploiement continu automatique à chaque push, et la gestion des variables d'environnement chiffrées élimine les risques de fuite de secrets. Le modèle de facturation à l'usage et la scalabilité automatique le rendent adapté à une phase de lancement avec trafic variable.</td>
         </tr>
         <tr>
           <td><strong>Stripe</strong></td>
-          <td>Stripe est la r&eacute;f&eacute;rence mondiale pour l'int&eacute;gration de paiements en ligne, offrant une conformit&eacute; PCI-DSS Level 1 sans que l'application ne manipule directement les donn&eacute;es de carte bancaire. Son syst&egrave;me de webhooks avec v&eacute;rification de signature HMAC garantit l'int&eacute;grit&eacute; des &eacute;v&eacute;nements de paiement, et son mode test complet permet de valider l'ensemble des flux (succ&egrave;s, refus, remboursement) sans transaction r&eacute;elle. Les APIs Stripe Connect permettront &agrave; terme de g&eacute;rer les virements directs aux artistes.</td>
+          <td>Stripe est la référence mondiale pour l'intégration de paiements en ligne, offrant une conformité PCI-DSS Level 1 sans que l'application ne manipule directement les données de carte bancaire. Son système de webhooks avec vérification de signature HMAC garantit l'intégrité des événements de paiement, et son mode test complet permet de valider l'ensemble des flux (succès, refus, remboursement) sans transaction réelle. Les APIs Stripe Connect permettront à terme de gérer les virements directs aux artistes.</td>
         </tr>
       </tbody>
     </table>
@@ -517,21 +530,21 @@ import DocLayout from '../layouts/DocLayout.astro';
   <div class="card" id="architecture">
     <h2 class="section-title">Architecture & modules</h2>
     <ul class="list-tight">
-      <li>Front/Back unifi&eacute;s dans Next.js ; API routes sous <code>app/api/**</code></li>
-      <li>Services m&eacute;tier : r&eacute;servation, paiement, notifications, messagerie</li>
-      <li>Prisma schema : mod&egrave;les utilisateurs, posts, bookings, payments, notifications, etc.</li>
+      <li>Front/Back unifiés dans Next.js ; API routes sous <code>app/api/**</code></li>
+      <li>Services métier : réservation, paiement, notifications, messagerie</li>
+      <li>Prisma schema : modèles utilisateurs, posts, bookings, payments, notifications, etc.</li>
       <li>Stockage fichiers : S3 (upload) ; Cache/session : Redis</li>
     </ul>
   </div>
 
   <div class="card" id="flux">
-    <h2 class="section-title">Flux de donn&eacute;es</h2>
-    <table role="grid" aria-label="Flux m&eacute;tier et donn&eacute;es persist&eacute;es">
+    <h2 class="section-title">Flux de données</h2>
+    <table role="grid" aria-label="Flux métier et données persistées">
       <thead>
         <tr>
           <th scope="col">Flux</th>
-          <th scope="col">&Eacute;tapes cl&eacute;s</th>
-          <th scope="col">Donn&eacute;es persist&eacute;es</th>
+          <th scope="col">Étapes clés</th>
+          <th scope="col">Données persistées</th>
         </tr>
       </thead>
       <tbody>
@@ -541,8 +554,8 @@ import DocLayout from '../layouts/DocLayout.astro';
           <td>User, Session, VerificationToken</td>
         </tr>
         <tr>
-          <td>R&eacute;servation</td>
-          <td>Disponibilit&eacute;s → Booking → Confirmation</td>
+          <td>Réservation</td>
+          <td>Disponibilités → Booking → Confirmation</td>
           <td>Appointment, Booking, StatusHistory</td>
         </tr>
         <tr>
@@ -578,7 +591,7 @@ import DocLayout from '../layouts/DocLayout.astro';
         <tr>
           <td>Bookings</td>
           <td><code>/api/appointments/*</code></td>
-          <td>Cr&eacute;ation, statut, transitions</td>
+          <td>Création, statut, transitions</td>
         </tr>
         <tr>
           <td>Paiements</td>
@@ -588,7 +601,7 @@ import DocLayout from '../layouts/DocLayout.astro';
         <tr>
           <td>Notifications</td>
           <td><code>/api/notifications</code>, <code>/api/push-subscriptions/*</code></td>
-          <td>Envoi et pr&eacute;f&eacute;rences</td>
+          <td>Envoi et préférences</td>
         </tr>
         <tr>
           <td>Messages</td>
@@ -605,22 +618,22 @@ import DocLayout from '../layouts/DocLayout.astro';
   </div>
 
   <div class="card" id="roles">
-    <h2 class="section-title">R&ocirc;les & permissions</h2>
+    <h2 class="section-title">Rôles & permissions</h2>
     <ul class="list-tight">
-      <li>Client : recherche, r&eacute;servation, paiement, messagerie, gestion profil.</li>
-      <li>Artiste/Pro : gestion disponibilit&eacute;s, validation/annulation, stats, contenu.</li>
-      <li>Admin : mod&eacute;ration, gestion utilisateurs, acc&egrave;s aux dashboards.</li>
-      <li>Contr&ocirc;le d’acc&egrave;s : middleware + v&eacute;rification des r&ocirc;les sur routes sensibles.</li>
+      <li>Client : recherche, réservation, paiement, messagerie, gestion profil.</li>
+      <li>Artiste/Pro : gestion disponibilités, validation/annulation, stats, contenu.</li>
+      <li>Admin : modération, gestion utilisateurs, accès aux dashboards.</li>
+      <li>Contrôle d’accès : middleware + vérification des rôles sur routes sensibles.</li>
     </ul>
   </div>
 
   <div class="card" id="parcours">
-    <h2 class="section-title">Parcours fonctionnels cl&eacute;s</h2>
+    <h2 class="section-title">Parcours fonctionnels clés</h2>
     <ul class="list-tight">
-      <li>Inscription → v&eacute;rification email → login → onboarding.</li>
-      <li>Recherche d’un artiste → r&eacute;servation → paiement Stripe → confirmation.</li>
-      <li>Messagerie : ouverture conversation → envoi → r&eacute;ception temps r&eacute;el.</li>
-      <li>Upload m&eacute;dia : s&eacute;lection fichier → upload S3 → affichage.</li>
+      <li>Inscription → vérification email → login → onboarding.</li>
+      <li>Recherche d’un artiste → réservation → paiement Stripe → confirmation.</li>
+      <li>Messagerie : ouverture conversation → envoi → réception temps réel.</li>
+      <li>Upload média : sélection fichier → upload S3 → affichage.</li>
     </ul>
   </div>
 
@@ -628,18 +641,18 @@ import DocLayout from '../layouts/DocLayout.astro';
     <h2 class="section-title">Exigences techniques & fonctionnelles (CO2.5)</h2>
     <ul class="list-tight">
       <li>Performance : pages principales &lt; 3s en conditions normales, pagination/filtrage.</li>
-      <li>S&eacute;curit&eacute; : validation entr&eacute;e, contr&ocirc;le d’acc&egrave;s, secrets en env.</li>
-      <li>Compatibilit&eacute; : web + mobile responsive, navigateurs modernes.</li>
-      <li>Tra&ccedil;abilit&eacute; : logs applicatifs + m&eacute;triques (Prometheus/Grafana).</li>
+      <li>Sécurité : validation entrée, contrôle d’accès, secrets en env.</li>
+      <li>Compatibilité : web + mobile responsive, navigateurs modernes.</li>
+      <li>Traçabilité : logs applicatifs + métriques (Prometheus/Grafana).</li>
     </ul>
   </div>
 
   <div class="card" id="donnees">
-    <h2 class="section-title">Donn&eacute;es & int&eacute;grit&eacute;</h2>
+    <h2 class="section-title">Données & intégrité</h2>
     <ul class="list-tight">
-      <li>Mod&egrave;les cl&eacute;s : User, Post, Booking, Payment, Notification, Message.</li>
-      <li>Contraintes : unicit&eacute; email/username, relations booking↔paiement.</li>
-      <li>Historisation : statuts de r&eacute;servation et paiements conserv&eacute;s.</li>
+      <li>Modèles clés : User, Post, Booking, Payment, Notification, Message.</li>
+      <li>Contraintes : unicité email/username, relations booking↔paiement.</li>
+      <li>Historisation : statuts de réservation et paiements conservés.</li>
       <li>RGPD : suppression/anonymisation des comptes si requis.</li>
     </ul>
   </div>
@@ -647,7 +660,7 @@ import DocLayout from '../layouts/DocLayout.astro';
   <div class="card" id="configuration">
     <h2 class="section-title">Configuration & scripts</h2>
     <ul class="list-tight">
-      <li>Variables env valid&eacute;es via <code>pnpm env:check</code>.</li>
+      <li>Variables env validées via <code>pnpm env:check</code>.</li>
       <li>DB : <code>pnpm db:generate</code>, <code>pnpm db:push</code>, <code>pnpm db:seed</code>.</li>
       <li>Notifications : <code>pnpm notifications:test</code> / <code>notifications:send-test</code>.</li>
       <li>Docs API : <code>api:docs:generate</code> / <code>api:docs:export</code>.</li>
@@ -656,80 +669,80 @@ import DocLayout from '../layouts/DocLayout.astro';
 
   <div class="card" id="tests">
     <h2 class="section-title">Tests & couverture (CO2.4)</h2>
-    <p class="pill badge-success">&Eacute;tat actuel : Jest (ts-jest) op&eacute;rationnel &mdash; <code>pnpm test</code> et <code>pnpm test:coverage</code> fonctionnent.</p>
+    <p class="pill badge-success">État actuel : Jest (ts-jest) opérationnel — <code>pnpm test</code> et <code>pnpm test:coverage</code> fonctionnent.</p>
     <ul class="list-tight">
-      <li>Harnais cibl&eacute; : unitaires (Jest + ts-jest) + E2E (Playwright) + lint.</li>
+      <li>Harnais ciblé : unitaires (Jest + ts-jest) + E2E (Playwright) + lint.</li>
       <li>Suites unitaires : <code>__tests__/api/*.test.ts</code>, <code>__tests__/components/*.test.tsx</code>, <code>__tests__/lib/*.test.ts</code>.</li>
       <li>Suites E2E : <code>e2e/auth-flow</code>, <code>booking-flow</code>, <code>payment-flow</code>, <code>basic-navigation</code>, <code>public-features</code>.</li>
-      <li>R&eacute;sultat : <code>pnpm test</code> ex&eacute;cute les tests unitaires ; <code>pnpm test:coverage</code> g&eacute;n&egrave;re le rapport lcov (plus d’erreur SWC &mdash; transpilation via ts-jest).</li>
+      <li>Résultat : <code>pnpm test</code> exécute les tests unitaires ; <code>pnpm test:coverage</code> génère le rapport lcov (plus d’erreur SWC — transpilation via ts-jest).</li>
       <li>Rapport de couverture : <code>coverage/lcov-report/index.html</code>.</li>
-      <li>Modules critiques vis&eacute;s : Auth, R&eacute;servations, Paiement Stripe (commission), Notifications.</li>
-      <li>Pr&eacute;vention r&eacute;gressions : sc&eacute;narios E2E align&eacute;s sur les parcours (auth, r&eacute;servation, paiement, upload, messaging).</li>
+      <li>Modules critiques visés : Auth, Réservations, Paiement Stripe (commission), Notifications.</li>
+      <li>Prévention régressions : scénarios E2E alignés sur les parcours (auth, réservation, paiement, upload, messaging).</li>
     </ul>
   </div>
 
   <div class="card" id="securite">
-    <h2 class="section-title">S&eacute;curit&eacute; (C2.2.3 &mdash; OWASP Top 10)</h2>
+    <h2 class="section-title">Sécurité (C2.2.3 — OWASP Top 10)</h2>
     <div class="callout callout-info">
-      <strong>R&eacute;f&eacute;rentiel appliqu&eacute; :</strong> OWASP Top 10 (2021) &mdash; les mesures ci-dessous couvrent les 10 failles de s&eacute;curit&eacute; principales d&eacute;crites par l’OWASP, conform&eacute;ment au crit&egrave;re C2.2.3 du r&eacute;f&eacute;rentiel YNOV 2024.
+      <strong>Référentiel appliqué :</strong> OWASP Top 10 (2021) — les mesures ci-dessous couvrent les 10 failles de sécurité principales décrites par l’OWASP, conformément au critère C2.2.3 du référentiel YNOV 2024.
     </div>
     <table role="grid" aria-label="Couverture OWASP Top 10">
       <thead>
         <tr>
           <th scope="col">Faille OWASP</th>
-          <th scope="col">Mesure impl&eacute;ment&eacute;e dans INKSPOT</th>
+          <th scope="col">Mesure implémentée dans INKSPOT</th>
           <th scope="col">Statut</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>A01 &mdash; Broken Access Control</strong></td>
-          <td>Contr&ocirc;le d’acc&egrave;s par r&ocirc;les (USER / PRO / ADMIN) via NextAuth ; middleware de v&eacute;rification sur toutes les routes API sensibles</td>
+          <td><strong>A01 — Broken Access Control</strong></td>
+          <td>Contrôle d’accès par rôles (USER / PRO / ADMIN) via NextAuth ; middleware de vérification sur toutes les routes API sensibles</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A02 &mdash; Cryptographic Failures</strong></td>
-          <td>Mots de passe hash&eacute;s (bcryptjs) ; HTTPS via Nginx ; secrets stock&eacute;s en variables d’env Railway (jamais en clair) ; rotation recommand&eacute;e</td>
+          <td><strong>A02 — Cryptographic Failures</strong></td>
+          <td>Mots de passe hashés (bcryptjs) ; HTTPS via Nginx ; secrets stockés en variables d’env Railway (jamais en clair) ; rotation recommandée</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A03 &mdash; Injection</strong></td>
-          <td>Requ&ecirc;tes DB via Prisma ORM (param&eacute;trage automatique, pas de SQL brut) ; validation d’entr&eacute;e avec sch&eacute;mas Zod sur toutes les routes sensibles</td>
+          <td><strong>A03 — Injection</strong></td>
+          <td>Requêtes DB via Prisma ORM (paramétrage automatique, pas de SQL brut) ; validation d’entrée avec schémas Zod sur toutes les routes sensibles</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A04 &mdash; Insecure Design</strong></td>
-          <td>Architecture modulaire (app/api, services, prisma) ; s&eacute;paration des responsabilit&eacute;s ; revue de code via PR GitHub</td>
+          <td><strong>A04 — Insecure Design</strong></td>
+          <td>Architecture modulaire (app/api, services, prisma) ; séparation des responsabilités ; revue de code via PR GitHub</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A05 &mdash; Security Misconfiguration</strong></td>
-          <td>Variables d’env Railway (pas de .env en production) ; headers HTTP s&eacute;curis&eacute;s via Nginx ; ACL S3 restrictives</td>
+          <td><strong>A05 — Security Misconfiguration</strong></td>
+          <td>Variables d’env Railway (pas de .env en production) ; headers HTTP sécurisés via Nginx ; ACL S3 restrictives</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A06 &mdash; Vulnerable Components</strong></td>
-          <td><code>pnpm audit</code> int&eacute;gr&eacute; au pipeline CI/CD ; script <code>security:scan</code> ; surveillance des d&eacute;pendances (Dependabot recommand&eacute;)</td>
+          <td><strong>A06 — Vulnerable Components</strong></td>
+          <td><code>pnpm audit</code> intégré au pipeline CI/CD ; script <code>security:scan</code> ; surveillance des dépendances (Dependabot recommandé)</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A07 &mdash; Auth Failures</strong></td>
-          <td>Sessions NextAuth (JWT + cookies httpOnly) ; rate-limit sur endpoints d’authentification ; verrouillage apr&egrave;s tentatives &eacute;chou&eacute;es</td>
+          <td><strong>A07 — Auth Failures</strong></td>
+          <td>Sessions NextAuth (JWT + cookies httpOnly) ; rate-limit sur endpoints d’authentification ; verrouillage après tentatives échouées</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A08 &mdash; Software Integrity Failures</strong></td>
-          <td>Webhooks Stripe : v&eacute;rification de signature HMAC + idempotence (pr&eacute;vention des replays) ; pipeline CI/CD avec v&eacute;rification des artefacts</td>
+          <td><strong>A08 — Software Integrity Failures</strong></td>
+          <td>Webhooks Stripe : vérification de signature HMAC + idempotence (prévention des replays) ; pipeline CI/CD avec vérification des artefacts</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A09 &mdash; Logging Failures</strong></td>
-          <td>Journalisation des &eacute;v&eacute;nements critiques (auth, paiements, erreurs 5xx) ; logs Nginx + applicatifs ; Prometheus/Grafana pour les m&eacute;triques</td>
+          <td><strong>A09 — Logging Failures</strong></td>
+          <td>Journalisation des événements critiques (auth, paiements, erreurs 5xx) ; logs Nginx + applicatifs ; Prometheus/Grafana pour les métriques</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
         <tr>
-          <td><strong>A10 &mdash; SSRF</strong></td>
-          <td>Validation des types et tailles de fichiers upload&eacute;s ; ACL S3 + restriction des URLs autoris&eacute;es pour les webhooks entrants</td>
+          <td><strong>A10 — SSRF</strong></td>
+          <td>Validation des types et tailles de fichiers uploadés ; ACL S3 + restriction des URLs autorisées pour les webhooks entrants</td>
           <td><span class="pill badge-success">Couvert</span></td>
         </tr>
       </tbody>
@@ -737,23 +750,23 @@ import DocLayout from '../layouts/DocLayout.astro';
   </div>
 
   <div class="card" id="accessibilite">
-    <h2 class="section-title">Accessibilit&eacute; (CO2.5 &mdash; RGAA 4.1 / WCAG 2.1)</h2>
+    <h2 class="section-title">Accessibilité (CO2.5 — RGAA 4.1 / WCAG 2.1)</h2>
     <div class="callout callout-info">
-      <strong>R&eacute;f&eacute;rentiel choisi :</strong> RGAA 4.1 (R&eacute;f&eacute;rentiel G&eacute;n&eacute;ral d’Am&eacute;lioration de l’Accessibilit&eacute;), align&eacute; sur WCAG 2.1 niveau AA &mdash; conform&eacute;ment au crit&egrave;re C2.2.3 du r&eacute;f&eacute;rentiel YNOV 2024 qui exige un « r&eacute;f&eacute;rentiel d’accessibilit&eacute; choisi, pr&eacute;sent&eacute; et justifi&eacute; ». Le RGAA est le r&eacute;f&eacute;rentiel officiel fran&ccedil;ais, applicable aux services num&eacute;riques professionnels.
+      <strong>Référentiel choisi :</strong> RGAA 4.1 (Référentiel Général d’Amélioration de l’Accessibilité), aligné sur WCAG 2.1 niveau AA — conformément au critère C2.2.3 du référentiel YNOV 2024 qui exige un « référentiel d’accessibilité choisi, présenté et justifié ». Le RGAA est le référentiel officiel français, applicable aux services numériques professionnels.
     </div>
-    <table role="grid" aria-label="Checklist accessibilit&eacute; RGAA / WCAG 2.1">
+    <table role="grid" aria-label="Checklist accessibilité RGAA / WCAG 2.1">
       <thead>
         <tr>
-          <th scope="col">Crit&egrave;re RGAA</th>
-          <th scope="col">Mesure impl&eacute;ment&eacute;e</th>
+          <th scope="col">Critère RGAA</th>
+          <th scope="col">Mesure implémentée</th>
           <th scope="col">Statut</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><strong>Images (1.x)</strong></td>
-          <td>Attributs <code>alt</code> sur toutes les images significatives ; images d&eacute;coratives avec <code>alt=""</code></td>
-          <td><span class="pill badge-success">Impl&eacute;ment&eacute;</span></td>
+          <td>Attributs <code>alt</code> sur toutes les images significatives ; images décoratives avec <code>alt=""</code></td>
+          <td><span class="pill badge-success">Implémenté</span></td>
         </tr>
         <tr>
           <td><strong>Couleurs (3.x)</strong></td>
@@ -762,55 +775,55 @@ import DocLayout from '../layouts/DocLayout.astro';
         </tr>
         <tr>
           <td><strong>Tableaux (5.x)</strong></td>
-          <td>Attributs <code>scope</code>, <code>role="grid"</code>, <code>aria-label</code> sur tous les tableaux de donn&eacute;es</td>
-          <td><span class="pill badge-success">Impl&eacute;ment&eacute;</span></td>
+          <td>Attributs <code>scope</code>, <code>role="grid"</code>, <code>aria-label</code> sur tous les tableaux de données</td>
+          <td><span class="pill badge-success">Implémenté</span></td>
         </tr>
         <tr>
           <td><strong>Liens (6.x)</strong></td>
-          <td>Intitul&eacute;s de liens explicites ; pas de « cliquez ici » sans contexte</td>
-          <td><span class="pill badge-success">Impl&eacute;ment&eacute;</span></td>
+          <td>Intitulés de liens explicites ; pas de « cliquez ici » sans contexte</td>
+          <td><span class="pill badge-success">Implémenté</span></td>
         </tr>
         <tr>
           <td><strong>Scripts (7.x)</strong></td>
-          <td>Composants interactifs avec r&ocirc;les ARIA explicites ; &eacute;v&eacute;nements clavier sur tous les &eacute;l&eacute;ments cliquables</td>
-          <td><span class="pill badge-success">Impl&eacute;ment&eacute;</span></td>
+          <td>Composants interactifs avec rôles ARIA explicites ; événements clavier sur tous les éléments cliquables</td>
+          <td><span class="pill badge-success">Implémenté</span></td>
         </tr>
         <tr>
           <td><strong>Navigation (12.x)</strong></td>
-          <td>Focus visible ; navigation clavier compl&egrave;te ; modales fermables au clavier (Escape) ; ordre de tabulation logique</td>
-          <td><span class="pill badge-success">Impl&eacute;ment&eacute;</span></td>
+          <td>Focus visible ; navigation clavier complète ; modales fermables au clavier (Escape) ; ordre de tabulation logique</td>
+          <td><span class="pill badge-success">Implémenté</span></td>
         </tr>
         <tr>
           <td><strong>Formulaires (11.x)</strong></td>
-          <td>Labels associ&eacute;s &agrave; chaque champ ; messages d’erreur annonc&eacute;s via <code>aria-live</code> ; champs obligatoires marqu&eacute;s</td>
-          <td><span class="pill badge-success">Impl&eacute;ment&eacute;</span></td>
+          <td>Labels associés à chaque champ ; messages d’erreur annoncés via <code>aria-live</code> ; champs obligatoires marqués</td>
+          <td><span class="pill badge-success">Implémenté</span></td>
         </tr>
       </tbody>
     </table>
     <h3>Outillage et audit</h3>
     <ul class="list-tight">
-      <li><strong>Lint statique</strong> : <code>eslint-plugin-jsx-a11y</code> int&eacute;gr&eacute; au pipeline CI/CD</li>
-      <li><strong>Audit automatis&eacute;</strong> : <code>axe-cli</code> et Playwright a11y sur les pages critiques (login, booking, paiement, messagerie)</li>
-      <li><strong>Audit Lighthouse</strong> : score accessibilit&eacute; cible ≥ 90/100</li>
-      <li><strong>Statut</strong> : audit axe/Lighthouse planifi&eacute; &mdash; voir anomalie REC-003 dans le <a href="/cahier-recette#anomalies">Cahier de Recette</a></li>
+      <li><strong>Lint statique</strong> : <code>eslint-plugin-jsx-a11y</code> intégré au pipeline CI/CD</li>
+      <li><strong>Audit automatisé</strong> : <code>axe-cli</code> et Playwright a11y sur les pages critiques (login, booking, paiement, messagerie)</li>
+      <li><strong>Audit Lighthouse</strong> : score accessibilité cible ≥ 90/100</li>
+      <li><strong>Statut</strong> : audit axe/Lighthouse planifié — voir anomalie REC-003 dans le <a href="/cahier-recette#anomalies">Cahier de Recette</a></li>
     </ul>
   </div>
 
   <div class="card" id="evolutivite">
-    <h2 class="section-title">&Eacute;volutivit&eacute; & maintenabilit&eacute;</h2>
+    <h2 class="section-title">Évolutivité & maintenabilité</h2>
     <ul class="list-tight">
       <li>Migrations Prisma : <code>pnpm db:migrate</code> / <code>db:push</code>, versionning clair</li>
-      <li>Cache/Redis pour sessions et optimisation requ&ecirc;tes fr&eacute;quentes</li>
-      <li>Modules s&eacute;par&eacute;s (app/api, services, prisma) pour limiter le couplage</li>
-      <li>Surveillance des d&eacute;pendances (npm audit, security:scan)</li>
+      <li>Cache/Redis pour sessions et optimisation requêtes fréquentes</li>
+      <li>Modules séparés (app/api, services, prisma) pour limiter le couplage</li>
+      <li>Surveillance des dépendances (npm audit, security:scan)</li>
     </ul>
   </div>
 
   <div class="card" id="monitoring">
     <h2 class="section-title">Monitoring / Healthchecks</h2>
     <ul class="list-tight">
-      <li>Endpoints sant&eacute; : <code>/api/health</code> et variantes simples</li>
-      <li>Prometheus + Grafana : m&eacute;triques app/DB/cache</li>
+      <li>Endpoints santé : <code>/api/health</code> et variantes simples</li>
+      <li>Prometheus + Grafana : métriques app/DB/cache</li>
       <li>Logs : app, nginx, Stripe webhooks</li>
     </ul>
   </div>
@@ -819,170 +832,170 @@ import DocLayout from '../layouts/DocLayout.astro';
     <h2 class="section-title">Exploitation & runbook</h2>
     <ul class="list-tight">
       <li>Surveiller erreurs 5xx et latence des endpoints critiques.</li>
-      <li>V&eacute;rifier quotidiennement les jobs Stripe/webhooks.</li>
+      <li>Vérifier quotidiennement les jobs Stripe/webhooks.</li>
       <li>Planifier les migrations Prisma hors pic de charge.</li>
-      <li>Backups : base de donn&eacute;es + sauvegarde des m&eacute;dias S3.</li>
+      <li>Backups : base de données + sauvegarde des médias S3.</li>
     </ul>
   </div>
 
   <div class="card" id="depannage">
-    <h2 class="section-title">D&eacute;pannage rapide</h2>
+    <h2 class="section-title">Dépannage rapide</h2>
     <ul class="list-tight">
-      <li>Login KO : v&eacute;rifier <code>NEXTAUTH_URL</code> + secrets.</li>
-      <li>Paiement KO : v&eacute;rifier cl&eacute;s Stripe + webhook secret.</li>
-      <li>Upload KO : v&eacute;rifier credentials S3 + ACL.</li>
-      <li>E2E KO : v&eacute;rifier port webServer + config Playwright.</li>
+      <li>Login KO : vérifier <code>NEXTAUTH_URL</code> + secrets.</li>
+      <li>Paiement KO : vérifier clés Stripe + webhook secret.</li>
+      <li>Upload KO : vérifier credentials S3 + ACL.</li>
+      <li>E2E KO : vérifier port webServer + config Playwright.</li>
     </ul>
   </div>
 
   <div class="card" id="annexes">
     <h2 class="section-title">Annexes</h2>
-    <p>Annexes du manuel (A &agrave; H) :</p>
+    <p>Annexes du manuel (A à H) :</p>
     <table role="grid" aria-label="Annexes du manuel">
       <thead>
         <tr>
           <th scope="col">Annexe</th>
           <th scope="col">Contenu</th>
-          <th scope="col">Section de r&eacute;f&eacute;rence</th>
+          <th scope="col">Section de référence</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td><strong>A</strong></td><td>Architecture de la stack technique &mdash; diagramme ASCII des couches (pr&eacute;sentation, API, services m&eacute;tier, Prisma, PostgreSQL) et services externes (Stripe, S3, Redis, Prometheus/Grafana)</td><td><a href="#vue-architecture">Vue d’architecture simplifi&eacute;e</a></td></tr>
-        <tr><td><strong>B</strong></td><td>Flux d’authentification &mdash; s&eacute;quence Register → Email verification → Login → Session JWT (NextAuth, bcrypt, Google OAuth)</td><td><a href="#flux">Flux de donn&eacute;es</a> &mdash; ligne Auth</td></tr>
-        <tr><td><strong>C</strong></td><td>Architecture de monitoring &mdash; Prometheus (scraping 15s) → Grafana (dashboards, alertes) → Loki (logs) → Tempo (traces), provisioning automatique</td><td><a href="#supervision">Syst&egrave;me de supervision</a></td></tr>
-        <tr><td><strong>D</strong></td><td>Gestion des d&eacute;pendances &mdash; proc&eacute;dure pnpm audit, pnpm outdated, mise &agrave; jour s&eacute;curis&eacute;e, bonnes pratiques</td><td><a href="#dependances">D&eacute;pendances &mdash; 3.c</a></td></tr>
-        <tr><td><strong>E</strong></td><td>Supervision d&eacute;taill&eacute;e &mdash; m&eacute;triques API (temps de r&eacute;ponse, taux d’erreurs), m&eacute;triques DB, m&eacute;triques m&eacute;tier (utilisateurs, r&eacute;servations, revenus)</td><td><a href="#supervision">Syst&egrave;me de supervision</a></td></tr>
-        <tr><td><strong>F</strong></td><td>Flux CI/CD et d&eacute;ploiement &mdash; GitHub Actions (quality → build → security) → Railway CD (build Docker → deploy → migrations Prisma → smoke tests)</td><td><a href="#maintenance">Maintenance &mdash; 5.a</a> + <a href="/deploiement-railway">Manuel D&eacute;ploiement</a></td></tr>
-        <tr><td><strong>G</strong></td><td>Paiements &amp; commissions Stripe &mdash; flux Checkout → Webhook → Sync DB, commission 3,5 % + 0,50 €, idempotence, v&eacute;rification signature HMAC</td><td><a href="#modele-economique">Mod&egrave;le &eacute;conomique &mdash; 6.c</a></td></tr>
-        <tr><td><strong>H</strong></td><td>Fonctionnalit&eacute;s &amp; workflows cl&eacute;s &mdash; inscription → onboarding, recherche artiste → r&eacute;servation → paiement, messagerie temps r&eacute;el, upload m&eacute;dia S3</td><td><a href="#parcours">Parcours fonctionnels</a> + <a href="#modele-economique">6.b</a></td></tr>
+        <tr><td><strong>A</strong></td><td>Architecture de la stack technique — diagramme ASCII des couches (présentation, API, services métier, Prisma, PostgreSQL) et services externes (Stripe, S3, Redis, Prometheus/Grafana)</td><td><a href="#vue-architecture">Vue d’architecture simplifiée</a></td></tr>
+        <tr><td><strong>B</strong></td><td>Flux d’authentification — séquence Register → Email verification → Login → Session JWT (NextAuth, bcrypt, Google OAuth)</td><td><a href="#flux">Flux de données</a> — ligne Auth</td></tr>
+        <tr><td><strong>C</strong></td><td>Architecture de monitoring — Prometheus (scraping 15s) → Grafana (dashboards, alertes) → Loki (logs) → Tempo (traces), provisioning automatique</td><td><a href="#supervision">Système de supervision</a></td></tr>
+        <tr><td><strong>D</strong></td><td>Gestion des dépendances — procédure pnpm audit, pnpm outdated, mise à jour sécurisée, bonnes pratiques</td><td><a href="#dependances">Dépendances — 3.c</a></td></tr>
+        <tr><td><strong>E</strong></td><td>Supervision détaillée — métriques API (temps de réponse, taux d’erreurs), métriques DB, métriques métier (utilisateurs, réservations, revenus)</td><td><a href="#supervision">Système de supervision</a></td></tr>
+        <tr><td><strong>F</strong></td><td>Flux CI/CD et déploiement — GitHub Actions (quality → build → security) → Railway CD (build Docker → deploy → migrations Prisma → smoke tests)</td><td><a href="#maintenance">Maintenance — 5.a</a> + <a href="/deploiement-railway">Manuel Déploiement</a></td></tr>
+        <tr><td><strong>G</strong></td><td>Paiements &amp; commissions Stripe — flux Checkout → Webhook → Sync DB, commission 3,5 % + 0,50 €, idempotence, vérification signature HMAC</td><td><a href="#modele-economique">Modèle économique — 6.c</a></td></tr>
+        <tr><td><strong>H</strong></td><td>Fonctionnalités &amp; workflows clés — inscription → onboarding, recherche artiste → réservation → paiement, messagerie temps réel, upload média S3</td><td><a href="#parcours">Parcours fonctionnels</a> + <a href="#modele-economique">6.b</a></td></tr>
       </tbody>
     </table>
     <p><strong>Ressources projet</strong></p>
     <ul class="list-tight">
-      <li>Routes API : inventaire g&eacute;n&eacute;r&eacute; depuis <code>app/api/**</code> (≈ 80 routes list&eacute;es)</li>
-      <li>Mod&egrave;les Prisma : <code>prisma/schema.prisma</code> (User, Post, Conversation, Message, Appointment, Booking, Payment, Invoice, Review, Notification, etc.)</li>
+      <li>Routes API : inventaire généré depuis <code>app/api/**</code> (≈ 80 routes listées)</li>
+      <li>Modèles Prisma : <code>prisma/schema.prisma</code> (User, Post, Conversation, Message, Appointment, Booking, Payment, Invoice, Review, Notification, etc.)</li>
       <li>Docs Swagger : scripts <code>api:docs:generate</code> / <code>api:docs:export</code> (swagger-jsdoc)</li>
     </ul>
   </div>
 
   <div class="card" id="mise-a-jour">
-    <h2 class="section-title">Manuel de mise &agrave; jour (C2.4.1)</h2>
+    <h2 class="section-title">Manuel de mise à jour (C2.4.1)</h2>
     <div class="callout callout-info">
-      <strong>R&eacute;f&eacute;rentiel :</strong> Ce chapitre r&eacute;pond au crit&egrave;re C2.4.1 du r&eacute;f&eacute;rentiel YNOV 2024 &mdash; « R&eacute;diger la documentation technique : manuel de mise &agrave; jour ». Il d&eacute;crit la proc&eacute;dure de mise &agrave; jour des d&eacute;pendances, des versions applicatives et des migrations de base de donn&eacute;es.
+      <strong>Référentiel :</strong> Ce chapitre répond au critère C2.4.1 du référentiel YNOV 2024 — « Rédiger la documentation technique : manuel de mise à jour ». Il décrit la procédure de mise à jour des dépendances, des versions applicatives et des migrations de base de données.
     </div>
-    <h3>Mise &agrave; jour des d&eacute;pendances</h3>
-    <table role="grid" aria-label="Proc&eacute;dure de mise &agrave; jour des d&eacute;pendances">
+    <h3>Mise à jour des dépendances</h3>
+    <table role="grid" aria-label="Procédure de mise à jour des dépendances">
       <thead>
         <tr>
-          <th scope="col">&Eacute;tape</th>
+          <th scope="col">Étape</th>
           <th scope="col">Commande</th>
-          <th scope="col">Fr&eacute;quence</th>
+          <th scope="col">Fréquence</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Audit de s&eacute;curit&eacute;</td>
+          <td>Audit de sécurité</td>
           <td><code>pnpm audit</code></td>
-          <td>Hebdomadaire / apr&egrave;s chaque PR</td>
+          <td>Hebdomadaire / après chaque PR</td>
         </tr>
         <tr>
-          <td>Correction automatique des vuln&eacute;rabilit&eacute;s</td>
+          <td>Correction automatique des vulnérabilités</td>
           <td><code>pnpm audit --fix</code></td>
-          <td>D&egrave;s qu’une vuln&eacute;rabilit&eacute; est d&eacute;tect&eacute;e</td>
+          <td>Dès qu’une vulnérabilité est détectée</td>
         </tr>
         <tr>
-          <td>V&eacute;rification des mises &agrave; jour disponibles</td>
+          <td>Vérification des mises à jour disponibles</td>
           <td><code>pnpm outdated</code></td>
           <td>Mensuelle</td>
         </tr>
         <tr>
-          <td>Mise &agrave; jour d’une d&eacute;pendance sp&eacute;cifique</td>
+          <td>Mise à jour d’une dépendance spécifique</td>
           <td><code>pnpm update [package]</code></td>
-          <td>Selon besoin / correctif de s&eacute;curit&eacute;</td>
+          <td>Selon besoin / correctif de sécurité</td>
         </tr>
         <tr>
-          <td>Mise &agrave; jour majeure (breaking changes)</td>
+          <td>Mise à jour majeure (breaking changes)</td>
           <td><code>pnpm add [package]@latest</code> + tests complets</td>
-          <td>Planifi&eacute;e (sprint d&eacute;di&eacute;)</td>
+          <td>Planifiée (sprint dédié)</td>
         </tr>
       </tbody>
     </table>
-    <h3>Mise &agrave; jour de l’application</h3>
+    <h3>Mise à jour de l’application</h3>
     <ul class="list-tight">
-      <li><strong>Type automatique (Railway)</strong> : tout push sur la branche <code>dev</code> d&eacute;clenche un red&eacute;ploiement automatique via Railway CI/CD.</li>
-      <li><strong>Type manuel</strong> : via le dashboard Railway → « Deploy » → s&eacute;lectionner le commit cible.</li>
-      <li><strong>Rollback</strong> : Railway conserve l’historique des d&eacute;ploiements ; rollback en 1 clic vers une version pr&eacute;c&eacute;dente.</li>
+      <li><strong>Type automatique (Railway)</strong> : tout push sur la branche <code>dev</code> déclenche un redéploiement automatique via Railway CI/CD.</li>
+      <li><strong>Type manuel</strong> : via le dashboard Railway → « Deploy » → sélectionner le commit cible.</li>
+      <li><strong>Rollback</strong> : Railway conserve l’historique des déploiements ; rollback en 1 clic vers une version précédente.</li>
     </ul>
-    <h3>Migrations de base de donn&eacute;es</h3>
+    <h3>Migrations de base de données</h3>
     <ul class="list-tight">
-      <li><strong>Cr&eacute;er une migration</strong> : <code>npx prisma migrate dev --name [nom-migration]</code> (environnement de d&eacute;veloppement)</li>
-      <li><strong>Appliquer en production</strong> : <code>npx prisma migrate deploy</code> (ex&eacute;cut&eacute; automatiquement au d&eacute;marrage via Railway)</li>
-      <li><strong>V&eacute;rifier l’&eacute;tat</strong> : <code>npx prisma migrate status</code></li>
-      <li><strong>Sauvegarde avant migration</strong> : toujours effectuer un backup DB avant une migration en production (voir Manuel de D&eacute;ploiement).</li>
+      <li><strong>Créer une migration</strong> : <code>npx prisma migrate dev --name [nom-migration]</code> (environnement de développement)</li>
+      <li><strong>Appliquer en production</strong> : <code>npx prisma migrate deploy</code> (exécuté automatiquement au démarrage via Railway)</li>
+      <li><strong>Vérifier l’état</strong> : <code>npx prisma migrate status</code></li>
+      <li><strong>Sauvegarde avant migration</strong> : toujours effectuer un backup DB avant une migration en production (voir Manuel de Déploiement).</li>
     </ul>
     <h3>Gestion des versions (SemVer)</h3>
-    <table role="grid" aria-label="Convention de versioning s&eacute;mantique">
+    <table role="grid" aria-label="Convention de versioning sémantique">
       <thead>
         <tr>
           <th scope="col">Type de changement</th>
-          <th scope="col">Incr&eacute;ment de version</th>
+          <th scope="col">Incrément de version</th>
           <th scope="col">Exemple</th>
         </tr>
       </thead>
       <tbody>
         <tr><td>Correctif de bug (patch)</td><td>PATCH (+0.0.1)</td><td>1.0.0 → 1.0.1</td></tr>
-        <tr><td>Nouvelle fonctionnalit&eacute; r&eacute;trocompatible</td><td>MINOR (+0.1.0)</td><td>1.0.0 → 1.1.0</td></tr>
+        <tr><td>Nouvelle fonctionnalité rétrocompatible</td><td>MINOR (+0.1.0)</td><td>1.0.0 → 1.1.0</td></tr>
         <tr><td>Changement incompatible (breaking)</td><td>MAJOR (+1.0.0)</td><td>1.0.0 → 2.0.0</td></tr>
       </tbody>
     </table>
-    <p>L’historique complet des versions est trac&eacute; dans le <a href="/changelog">Changelog</a> (crit&egrave;re C4.3.2 &mdash; Journal des versions).</p>
+    <p>L’historique complet des versions est tracé dans le <a href="/changelog">Changelog</a> (critère C4.3.2 — Journal des versions).</p>
   </div>
 
   <div class="card" id="conclusion-technique">
     <h2 class="section-title">Conclusion technique</h2>
-    <p>INKSPOT v1.0 constitue une application web full-stack industrialis&eacute;e, con&ccedil;ue d&egrave;s l'origine avec des principes d'ing&eacute;nierie logicielle robustes. Cette conclusion synth&eacute;tise les trois axes structurants du projet.</p>
+    <p>INKSPOT v1.0 constitue une application web full-stack industrialisée, conçue dès l'origine avec des principes d'ingénierie logicielle robustes. Cette conclusion synthétise les trois axes structurants du projet.</p>
 
-    <h3>Une architecture modulaire et d&eacute;coupl&eacute;e</h3>
-    <p>L'architecture en couches adopt&eacute;e &mdash; pr&eacute;sentation, API, services m&eacute;tier, acc&egrave;s donn&eacute;es, persistance &mdash; garantit un couplage faible entre les composants. Chaque module (authentification, r&eacute;servations, paiements, messagerie, recherche) est d&eacute;velopp&eacute; de mani&egrave;re ind&eacute;pendante avec ses propres services, tests et routes API. Cette modularit&eacute; permet de modifier ou remplacer un composant sans impact sur les autres, et facilite l'int&eacute;gration de nouveaux d&eacute;veloppeurs sur le projet.</p>
-    <p>L'utilisation de Next.js App Router avec des Server Components r&eacute;duit la quantit&eacute; de JavaScript envoy&eacute;e au client, tandis que Zustand g&egrave;re l'&eacute;tat c&ocirc;t&eacute; client de mani&egrave;re pr&eacute;visible. Prisma assure une couche d'acc&egrave;s aux donn&eacute;es typ&eacute;e et s&eacute;curis&eacute;e, &eacute;liminant les risques d'injection SQL par construction.</p>
+    <h3>Une architecture modulaire et découplée</h3>
+    <p>L'architecture en couches adoptée — présentation, API, services métier, accès données, persistance — garantit un couplage faible entre les composants. Chaque module (authentification, réservations, paiements, messagerie, recherche) est développé de manière indépendante avec ses propres services, tests et routes API. Cette modularité permet de modifier ou remplacer un composant sans impact sur les autres, et facilite l'intégration de nouveaux développeurs sur le projet.</p>
+    <p>L'utilisation de Next.js App Router avec des Server Components réduit la quantité de JavaScript envoyée au client, tandis que Zustand gère l'état côté client de manière prévisible. Prisma assure une couche d'accès aux données typée et sécurisée, éliminant les risques d'injection SQL par construction.</p>
 
     <h3>Un projet maintenable sur le long terme</h3>
-    <p>La maintenabilit&eacute; du projet repose sur plusieurs piliers compl&eacute;mentaires : un pipeline CI/CD automatis&eacute; (GitHub Actions + Railway) qui valide chaque modification avant d&eacute;ploiement ; une suite de tests unitaires (Jest, 341 tests, couverture 50 %+ sur les modules critiques) et E2E (Playwright, 5 navigateurs) qui prot&egrave;ge contre les r&eacute;gressions ; un syst&egrave;me de versioning s&eacute;mantique (SemVer) avec Conventional Commits qui rend l'historique lisible ; et une documentation technique compl&egrave;te (ce manuel, le cahier de recette, le manuel de d&eacute;ploiement, le changelog) qui assure la tra&ccedil;abilit&eacute; des d&eacute;cisions.</p>
-    <p>Le monitoring en temps r&eacute;el via Prometheus et Grafana permet de d&eacute;tecter proactivement les d&eacute;gradations de performance avant qu'elles n'impactent les utilisateurs, tandis que les alertes automatiques r&eacute;duisent le temps de r&eacute;action en cas d'incident.</p>
+    <p>La maintenabilité du projet repose sur plusieurs piliers complémentaires : un pipeline CI/CD automatisé (GitHub Actions + Railway) qui valide chaque modification avant déploiement ; une suite de tests unitaires (Jest, 341 tests, couverture 50 %+ sur les modules critiques) et E2E (Playwright, 5 navigateurs) qui protège contre les régressions ; un système de versioning sémantique (SemVer) avec Conventional Commits qui rend l'historique lisible ; et une documentation technique complète (ce manuel, le cahier de recette, le manuel de déploiement, le changelog) qui assure la traçabilité des décisions.</p>
+    <p>Le monitoring en temps réel via Prometheus et Grafana permet de détecter proactivement les dégradations de performance avant qu'elles n'impactent les utilisateurs, tandis que les alertes automatiques réduisent le temps de réaction en cas d'incident.</p>
 
-    <h3>Un syst&egrave;me pr&ecirc;t &agrave; &eacute;voluer</h3>
-    <p>INKSPOT v1.0 pose les fondations d'une plateforme &eacute;volutive. L'architecture actuelle supporte nativement les extensions suivantes sans refactoring majeur : internationalisation (i18n) via les capacit&eacute;s de Next.js ; application mobile via l'API REST existante ; abonnements premium via Stripe Billing ; g&eacute;olocalisation avanc&eacute;e via les index PostgreSQL ; et scalabilit&eacute; horizontale via le cache Redis et le d&eacute;ploiement Railway multi-instances.</p>
-    <p>La conformit&eacute; aux r&eacute;f&eacute;rentiels OWASP Top 10 et RGAA 4.1, la couverture de tests et la documentation exhaustive positionnent INKSPOT comme un projet pr&ecirc;t pour une mise en production r&eacute;elle et une &eacute;volution continue dans un contexte professionnel.</p>
+    <h3>Un système prêt à évoluer</h3>
+    <p>INKSPOT v1.0 pose les fondations d'une plateforme évolutive. L'architecture actuelle supporte nativement les extensions suivantes sans refactoring majeur : internationalisation (i18n) via les capacités de Next.js ; application mobile via l'API REST existante ; abonnements premium via Stripe Billing ; géolocalisation avancée via les index PostgreSQL ; et scalabilité horizontale via le cache Redis et le déploiement Railway multi-instances.</p>
+    <p>La conformité aux référentiels OWASP Top 10 et RGAA 4.1, la couverture de tests et la documentation exhaustive positionnent INKSPOT comme un projet prêt pour une mise en production réelle et une évolution continue dans un contexte professionnel.</p>
 
     <div class="callout callout-info">
-      <strong>Version 1.0 &mdash; 6 mars 2026 :</strong> INKSPOT est livr&eacute; en version 1.0 avec l'ensemble des fonctionnalit&eacute;s core op&eacute;rationnelles (authentification, profils, r&eacute;servations, paiements Stripe, messagerie, recherche, monitoring), une infrastructure Railway d&eacute;ploy&eacute;e et valid&eacute;e, et une documentation technique conforme aux exigences du r&eacute;f&eacute;rentiel YNOV 2024 (CO2.4, CO2.5, CO2.7, C2.1.1, C2.1.2, C2.3.2, C2.4.1, C4.3.2).
+      <strong>Version 1.0 — 6 mars 2026 :</strong> INKSPOT est livré en version 1.0 avec l'ensemble des fonctionnalités core opérationnelles (authentification, profils, réservations, paiements Stripe, messagerie, recherche, monitoring), une infrastructure Railway déployée et validée, et une documentation technique conforme aux exigences du référentiel YNOV 2024 (CO2.4, CO2.5, CO2.7, C2.1.1, C2.1.2, C2.3.2, C2.4.1, C4.3.2).
     </div>
   </div>
 
   <div class="card" id="glossaire-mut">
     <h2 class="section-title">Glossaire</h2>
-    <table role="grid" aria-label="D&eacute;finitions des termes techniques">
-      <thead><tr><th scope="col">Terme</th><th scope="col">D&eacute;finition</th></tr></thead>
+    <table role="grid" aria-label="Définitions des termes techniques">
+      <thead><tr><th scope="col">Terme</th><th scope="col">Définition</th></tr></thead>
       <tbody>
-        <tr><td>CI/CD</td><td>Int&eacute;gration et d&eacute;ploiement continus (GitHub Actions + Railway)</td></tr>
+        <tr><td>CI/CD</td><td>Intégration et déploiement continus (GitHub Actions + Railway)</td></tr>
         <tr><td>SCA / 3‑D Secure</td><td>Strong Customer Authentication : authentification forte pour les paiements en ligne</td></tr>
-        <tr><td>Idempotence</td><td>Traitement d’un webhook ou d’une requ&ecirc;te sans effet de bord en cas de doublon</td></tr>
-        <tr><td>Preview</td><td>Environnement Railway temporaire cr&eacute;&eacute; &agrave; partir d’une Pull Request</td></tr>
-        <tr><td>Runbook</td><td>Proc&eacute;dure op&eacute;rationnelle pour l’exploitation et le d&eacute;pannage</td></tr>
-        <tr><td>Healthcheck</td><td>Endpoint ou script v&eacute;rifiant la disponibilit&eacute; de l’application ou des services</td></tr>
+        <tr><td>Idempotence</td><td>Traitement d’un webhook ou d’une requête sans effet de bord en cas de doublon</td></tr>
+        <tr><td>Preview</td><td>Environnement Railway temporaire créé à partir d’une Pull Request</td></tr>
+        <tr><td>Runbook</td><td>Procédure opérationnelle pour l’exploitation et le dépannage</td></tr>
+        <tr><td>Healthcheck</td><td>Endpoint ou script vérifiant la disponibilité de l’application ou des services</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="card" id="references-croisees-mut">
-    <h2 class="section-title">R&eacute;f&eacute;rences crois&eacute;es</h2>
-    <p>Documents et pages compl&eacute;mentaires de la documentation INKSPOT :</p>
+    <h2 class="section-title">Références croisées</h2>
+    <p>Documents et pages complémentaires de la documentation INKSPOT :</p>
     <ul class="list-tight">
-      <li><strong><a href="/cahier-recette">Cahier de Recette</a></strong> &mdash; Plan de tests, sc&eacute;narios fonctionnels, crit&egrave;res d’acceptation, E2E et couverture (r&eacute;f&eacute;rentiel CO2.7).</li>
-      <li><strong><a href="/deploiement-railway">Manuel de D&eacute;ploiement Railway</a></strong> &mdash; Pr&eacute;requis, variables d’environnement compl&egrave;tes, build, migrations, CI/CD, observabilit&eacute;, sauvegardes et incidents.</li>
-      <li><strong><a href="/changelog">Changelog</a></strong> &mdash; Historique des &eacute;volutions et corrections du projet.</li>
+      <li><strong><a href="/cahier-recette">Cahier de Recette</a></strong> — Plan de tests, scénarios fonctionnels, critères d’acceptation, E2E et couverture (référentiel CO2.7).</li>
+      <li><strong><a href="/deploiement-railway">Manuel de Déploiement Railway</a></strong> — Prérequis, variables d’environnement complètes, build, migrations, CI/CD, observabilité, sauvegardes et incidents.</li>
+      <li><strong><a href="/changelog">Changelog</a></strong> — Historique des évolutions et corrections du projet.</li>
     </ul>
-    <p>Documentation technique du d&eacute;p&ocirc;t : <code>docs/</code> (CI/CD, environnement, d&eacute;ploiement Railway, d&eacute;pannage VAPID, etc.).</p>
+    <p>Documentation technique du dépôt : <code>docs/</code> (CI/CD, environnement, déploiement Railway, dépannage VAPID, etc.).</p>
   </div>
 
   <div class="card" id="table-sections-mut">
@@ -992,33 +1005,33 @@ import DocLayout from '../layouts/DocLayout.astro';
       <thead>
         <tr>
           <th scope="col">Section</th>
-          <th scope="col">Pr&eacute;sent</th>
+          <th scope="col">Présent</th>
           <th scope="col">Emplacement</th>
         </tr>
       </thead>
       <tbody>
         <tr><td>Informations du document</td><td>Oui</td><td><a href="#infos-document">#infos-document</a></td></tr>
-        <tr><td>1. Introduction (Pr&eacute;sentation, Vision, Pour qui, Approche, Philosophie, Accessibilit&eacute;)</td><td>Oui</td><td><a href="#introduction">#introduction</a></td></tr>
+        <tr><td>1. Introduction (Présentation, Vision, Pour qui, Approche, Philosophie, Accessibilité)</td><td>Oui</td><td><a href="#introduction">#introduction</a></td></tr>
         <tr><td>2. Stack technique (tableau + annexe A)</td><td>Oui</td><td><a href="#stack">#stack</a> + Annexes</td></tr>
-        <tr><td>3. D&eacute;pendances &mdash; 3.a Scripts</td><td>Oui</td><td><a href="#dependances">#dependances</a></td></tr>
-        <tr><td>3. D&eacute;pendances &mdash; 3.b D&eacute;pendances principales</td><td>Oui</td><td>M&ecirc;me section</td></tr>
-        <tr><td>3. D&eacute;pendances &mdash; 3.c Proc&eacute;dure de gestion</td><td>Oui</td><td>M&ecirc;me section</td></tr>
-        <tr><td>4. Syst&egrave;me de supervision (Vue d’ensemble, M&eacute;triques, Indicateurs, Statuts, Priorit&eacute;s)</td><td>Oui</td><td><a href="#supervision">#supervision</a></td></tr>
-        <tr><td>5. Maintenance &mdash; 5.a D&eacute;ploiement continu</td><td>Oui</td><td><a href="#maintenance">#maintenance</a></td></tr>
-        <tr><td>5. Maintenance &mdash; 5.b M&eacute;thodologie de test</td><td>Oui</td><td>M&ecirc;me section</td></tr>
-        <tr><td>5. Maintenance &mdash; 5.c M&eacute;thodologie GitHub</td><td>Oui</td><td>M&ecirc;me section</td></tr>
-        <tr><td>6. Mod&egrave;le &eacute;conomique &mdash; 6.a, 6.b, 6.c</td><td>Oui</td><td><a href="#modele-economique">#modele-economique</a></td></tr>
-        <tr><td>Vue d'architecture simplifi&eacute;e du syst&egrave;me (diagramme ASCII + couches)</td><td>Oui</td><td><a href="#vue-architecture">#vue-architecture</a></td></tr>
+        <tr><td>3. Dépendances — 3.a Scripts</td><td>Oui</td><td><a href="#dependances">#dependances</a></td></tr>
+        <tr><td>3. Dépendances — 3.b Dépendances principales</td><td>Oui</td><td>Même section</td></tr>
+        <tr><td>3. Dépendances — 3.c Procédure de gestion</td><td>Oui</td><td>Même section</td></tr>
+        <tr><td>4. Système de supervision (Vue d’ensemble, Métriques, Indicateurs, Statuts, Priorités)</td><td>Oui</td><td><a href="#supervision">#supervision</a></td></tr>
+        <tr><td>5. Maintenance — 5.a Déploiement continu</td><td>Oui</td><td><a href="#maintenance">#maintenance</a></td></tr>
+        <tr><td>5. Maintenance — 5.b Méthodologie de test</td><td>Oui</td><td>Même section</td></tr>
+        <tr><td>5. Maintenance — 5.c Méthodologie GitHub</td><td>Oui</td><td>Même section</td></tr>
+        <tr><td>6. Modèle économique — 6.a, 6.b, 6.c</td><td>Oui</td><td><a href="#modele-economique">#modele-economique</a></td></tr>
+        <tr><td>Vue d'architecture simplifiée du système (diagramme ASCII + couches)</td><td>Oui</td><td><a href="#vue-architecture">#vue-architecture</a></td></tr>
         <tr><td>Justification des choix technologiques (Next.js, TypeScript, PostgreSQL, Prisma, Redis, Railway, Stripe)</td><td>Oui</td><td><a href="#justification-choix">#justification-choix</a></td></tr>
-        <tr><td>Conclusion technique (architecture modulaire, maintenabilit&eacute;, &eacute;volutivit&eacute;)</td><td>Oui</td><td><a href="#conclusion-technique">#conclusion-technique</a></td></tr>
-        <tr><td>Annexes A &agrave; H (architecture, flux auth, monitoring, d&eacute;pendances, CI/CD, paiements, workflows)</td><td>Oui</td><td><a href="#annexes">#annexes</a> + sections techniques</td></tr>
+        <tr><td>Conclusion technique (architecture modulaire, maintenabilité, évolutivité)</td><td>Oui</td><td><a href="#conclusion-technique">#conclusion-technique</a></td></tr>
+        <tr><td>Annexes A à H (architecture, flux auth, monitoring, dépendances, CI/CD, paiements, workflows)</td><td>Oui</td><td><a href="#annexes">#annexes</a> + sections techniques</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="card" id="reference-mut">
-    <h2 class="section-title">R&eacute;f&eacute;rence document</h2>
+    <h2 class="section-title">Référence document</h2>
     <p><strong>Manuel d’utilisation technique INKSPOT.</strong> Ce document constitue le livrable officiel du manuel d’utilisation technique.</p>
-    <p><strong>Validation Master</strong> : ce manuel est conforme aux attentes du livrable « Manuel d’utilisation technique » du r&eacute;f&eacute;rentiel YNOV 2024 (crit&egrave;res CO2.4 et CO2.5). Les sections Tests &amp; couverture, Exigences techniques, S&eacute;curit&eacute;, Accessibilit&eacute; et &Eacute;volutivit&eacute; sont d&eacute;taill&eacute;es et trac&eacute;es ; la conformit&eacute; est explicit&eacute;e dans la section <a href="#conformite-referentiel-mut">Conformit&eacute; r&eacute;f&eacute;rentiel</a>.</p>
+    <p><strong>Validation Master</strong> : ce manuel est conforme aux attentes du livrable « Manuel d’utilisation technique » du référentiel YNOV 2024 (critères CO2.4 et CO2.5). Les sections Tests &amp; couverture, Exigences techniques, Sécurité, Accessibilité et Évolutivité sont détaillées et tracées ; la conformité est explicitée dans la section <a href="#conformite-referentiel-mut">Conformité référentiel</a>.</p>
   </div>
 </DocLayout>
